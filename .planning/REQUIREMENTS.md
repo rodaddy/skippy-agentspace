@@ -20,8 +20,8 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 
 ### Core Infrastructure
 
-- [ ] **CORE-01**: Personas (Skippy, Bob, Clarisa, April) packaged as portable definitions
-- [ ] **CORE-02**: LAWs (15) packaged with enforcement descriptions
+- [x] **CORE-01**: Personas (Skippy, Bob, Clarisa, April) packaged as portable definitions
+- [x] **CORE-02**: LAWs (15) packaged with enforcement descriptions
 - [ ] **CORE-03**: Style rules and communication conventions packaged
 - [ ] **CORE-04**: CLAUDE.md template available for new projects
 - [ ] **CORE-05**: All 10 claude commands packaged for portable install
@@ -110,8 +110,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUN-02 | Phase 5 | Complete |
 | FOUN-03 | Phase 5 | Complete |
 | FOUN-04 | Phase 5 | Complete |
-| CORE-01 | Phase 6 | Pending |
-| CORE-02 | Phase 6 | Pending |
+| CORE-01 | Phase 6 | Complete |
+| CORE-02 | Phase 6 | Complete |
 | CORE-03 | Phase 6 | Pending |
 | CORE-04 | Phase 6 | Pending |
 | CORE-05 | Phase 6 | Pending |
