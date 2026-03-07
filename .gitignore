@@ -5,3 +5,12 @@
 .env
 .env.*
 node_modules/
+
+# Private content safety net
+# Primary protection: private content lives at ~/.config/pai-private/
+# These patterns are a secondary defense against accidental inclusion
+*.secret
+*.credentials
+*.private
+credentials/
+secrets/

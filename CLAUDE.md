@@ -124,3 +124,4 @@ All 4 phases complete. v1 requirements satisfied.
 | Phase structure + success criteria | `.planning/ROADMAP.md` |
 | Current position + blockers | `.planning/STATE.md` |
 | The actual skill | `skills/skippy-dev/SKILL.md` |
+| Content conventions + upstream registry | `CONVENTIONS.md` |
