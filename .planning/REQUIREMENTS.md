@@ -22,12 +22,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Documentation
 
-- [ ] **DOC-01**: GSD dependency map -- document every GSD `.planning/` integration point (file paths, field names, structure assumptions) and breakage risk if GSD changes upstream
+- [x] **DOC-01**: GSD dependency map -- document every GSD `.planning/` integration point (file paths, field names, structure assumptions) and breakage risk if GSD changes upstream
 
 ### Structure
 
 - [x] **STRU-01**: Skill follows PAI pattern -- slim SKILL.md entry point, detail in `references/` and `docs/`, index file for navigation
-- [ ] **STRU-02**: CLAUDE.md includes origin story, architectural decisions, current status, and enough context for cold session orientation
+- [x] **STRU-02**: CLAUDE.md includes origin story, architectural decisions, current status, and enough context for cold session orientation
 - [x] **STRU-03**: Install tooling supports both `~/.claude/skills/` (modern) and `~/.claude/commands/` (legacy) targets
 
 ## v2 Requirements
@@ -71,9 +71,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | CMD-01 | Phase 3 | Complete |
 | CMD-02 | Phase 3 | Complete |
 | CMD-03 | Phase 3 | Complete |
-| DOC-01 | Phase 4 | Pending |
+| DOC-01 | Phase 4 | Complete |
 | STRU-01 | Phase 1 | Complete |
-| STRU-02 | Phase 4 | Pending |
+| STRU-02 | Phase 4 | Complete |
 | STRU-03 | Phase 2 | Complete |
 
 **Coverage:**
