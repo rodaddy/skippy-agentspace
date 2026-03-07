@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
 status: executing
-stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-07T22:37:08.787Z"
-last_activity: 2026-03-07 -- Completed 07-02 LAW enforcement hook scripts (15 hooks)
+stopped_at: Completed 07-03-PLAN.md
+last_updated: "2026-03-07T22:44:33.873Z"
+last_activity: 2026-03-07 -- Completed 07-03 hook installer, uninstaller, and validation
 progress:
   total_phases: 10
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 17
-  completed_plans: 16
-  percent: 94
+  completed_plans: 17
+  percent: 100
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 ## Current Position
 
 Phase: 7 of 10 (Hook Installation)
-Plan: 2 of 3 complete
-Status: In Progress
-Last activity: 2026-03-07 -- Completed 07-02 LAW enforcement hook scripts (15 hooks)
+Plan: 3 of 3 complete
+Status: Phase Complete
+Last activity: 2026-03-07 -- Completed 07-03 hook installer, uninstaller, and validation
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [█████████░] 94%
 | Phase 06 P03 | 2min | 2 tasks | 4 files |
 | Phase 07 P01 | 2min | 2 tasks | 4 files |
 | Phase 07 P02 | 10min | 2 tasks | 15 files |
+| Phase 07 P03 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,9 @@ Recent decisions affecting current work:
 - [07-02]: Inlined pattern detection in each hook rather than shared module -- portability over DRY
 - [07-02]: LAW 11 uses askDecision (warn) since ggshield is the real gate; LAWs 6, 10 also soft nudge
 - [07-02]: LAW 15 sanitized -- removed private IPs, uses hostname-based detection only
+- [07-03]: Bun-only JSON backend -- bun already a hard dependency, python3/jq fallbacks deferred
+- [07-03]: Shell orchestrator + TypeScript backend split -- bash for flow, bun for JSON operations
+- [07-03]: Check 4 grep targets input.toolName not bare toolName -- avoids false positives from local vars
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-07T22:35:56Z
-Stopped at: Completed 07-02-PLAN.md
-Resume file: .planning/phases/07-hook-installation/07-02-SUMMARY.md
+Last session: 2026-03-07T22:39:19Z
+Stopped at: Completed 07-03-PLAN.md
+Resume file: .planning/phases/07-hook-installation/07-03-SUMMARY.md

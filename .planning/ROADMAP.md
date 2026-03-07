@@ -25,7 +25,7 @@
 
 - [x] **Phase 5: Foundation** - Public/private content boundary and extensible upstream registry (completed 2026-03-07)
 - [x] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, and CLAUDE.md template packaged as portable core (commands deferred) (completed 2026-03-07)
-- [ ] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall
+- [x] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall (completed 2026-03-07)
 - [ ] **Phase 8: Upstream Analysis** - OMC as third upstream, cross-package analysis, and generic upstream checker
 - [ ] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported
 - [ ] **Phase 10: Bootstrap & Docs** - Prerequisite validation, setup/install/upgrade docs, and post-install verification
@@ -206,7 +206,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Documentation | v1.0 | 2/2 | Complete | 2026-03-07 |
 | 5. Foundation | v1.1 | 2/2 | Complete | 2026-03-07 |
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
-| 7. Hook Installation | 2/3 | In Progress|  | - |
+| 7. Hook Installation | 3/3 | Complete   | 2026-03-07 | - |
 | 8. Upstream Analysis | v1.1 | 0/? | Not started | - |
 | 9. Skill System | v1.1 | 0/? | Not started | - |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |

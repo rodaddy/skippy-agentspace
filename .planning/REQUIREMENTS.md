@@ -30,10 +30,10 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 ### Hooks
 
 - [x] **HOOK-01**: Hook manifest declares all hooks and their settings.json registrations
-- [ ] **HOOK-02**: Hook installer merges into settings.json via jq without destroying existing hooks
-- [ ] **HOOK-03**: Hook uninstaller cleanly removes only our hooks
-- [ ] **HOOK-04**: Hook operations are idempotent (safe to re-run)
-- [ ] **HOOK-05**: settings.json is backed up before any modification
+- [x] **HOOK-02**: Hook installer merges into settings.json via jq without destroying existing hooks
+- [x] **HOOK-03**: Hook uninstaller cleanly removes only our hooks
+- [x] **HOOK-04**: Hook operations are idempotent (safe to re-run)
+- [x] **HOOK-05**: settings.json is backed up before any modification
 
 ### Upstream Analysis
 
@@ -117,10 +117,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | CORE-05 | Phase 6 | Complete |
 | CORE-06 | Phase 6 | Complete |
 | HOOK-01 | Phase 7 | Complete |
-| HOOK-02 | Phase 7 | Pending |
-| HOOK-03 | Phase 7 | Pending |
-| HOOK-04 | Phase 7 | Pending |
-| HOOK-05 | Phase 7 | Pending |
+| HOOK-02 | Phase 7 | Complete |
+| HOOK-03 | Phase 7 | Complete |
+| HOOK-04 | Phase 7 | Complete |
+| HOOK-05 | Phase 7 | Complete |
 | UPST-01 | Phase 8 | Pending |
 | UPST-02 | Phase 8 | Pending |
 | UPST-03 | Phase 8 | Pending |
