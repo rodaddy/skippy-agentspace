@@ -1,0 +1,158 @@
+{
+  "version": "1.0",
+  "description": "PAI LAW enforcement hooks for Claude Code",
+  "path_prefix": "skills/core/hooks",
+  "identifier": "skills/core/hooks/",
+  "hooks": [
+    {
+      "id": "law-01",
+      "law": 1,
+      "name": "Never Assume",
+      "description": "Block implementation on vague/ambiguous requests",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|Bash",
+      "script": "law-01-never-assume.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-02",
+      "law": 2,
+      "name": "Checkbox Questions",
+      "description": "Enforce checkbox-style questions for multi-option choices",
+      "event": "PreToolUse",
+      "matcher": "*",
+      "script": "law-02-checkbox-questions.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-03",
+      "law": 3,
+      "name": "Pro/Con Analysis",
+      "description": "Require pro/con analysis before major decisions",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|Bash",
+      "script": "law-03-procon-analysis.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-04",
+      "law": 4,
+      "name": "Critical Thinking",
+      "description": "Enforce persona-aware critical thinking before implementation",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|Bash",
+      "script": "law-04-critical-thinking.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-05",
+      "law": 5,
+      "name": "Explain Before Doing",
+      "description": "Block implementation without prior explanation",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|Bash",
+      "script": "law-05-explain-before-doing.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-06",
+      "law": 6,
+      "name": "Interview-First",
+      "description": "Enforce interview-first approach for new projects",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|Bash",
+      "script": "law-06-interview-first.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-07",
+      "law": 7,
+      "name": "Never Ancient Bash",
+      "description": "Block #!/bin/bash in Write/Edit operations",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit",
+      "script": "law-07-never-ancient-bash.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-08",
+      "law": 8,
+      "name": "Never Work on Main",
+      "description": "Block commits and pushes to protected branches",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "law-08-never-work-on-main.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-09",
+      "law": 9,
+      "name": "File Size Limits",
+      "description": "Enforce 750-line file size limit on write operations",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit",
+      "script": "law-09-file-size-limits.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-10",
+      "law": 10,
+      "name": "qmd First",
+      "description": "Prefer qmd MCP for codebase search before Read/Glob/Grep",
+      "event": "PreToolUse",
+      "matcher": "Read|Glob|Grep",
+      "script": "law-10-qmd-first.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-11",
+      "law": 11,
+      "name": "No Secrets in Git",
+      "description": "Pre-check for potential secrets before git commit/push",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "law-11-no-secrets-in-git.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-12",
+      "law": 12,
+      "name": "Private Repos Default",
+      "description": "Block public repo creation unless explicitly requested",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "law-12-private-repos-default.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-13",
+      "law": 13,
+      "name": "No Silent Autopilot",
+      "description": "Detect and warn about silent autopilot keyword triggers",
+      "event": "UserPromptSubmit",
+      "matcher": null,
+      "script": "law-13-no-silent-autopilot.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-14",
+      "law": 14,
+      "name": "Network Share Protocol",
+      "description": "Enforce SMB/network share access protocols",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "law-14-network-share-protocol.ts",
+      "blocking": true
+    },
+    {
+      "id": "law-15",
+      "law": 15,
+      "name": "No LiteLLM Self-Surgery",
+      "description": "Block direct LiteLLM config modifications",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "law-15-no-litellm-self-surgery.ts",
+      "blocking": true
+    }
+  ]
+}
