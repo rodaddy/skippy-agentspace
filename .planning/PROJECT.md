@@ -14,6 +14,7 @@ Every skill works standalone with vanilla Claude Code -- no PAI dependency requi
 
 **Target features:**
 - OMC analysis and cherry-pick (third upstream alongside GSD and PAUL)
+- Extensible upstream system -- add new packages/marketplaces to cherry-pick from
 - Core infrastructure package (personas, LAWs, hooks, commands)
 - All PAI skills restructured to slim SKILL.md + deep references pattern
 - Add-on skill system (opt-in installation per skill)
