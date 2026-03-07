@@ -50,7 +50,7 @@ Three approaches were evaluated. We chose **parasitic skill** (option 1):
 | Phase | Goal | Status |
 |-------|------|--------|
 | 1. Spec Compliance | Portable paths, Agent Skills frontmatter, `bin/` → `scripts/` | Not started |
-| 2. Plugin Packaging | `.claude-plugin/plugin.json`, dual install targets | Not started |
+| 2. Plugin Packaging | `.claude-plugin/marketplace.json`, dual install targets | In progress |
 | 3. Command Validation | Reconcile, update, cleanup commands work end-to-end | Not started |
 | 4. Documentation | GSD dependency map, cold session CLAUDE.md | Not started |
 
@@ -59,6 +59,8 @@ Three approaches were evaluated. We chose **parasitic skill** (option 1):
 ## What's Already Built
 
 ```
+.claude-plugin/
+  marketplace.json      # Plugin marketplace definition (strict: false)
 skills/skippy-dev/
   SKILL.md              # Entry point -- 3 commands, 5 enhancement refs
   commands/              # /skippy:reconcile, /skippy:update, /skippy:cleanup
@@ -66,8 +68,8 @@ skills/skippy-dev/
   scripts/               # skippy-update.sh, skippy-cleanup.sh
   .versions              # Upstream version tracking (GSD + PAUL)
 tools/
-  install.sh             # Symlink skill into ~/.claude/commands/
-  uninstall.sh           # Remove symlinks
+  install.sh             # Dual-target installer (skills/ or commands/)
+  uninstall.sh           # Dual-target uninstaller (skills/ and commands/)
   index-sync.sh          # Validate/regenerate INDEX.md
 INDEX.md                 # Auto-generated skill registry
 ```
