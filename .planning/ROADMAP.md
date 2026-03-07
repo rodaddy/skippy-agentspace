@@ -13,7 +13,7 @@ Transform skippy-agentspace from a working-but-non-portable skill repo into a sp
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Spec Compliance** - Align skill structure and paths to Agent Skills standard (completed 2026-03-07)
-- [ ] **Phase 2: Plugin Packaging** - Enable native `/plugin install` distribution
+- [x] **Phase 2: Plugin Packaging** - Enable native `/plugin install` distribution (completed 2026-03-07)
 - [x] **Phase 3: Command Validation** - Harden and validate all three skippy commands against real workflows (completed 2026-03-07)
 - [ ] **Phase 4: Documentation** - Cold session context and GSD dependency mapping
 
@@ -72,10 +72,11 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. GSD dependency map exists documenting every `.planning/` integration point (file paths, field names, structure assumptions) with breakage risk annotations for upstream GSD changes
   2. CLAUDE.md includes origin story, architectural decisions, current project status, and enough context that a cold session can orient and begin work without asking questions
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md -- GSD dependency map with breakage risk annotations
+- [ ] 04-02-PLAN.md -- Rewrite CLAUDE.md as cold-session brief
 
 ## Progress
 
@@ -85,6 +86,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Spec Compliance | 1/1 | Complete   | 2026-03-07 |
-| 2. Plugin Packaging | 1/3 | In Progress | - |
+| 2. Plugin Packaging | 3/3 | Complete | 2026-03-07 |
 | 3. Command Validation | 3/3 | Complete   | 2026-03-07 |
 | 4. Documentation | 0/1 | Not started | - |
