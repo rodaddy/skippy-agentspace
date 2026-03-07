@@ -1,0 +1,16 @@
+{
+  "name": "paul",
+  "description": "Plan-Apply-Unify Loop -- structured planning framework",
+  "repo": "https://github.com/ChristopherKahler/paul.git",
+  "branch": "main",
+  "last_checked_sha": "none",
+  "last_check": "never",
+  "cherry_picks": [
+    "context-brackets",
+    "mandatory-reconciliation",
+    "task-anatomy",
+    "plan-boundaries",
+    "state-consistency"
+  ],
+  "notes": "5 ideas cherry-picked as reference docs in skills/skippy-dev/references/"
+}
