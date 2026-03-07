@@ -24,7 +24,7 @@
 - Decimal phases (5.1, 5.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 5: Foundation** - Public/private content boundary and extensible upstream registry (completed 2026-03-07)
-- [ ] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, commands, and CLAUDE.md template packaged as portable core
+- [ ] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, and CLAUDE.md template packaged as portable core (commands deferred)
 - [ ] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall
 - [ ] **Phase 8: Upstream Analysis** - OMC as third upstream, cross-package analysis, and generic upstream checker
 - [ ] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported
@@ -112,21 +112,22 @@ Plans:
 - [ ] 05-02-PLAN.md -- Upstream registry (upstreams/gsd + paul, .versions removal)
 
 ### Phase 6: Core Infrastructure
-**Goal**: The essential PAI operating layer -- personas, LAWs, rules, commands, and project templates -- is packaged as a portable, installable core that follows the slim SKILL.md pattern
+**Goal**: The essential PAI operating layer -- personas, LAWs, rules, and project templates -- is packaged as a portable, installable core that follows the slim SKILL.md pattern
 **Depends on**: Phase 5 (public/private boundary defined)
 **Requirements**: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06
+**Note**: CORE-05 (command packaging) deferred per discuss-phase decision. Acknowledged in SKILL.md but not implemented this phase.
 **Success Criteria** (what must be TRUE):
-  1. All 4 personas (Skippy, Bob, Clarisa, April) exist as individual definition files under `core/` with name, style, and behavioral rules
+  1. All 4 personas (Skippy, Bob, Clarisa, April) exist as individual definition files under `skills/core/` with name, style, and behavioral rules
   2. All 15 LAWs are packaged with enforcement descriptions (which are hook-enforced vs convention-enforced)
   3. A CLAUDE.md template exists that a new project can copy and customize, pre-wired with LAW references and persona defaults
-  4. All 10 claude commands from `~/.claude/commands/` are packaged under `core/` with working symlink targets
-  5. `core/SKILL.md` is under 150 lines, with all detail in `core/references/` subdirectories
-**Plans**: TBD
+  4. ~~All 10 claude commands packaged~~ DEFERRED -- command packaging moved to future phase pending todo system research
+  5. `skills/core/SKILL.md` is under 150 lines, with all detail in `core/references/` subdirectories
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
+- [ ] 06-01-PLAN.md -- Personas and LAWs extraction (4 persona files + 15 LAW files)
+- [ ] 06-02-PLAN.md -- Rules and templates (4 rule files + 2 template files)
+- [ ] 06-03-PLAN.md -- SKILL.md entry point + INDEX.md/marketplace.json/CLAUDE.md integration
 
 ### Phase 7: Hook Installation
 **Goal**: Users can install and uninstall PAI hooks into Claude Code's settings.json without destroying existing hook registrations from GSD, OMC, or other systems
@@ -202,8 +203,8 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. Plugin Packaging | v1.0 | 3/3 | Complete | 2026-03-07 |
 | 3. Command Validation | v1.0 | 3/3 | Complete | 2026-03-07 |
 | 4. Documentation | v1.0 | 2/2 | Complete | 2026-03-07 |
-| 5. Foundation | 2/2 | Complete   | 2026-03-07 | - |
-| 6. Core Infrastructure | v1.1 | 0/? | Not started | - |
+| 5. Foundation | v1.1 | 2/2 | Complete | 2026-03-07 |
+| 6. Core Infrastructure | v1.1 | 0/3 | Planned | - |
 | 7. Hook Installation | v1.1 | 0/? | Not started | - |
 | 8. Upstream Analysis | v1.1 | 0/? | Not started | - |
 | 9. Skill System | v1.1 | 0/? | Not started | - |
