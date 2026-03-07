@@ -19,7 +19,7 @@ Run the update script:
 ${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh
 ```
 
-Review the output. If changes are detected, read the relevant files from `/tmp/skippy-upstream/` to evaluate whether they're worth absorbing into skippy-dev references.
+Review the output. If changes are detected, read the relevant files from `~/.cache/skippy-upstream/` (or `$SKIPPY_CACHE_DIR` if set) to evaluate whether they're worth absorbing into skippy-dev references.
 
 No auto-merge -- present findings and let the user decide.
 </process>
