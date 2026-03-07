@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SPEC-01**: All skill files use portable paths -- no hardcoded absolute paths, use `${CLAUDE_SKILL_DIR}` or relative paths
 - [x] **SPEC-02**: SKILL.md frontmatter aligned to Agent Skills standard -- `name`, `description` required; non-standard `triggers:` field removed; `metadata:` block added with version and author
 - [x] **SPEC-03**: `bin/` directory renamed to `scripts/` across all skills (Agent Skills spec convention)
-- [ ] **SPEC-04**: Plugin packaging -- `.claude-plugin/plugin.json` and `marketplace.json` enable native `/plugin install` from this repo
+- [x] **SPEC-04**: Plugin packaging -- `.claude-plugin/plugin.json` and `marketplace.json` enable native `/plugin install` from this repo
 
 ### Commands
 
@@ -67,7 +67,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | SPEC-01 | Phase 1 | Complete |
 | SPEC-02 | Phase 1 | Complete |
 | SPEC-03 | Phase 1 | Complete |
-| SPEC-04 | Phase 2 | Pending |
+| SPEC-04 | Phase 2 | Complete |
 | CMD-01 | Phase 3 | Pending |
 | CMD-02 | Phase 3 | Pending |
 | CMD-03 | Phase 3 | Pending |
