@@ -139,11 +139,12 @@ Plans:
   3. Running the hook uninstaller removes only PAI-registered hooks, leaving all other hooks intact
   4. Running the installer twice produces the same settings.json as running it once (idempotent)
   5. A timestamped backup of settings.json is created before any modification
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md -- Manifest + shared lib (types, context, feedback utilities)
+- [ ] 07-02-PLAN.md -- 15 LAW hook scripts (10 ports + 5 new)
+- [ ] 07-03-PLAN.md -- Installer, uninstaller, INSTALL.md, SKILL.md update
 
 ### Phase 8: Upstream Analysis
 **Goal**: OMC is tracked as a third upstream source, cross-package patterns are identified and cherry-picked, and `/skippy:update` works generically against any registered upstream
@@ -204,8 +205,8 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Command Validation | v1.0 | 3/3 | Complete | 2026-03-07 |
 | 4. Documentation | v1.0 | 2/2 | Complete | 2026-03-07 |
 | 5. Foundation | v1.1 | 2/2 | Complete | 2026-03-07 |
-| 6. Core Infrastructure | 3/3 | Complete   | 2026-03-07 | - |
-| 7. Hook Installation | v1.1 | 0/? | Not started | - |
+| 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
+| 7. Hook Installation | v1.1 | 0/3 | Planned | - |
 | 8. Upstream Analysis | v1.1 | 0/? | Not started | - |
 | 9. Skill System | v1.1 | 0/? | Not started | - |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |
