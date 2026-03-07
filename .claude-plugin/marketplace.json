@@ -1,0 +1,25 @@
+{
+  "name": "skippy-agentspace",
+  "owner": {
+    "name": "Rico"
+  },
+  "metadata": {
+    "description": "Development workflow enhancements for Claude Code -- augments GSD with best ideas from PAUL",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "skippy-dev",
+      "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": {
+        "name": "Rico"
+      },
+      "skills": [
+        "./skills/skippy-dev"
+      ]
+    }
+  ]
+}
