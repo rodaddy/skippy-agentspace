@@ -78,3 +78,9 @@ Read ${CLAUDE_SKILL_DIR}/references/state-consistency.md
 ```
 
 Don't load all references into every agent -- pick the relevant one.
+
+## Maintenance
+
+| Reference | Purpose |
+|-----------|---------|
+| `references/gsd-dependency-map.md` | Every `.planning/` integration point with breakage risk -- check before GSD updates |
