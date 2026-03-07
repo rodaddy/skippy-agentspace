@@ -28,11 +28,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. SKILL.md frontmatter passes Agent Skills spec validation (required fields: `name`, `description`; non-standard `triggers:` removed; `metadata:` block present with version and author)
   3. `scripts/` directory exists where `bin/` was -- all internal references updated, no broken script paths
   4. Skill follows progressive disclosure pattern -- slim SKILL.md entry point under 150 lines, detail in `references/` and `docs/`, navigation index present
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md -- Fix paths, align frontmatter, rename bin/ to scripts/, verify structure
 
 ### Phase 2: Plugin Packaging
 **Goal**: Users can install skippy-dev via `/plugin marketplace add` with a single command, and install tooling supports both modern and legacy targets
@@ -82,7 +81,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Spec Compliance | 0/2 | Not started | - |
+| 1. Spec Compliance | 0/1 | Not started | - |
 | 2. Plugin Packaging | 0/1 | Not started | - |
 | 3. Command Validation | 0/2 | Not started | - |
 | 4. Documentation | 0/1 | Not started | - |
