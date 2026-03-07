@@ -3,11 +3,12 @@ set -euo pipefail
 
 # skippy-cleanup -- Manage ephemeral files (debug, telemetry, history, logs)
 # Usage: skippy-cleanup.sh [--quarantine|--nuke]
-#   --quarantine (default): Move to /Volumes/ThunderBolt/_tmp/skippy-cleanup/
+#   --quarantine (default): Move to quarantine directory
 #   --nuke: Delete permanently
 
 MODE="${1:---quarantine}"
-QUARANTINE_DIR="/Volumes/ThunderBolt/_tmp/skippy-cleanup/$(date +%Y-%m-%d_%H%M%S)"
+QUARANTINE_BASE="${SKIPPY_QUARANTINE_DIR:-${TMPDIR:-/tmp}/skippy-cleanup}"
+QUARANTINE_DIR="${QUARANTINE_BASE}/$(date +%Y-%m-%d_%H%M%S)"
 TOTAL_FREED=0
 
 # Ephemeral directories to clean

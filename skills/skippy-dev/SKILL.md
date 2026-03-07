@@ -1,13 +1,10 @@
 ---
 name: skippy-dev
-description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, and state consistency. Augments GSD with best-of-breed ideas from the PAUL framework.
-triggers:
-  - /skippy:reconcile
-  - /skippy:update
-  - /skippy:cleanup
-  - reconcile plan
-  - check upstream
-  - cleanup ephemeral
+description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
+metadata:
+  version: 0.1.0
+  author: Rico
+  source: https://github.com/rico/skippy-agentspace
 ---
 
 # skippy-dev -- Development Workflow Enhancements
@@ -51,7 +48,7 @@ Check GSD and PAUL repos for upstream changes worth absorbing.
 
 **Workflow:**
 
-1. Run `~/.config/pai/Skills/skippy-dev/bin/skippy-update.sh`
+1. Run `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh`
 2. Review the diff report
 3. Human decides what to absorb -- no auto-merge
 
@@ -61,8 +58,8 @@ Manage ephemeral files (debug logs, telemetry, session history).
 
 **Workflow:**
 
-1. Run `~/.config/pai/Skills/skippy-dev/bin/skippy-cleanup.sh [--quarantine|--nuke]`
-2. Default is `--quarantine` (moves to `/Volumes/ThunderBolt/_tmp/skippy-cleanup/`)
+1. Run `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh [--quarantine|--nuke]`
+2. Default is `--quarantine` (moves to a configurable quarantine directory)
 3. Reports space freed
 
 ## For Agents
@@ -70,13 +67,13 @@ Manage ephemeral files (debug logs, telemetry, session history).
 When spawning GSD agents (planner, executor, verifier), you can enhance their prompts:
 
 ```
-Read ~/.config/pai/Skills/skippy-dev/references/task-anatomy.md
+Read ${CLAUDE_SKILL_DIR}/references/task-anatomy.md
 # Include when the agent is creating plans
 
-Read ~/.config/pai/Skills/skippy-dev/references/plan-boundaries.md
+Read ${CLAUDE_SKILL_DIR}/references/plan-boundaries.md
 # Include when the plan needs scope protection
 
-Read ~/.config/pai/Skills/skippy-dev/references/state-consistency.md
+Read ${CLAUDE_SKILL_DIR}/references/state-consistency.md
 # Include when the agent touches state files
 ```
 

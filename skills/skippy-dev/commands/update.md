@@ -9,14 +9,14 @@ Reports changed files and recent commits -- human decides what to absorb.
 </objective>
 
 <execution_context>
-@/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md
+@../SKILL.md
 </execution_context>
 
 <process>
 Run the update script:
 
 ```bash
-~/.config/pai/Skills/skippy-dev/bin/skippy-update.sh
+${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh
 ```
 
 Review the output. If changes are detected, read the relevant files from `/tmp/skippy-upstream/` to evaluate whether they're worth absorbing into skippy-dev references.

@@ -4,8 +4,10 @@ set -euo pipefail
 # skippy-update -- Check GSD and PAUL repos for upstream changes
 # Usage: skippy-update.sh
 
-UPSTREAM_DIR="/tmp/skippy-upstream"
-VERSIONS_FILE="$HOME/.config/pai/Skills/skippy-dev/.versions"
+UPSTREAM_DIR="${SKIPPY_CACHE_DIR:-${HOME}/.cache/skippy-upstream}"
+# Resolve SKILL_DIR: prefer CLAUDE_SKILL_DIR, fall back to script's own directory
+SKILL_DIR="${CLAUDE_SKILL_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
+VERSIONS_FILE="${SKILL_DIR}/.versions"
 GSD_REPO="https://github.com/gsd-build/get-shit-done.git"
 PAUL_REPO="https://github.com/ChristopherKahler/paul.git"
 

@@ -9,9 +9,9 @@ Produces a reconciliation report showing DONE/MODIFIED/SKIPPED/ADDED tasks, AC p
 </objective>
 
 <execution_context>
-@/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md
-@/Users/rico/.config/pai/Skills/skippy-dev/references/reconciliation.md
-@/Users/rico/.config/pai/Skills/skippy-dev/references/state-consistency.md
+@../SKILL.md
+@../references/reconciliation.md
+@../references/state-consistency.md
 </execution_context>
 
 <process>
