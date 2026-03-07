@@ -58,11 +58,12 @@ Plans:
   2. `/skippy:update` clones upstream repos to `~/.cache/` (not `/tmp/`), parses `.versions` without `source`, uses full SHA hashes, and state survives macOS reboot
   3. `/skippy:cleanup` quarantine mode moves files to quarantine dir with accurate space reporting, nuke mode deletes permanently, and empty dirs are recreated after cleanup
   4. All three scripts exit cleanly on missing inputs (no `.planning/`, no upstream repos, no files to clean) with informative error messages
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md -- Enhance reconcile.md for multi-plan phases and phase detection
+- [ ] 03-02-PLAN.md -- Fix update script bugs (source, short SHA, error handling)
+- [ ] 03-03-PLAN.md -- Fix cleanup script TMPDIR quarantine bug
 
 ### Phase 4: Documentation
 **Goal**: A new session opening this repo immediately understands what it is, how it works, and what depends on what
