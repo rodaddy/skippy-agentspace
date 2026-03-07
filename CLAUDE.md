@@ -63,7 +63,7 @@ skills/skippy-dev/
   SKILL.md              # Entry point -- 3 commands, 5 enhancement refs
   commands/              # /skippy:reconcile, /skippy:update, /skippy:cleanup
   references/            # 5 PAUL enhancement docs (context brackets, reconciliation, etc.)
-  bin/                   # skippy-update.sh, skippy-cleanup.sh (needs rename to scripts/)
+  scripts/               # skippy-update.sh, skippy-cleanup.sh
   .versions              # Upstream version tracking (GSD + PAUL)
 tools/
   install.sh             # Symlink skill into ~/.claude/commands/
@@ -71,11 +71,6 @@ tools/
   index-sync.sh          # Validate/regenerate INDEX.md
 INDEX.md                 # Auto-generated skill registry
 ```
-
-**Known issues (Phase 1 will fix):**
-- Hardcoded absolute paths in `commands/reconcile.md` (`/Users/rico/...`)
-- Non-standard `triggers:` frontmatter field (Agent Skills spec uses different discovery)
-- `bin/` should be `scripts/` per Agent Skills convention
 
 ## Key Files for Context
 
