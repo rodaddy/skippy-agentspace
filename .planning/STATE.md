@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
-status: in-progress
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-07T22:24:15.422Z"
-last_activity: 2026-03-07 -- Completed 07-01 hook manifest and shared library
+status: executing
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-07T22:37:08.787Z"
+last_activity: 2026-03-07 -- Completed 07-02 LAW enforcement hook scripts (15 hooks)
 progress:
   total_phases: 10
   completed_phases: 6
   total_plans: 17
-  completed_plans: 15
-  percent: 88
+  completed_plans: 16
+  percent: 94
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 ## Current Position
 
 Phase: 7 of 10 (Hook Installation)
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In Progress
-Last activity: 2026-03-07 -- Completed 07-01 hook manifest and shared library
+Last activity: 2026-03-07 -- Completed 07-02 LAW enforcement hook scripts (15 hooks)
 
-Progress: [█████████░] 88%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [█████████░] 88%
 | Phase 06 P02 | 2min | 2 tasks | 6 files |
 | Phase 06 P03 | 2min | 2 tasks | 4 files |
 | Phase 07 P01 | 2min | 2 tasks | 4 files |
+| Phase 07 P02 | 10min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Recent decisions affecting current work:
 - [07-01]: snake_case field names (tool_name, tool_input) per official Claude Code docs with normalizeInput() compat shim
 - [07-01]: hookSpecificOutput wrapper format for PreToolUse decisions, separate blockTopLevel() for other events
 - [07-01]: Shared lib pattern -- types.ts, context.ts, feedback.ts under hooks/lib/ imported by all 15 hooks
+- [07-02]: Inlined pattern detection in each hook rather than shared module -- portability over DRY
+- [07-02]: LAW 11 uses askDecision (warn) since ggshield is the real gate; LAWs 6, 10 also soft nudge
+- [07-02]: LAW 15 sanitized -- removed private IPs, uses hostname-based detection only
 
 ### Pending Todos
 
@@ -103,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-07T22:23:17Z
-Stopped at: Completed 07-01-PLAN.md
-Resume file: .planning/phases/07-hook-installation/07-01-SUMMARY.md
+Last session: 2026-03-07T22:35:56Z
+Stopped at: Completed 07-02-PLAN.md
+Resume file: .planning/phases/07-hook-installation/07-02-SUMMARY.md
