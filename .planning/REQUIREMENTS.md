@@ -14,9 +14,9 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 ### Foundation
 
 - [x] **FOUN-01**: Public/private content boundary is defined and documented
-- [ ] **FOUN-02**: Extensible upstream registry replaces hardcoded GSD+PAUL tracking
-- [ ] **FOUN-03**: Adding a new upstream is creating a directory, not changing code
-- [ ] **FOUN-04**: Existing `.versions` data migrated to new upstream format
+- [x] **FOUN-02**: Extensible upstream registry replaces hardcoded GSD+PAUL tracking
+- [x] **FOUN-03**: Adding a new upstream is creating a directory, not changing code
+- [x] **FOUN-04**: Existing `.versions` data migrated to new upstream format
 
 ### Core Infrastructure
 
@@ -107,9 +107,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | STRU-02 | Phase 4 | Complete |
 | STRU-03 | Phase 2 | Complete |
 | FOUN-01 | Phase 5 | Complete |
-| FOUN-02 | Phase 5 | Pending |
-| FOUN-03 | Phase 5 | Pending |
-| FOUN-04 | Phase 5 | Pending |
+| FOUN-02 | Phase 5 | Complete |
+| FOUN-03 | Phase 5 | Complete |
+| FOUN-04 | Phase 5 | Complete |
 | CORE-01 | Phase 6 | Pending |
 | CORE-02 | Phase 6 | Pending |
 | CORE-03 | Phase 6 | Pending |

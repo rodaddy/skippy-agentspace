@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-07T19:59:42.742Z"
-last_activity: 2026-03-07 -- Completed 05-01 content boundary plan
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-07T20:02:47.904Z"
+last_activity: 2026-03-07 -- Completed 05-02 upstream registry plan
 progress:
   total_phases: 10
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 11
-  completed_plans: 10
-  percent: 91
+  completed_plans: 11
+  percent: 100
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 ## Current Position
 
 Phase: 5 of 10 (Foundation) -- first phase of v1.1
-Plan: 1 of 2 complete
-Status: Executing
-Last activity: 2026-03-07 -- Completed 05-01 content boundary plan
+Plan: 2 of 2 complete
+Status: Phase 5 Complete
+Last activity: 2026-03-07 -- Completed 05-02 upstream registry plan
 
-Progress: [█████████░] 91%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [█████████░] 91%
 - v1.0 completed all 9 plans in one day
 - Trend: Stable
 | Phase 05 P01 | 1min | 2 tasks | 3 files |
+| Phase 05 P02 | 1min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Recent decisions affecting current work:
 - [v1.1]: New machine bootstrap -- clone + install = working PAI
 - [05-01]: CONVENTIONS.md as standalone doc with one-line reference from CLAUDE.md
 - [05-01]: Minimal .gitignore patterns (5 patterns) -- architectural prevention is primary protection
+- [05-02]: Directory-per-upstream pattern -- each upstream is a directory with upstream.json, no code changes to add new upstreams
+- [05-02]: Initialized last_checked_sha/last_check to none/never matching old .versions data exactly
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-07T19:59:42.740Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-07T20:02:00Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
