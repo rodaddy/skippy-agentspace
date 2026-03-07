@@ -1,155 +1,284 @@
-# Technology Stack
+# Stack Research
 
-**Project:** skippy-agentspace (Portable Claude Code Skill Marketplace)
-**Researched:** 2026-03-06
-**Overall confidence:** HIGH
+**Domain:** Portable PAI infrastructure packaging -- shell-based skill/hook/command system for Claude Code
+**Researched:** 2026-03-07
+**Confidence:** HIGH
 
-## Recommended Stack
+## Context: What Already Exists (DO NOT CHANGE)
 
-### Core Format: Agent Skills Open Standard
+These are validated v1.0 decisions. Listed here so roadmap consumers understand what's locked.
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Agent Skills spec | 1.0 | Skill file format (SKILL.md + frontmatter) | Industry standard adopted by 30+ tools (Claude Code, Codex, Gemini CLI, Cursor, VS Code Copilot, Goose, Roo Code, etc.). Write once, run everywhere. |
-| YAML frontmatter | -- | Skill metadata (name, description, triggers) | Required by Agent Skills spec. Claude uses `description` for auto-discovery. |
-| Markdown | -- | Skill instructions, reference docs, commands | Native format for all AI coding agents. No build step. |
+| Technology | Purpose | Status |
+|------------|---------|--------|
+| Bash (`#!/usr/bin/env bash`) | All scripts and tooling | Locked -- no build step, no runtime dependencies |
+| Markdown | Rules, references, SKILL.md entry points | Locked -- Claude Code's native format |
+| Symlinks | Installation mechanism (tools/install.sh) | Locked -- dual-target (skills/ and commands/) |
+| `.claude-plugin/marketplace.json` | Plugin distribution | Locked -- strict:false, no plugin.json needed |
+| Git hash tracking (`.versions`) | Upstream version monitoring | Locked -- key=value flat file |
+| `~/.cache/skippy-upstream/` | Cloned upstream repos for diff comparison | Locked -- skippy-update.sh pattern |
 
-**Confidence:** HIGH -- verified against official Agent Skills spec at agentskills.io and Claude Code docs at code.claude.com/docs/en/skills.
+## Stack Additions for v1.1
 
-### Distribution: Claude Code Plugin System
+### What's Needed and Why
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `.claude-plugin/plugin.json` | -- | Plugin manifest | Claude Code's native packaging format. One `plugin.json` describes all bundled skills. |
-| `.claude-plugin/marketplace.json` | -- | Marketplace catalog | Enables `/plugin marketplace add` and `/plugin install`. Git repo = marketplace. |
-| Git repository (GitHub) | -- | Plugin source and distribution | Anthropic's own skills repo uses this pattern. Users add via `/plugin marketplace add owner/repo`. |
+v1.1 adds five capabilities. Each needs specific tooling decisions. The critical constraint: **no new runtime dependencies**. Everything must work with vanilla Claude Code on a fresh macOS install with only `git`, `bash`, and standard POSIX tools.
 
-**Confidence:** HIGH -- verified against official docs and Anthropic's own `anthropics/skills` repo marketplace.json.
+---
 
-### Scripting Runtime
+### 1. OMC Analysis Tooling
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Bash (`#!/usr/bin/env bash`) | 5.x+ | Skill scripts (install, update, cleanup) | Zero dependencies, portable, matches project constraint. Already in use. |
-| `${CLAUDE_SKILL_DIR}` | -- | Portable path resolution in SKILL.md | Built-in Claude Code variable. Resolves to the skill's directory at runtime. Eliminates hardcoded absolute paths. |
-| `${CLAUDE_PLUGIN_ROOT}` | -- | Portable path in plugin hooks/MCP configs | Built-in Claude Code variable for plugin-scoped scripts. |
+**Need:** Clone OMC repo, diff against known hash, report interesting changes -- same pattern as existing GSD/PAUL tracking.
 
-**Confidence:** HIGH -- `CLAUDE_SKILL_DIR` confirmed in official Claude Code skills docs (string substitutions table).
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Bash (existing pattern) | N/A | `skippy-update.sh` extended with OMC entry | Same fetch_repo/report_changes pattern already works for GSD and PAUL. Adding OMC is ~20 lines. |
+| Git CLI | System | Clone/fetch/diff OMC repo at `~/.cache/skippy-upstream/omc/` | Already used for GSD/PAUL. No new dependency. |
 
-### Skill Structure (Per Agent Skills Spec)
+**What NOT to add:**
+- No npm/bun to parse OMC's package.json -- just track git hashes like we do for GSD/PAUL
+- No OMC CLI (`oh-my-claude-sisyphus`) -- we cherry-pick ideas as markdown references, we don't run their runtime
 
-| Component | Path | Purpose | Required |
-|-----------|------|---------|----------|
-| `SKILL.md` | `skills/<name>/SKILL.md` | Entrypoint -- frontmatter + instructions | Yes |
-| `references/` | `skills/<name>/references/` | Detailed docs loaded on demand | No |
-| `scripts/` (or `bin/`) | `skills/<name>/scripts/` | Executable code agents can run | No |
-| `commands/` | `skills/<name>/commands/` | Slash command .md files (Claude Code extension) | No |
-| `assets/` | `skills/<name>/assets/` | Templates, schemas, data files | No |
+**Integration point:** Extend `.versions` with `omc_hash=none` line. Extend `skippy-update.sh` with a third `fetch_repo`/`report_changes` block for OMC.
 
-**Note:** The Agent Skills spec uses `scripts/`. Claude Code supports both `scripts/` and `bin/`. Recommend migrating to `scripts/` for cross-tool compatibility.
+**OMC repo URL:** `https://github.com/Yeachan-Heo/oh-my-claudecode.git`
 
-### Infrastructure Tools
+---
 
-| Tool | Purpose | Why |
-|------|---------|-----|
-| `tools/install.sh` | Symlink skills to `~/.claude/commands/` | Keep for backward compat with pre-plugin manual install. Plugin system supersedes this for distribution. |
-| `tools/index-sync.sh` | Validate INDEX.md matches actual skills | Useful for development. Plugin system handles discovery automatically post-install. |
-| `skills-ref` CLI | Validate SKILL.md against Agent Skills spec | Official validation tool from agentskills/agentskills repo. Run in CI or pre-commit. |
+### 2. Extensible Upstream Cherry-Pick System
+
+**Need:** Go from hardcoded GSD+PAUL+OMC to a registry where new upstream sources can be added without modifying core scripts.
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Directory-based registry | N/A | `upstreams/<name>/upstream.conf` -- one dir per tracked upstream | Follows the same pattern as `skills/<name>/SKILL.md`. No parser needed beyond `source` or key=value read. |
+| Bash key=value conf files | N/A | `upstream.conf` with `repo_url=`, `branch=`, `track_paths=`, `hash=` | Flat config that bash can read natively. No YAML/JSON parser dependency. |
+| `diff --stat` + `log --oneline` | Git CLI | Report what changed in tracked paths only | Filter noise -- only show changes in paths we care about (e.g., OMC's `skills/` not their `benchmarks/`) |
+
+**Registry format (`upstreams/<name>/upstream.conf`):**
+
+```bash
+# Required
+repo_url=https://github.com/Yeachan-Heo/oh-my-claudecode.git
+branch=main
+
+# Optional -- restrict tracking to specific paths (space-separated)
+track_paths=skills/ agents/ hooks/ CLAUDE.md
+
+# Managed by skippy-update (do not edit manually)
+known_hash=none
+last_check=never
+```
+
+**Each upstream also gets:**
+- `upstreams/<name>/CHERRY-PICKS.md` -- log of what was absorbed and when
+- `upstreams/<name>/notes/` -- analysis notes, rejection rationale
+
+**Why directory-based over a single JSON/YAML registry:**
+- Adding an upstream = creating a directory with a conf file. No merge conflicts, no parser.
+- Each upstream's cherry-pick history is self-contained.
+- `ls upstreams/` is the registry. No index file to sync.
+
+**Migration from current `.versions`:**
+- Move GSD, PAUL, OMC tracking into `upstreams/gsd/`, `upstreams/paul/`, `upstreams/omc/`
+- Keep `.versions` as a legacy fallback during transition, remove in v1.2
+
+---
+
+### 3. Core Infrastructure Package
+
+**Need:** Package personas, LAWs, hooks, commands, and rules from `~/.config/pai/` and `~/.config/pai-private/` into installable, portable units.
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Skill directory pattern | N/A | `skills/pai-core/SKILL.md` + `references/` + `templates/` | Same slim-core pattern as skippy-dev. Proven portable. |
+| Bash installer extension | N/A | `tools/install.sh` extended with `--core` flag for infrastructure setup | Reuses existing installer. Adds symlink targets for hooks, CLAUDE.md fragments, and settings. |
+| Template/fragment system | N/A | `core/templates/CLAUDE.md.fragment` -- snippets that get concatenated | Allows modular CLAUDE.md assembly. User's project CLAUDE.md includes fragments via path references, not copy-paste. |
+
+**What gets packaged (from audit):**
+
+| Component | Source Location | Package Location | Install Target |
+|-----------|----------------|-----------------|----------------|
+| 4 Personas (Skippy, Bob, Clarisa, April) | `~/.config/pai/Skills/CORE/personas/` | `core/personas/` | `~/.config/pai/Skills/CORE/personas/` |
+| LAW definitions | `~/.config/pai-private/rules/laws/` | `core/laws/` | `~/.config/pai-private/rules/laws/` |
+| Communication style | `~/.config/pai-private/rules/style/` | `core/rules/style/` | `~/.config/pai-private/rules/style/` |
+| CLAUDE.md (global) | `~/.claude/CLAUDE.md` | `core/templates/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+| Core hooks (safety, quality, law-enforcement) | `~/.config/pai-private/hooks/` | `core/hooks/` | `~/.claude/hooks/` via symlinks |
+| settings.json (permissions, env) | `~/.claude/settings.json` | `core/templates/settings.json.example` | Manual merge (never auto-overwrite) |
+
+**Critical design decision: public vs private split.**
+
+Some content is sensitive (contacts, security protocols, credentials patterns). The repo needs a clear boundary:
+
+| Tier | Contents | Handling |
+|------|----------|----------|
+| **Public** (committed) | Personas, LAW definitions, style rules, hook scripts, CLAUDE.md template | Normal git tracking |
+| **Private** (gitignored) | Contacts, security protocols, credential patterns, personal memory | `core/private/` directory, gitignored, populated by bootstrap from a separate encrypted source |
+
+**What NOT to add:**
+- No TypeScript/Bun for hooks in the package -- hooks that need TS (like law-enforcement hooks) keep their source in the core but need `bun` as a runtime dependency documented in prerequisites
+- No attempt to package MCP server configs -- those are machine-specific (IP addresses, ports)
+- No `settings.json` auto-merge -- provide an example file and a diff tool, never overwrite
+
+**Hooks dependency note:** The existing PAI hooks at `~/.config/pai/hooks/` use TypeScript executed via `bun`. This is a runtime prerequisite, not a build dependency. The bootstrap script must verify `bun` is available. The hooks themselves have a `package.json` with `pg` (PostgreSQL client) as the only dependency -- this is for the brain/knowledge system and should be optional.
+
+---
+
+### 4. Add-On Skill Installation System
+
+**Need:** Install individual skills from the repo without installing everything. Skills are opt-in, each self-contained.
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Extended `tools/install.sh` | N/A | `install.sh <skill-name>` already works, needs `--list-available` and dependency checking | Existing installer already handles single-skill install. Just needs polish. |
+| Skill dependency declaration | N/A | Optional `requires:` field in SKILL.md frontmatter | Lets a skill declare it needs `pai-core` installed first. Installer checks and warns. |
+| Skill categories in INDEX.md | N/A | Category column in the auto-generated index table | `tools/index-sync.sh` extended to parse `category:` from frontmatter |
+
+**Skill frontmatter additions:**
+
+```yaml
+---
+name: skippy-dev
+description: Development workflow enhancements
+metadata:
+  version: 0.1.0
+  author: Rico
+  category: workflow        # NEW -- used by INDEX.md and install --list
+  requires: []              # NEW -- skill dependencies (e.g., ["pai-core"])
+  tier: public              # NEW -- public (committed) or private (gitignored)
+---
+```
+
+**Install command extensions:**
+
+```bash
+# Existing (unchanged)
+tools/install.sh skippy-dev
+tools/install.sh --all
+
+# New
+tools/install.sh --list              # Show available skills with categories
+tools/install.sh --category workflow # Install all skills in a category
+tools/install.sh --check             # Verify all installed skills have deps met
+```
+
+**What NOT to add:**
+- No version resolution or semver -- skills are always latest (from the repo checkout)
+- No remote fetching of individual skills -- the repo is the package, `git pull` updates everything
+- No lock files -- symlinks point to repo checkout, always current
+
+---
+
+### 5. New Machine Bootstrap
+
+**Need:** `git clone` + one command = working PAI infrastructure on a fresh macOS machine.
+
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Bash bootstrap script | N/A | `tools/bootstrap.sh` -- idempotent setup script | Single entry point. Runs install.sh --all, sets up core, verifies prerequisites. |
+| Prerequisite checker | N/A | Verify `git`, `bash` (4+), `bun`, `brew` are available | Fail fast with clear instructions if something is missing. |
+| XDG-aware paths | N/A | Respect `$XDG_CONFIG_HOME` if set, default to `~/.config/` | Standard on Linux, works on macOS. Future-proof. |
+
+**Bootstrap flow:**
+
+```
+1. Clone repo
+2. cd skippy-agentspace
+3. ./tools/bootstrap.sh
+   a. Check prerequisites (git, bash 4+, bun)
+   b. Install core infrastructure (personas, LAWs, hooks, CLAUDE.md)
+   c. Install all default skills
+   d. Set up upstream tracking directories
+   e. Run index-sync --generate
+   f. Verify installation (install.sh --check)
+   g. Print next steps (private config, MCP servers, etc.)
+```
+
+**Prerequisites to verify:**
+
+| Tool | Why Needed | Install Command |
+|------|-----------|-----------------|
+| `git` | Cloning, upstream tracking | `brew install git` (or Xcode CLT) |
+| `bash` 4+ | Associative arrays, better globbing | `brew install bash` (macOS ships 3.2) |
+| `bun` | Running TypeScript hooks | `brew install oven-sh/bun/bun` |
+| `brew` | Installing prerequisites | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
+
+**What NOT to add:**
+- No Docker/container-based bootstrap -- this is a dotfiles-style repo, not a service
+- No Ansible/Chef/Puppet -- overkill for a single-user workstation setup
+- No cloud sync -- private config comes from a separate encrypted repo or manual setup
+- No auto-install of MCP servers -- those require per-machine configuration (API keys, network addresses)
+
+---
+
+## Alternatives Considered
+
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| Bash key=value conf | YAML/TOML config | If the project ever needs nested config structures (unlikely -- flat is fine for upstream tracking) |
+| Directory-per-upstream | Single JSON registry | If you need atomic updates to the full registry (we don't -- each upstream is independent) |
+| Symlinks for installation | Copy-based install | If you need skills to work when the repo is deleted (we don't -- the repo IS the source of truth) |
+| Template fragments for CLAUDE.md | Full CLAUDE.md overwrite | Never -- users have project-specific content that must be preserved |
+| `bun` for TS hooks | `node` for TS hooks | If bun is unavailable; but `bun` is a PAI prerequisite, so always prefer it |
 
 ## What NOT to Use
 
-| Technology | Why Not | Use Instead |
-|------------|---------|-------------|
-| npm/yarn for distribution | Adds Node.js dependency to what should be zero-dep markdown+shell | Git repo as plugin marketplace (Anthropic's pattern) |
-| TypeScript/Node.js for skill logic | Breaks portability constraint. Skills should be markdown + shell. | Bash scripts in `scripts/` |
-| `.claude/commands/` as primary format | Merged into skills system since Claude Code v2.1.3. Commands still work but skills are the future. | `.claude/skills/` with SKILL.md |
-| Hardcoded absolute paths in commands | `@/Users/rico/...` breaks portability. Only works on Rico's machine. | `${CLAUDE_SKILL_DIR}` variable or relative paths from SKILL.md |
-| Custom skill discovery/loading | Claude Code already handles auto-discovery from `~/.claude/skills/`, `.claude/skills/`, and plugins. | Native Claude Code skill discovery |
-| `triggers:` frontmatter field | Not in Agent Skills spec or Claude Code's supported frontmatter. Claude uses `description` for matching. | `description` field with specific keywords |
-| Forking GSD or PAUL | Maintenance burden, divergence risk | Parasitic enhancement via reference docs (current approach is correct) |
-| MCP servers for skill logic | Overkill for workflow knowledge. MCP is for external connectivity (APIs, databases). | Skills for procedural knowledge, MCP only if external tool integration needed |
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| npm/yarn/pnpm | PAI uses bun exclusively; adding another package manager creates confusion | `bun` for any JS/TS needs |
+| Python for scripts | Adds a runtime dependency; bash is universal on target machines | Bash for all scripts |
+| JSON/YAML parsers (jq, yq) | External dependency; not guaranteed on fresh macOS | Bash key=value conf, `grep`/`sed` for simple parsing |
+| Makefile | Adds complexity; bash scripts are more readable for this use case | Direct bash scripts |
+| OMC's npm package (`oh-my-claude-sisyphus`) | We cherry-pick ideas as markdown, not run their runtime | Read their SKILL.md files, extract patterns into our own references |
+| Hardcoded upstream URLs in scripts | Breaks extensibility; new upstreams require code changes | `upstreams/<name>/upstream.conf` registry |
+| Auto-merge of upstream changes | Risk of breaking local customizations | Report changes, human decides -- existing `/skippy:update` pattern |
+| `settings.json` auto-overwrite | Destroys user's permission grants and custom paths | Provide `.example` template, manual merge instructions |
 
-## Dual Distribution Strategy
+## Stack Patterns by Capability
 
-The project needs two distribution paths that coexist:
+**If adding a new upstream source:**
+- Create `upstreams/<name>/upstream.conf` with repo_url, branch, track_paths
+- Run `/skippy:update` -- it auto-discovers all `upstreams/*/upstream.conf` files
+- No code changes needed
 
-### Path 1: Plugin Marketplace (Primary -- New Users)
+**If adding a new skill:**
+- Create `skills/<name>/SKILL.md` with frontmatter (name, description, category, requires, tier)
+- Add `references/` dir for deep docs, `commands/` dir for slash commands
+- Run `tools/index-sync.sh --generate` to update INDEX.md
+- Run `tools/install.sh <name>` to install
 
-```
-skippy-agentspace/
-  .claude-plugin/
-    marketplace.json          # Marketplace catalog
-    plugin.json               # Plugin manifest (if repo itself is the plugin)
-  skills/
-    skippy-dev/
-      SKILL.md
-      scripts/                # Renamed from bin/ for spec compliance
-      references/
-      commands/               # Claude Code slash commands
-```
+**If packaging PAI hooks:**
+- Hooks are TypeScript files run by `bun` -- they stay as `.ts` files
+- `core/hooks/` contains the source, `tools/install.sh --core` symlinks them to `~/.claude/hooks/`
+- `package.json` in hooks dir declares any npm dependencies (currently just `pg`)
+- Bootstrap runs `bun install` in the hooks directory after symlinking
 
-**Install:** `/plugin marketplace add rodaddy/skippy-agentspace` then `/plugin install skippy-dev@skippy-agentspace`
+**If bootstrapping a new machine:**
+- `./tools/bootstrap.sh` is the single entry point
+- It's idempotent -- safe to run multiple times
+- Exits with clear error if prerequisites are missing
+- Prints manual steps for private/machine-specific config at the end
 
-### Path 2: Manual Symlink (Backward Compat -- PAI Users)
+## Version Compatibility
 
-```bash
-./tools/install.sh skippy-dev
-# Creates: ~/.claude/commands/skippy -> skills/skippy-dev/commands/
-# Also: ~/.claude/skills/skippy-dev -> skills/skippy-dev/ (NEW)
-```
-
-**Why both:** Plugin system is the standard path. Manual symlinks support PAI's existing AGENT-INDEX.md workflow and users who want fine-grained control.
-
-## Agent Skills Spec Compliance Gaps (Current State)
-
-| Spec Requirement | Current State | Fix |
-|-----------------|---------------|-----|
-| `name` must match directory name | `skippy-dev` in frontmatter matches `skills/skippy-dev/` | OK |
-| `description` is required | Present | OK |
-| `name` -- no consecutive hyphens | `skippy-dev` has single hyphen | OK |
-| `scripts/` directory (not `bin/`) | Uses `bin/` | Rename to `scripts/` |
-| `triggers:` not a spec field | Used in current SKILL.md frontmatter | Remove; put trigger keywords in `description` |
-| No hardcoded absolute paths | `commands/reconcile.md` has `@/Users/rico/...` | Use `${CLAUDE_SKILL_DIR}` or relative paths |
-| `plugin.json` manifest | Missing | Create `.claude-plugin/plugin.json` |
-| `marketplace.json` | Missing | Create `.claude-plugin/marketplace.json` |
-
-## Progressive Disclosure Architecture
-
-The Agent Skills spec mandates efficient context use:
-
-1. **Metadata layer** (~100 tokens per skill): `name` + `description` loaded at startup for all installed skills
-2. **Instructions layer** (< 5000 tokens recommended): Full SKILL.md body loaded when skill activates
-3. **Resources layer** (on demand): `references/`, `scripts/`, `assets/` loaded only when explicitly needed
-
-Current `skippy-dev` SKILL.md is ~84 lines -- well within the 500-line recommendation. Five reference docs are properly separated for on-demand loading. This is correct.
-
-## Version Pinning Strategy
-
-Use `metadata.version` in SKILL.md frontmatter (Agent Skills spec) and `version` in plugin.json:
-
-```yaml
-# In SKILL.md frontmatter
-metadata:
-  author: rodaddy
-  version: "0.1.0"
-```
-
-```json
-// In .claude-plugin/plugin.json
-{
-  "name": "skippy-dev",
-  "version": "0.1.0"
-}
-```
-
-Marketplace can pin to git refs or SHAs for release channels (stable vs latest).
+| Component | Requires | Notes |
+|-----------|----------|-------|
+| All bash scripts | Bash 4.0+ | macOS ships 3.2; `brew install bash` needed. Scripts use associative arrays. |
+| TypeScript hooks | Bun 1.0+ | Any recent bun version works. Hooks use `Bun.file()` and `Bun.spawn()`. |
+| Git operations | Git 2.20+ | For `--quiet` flag support and modern fetch behavior. Any recent git works. |
+| Claude Code | Any version with skills/ support | Skills dir (`~/.claude/skills/`) is the modern target. Commands dir (`~/.claude/commands/`) is legacy fallback. |
+| GSD | 1.22+ | Current version is 1.22.4. Workflows in `~/.claude/get-shit-done/workflows/`. |
+| OMC | 4.7+ | Current cached version is 4.7.3. We only read their SKILL.md files for ideas. |
 
 ## Sources
 
-- [Agent Skills Specification](https://agentskills.io/specification) -- open standard, 30+ compatible tools (HIGH confidence)
-- [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills) -- official Anthropic docs (HIGH confidence)
-- [Claude Code Plugin Marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) -- official distribution system (HIGH confidence)
-- [Anthropic's skills repo marketplace.json](https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json) -- reference implementation (HIGH confidence)
-- [Agent Skills GitHub](https://github.com/agentskills/agentskills) -- spec repo with validation tooling (HIGH confidence)
-- [Claude Code community FAQ on skills vs plugins](https://x.com/claude_code/status/2009479585172242739) -- "Plugins are containers for distributing skills" (MEDIUM confidence)
-- [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) -- community skill collections (MEDIUM confidence)
+- Existing codebase: `tools/install.sh`, `tools/uninstall.sh`, `tools/index-sync.sh`, `skills/skippy-dev/scripts/skippy-update.sh` -- patterns for all new tooling [HIGH confidence]
+- PAI infrastructure audit (`.planning/PAI-INFRASTRUCTURE-AUDIT.md`) -- 68 skills, 12 agents, 34 workflows catalogued [HIGH confidence]
+- OMC GitHub repo ([Yeachan-Heo/oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode)) -- skill structure is single SKILL.md per directory, 38 skills in v4.7.3 [HIGH confidence]
+- OMC v4.7.3 cached at `~/.claude/plugins/cache/omc/oh-my-claudecode/4.7.3/` -- direct inspection of skill files [HIGH confidence]
+- PAI hooks at `~/.config/pai/hooks/` -- TypeScript, `bun` runtime, `pg` dependency [HIGH confidence]
+- GSD at `~/.claude/get-shit-done/` -- v1.22.4, Node.js `gsd-tools.cjs` for CLI utilities [HIGH confidence]
+- PAI CORE skill at `~/.config/pai/Skills/CORE/` -- 4 personas, laws, contacts, security protocols [HIGH confidence]
+
+---
+*Stack research for: Portable PAI Infrastructure Packaging (v1.1)*
+*Researched: 2026-03-07*
