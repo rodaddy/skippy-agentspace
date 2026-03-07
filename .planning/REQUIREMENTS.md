@@ -28,7 +28,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **STRU-01**: Skill follows PAI pattern -- slim SKILL.md entry point, detail in `references/` and `docs/`, index file for navigation
 - [ ] **STRU-02**: CLAUDE.md includes origin story, architectural decisions, current status, and enough context for cold session orientation
-- [ ] **STRU-03**: Install tooling supports both `~/.claude/skills/` (modern) and `~/.claude/commands/` (legacy) targets
+- [x] **STRU-03**: Install tooling supports both `~/.claude/skills/` (modern) and `~/.claude/commands/` (legacy) targets
 
 ## v2 Requirements
 
@@ -74,7 +74,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | DOC-01 | Phase 4 | Pending |
 | STRU-01 | Phase 1 | Complete |
 | STRU-02 | Phase 4 | Pending |
-| STRU-03 | Phase 2 | Pending |
+| STRU-03 | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 11 total
