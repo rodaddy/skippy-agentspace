@@ -102,14 +102,14 @@ Plans:
 **Requirements**: FOUN-01, FOUN-02, FOUN-03, FOUN-04
 **Success Criteria** (what must be TRUE):
   1. A documented convention distinguishes public content (safe to commit) from private content (never committed), and .gitignore enforces it
-  2. Running `ls upstreams/` shows one directory per tracked upstream (gsd, paul), each containing an `upstream.conf` with repo URL, branch, and last-checked SHA
+  2. Running `ls upstreams/` shows one directory per tracked upstream (gsd, paul), each containing an `upstream.json` with repo URL, branch, and last-checked SHA
   3. Adding a new upstream source requires only creating a new directory under `upstreams/` with the standard files -- no script or code changes needed
   4. Existing `.versions` tracking data is present in the new upstream format with no data loss
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md -- Public/private content boundary (CONVENTIONS.md, .gitignore, CLAUDE.md ref)
+- [ ] 05-02-PLAN.md -- Upstream registry (upstreams/gsd + paul, .versions removal)
 
 ### Phase 6: Core Infrastructure
 **Goal**: The essential PAI operating layer -- personas, LAWs, rules, commands, and project templates -- is packaged as a portable, installable core that follows the slim SKILL.md pattern
@@ -149,10 +149,10 @@ Plans:
 **Depends on**: Phase 5 (upstream registry exists)
 **Requirements**: UPST-01, UPST-02, UPST-03, UPST-04
 **Success Criteria** (what must be TRUE):
-  1. `upstreams/omc/` exists with upstream.conf pointing to oh-my-claudecode repo, and `/skippy:update` reports its version status alongside GSD and PAUL
+  1. `upstreams/omc/` exists with upstream.json pointing to oh-my-claudecode repo, and `/skippy:update` reports its version status alongside GSD and PAUL
   2. A cross-package analysis document identifies patterns that appear in 2+ upstreams (e.g., model routing, task verification, context management) with notes on which implementation is best
   3. At least 3 "best-of-breed" skippy reference docs exist that synthesize the strongest version of shared patterns across upstreams
-  4. `/skippy:update` uses a generic upstream checker that iterates `upstreams/*/upstream.conf` instead of hardcoded repo URLs
+  4. `/skippy:update` uses a generic upstream checker that iterates `upstreams/*/upstream.json` instead of hardcoded repo URLs
 **Plans**: TBD
 
 Plans:
@@ -202,7 +202,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. Plugin Packaging | v1.0 | 3/3 | Complete | 2026-03-07 |
 | 3. Command Validation | v1.0 | 3/3 | Complete | 2026-03-07 |
 | 4. Documentation | v1.0 | 2/2 | Complete | 2026-03-07 |
-| 5. Foundation | v1.1 | 0/? | Not started | - |
+| 5. Foundation | v1.1 | 0/2 | Planning complete | - |
 | 6. Core Infrastructure | v1.1 | 0/? | Not started | - |
 | 7. Hook Installation | v1.1 | 0/? | Not started | - |
 | 8. Upstream Analysis | v1.1 | 0/? | Not started | - |
