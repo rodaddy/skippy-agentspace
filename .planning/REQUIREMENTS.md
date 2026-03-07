@@ -137,10 +137,10 @@ Deferred to future release. Tracked but not in current roadmap.
 
 **Coverage:**
 - v1.0 requirements: 11 total (all complete)
-- v1.1 requirements: 25 total
-- Mapped to phases: 25
-- Unmapped: 0 ✓
+- v1.1 requirements: 28 total
+- Mapped to phases: 28
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-07 after v1.1 milestone requirements*
+*Last updated: 2026-03-07 after v1.1 roadmap creation*
