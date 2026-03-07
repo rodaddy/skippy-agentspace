@@ -24,8 +24,8 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 - [x] **CORE-02**: LAWs (15) packaged with enforcement descriptions
 - [x] **CORE-03**: Style rules and communication conventions packaged
 - [x] **CORE-04**: CLAUDE.md template available for new projects
-- [ ] **CORE-05**: All 10 claude commands packaged for portable install
-- [ ] **CORE-06**: Core follows slim SKILL.md + deep references pattern
+- [x] **CORE-05**: All 10 claude commands packaged for portable install
+- [x] **CORE-06**: Core follows slim SKILL.md + deep references pattern
 
 ### Hooks
 
@@ -114,8 +114,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | CORE-02 | Phase 6 | Complete |
 | CORE-03 | Phase 6 | Complete |
 | CORE-04 | Phase 6 | Complete |
-| CORE-05 | Phase 6 | Pending |
-| CORE-06 | Phase 6 | Pending |
+| CORE-05 | Phase 6 | Complete |
+| CORE-06 | Phase 6 | Complete |
 | HOOK-01 | Phase 7 | Pending |
 | HOOK-02 | Phase 7 | Pending |
 | HOOK-03 | Phase 7 | Pending |
