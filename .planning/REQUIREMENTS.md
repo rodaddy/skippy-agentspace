@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **CMD-01**: `/skippy:reconcile` works end-to-end against a real `.planning/` project with completed GSD phases -- reads PLAN.md, compares to execution output, reports deviations
 - [x] **CMD-02**: `/skippy:update` hardened -- clones to `~/.cache/` (not `/tmp/`), parses `.versions` safely (no `source`), uses full SHA hashes, survives macOS reboot
-- [ ] **CMD-03**: `/skippy:cleanup` validated -- quarantine and nuke modes both work correctly, space reporting accurate, empty dirs recreated after cleanup
+- [x] **CMD-03**: `/skippy:cleanup` validated -- quarantine and nuke modes both work correctly, space reporting accurate, empty dirs recreated after cleanup
 
 ### Documentation
 
@@ -70,7 +70,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | SPEC-04 | Phase 2 | Complete |
 | CMD-01 | Phase 3 | Complete |
 | CMD-02 | Phase 3 | Complete |
-| CMD-03 | Phase 3 | Pending |
+| CMD-03 | Phase 3 | Complete |
 | DOC-01 | Phase 4 | Pending |
 | STRU-01 | Phase 1 | Complete |
 | STRU-02 | Phase 4 | Pending |
