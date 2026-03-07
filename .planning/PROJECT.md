@@ -2,30 +2,54 @@
 
 ## What This Is
 
-A portable skill repository for Claude Code that cherry-picks the best development workflow ideas from multiple frameworks (GSD, PAUL, OMC) into standalone, installable skills. First skill: `skippy-dev` -- 5 workflow enhancements that augment GSD with PAUL's best ideas, plus 3 utility commands. Designed for PAI (Rico's personal AI infrastructure) but portable enough for any Claude Code user.
+A portable PAI infrastructure package for Claude Code. Core system (personas, LAWs, hooks, commands) plus add-on skills -- all bootstrappable on a new machine from a single repo. Cherry-picks the best ideas from GSD, PAUL, and OMC as upstream sources. Every skill follows the slim-core pattern: small SKILL.md entry point with deep reference docs in folders, so everything is available without eating context.
 
 ## Core Value
 
 Every skill works standalone with vanilla Claude Code -- no PAI dependency required. Skills are self-contained, installable, and enhanced (not broken) by PAI infrastructure when present.
 
+## Current Milestone: v1.1 Portable PAI
+
+**Goal:** Transform skippy-agentspace from a single-skill repo into a portable PAI infrastructure package -- core system + add-on skills, bootstrappable on a new machine.
+
+**Target features:**
+- OMC analysis and cherry-pick (third upstream alongside GSD and PAUL)
+- Core infrastructure package (personas, LAWs, hooks, commands)
+- All PAI skills restructured to slim SKILL.md + deep references pattern
+- Add-on skill system (opt-in installation per skill)
+- New machine bootstrap (clone + install = working PAI)
+
 ## Requirements
 
 ### Validated
 
-(None yet -- ship to validate)
+<!-- Shipped in v1.0 and confirmed working. -->
+
+- ✓ Origin documentation -- full story of why this exists — v1.0
+- ✓ 5 PAUL enhancement reference docs with real, actionable content — v1.0
+- ✓ `/skippy:reconcile` command works against a real `.planning/` project — v1.0
+- ✓ `/skippy:update` script clones both repos, tracks versions, reports diffs — v1.0
+- ✓ `/skippy:cleanup` script quarantines or nukes ephemeral files — v1.0
+- ✓ Install/uninstall tooling correctly symlinks skills — v1.0
+- ✓ Index sync validates INDEX.md matches actual skills — v1.0
+- ✓ Cold session context for new sessions — v1.0
+- ✓ CLAUDE.md includes origin story and architectural decisions — v1.0
+- ✓ All scripts pass basic functional testing — v1.0
 
 ### Active
 
-- [ ] Origin documentation -- full story of why this exists (YouTube analysis, GSD vs PAUL comparison, architectural decision)
-- [ ] 5 PAUL enhancement reference docs with real, actionable content (context brackets, reconciliation, task anatomy, plan boundaries, state consistency)
-- [ ] `/skippy:reconcile` command works against a real `.planning/` project with completed phases
-- [ ] `/skippy:update` script clones both GSD and PAUL repos, tracks versions, reports diffs
-- [ ] `/skippy:cleanup` script quarantines or nukes ephemeral files with space reporting
-- [ ] Install/uninstall tooling (`tools/install.sh`, `tools/uninstall.sh`) correctly symlinks skills into `~/.claude/commands/`
-- [ ] Index sync (`tools/index-sync.sh`) validates INDEX.md matches actual skills
-- [ ] Cold session context -- a new session opening this repo has enough documentation to understand what it is, why it exists, current state, and what to work on next
-- [ ] CLAUDE.md includes origin story, architectural decisions, and current project status
-- [ ] All scripts pass basic functional testing (run without errors, produce expected output)
+<!-- v1.1 scope -- defined during requirements phase. -->
+
+(Defining in v1.1 milestone)
+
+### Out of Scope
+
+<!-- Updated for v1.1 -->
+
+- Forking GSD, PAUL, or OMC -- we ride upstream, never fork
+- Auto-merging upstream changes -- report, human decides
+- Publishing to npm or any package registry -- private repo, manual install
+- BDD Given/When/Then ceremony -- too much overhead for solo dev
 
 ### Out of Scope
 
@@ -97,4 +121,4 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-de
 | Separate agentspace repo | Skills should be portable, not buried in PAI config | -- Pending |
 
 ---
-*Last updated: 2026-03-06 after initialization*
+*Last updated: 2026-03-07 after v1.1 milestone start*
