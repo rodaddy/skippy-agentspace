@@ -38,14 +38,16 @@ Plans:
 **Depends on**: Phase 1
 **Requirements**: SPEC-04, STRU-03
 **Success Criteria** (what must be TRUE):
-  1. `.claude-plugin/plugin.json` exists with valid schema and `strict: false` pattern
-  2. `marketplace.json` at repo root lists available skills with correct paths
+  1. `.claude-plugin/marketplace.json` exists with valid schema, `strict: false` pattern (no plugin.json needed)
+  2. marketplace.json lists available skills with correct paths and `source: "./"`
   3. Install tooling (`tools/install.sh`) detects target environment and symlinks to `~/.claude/skills/` (modern) or `~/.claude/commands/` (legacy) correctly
   4. A clean clone of the repo can be installed via plugin system and skill loads without errors
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md -- Create marketplace.json (strict: false, no plugin.json)
+- [ ] 02-02-PLAN.md -- Rewrite install.sh with dual-target support
+- [ ] 02-03-PLAN.md -- Rewrite uninstall.sh + update INDEX.md + CLAUDE.md
 
 ### Phase 3: Command Validation
 **Goal**: All three skippy commands run correctly against real workflows and survive edge cases
