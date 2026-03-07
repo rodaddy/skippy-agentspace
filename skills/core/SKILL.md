@@ -26,25 +26,53 @@ Switch with: "persona bob", "switch to clarisa", "be april", etc. Default is Ski
 
 ## LAWs
 
-15 mandatory rules. Never violate. Hook-enforced where possible, manually enforced otherwise.
+15 mandatory rules. Never violate. All hook-enforced via Claude Code settings.json hooks.
 
 | # | Name | Enforcement | File |
 |---|------|-------------|------|
-| 1 | Never Assume | Hook: pre-implementation.ts | `references/laws/law-01-never-assume.md` |
-| 2 | Checkbox Questions | Hook: pre-communication.ts | `references/laws/law-02-checkbox-questions.md` |
-| 3 | Pro/Con Analysis | Hook: pre-decision.ts | `references/laws/law-03-procon-analysis.md` |
-| 4 | Critical Thinking | Hook: pre-decision.ts | `references/laws/law-04-critical-thinking.md` |
-| 5 | Explain Before Doing | Hook: pre-implementation.ts | `references/laws/law-05-explain-before-doing.md` |
-| 6 | Interview-First | Manual (Phase 7 gap) | `references/laws/law-06-interview-first.md` |
-| 7 | Never Ancient Bash | Hook: pre-ancient-bash-blocker.ts | `references/laws/law-07-never-ancient-bash.md` |
-| 8 | Never Work on Main | Hook: pre-bash-protected-branch-commit.ts | `references/laws/law-08-never-work-on-main.md` |
-| 9 | File Size Limits | Hook: pre-edit-file-size.ts | `references/laws/law-09-file-size-limits.md` |
-| 10 | qmd First | Manual (Phase 7 gap) | `references/laws/law-10-qmd-first.md` |
-| 11 | No Secrets in Git | Hook: ggshield pre-commit/pre-push | `references/laws/law-11-no-secrets-in-git.md` |
-| 12 | Private Repos Default | Manual (Phase 7 gap) | `references/laws/law-12-private-repos-default.md` |
-| 13 | No Silent Autopilot | Manual (Phase 7 gap) | `references/laws/law-13-no-silent-autopilot.md` |
-| 14 | Network Share Protocol | Manual (Phase 7 gap) | `references/laws/law-14-network-share-protocol.md` |
-| 15 | No LiteLLM Self-Surgery | Hook: pre-litellm-self-surgery.ts | `references/laws/law-15-no-litellm-self-surgery.md` |
+| 1 | Never Assume | Hook: law-01-never-assume.ts | `references/laws/law-01-never-assume.md` |
+| 2 | Checkbox Questions | Hook: law-02-checkbox-questions.ts | `references/laws/law-02-checkbox-questions.md` |
+| 3 | Pro/Con Analysis | Hook: law-03-procon-analysis.ts | `references/laws/law-03-procon-analysis.md` |
+| 4 | Critical Thinking | Hook: law-04-critical-thinking.ts | `references/laws/law-04-critical-thinking.md` |
+| 5 | Explain Before Doing | Hook: law-05-explain-before-doing.ts | `references/laws/law-05-explain-before-doing.md` |
+| 6 | Interview-First | Hook: law-06-interview-first.ts | `references/laws/law-06-interview-first.md` |
+| 7 | Never Ancient Bash | Hook: law-07-never-ancient-bash.ts | `references/laws/law-07-never-ancient-bash.md` |
+| 8 | Never Work on Main | Hook: law-08-never-work-on-main.ts | `references/laws/law-08-never-work-on-main.md` |
+| 9 | File Size Limits | Hook: law-09-file-size-limits.ts | `references/laws/law-09-file-size-limits.md` |
+| 10 | qmd First | Hook: law-10-qmd-first.ts | `references/laws/law-10-qmd-first.md` |
+| 11 | No Secrets in Git | Hook: law-11-no-secrets-in-git.ts | `references/laws/law-11-no-secrets-in-git.md` |
+| 12 | Private Repos Default | Hook: law-12-private-repos-default.ts | `references/laws/law-12-private-repos-default.md` |
+| 13 | No Silent Autopilot | Hook: law-13-no-silent-autopilot.ts | `references/laws/law-13-no-silent-autopilot.md` |
+| 14 | Network Share Protocol | Hook: law-14-network-share-protocol.ts | `references/laws/law-14-network-share-protocol.md` |
+| 15 | No LiteLLM Self-Surgery | Hook: law-15-no-litellm-self-surgery.ts | `references/laws/law-15-no-litellm-self-surgery.md` |
+
+## Hooks
+
+15 hook scripts enforcing all LAWs via Claude Code's hook system. Installed into `~/.claude/settings.json`.
+
+| LAW # | Name | Event | Matcher | File |
+|-------|------|-------|---------|------|
+| 1 | Never Assume | PreToolUse | Write\|Edit\|Bash | `hooks/law-01-never-assume.ts` |
+| 2 | Checkbox Questions | PreToolUse | * | `hooks/law-02-checkbox-questions.ts` |
+| 3 | Pro/Con Analysis | PreToolUse | Write\|Edit\|Bash | `hooks/law-03-procon-analysis.ts` |
+| 4 | Critical Thinking | PreToolUse | Write\|Edit\|Bash | `hooks/law-04-critical-thinking.ts` |
+| 5 | Explain Before Doing | PreToolUse | Write\|Edit\|Bash | `hooks/law-05-explain-before-doing.ts` |
+| 6 | Interview-First | PreToolUse | Write\|Edit\|Bash | `hooks/law-06-interview-first.ts` |
+| 7 | Never Ancient Bash | PreToolUse | Write\|Edit | `hooks/law-07-never-ancient-bash.ts` |
+| 8 | Never Work on Main | PreToolUse | Bash | `hooks/law-08-never-work-on-main.ts` |
+| 9 | File Size Limits | PreToolUse | Write\|Edit | `hooks/law-09-file-size-limits.ts` |
+| 10 | qmd First | PreToolUse | Read\|Glob\|Grep | `hooks/law-10-qmd-first.ts` |
+| 11 | No Secrets in Git | PreToolUse | Bash | `hooks/law-11-no-secrets-in-git.ts` |
+| 12 | Private Repos Default | PreToolUse | Bash | `hooks/law-12-private-repos-default.ts` |
+| 13 | No Silent Autopilot | UserPromptSubmit | (all) | `hooks/law-13-no-silent-autopilot.ts` |
+| 14 | Network Share Protocol | PreToolUse | Bash | `hooks/law-14-network-share-protocol.ts` |
+| 15 | No LiteLLM Self-Surgery | PreToolUse | Bash | `hooks/law-15-no-litellm-self-surgery.ts` |
+
+**Install:** `bash skills/core/hooks/install-hooks.sh` or follow `skills/core/hooks/INSTALL.md`
+
+**Uninstall:** `bash skills/core/hooks/uninstall-hooks.sh`
+
+**Validate:** `bash tools/validate-hooks.sh --full`
 
 ## Rules
 
