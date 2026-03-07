@@ -7,7 +7,7 @@ set -euo pipefail
 #   --nuke: Delete permanently
 
 MODE="${1:---quarantine}"
-QUARANTINE_BASE="${SKIPPY_QUARANTINE_DIR:-${TMPDIR:-/tmp}/skippy-cleanup}"
+QUARANTINE_BASE="${SKIPPY_QUARANTINE_DIR:-${HOME}/.cache/skippy-quarantine}"
 QUARANTINE_DIR="${QUARANTINE_BASE}/$(date +%Y-%m-%d_%H%M%S)"
 TOTAL_FREED=0
 
