@@ -9,7 +9,7 @@
 
 ## What This Is
 
-A skill marketplace repo containing **skippy-dev** -- 5 workflow enhancements and 3 utility commands that augment GSD (get-shit-done) with the best ideas from PAUL (Plan-Apply-Unify Loop). Installs as a Claude Code plugin or via manual symlinks.
+A skill marketplace repo containing **core** (PAI identity -- personas, LAWs, rules, templates) and **skippy-dev** (5 workflow enhancements and 3 utility commands from GSD + PAUL). Installs as a Claude Code plugin or via manual symlinks.
 
 **Not a fork.** Both upstreams ride unchanged -- all enhancements are additive reference docs and utility commands.
 
@@ -49,6 +49,12 @@ Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, 
 ```
 .claude-plugin/
   marketplace.json        # Plugin marketplace definition (strict: false)
+skills/core/
+  SKILL.md                # Entry point -- personas, LAWs, rules, templates
+  references/personas/    # 4 persona files (Skippy, Bob, Clarisa, April)
+  references/laws/        # 15 individual LAW files with enforcement metadata
+  references/rules/       # 4 opinionated default rules
+  references/templates/   # CLAUDE.md and user.md project starters
 skills/skippy-dev/
   SKILL.md                # Entry point -- 3 commands, 5 enhancement refs
   commands/               # /skippy:reconcile, /skippy:update, /skippy:cleanup
@@ -123,5 +129,6 @@ All 4 phases complete. v1 requirements satisfied.
 | Requirements (11 total, all mapped) | `.planning/REQUIREMENTS.md` |
 | Phase structure + success criteria | `.planning/ROADMAP.md` |
 | Current position + blockers | `.planning/STATE.md` |
-| The actual skill | `skills/skippy-dev/SKILL.md` |
+| The actual skill (dev workflow) | `skills/skippy-dev/SKILL.md` |
+| Core skill entry point | `skills/core/SKILL.md` |
 | Content conventions + upstream registry | `CONVENTIONS.md` |

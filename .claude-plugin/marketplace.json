@@ -20,6 +20,19 @@
       "skills": [
         "./skills/skippy-dev"
       ]
+    },
+    {
+      "name": "core",
+      "description": "PAI core infrastructure -- personas, LAWs, rules, and project templates",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": {
+        "name": "Rico"
+      },
+      "skills": [
+        "./skills/core"
+      ]
     }
   ]
 }

@@ -6,6 +6,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 | Skill | Path | Commands | References | Use When |
 |-------|------|----------|------------|----------|
+| core | `core/SKILL.md` | (none -- commands deferred) | personas/, laws/, rules/, templates/ | PAI core infrastructure -- personas, LAWs, rules, and project templates |
 | skippy-dev | `skippy-dev/SKILL.md` | /skippy:reconcile, /skippy:update, /skippy:cleanup | context-brackets.md, plan-boundaries.md, reconciliation.md, state-consistency.md, task-anatomy.md | Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency |
 
 ## Plugin Distribution
