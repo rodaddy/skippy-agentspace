@@ -29,7 +29,7 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 
 ### Hooks
 
-- [ ] **HOOK-01**: Hook manifest declares all hooks and their settings.json registrations
+- [x] **HOOK-01**: Hook manifest declares all hooks and their settings.json registrations
 - [ ] **HOOK-02**: Hook installer merges into settings.json via jq without destroying existing hooks
 - [ ] **HOOK-03**: Hook uninstaller cleanly removes only our hooks
 - [ ] **HOOK-04**: Hook operations are idempotent (safe to re-run)
@@ -116,7 +116,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CORE-04 | Phase 6 | Complete |
 | CORE-05 | Phase 6 | Complete |
 | CORE-06 | Phase 6 | Complete |
-| HOOK-01 | Phase 7 | Pending |
+| HOOK-01 | Phase 7 | Complete |
 | HOOK-02 | Phase 7 | Pending |
 | HOOK-03 | Phase 7 | Pending |
 | HOOK-04 | Phase 7 | Pending |
