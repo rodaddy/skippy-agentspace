@@ -1,0 +1,92 @@
+# <!-- CUSTOMIZE: project_name (default: my-project) -->
+
+<!-- CUSTOMIZE: project_description (default: describe your project here) -->
+> All LAWs from core/references/laws/ apply. See the full list below.
+
+<!-- CUSTOMIZE: default_persona (default: skippy) -->
+> Default persona: Skippy. Override per-project by changing this line.
+> Persona cascade: project CLAUDE.md persona overrides global user.md default.
+
+## Stack
+
+<!-- CUSTOMIZE: Adjust these defaults to match your project's stack -->
+
+| Tool | Default | Override With |
+|------|---------|---------------|
+<!-- CUSTOMIZE: package_manager (default: bun) -->
+| Package manager (JS) | `bun` | npm, yarn, pnpm |
+<!-- CUSTOMIZE: python_runner (default: uv) -->
+| Package manager (Python) | `uv` | pip, conda |
+<!-- CUSTOMIZE: system_packages (default: brew) -->
+| System packages | `brew` | apt, dnf |
+<!-- CUSTOMIZE: runtime (default: bun) -->
+| JS Runtime | Bun | Node.js, Deno |
+
+**Hard rules:**
+- `bun` for Node.js -- never npm/yarn/pip
+- `uv` for Python -- never pip/conda
+- `#!/usr/bin/env bash` -- NEVER `#!/bin/bash` (LAW 7)
+- 750 lines max per file, split proactively at ~600 (LAW 9)
+
+## Skills First (CRITICAL)
+
+Before doing anything manually, check if a skill or slash command exists for the task.
+Skills encode workflow knowledge that manual steps will miss.
+
+**If a skill exists, use it.** Do not attempt the task manually.
+If a skill fails, stop and ask -- do NOT fall back to manual.
+
+## LAWs
+
+<!-- CUSTOMIZE: Remove any LAWs that don't apply to your project -->
+15 mandatory rules. Never violate. Full definitions in `core/references/laws/`.
+
+| # | Name | Enforcement |
+|---|------|-------------|
+| 1 | Never Assume | Hook |
+| 2 | Checkbox Questions | Hook |
+| 3 | Pro/Con Analysis | Hook |
+| 4 | Critical Thinking | Hook |
+| 5 | Explain Before Doing | Hook |
+| 6 | Interview First | Manual |
+| 7 | Never Ancient Bash | Hook |
+| 8 | Never Work on Main | Hook |
+| 9 | File Size Limits | Hook |
+| 10 | QMD First | Manual |
+| 11 | No Secrets in Git | Hook |
+| 12 | Private Repos Default | Manual |
+| 13 | No Silent Autopilot | Manual |
+| 14 | Network Share Protocol | Manual |
+| 15 | No LiteLLM Self-Surgery | Manual |
+
+## Verification Loop
+
+After any significant implementation, verify before declaring done:
+1. Run relevant tests (`bun test`, project-specific test commands)
+2. Run typecheck/build if applicable
+3. For UI changes -- visually verify
+4. If no automated verification exists, state what was verified manually
+
+Don't just write code and say "done." The feedback loop matters.
+
+## Git Conventions
+
+- Never commit to main -- use `feat/`, `fix/`, `wip/` branches (LAW 8)
+- Private repos by default (LAW 12)
+- No secrets in git -- use `.env` (gitignored) or a secrets manager (LAW 11)
+
+## Key Files
+
+<!-- CUSTOMIZE: Add your project's key files -->
+| Need | Read |
+|------|------|
+| Project context | `.planning/PROJECT.md` |
+| Requirements | `.planning/REQUIREMENTS.md` |
+| Current state | `.planning/STATE.md` |
+
+## Corrections
+
+<!-- Add corrections here as you discover recurring mistakes.
+     Format: "Don't X, instead Y -- because Z" -->
+
+None yet.
