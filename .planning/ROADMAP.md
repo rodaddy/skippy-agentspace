@@ -12,7 +12,7 @@ Transform skippy-agentspace from a working-but-non-portable skill repo into a sp
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Spec Compliance** - Align skill structure and paths to Agent Skills standard
+- [x] **Phase 1: Spec Compliance** - Align skill structure and paths to Agent Skills standard (completed 2026-03-07)
 - [ ] **Phase 2: Plugin Packaging** - Enable native `/plugin install` distribution
 - [ ] **Phase 3: Command Validation** - Harden and validate all three skippy commands against real workflows
 - [ ] **Phase 4: Documentation** - Cold session context and GSD dependency mapping
@@ -81,7 +81,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Spec Compliance | 0/1 | Not started | - |
+| 1. Spec Compliance | 1/1 | Complete   | 2026-03-07 |
 | 2. Plugin Packaging | 0/1 | Not started | - |
 | 3. Command Validation | 0/2 | Not started | - |
 | 4. Documentation | 0/1 | Not started | - |

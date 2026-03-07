@@ -9,9 +9,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Spec Compliance
 
-- [ ] **SPEC-01**: All skill files use portable paths -- no hardcoded absolute paths, use `${CLAUDE_SKILL_DIR}` or relative paths
-- [ ] **SPEC-02**: SKILL.md frontmatter aligned to Agent Skills standard -- `name`, `description` required; non-standard `triggers:` field removed; `metadata:` block added with version and author
-- [ ] **SPEC-03**: `bin/` directory renamed to `scripts/` across all skills (Agent Skills spec convention)
+- [x] **SPEC-01**: All skill files use portable paths -- no hardcoded absolute paths, use `${CLAUDE_SKILL_DIR}` or relative paths
+- [x] **SPEC-02**: SKILL.md frontmatter aligned to Agent Skills standard -- `name`, `description` required; non-standard `triggers:` field removed; `metadata:` block added with version and author
+- [x] **SPEC-03**: `bin/` directory renamed to `scripts/` across all skills (Agent Skills spec convention)
 - [ ] **SPEC-04**: Plugin packaging -- `.claude-plugin/plugin.json` and `marketplace.json` enable native `/plugin install` from this repo
 
 ### Commands
@@ -26,7 +26,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Structure
 
-- [ ] **STRU-01**: Skill follows PAI pattern -- slim SKILL.md entry point, detail in `references/` and `docs/`, index file for navigation
+- [x] **STRU-01**: Skill follows PAI pattern -- slim SKILL.md entry point, detail in `references/` and `docs/`, index file for navigation
 - [ ] **STRU-02**: CLAUDE.md includes origin story, architectural decisions, current status, and enough context for cold session orientation
 - [ ] **STRU-03**: Install tooling supports both `~/.claude/skills/` (modern) and `~/.claude/commands/` (legacy) targets
 
@@ -64,15 +64,15 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPEC-01 | Phase 1 | Pending |
-| SPEC-02 | Phase 1 | Pending |
-| SPEC-03 | Phase 1 | Pending |
+| SPEC-01 | Phase 1 | Complete |
+| SPEC-02 | Phase 1 | Complete |
+| SPEC-03 | Phase 1 | Complete |
 | SPEC-04 | Phase 2 | Pending |
 | CMD-01 | Phase 3 | Pending |
 | CMD-02 | Phase 3 | Pending |
 | CMD-03 | Phase 3 | Pending |
 | DOC-01 | Phase 4 | Pending |
-| STRU-01 | Phase 1 | Pending |
+| STRU-01 | Phase 1 | Complete |
 | STRU-02 | Phase 4 | Pending |
 | STRU-03 | Phase 2 | Pending |
 
