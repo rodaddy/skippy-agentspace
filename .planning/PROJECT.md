@@ -8,17 +8,19 @@ A portable PAI infrastructure package for Claude Code. Core system (personas, LA
 
 Every skill works standalone with vanilla Claude Code -- no PAI dependency required. Skills are self-contained, installable, and enhanced (not broken) by PAI infrastructure when present.
 
-## Current Milestone: v1.1 Portable PAI
+## Current Milestone: v1.2 Standalone Skippy
 
-**Goal:** Transform skippy-agentspace from a single-skill repo into a portable PAI infrastructure package -- core system + add-on skills, bootstrappable on a new machine.
+**Goal:** Skippy IS the framework -- no external dependencies on GSD, PAUL, or OMC at runtime. Automated testing, code quality, and a formalized multi-agent audit swarm.
 
 **Target features:**
-- OMC analysis and cherry-pick (third upstream alongside GSD and PAUL)
-- Extensible upstream system -- add new packages/marketplaces to cherry-pick from
-- Core infrastructure package (personas, LAWs, hooks, commands)
-- All PAI skills restructured to slim SKILL.md + deep references pattern
-- Add-on skill system (opt-in installation per skill)
-- New machine bootstrap (clone + install = working PAI)
+- GSD pattern absorption (phased execution, state tracking, plan structure, wave-based parallelism, checkpoints, verification loops)
+- `/skippy:review` audit swarm command (multi-agent review/fix/eval loop, sandboxed)
+- bats-core test suite (~260 lines minimum)
+- DRY extraction (`tools/lib/common.sh`)
+- deploy-service hardening (config mechanism, input validation, root guards)
+- CONTRIBUTING.md
+- `.gitattributes` export-ignore for `.planning/`
+- Version bump mechanism
 
 ## Requirements
 
@@ -26,22 +28,28 @@ Every skill works standalone with vanilla Claude Code -- no PAI dependency requi
 
 <!-- Shipped in v1.0 and confirmed working. -->
 
-- ✓ Origin documentation -- full story of why this exists — v1.0
-- ✓ 5 PAUL enhancement reference docs with real, actionable content — v1.0
-- ✓ `/skippy:reconcile` command works against a real `.planning/` project — v1.0
-- ✓ `/skippy:update` script clones both repos, tracks versions, reports diffs — v1.0
-- ✓ `/skippy:cleanup` script quarantines or nukes ephemeral files — v1.0
-- ✓ Install/uninstall tooling correctly symlinks skills — v1.0
-- ✓ Index sync validates INDEX.md matches actual skills — v1.0
-- ✓ Cold session context for new sessions — v1.0
-- ✓ CLAUDE.md includes origin story and architectural decisions — v1.0
-- ✓ All scripts pass basic functional testing — v1.0
+- ✓ Origin documentation -- full story of why this exists -- v1.0
+- ✓ 5 PAUL enhancement reference docs with real, actionable content -- v1.0
+- ✓ `/skippy:reconcile` command works against a real `.planning/` project -- v1.0
+- ✓ `/skippy:update` script clones both repos, tracks versions, reports diffs -- v1.0
+- ✓ `/skippy:cleanup` script quarantines or nukes ephemeral files -- v1.0
+- ✓ Install/uninstall tooling correctly symlinks skills -- v1.0
+- ✓ Index sync validates INDEX.md matches actual skills -- v1.0
+- ✓ Cold session context for new sessions -- v1.0
+- ✓ CLAUDE.md includes origin story and architectural decisions -- v1.0
+- ✓ All scripts pass basic functional testing -- v1.0
+- ✓ OMC analysis and cherry-pick (third upstream alongside GSD and PAUL) -- v1.1
+- ✓ Extensible upstream system -- add new packages/marketplaces to cherry-pick from -- v1.1
+- ✓ Core infrastructure package (personas, LAWs, hooks, commands) -- v1.1
+- ✓ All PAI skills restructured to slim SKILL.md + deep references pattern -- v1.1
+- ✓ Add-on skill system (opt-in installation per skill) -- v1.1
+- ✓ New machine bootstrap (clone + install = working PAI) -- v1.1
 
 ### Active
 
-<!-- v1.1 scope -- defined during requirements phase. -->
+<!-- v1.2 scope -- defined during requirements phase. -->
 
-(Defining in v1.1 milestone)
+(Defining in v1.2 milestone)
 
 ### Out of Scope
 
@@ -122,4 +130,4 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-de
 | Separate agentspace repo | Skills should be portable, not buried in PAI config | -- Pending |
 
 ---
-*Last updated: 2026-03-07 after v1.1 milestone start*
+*Last updated: 2026-03-08 after v1.2 milestone start*
