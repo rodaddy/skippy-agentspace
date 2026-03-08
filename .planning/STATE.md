@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
-status: completed
-stopped_at: Completed 15-02-PLAN.md (Phase 15 complete)
-last_updated: "2026-03-08T21:50:11.422Z"
-last_activity: 2026-03-08 -- Phase 15 Plan 02 complete (bump-version.sh version automation)
+status: in-progress
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-03-08T22:52:04Z"
+last_activity: 2026-03-08 -- Phase 16 Plan 01 complete (CONTRIBUTING.md + standalone identity docs)
 progress:
   total_phases: 16
   completed_phases: 15
-  total_plans: 37
-  completed_plans: 37
-  percent: 100
+  total_plans: 39
+  completed_plans: 38
+  percent: 97
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 15 Hardening complete (all phases done)
+**Current focus:** v1.2 Standalone Skippy -- Phase 16 Integration & Polish (plan 1 of 2 complete)
 
 ## Current Position
 
-Phase: 15-hardening (complete)
-Plan: 2 of 2 complete
-Status: Phase 15 complete -- all hardening plans done
-Last activity: 2026-03-08 -- Phase 15 Plan 02 complete (bump-version.sh version automation)
+Phase: 16-integration-polish (in progress)
+Plan: 1 of 2 complete
+Status: Plan 01 complete -- CONTRIBUTING.md + standalone identity docs
+Last activity: 2026-03-08 -- Phase 16 Plan 01 complete (CONTRIBUTING.md + standalone identity docs)
 
-Progress: [██████████] 100%
+Progress: [██████████] 97%
 
-**Next step:** v1.2 milestone wrap-up
+**Next step:** 16-02-PLAN.md (verify.sh review command fix + final verification pass)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 37 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 + Phase 14 + Phase 15)
+- Total plans completed: 38 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 + Phase 14 + Phase 15 + Phase 16)
 - Average duration: --
 - Total execution time: --
 
@@ -60,6 +60,8 @@ Progress: [██████████] 100%
 | 13. GSD Absorption | 3/3 | 11min | 21 |
 | 12. Testing | 3/3 | 7min | 12 |
 | 14. Audit Swarm | 2/2 | 4min | 11 |
+| 15. Hardening | 2/2 | 8min | 8 |
+| 16. Integration & Polish | 1/2 | 2min | 3 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -67,6 +69,7 @@ Progress: [██████████] 100%
 | Phase 14 P02 | 2min | 2 tasks | 4 files |
 | Phase 15 P01 | 4min | 2 tasks | 7 files |
 | Phase 15 P02 | 4min | 1 tasks | 1 files |
+| Phase 16 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -133,6 +136,8 @@ Recent decisions affecting current work:
 - [Phase 15]: Portable _sed_inplace helper detects GNU vs BSD sed at runtime
 - [Phase 15]: grep -F (fixed string) for post-bump verification to avoid regex false positives
 - [Phase 15]: Subshell grep with || true for pipefail-safe zero-match counting
+- [16-01]: CONTRIBUTING.md as routing doc (69 lines) -- references CONVENTIONS.md instead of duplicating content
+- [16-01]: Standalone framing replaces "cherry-picks" and "not a fork" language across all distributed docs
 
 ### Pending Todos
 
@@ -144,6 +149,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T21:20:39.323Z
-Stopped at: Completed 15-02-PLAN.md
+Last session: 2026-03-08T22:52:04Z
+Stopped at: Completed 16-01-PLAN.md
 Resume file: None
