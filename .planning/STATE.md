@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
-status: in-progress
-stopped_at: Completed 12-02-PLAN.md
-last_updated: "2026-03-08T20:36:00Z"
-last_activity: 2026-03-08 -- Phase 12 Plan 02 complete (install/uninstall tests, 14 tests passing)
+status: completed
+stopped_at: Completed 12-03-PLAN.md
+last_updated: "2026-03-08T20:48:26Z"
+last_activity: 2026-03-08 -- Phase 12 complete (37 tests passing, CI workflow ready)
 progress:
   total_phases: 16
-  completed_phases: 12
+  completed_phases: 13
   total_plans: 37
-  completed_plans: 32
-  percent: 86
+  completed_plans: 33
+  percent: 89
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 12 Testing in progress
+**Current focus:** v1.2 Standalone Skippy -- Phase 12 Testing complete
 
 ## Current Position
 
-Phase: 12-testing (in progress)
-Plan: 2 of 3 complete
-Status: Plan 02 complete -- install/uninstall tests, 14 tests passing (24 total)
-Last activity: 2026-03-08 -- Phase 12 Plan 02 complete (install/uninstall tests, 14 tests passing)
+Phase: 12-testing (complete)
+Plan: 3 of 3 complete
+Status: Phase 12 complete -- 37 tests passing across 7 test files, CI workflow ready
+Last activity: 2026-03-08 -- Phase 12 Plan 03 complete (verify/index-sync/validate-hooks tests + CI)
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 89%
 
-**Next step:** Execute 12-03-PLAN.md (index-sync and end-to-end tests)
+**Next step:** Next phase in v1.2 roadmap
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 32 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 plans 01-02)
+- Total plans completed: 33 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12)
 - Average duration: --
 - Total execution time: --
 
@@ -58,7 +58,7 @@ Progress: [█████████░] 86%
 |-------|-------|----------|-------|
 | 11. Foundation | 2/2 | 6min | 8 |
 | 13. GSD Absorption | 3/3 | 11min | 21 |
-| 12. Testing | 2/3 | 5min | 8 |
+| 12. Testing | 3/3 | 7min | 12 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -114,6 +114,9 @@ Recent decisions affecting current work:
 - [12-01]: Load paths in test helper use test_helper/ prefix -- bats resolves relative to .bats file, not the helper
 - [12-01]: 10 tests instead of planned 8 -- added SKIPPY_ROOT fallback and color-disable tests for completeness
 - [12-02]: Used skippy-dev instead of core for --target=commands test -- core has no commands/ subdirectory
+- [12-03]: Teardown restore pattern for index-sync tests -- backup/restore INDEX.md to avoid corrupting real file
+- [12-03]: Skip validate-hooks --full mode tests -- complex hook install/uninstall already tested by the script itself
+- [12-03]: brew install bun in CI -- ensures hook validation tests that need bun actually run
 
 ### Pending Todos
 
@@ -125,6 +128,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T20:36:00Z
-Stopped at: Completed 12-02-PLAN.md
+Last session: 2026-03-08T20:48:26Z
+Stopped at: Completed 12-03-PLAN.md
 Resume file: None
