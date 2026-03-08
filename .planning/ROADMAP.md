@@ -32,7 +32,7 @@
 
 ### v1.2 Standalone Skippy
 
-- [ ] **Phase 11: Foundation** - Shared shell library and repo hygiene (.gitattributes)
+- [x] **Phase 11: Foundation** - Shared shell library and repo hygiene (.gitattributes) (completed 2026-03-08)
 - [ ] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation
 - [ ] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns
 - [ ] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command
@@ -280,7 +280,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 8. Upstream Analysis | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
-| 11. Foundation | 1/2 | In Progress|  | - |
+| 11. Foundation | 2/2 | Complete   | 2026-03-08 | - |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
 | 13. GSD Pattern Absorption | v1.2 | 0/0 | Planned | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
 status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-03-08T17:22:00Z"
-last_activity: 2026-03-08 -- Phase 11 Plan 01 complete (common.sh + .gitattributes)
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-03-08T17:29:06Z"
+last_activity: 2026-03-08 -- Phase 11 complete (common.sh DRY migration of all 6 tools/ scripts)
 progress:
   total_phases: 16
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 27
-  completed_plans: 26
-  percent: 96
+  completed_plans: 27
+  percent: 100
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 11 in progress
+**Current focus:** v1.2 Standalone Skippy -- Phase 11 complete, Phase 12 next
 
 ## Current Position
 
-Phase: 11-foundation
-Plan: 1 of 2
-Status: Plan 01 complete, Plan 02 next
-Last activity: 2026-03-08 -- Phase 11 Plan 01 complete (common.sh + .gitattributes)
+Phase: 11-foundation (complete)
+Plan: 2 of 2
+Status: Phase 11 complete
+Last activity: 2026-03-08 -- Phase 11 Plan 02 complete (DRY migration of all 6 tools/ scripts)
 
-Progress: [██████████] 96%
+Progress: [██████████] 100%
 
-**Next step:** Execute 11-02-PLAN.md (migrate 6 tools/ scripts to source common.sh)
+**Next step:** Begin Phase 12 planning
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 26 (v1.0 + v1.1 + 11-01)
+- Total plans completed: 27 (v1.0 + v1.1 + Phase 11)
 - Average duration: --
 - Total execution time: --
 
@@ -56,7 +56,7 @@ Progress: [██████████] 96%
 
 | Phase | Plans | Duration | Files |
 |-------|-------|----------|-------|
-| 11. Foundation | 1/2 | 2min | 2 |
+| 11. Foundation | 2/2 | 6min | 8 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -100,6 +100,9 @@ Recent decisions affecting current work:
 - [Phase 10]: README.md is thin routing layer -- overview + 5-command quick start + doc links
 - [11-01]: ANSI colors with automatic terminal detection in common.sh (_SKIPPY_ private var prefix)
 - [11-01]: echo -e for color output -- consistent with existing script patterns
+- [11-02]: prereqs.sh keeps own exit-code logic -- skippy_summary not used due to interactive install-prompt flow
+- [11-02]: Minimal vs full fallback stubs -- heavy scripts get all functions, light scripts get only what they need
+- [11-02]: Fallback stubs use $0 for path derivation -- BASH_SOURCE context differs in inline fallback
 
 ### Pending Todos
 
@@ -111,6 +114,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T17:22:00Z
-Stopped at: Completed 11-01-PLAN.md
-Resume file: .planning/phases/11-foundation/11-02-PLAN.md
+Last session: 2026-03-08T17:29:06Z
+Stopped at: Completed 11-02-PLAN.md (Phase 11 complete)
+Resume file: Next phase planning
