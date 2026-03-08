@@ -114,7 +114,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CORE-02 | Phase 6 | Complete |
 | CORE-03 | Phase 6 | Complete |
 | CORE-04 | Phase 6 | Complete |
-| CORE-05 | Phase 6 | Complete |
+| CORE-05 | Phase 6 | Deferred |
 | CORE-06 | Phase 6 | Complete |
 | HOOK-01 | Phase 7 | Complete |
 | HOOK-02 | Phase 7 | Complete |
