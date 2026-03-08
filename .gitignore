@@ -29,3 +29,6 @@ node_modules/
 *.private
 credentials/
 secrets/
+
+# Deploy-service config
+skills/deploy-service/config.env
