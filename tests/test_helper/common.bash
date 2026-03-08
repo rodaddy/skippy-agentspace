@@ -24,7 +24,7 @@ _common_setup() {
     # Fallback for common.sh repo root detection when BASH_SOURCE path differs
     export SKIPPY_ROOT="$REPO_ROOT"
 
-    # Load bats helpers
-    load 'bats-support/load'
-    load 'bats-assert/load'
+    # Load bats helpers (paths relative to the .bats test file, not this helper)
+    load 'test_helper/bats-support/load'
+    load 'test_helper/bats-assert/load'
 }
