@@ -9,6 +9,32 @@ INDEX_FILE="$REPO_ROOT/INDEX.md"
 SKILLS_DIR="$REPO_ROOT/skills"
 MODE="${1:---check}"
 
+# Known category display order
+CATEGORY_ORDER=("core" "workflow" "utility" "domain")
+
+# Capitalize first letter for section headers
+capitalize() {
+    local word="$1"
+    echo "$(echo "${word:0:1}" | tr '[:lower:]' '[:upper:]')${word:1}"
+}
+
+# Check if a skill is installed (symlinked into ~/.claude/skills/ or ~/.claude/commands/)
+is_installed() {
+    local skill_name="$1"
+    if [[ -L "$HOME/.claude/skills/$skill_name" ]] || [[ -L "$HOME/.claude/commands/$skill_name" ]]; then
+        return 0
+    fi
+    return 1
+}
+
+# Extract category from SKILL.md frontmatter
+get_category() {
+    local skill_file="$1"
+    local cat
+    cat="$(sed -n '/^  category:/s/^  category: *//p' "$skill_file" | head -1 | tr -d '[:space:]')"
+    echo "${cat:-uncategorized}"
+}
+
 case "$MODE" in
     --check)
         echo "=== Index Sync: Checking ==="
@@ -31,12 +57,19 @@ case "$MODE" in
             else
                 echo "  OK: $skill_name"
             fi
+
+            # Check for category field (informational, non-fatal)
+            category="$(get_category "$skill_file")"
+            if [[ "$category" == "uncategorized" ]]; then
+                echo "  INFO: $skill_name has no category in frontmatter"
+            fi
         done
 
         # Check for INDEX entries with no matching directory
         # Extract skill names from INDEX.md table rows (pipe-delimited)
-        grep "^\| " "$INDEX_FILE" 2>/dev/null | grep -v "^\| Skill" | grep -v "^\|---" | while IFS='|' read -r _ name _rest; do
-            name="$(echo "$name" | xargs)"  # trim whitespace
+        grep "^| " "$INDEX_FILE" 2>/dev/null | grep -v "^| Skill" | grep -v "^|---" | while IFS='|' read -r _ name _rest; do
+            # Strip badges and whitespace from name
+            name="$(echo "$name" | sed 's/\[installed\]//' | xargs)"
             if [[ -n "$name" && ! -d "$SKILLS_DIR/$name" ]]; then
                 echo "  ORPHAN: $name in INDEX.md but no directory"
                 errors=$((errors + 1))
@@ -54,17 +87,13 @@ case "$MODE" in
     --generate)
         echo "=== Index Sync: Generating ==="
 
-        # Header
-        cat > "$INDEX_FILE" <<'HEADER'
-# Skill Index
+        # Collect skill data grouped by category
+        # Use temp files per category since bash associative arrays can't hold multiline values portably
+        tmpdir="$(mktemp -d)"
+        trap 'rm -rf "$tmpdir"' EXIT
 
-Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --generate` to rebuild.
-
-**Base path:** `skills/`
-
-HEADER
-
-        current_section=""
+        # Track which categories we find
+        found_categories=()
 
         for skill_dir in "$SKILLS_DIR"/*/; do
             skill_name="$(basename "$skill_dir")"
@@ -74,30 +103,98 @@ HEADER
                 continue
             fi
 
-            # Extract frontmatter fields
-            description="$(sed -n '/^description:/s/^description: *//p' "$skill_file" | head -1)"
+            # Extract fields
+            category="$(get_category "$skill_file")"
 
-            # Extract triggers (lines starting with "  - /" after "triggers:")
-            commands="$(sed -n '/^triggers:/,/^[^ -]/{ /^  - \//s/^  - //p }' "$skill_file" | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')"
-
-            # List reference files
-            refs=""
-            if [[ -d "$skill_dir/references" ]]; then
-                refs="$(ls "$skill_dir/references/" 2>/dev/null | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')"
+            # Extract commands from commands/*.md frontmatter (name: field)
+            commands=""
+            if [[ -d "$skill_dir/commands" ]]; then
+                commands="$(for cmd_file in "$skill_dir"/commands/*.md; do
+                    [[ -f "$cmd_file" ]] || continue
+                    sed -n '/^name:/s/^name: *//p' "$cmd_file" | head -1
+                done | sed 's/^/\//' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')"
+            fi
+            if [[ -z "$commands" ]]; then
+                commands="(none)"
             fi
 
-            echo "| $skill_name | \`$skill_name/SKILL.md\` | $commands | $refs | $description |"
-        done >> "$INDEX_FILE"
+            # Build display name with install badge
+            display_name="$skill_name"
+            if is_installed "$skill_name"; then
+                display_name="$skill_name [installed]"
+            fi
 
-        # Wrap in table
-        # We need to add the table header before the rows
-        # Read back, insert header, rewrite
-        tmp="$(mktemp)"
-        head -6 "$INDEX_FILE" > "$tmp"
-        echo "| Skill | Path | Commands | References | Use When |" >> "$tmp"
-        echo "|-------|------|----------|------------|----------|" >> "$tmp"
-        tail -n +7 "$INDEX_FILE" >> "$tmp"
-        mv "$tmp" "$INDEX_FILE"
+            # Track category
+            if [[ ! -f "$tmpdir/$category" ]]; then
+                found_categories+=("$category")
+                touch "$tmpdir/$category"
+            fi
+
+            # Append row to category file
+            echo "| $display_name | \`$skill_name/SKILL.md\` | $commands |" >> "$tmpdir/$category"
+        done
+
+        # Build INDEX.md
+        cat > "$INDEX_FILE" <<'HEADER'
+# Skill Index
+
+Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --generate` to rebuild.
+
+**Base path:** `skills/`
+
+HEADER
+
+        # Output categories in defined order first, then any extras
+        outputted=()
+
+        for cat in "${CATEGORY_ORDER[@]}"; do
+            if [[ -f "$tmpdir/$cat" ]]; then
+                section_name="$(capitalize "$cat")"
+                echo "## $section_name" >> "$INDEX_FILE"
+                echo "" >> "$INDEX_FILE"
+                echo "| Skill | Path | Commands |" >> "$INDEX_FILE"
+                echo "|-------|------|----------|" >> "$INDEX_FILE"
+                cat "$tmpdir/$cat" >> "$INDEX_FILE"
+                echo "" >> "$INDEX_FILE"
+                outputted+=("$cat")
+            fi
+        done
+
+        # Output any categories not in the predefined order
+        for cat in "${found_categories[@]}"; do
+            skip=false
+            for done_cat in "${outputted[@]}"; do
+                if [[ "$cat" == "$done_cat" ]]; then
+                    skip=true
+                    break
+                fi
+            done
+            if [[ "$skip" == "false" ]]; then
+                section_name="$(capitalize "$cat")"
+                echo "## $section_name" >> "$INDEX_FILE"
+                echo "" >> "$INDEX_FILE"
+                echo "| Skill | Path | Commands |" >> "$INDEX_FILE"
+                echo "|-------|------|----------|" >> "$INDEX_FILE"
+                cat "$tmpdir/$cat" >> "$INDEX_FILE"
+                echo "" >> "$INDEX_FILE"
+            fi
+        done
+
+        # Append Plugin Distribution footer
+        cat >> "$INDEX_FILE" <<'FOOTER'
+## Plugin Distribution
+
+This repo is also a Claude Code plugin marketplace. Install via:
+
+```
+/plugin marketplace add owner/skippy-agentspace
+/plugin install skippy-dev@skippy-agentspace
+```
+
+Plugin manifest: `.claude-plugin/marketplace.json` (strict: false -- no plugin.json needed).
+
+Manual install still supported via `tools/install.sh` (dual-target: `~/.claude/skills/` or `~/.claude/commands/`).
+FOOTER
 
         echo "=== INDEX.md regenerated with $(ls -d "$SKILLS_DIR"/*/ 2>/dev/null | wc -l | tr -d ' ') skills ==="
         ;;

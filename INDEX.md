@@ -4,10 +4,17 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 **Base path:** `skills/`
 
-| Skill | Path | Commands | References | Use When |
-|-------|------|----------|------------|----------|
-| core | `core/SKILL.md` | (none -- commands deferred) | personas/, laws/, rules/, templates/ | PAI core infrastructure -- personas, LAWs, rules, and project templates |
-| skippy-dev | `skippy-dev/SKILL.md` | /skippy:reconcile, /skippy:update, /skippy:cleanup | context-brackets.md, model-routing.md, plan-boundaries.md, reconciliation.md, session-persistence.md, skill-extraction.md, state-consistency.md, structured-deliberation.md, task-anatomy.md, verification-loops.md | Development workflow enhancements -- context awareness, reconciliation, task rigor, model routing, verification loops, session persistence |
+## Core
+
+| Skill | Path | Commands |
+|-------|------|----------|
+| core [installed] | `core/SKILL.md` | (none) |
+
+## Workflow
+
+| Skill | Path | Commands |
+|-------|------|----------|
+| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:reconcile, /skippy:update |
 
 ## Plugin Distribution
 

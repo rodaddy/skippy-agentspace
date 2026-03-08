@@ -5,6 +5,7 @@ metadata:
   version: 0.1.0
   author: Rico
   source: https://github.com/rico/skippy-agentspace
+  category: core
 ---
 
 # core -- PAI Core Infrastructure
