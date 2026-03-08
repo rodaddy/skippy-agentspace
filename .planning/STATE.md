@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
-status: completed
-stopped_at: Phase 9 context gathered
-last_updated: "2026-03-08T01:40:23.904Z"
-last_activity: 2026-03-08 -- Completed 08-03 generic upstream updater
+status: in-progress
+stopped_at: Completed 09-01 selective install/uninstall
+last_updated: "2026-03-08T02:05:00.000Z"
+last_activity: 2026-03-08 -- Completed 09-01 selective install/uninstall
 progress:
   total_phases: 10
   completed_phases: 8
-  total_plans: 20
-  completed_plans: 20
-  percent: 100
+  total_plans: 23
+  completed_plans: 21
+  percent: 91
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** Phase 8 -- Upstream Analysis (OMC registration, cross-package analysis, reference docs, generic updater)
+**Current focus:** Phase 9 -- Skill System (selective install, skill dependencies, bootstrap)
 
 ## Current Position
 
-Phase: 8 of 10 (Upstream Analysis)
-Plan: 3 of 3 complete
-Status: Phase Complete
-Last activity: 2026-03-08 -- Completed 08-03 generic upstream updater
+Phase: 9 of 10 (Skill System)
+Plan: 1 of 2 complete
+Status: In Progress
+Last activity: 2026-03-08 -- Completed 09-01 selective install/uninstall
 
-Progress: [██████████] 100%
+Progress: [█████████░] 91%
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [██████████] 100%
 | Phase 08 P01 | 4min | 2 tasks | 2 files |
 | Phase 08 P02 | 9min | 2 tasks | 5 files |
 | Phase 08 P03 | 3min | 2 tasks | 7 files |
+| Phase 09 P01 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,9 @@ Recent decisions affecting current work:
 - [Phase 08]: Graduation path concept in skill-extraction: correction -> pattern -> skill with explicit promotion triggers
 - [08-03]: AI-driven intent description over shell script wrapper -- Claude adapts to upstream count and change patterns conversationally
 - [08-03]: Cross-package analysis flag at >10 commits or cherry-pick area changes -- balances signal vs noise
+- [09-01]: Continue-on-error for batch install/uninstall -- report failures at end rather than aborting mid-batch
+- [09-01]: show_status() with printf column formatting and [installed]/[available] badges for no-arg display
+- [09-01]: Functions moved before argument parsing in install.sh to allow --help to call list_skills
 
 ### Pending Todos
 
@@ -123,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T01:40:23.902Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-skill-system/09-CONTEXT.md
+Last session: 2026-03-08T02:05:00Z
+Stopped at: Completed 09-01 selective install/uninstall
+Resume file: .planning/phases/09-skill-system/09-01-SUMMARY.md

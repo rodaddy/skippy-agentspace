@@ -44,7 +44,7 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 
 ### Skill System
 
-- [ ] **SKIL-01**: install.sh supports selective install (--core, --skill, --all flags)
+- [x] **SKIL-01**: install.sh supports selective install (--core, --skill, --all flags)
 - [ ] **SKIL-02**: migrate-skill.sh imports skills from ~/.config/pai/Skills/ into portable format
 - [ ] **SKIL-03**: ~10 essential skills migrated with slim SKILL.md + deep references
 - [ ] **SKIL-04**: INDEX.md updated with categories and install status
@@ -125,7 +125,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | UPST-02 | Phase 8 | Complete |
 | UPST-03 | Phase 8 | Complete |
 | UPST-04 | Phase 8 | Complete |
-| SKIL-01 | Phase 9 | Pending |
+| SKIL-01 | Phase 9 | Complete |
 | SKIL-02 | Phase 9 | Pending |
 | SKIL-03 | Phase 9 | Pending |
 | SKIL-04 | Phase 9 | Pending |
