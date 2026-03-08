@@ -28,7 +28,7 @@
 - [x] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall (completed 2026-03-07)
 - [x] **Phase 8: Upstream Analysis** - OMC as third upstream, cross-package analysis, and generic upstream checker (completed 2026-03-08)
 - [x] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported (completed 2026-03-08)
-- [ ] **Phase 10: Bootstrap & Docs** - Prerequisite validation, setup/install/upgrade docs, and post-install verification
+- [x] **Phase 10: Bootstrap & Docs** - Prerequisite validation, setup/install/upgrade docs, and post-install verification (completed 2026-03-08)
 
 ## Phase Details
 
@@ -211,4 +211,4 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 8. Upstream Analysis | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
-| 10. Bootstrap & Docs | 1/2 | In Progress|  | - |
+| 10. Bootstrap & Docs | 2/2 | Complete   | 2026-03-08 | - |
