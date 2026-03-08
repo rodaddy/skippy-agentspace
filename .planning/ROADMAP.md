@@ -242,7 +242,11 @@ Plans:
   3. A shared findings board (markdown file) aggregates results with severity ratings and cross-references
   4. Fix agents apply changes via atomic commits, and an evaluator agent verifies fixes and checks for regressions
   5. All agent execution overrides `$HOME` to a temp directory -- no agent touches real `~/.claude/` (learned from 71-skill nuke incident)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 14-01-PLAN.md -- Agent definitions (6 subagents) + audit-swarm.md reference doc
+- [ ] 14-02-PLAN.md -- /skippy:review command + SKILL.md, INDEX.md, CLAUDE.md integration
 
 ### Phase 15: Hardening
 **Goal**: Replace hardcoded placeholders in deploy-service with a config mechanism, and add version bump automation
@@ -299,6 +303,6 @@ Wave 3: [Phase 16]                          (needs all)
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | v1.2 | 0/3 | Planned | - |
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
-| 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
+| 14. Audit Swarm | v1.2 | 0/2 | Planned | - |
 | 15. Hardening | v1.2 | 0/2 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
