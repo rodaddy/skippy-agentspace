@@ -4,7 +4,18 @@ set -euo pipefail
 # index-sync -- Validate or regenerate INDEX.md from skills/*/SKILL.md frontmatter
 # Usage: index-sync.sh [--check|--generate]
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Source shared library with graceful fallback
+_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs (only repo_root and is_installed needed)
+    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/$1" ]] || [[ -L "$HOME/.claude/commands/$1" ]]; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 INDEX_FILE="$REPO_ROOT/INDEX.md"
 SKILLS_DIR="$REPO_ROOT/skills"
 MODE="${1:---check}"
@@ -16,15 +27,6 @@ CATEGORY_ORDER=("core" "workflow" "utility" "domain")
 capitalize() {
     local word="$1"
     echo "$(echo "${word:0:1}" | tr '[:lower:]' '[:upper:]')${word:1}"
-}
-
-# Check if a skill is installed (symlinked into ~/.claude/skills/ or ~/.claude/commands/)
-is_installed() {
-    local skill_name="$1"
-    if [[ -L "$HOME/.claude/skills/$skill_name" ]] || [[ -L "$HOME/.claude/commands/$skill_name" ]]; then
-        return 0
-    fi
-    return 1
 }
 
 # Extract category from SKILL.md frontmatter
@@ -130,7 +132,7 @@ case "$MODE" in
 
             # Build display name with install badge
             display_name="$skill_name"
-            if is_installed "$skill_name"; then
+            if skippy_is_installed "$skill_name"; then
                 display_name="$skill_name [installed]"
             fi
 

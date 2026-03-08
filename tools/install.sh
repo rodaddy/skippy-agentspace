@@ -18,7 +18,18 @@ set -euo pipefail
 # Modern installs symlink the entire skill directory (SKILL.md, commands/, references/, scripts/).
 # Legacy installs symlink the commands/ subdirectory only (slash commands, no SKILL.md discovery).
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Source shared library with graceful fallback
+_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs (only repo_root and is_installed needed)
+    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/$1" ]] || [[ -L "$HOME/.claude/commands/$1" ]]; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$REPO_ROOT/skills"
 TARGET="auto"
 SKILL_NAMES=()

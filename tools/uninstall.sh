@@ -11,6 +11,17 @@ set -euo pipefail
 # Checks both modern (~/.claude/skills/) and legacy (~/.claude/commands/) targets.
 # Removes from whichever locations have symlinks. Source files are untouched.
 
+# Source shared library with graceful fallback
+_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs (only repo_root needed)
+    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$HOME/.claude/skills"
 COMMANDS_DIR="$HOME/.claude/commands"
 
@@ -116,7 +127,7 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
 
     # CRITICAL: Only remove symlinks that point INTO this repo's skills/ directory.
     # Never touch symlinks belonging to other projects (PAI, n8n, etc.)
-    REPO_SKILLS_DIR="$(cd "$(dirname "$0")/.." && pwd)/skills"
+    REPO_SKILLS_DIR="$REPO_ROOT/skills"
 
     if [[ -d "$SKILLS_DIR" ]]; then
         for link in "$SKILLS_DIR"/*/; do
@@ -156,7 +167,7 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
         echo "PAI hooks detected in $SETTINGS_FILE."
         read -r -p "Also remove PAI hooks from settings.json? (y/n) " answer
         if [[ "$answer" =~ ^[Yy]$ ]]; then
-            HOOK_UNINSTALLER="$(cd "$(dirname "$0")/.." && pwd)/skills/core/hooks/uninstall-hooks.sh"
+            HOOK_UNINSTALLER="$REPO_ROOT/skills/core/hooks/uninstall-hooks.sh"
             if [[ -f "$HOOK_UNINSTALLER" ]]; then
                 bash "$HOOK_UNINSTALLER"
             else
