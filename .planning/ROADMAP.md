@@ -209,16 +209,23 @@ Plans:
 **Plans**: TBD
 
 ### Phase 13: GSD Pattern Absorption
-**Goal**: Absorb GSD's core execution patterns as standalone skippy reference docs, removing all runtime dependency on GSD
+**Goal**: Absorb GSD's core execution patterns as 4 standalone skippy reference docs, update reconcile to parse skippy's own format, and remove all GSD dependency language from distributed content
 **Depends on**: Phase 10 (v1.1 complete -- no dependency on Phases 11-12)
 **Requirements**: ABSORB-01, ABSORB-02, ABSORB-03, ABSORB-04, ABSORB-05, ABSORB-06, ABSORB-07
 **Success Criteria** (what must be TRUE):
-  1. Five new reference docs exist under `skills/skippy-dev/references/`: `phased-execution.md`, `state-tracking.md`, `plan-structure.md`, `wave-parallelism.md`, `checkpoints.md`
-  2. Each reference doc is a standalone skippy specification -- no "requires GSD" language, no references to `gsd-tools.cjs`
-  3. `grep -r "requires GSD\|gsd-tools" skills/ tools/` returns zero matches (excluding gsd-dependency-map.md historical notes)
-  4. `/skippy:reconcile` works against any `.planning/` directory following skippy's own format specification
-  5. `gsd-dependency-map.md` updated with header noting format absorption -- risks reframed as "format drift" not "GSD dependency"
-**Plans**: TBD
+  1. Four new reference docs exist under `skills/skippy-dev/references/`: `phased-execution.md`, `state-tracking.md`, `plan-structure.md`, `checkpoints.md` (wave-parallelism folded into phased-execution.md per user decision)
+  2. Each reference doc is a standalone skippy specification -- no "requires GSD" language, source credit footers only
+  3. `grep -rn "requires GSD\|gsd-tools\|gsd-executor\|gsd-verifier\|gsd-planner" skills/ --include="*.md"` returns zero matches
+  4. `/skippy:reconcile` parses skippy's markdown+YAML task format (not XML)
+  5. `task-anatomy.md` deleted (content absorbed into `plan-structure.md`)
+  6. `gsd-dependency-map.md` deleted (content absorbed into 4 new reference docs)
+  7. PROJECT.md constraint updated to allow bun/TypeScript for structured data operations
+**Plans**: 3 plans
+
+Plans:
+- [ ] 13-01-PLAN.md -- Create 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints)
+- [ ] 13-02-PLAN.md -- Create skippy-state.ts parser + update reconcile.md for markdown task format
+- [ ] 13-03-PLAN.md -- GSD language cleanup across 8 reference docs, SKILL.md update, PROJECT.md update, delete superseded files
 
 ### Phase 14: Audit Swarm
 **Goal**: Implement `/skippy:review` as a multi-agent audit command that spawns specialist review agents with sandboxed execution
@@ -282,7 +289,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | v1.2 | 0/0 | Planned | - |
+| 13. GSD Pattern Absorption | v1.2 | 0/3 | Planned | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
 | 15. Hardening | v1.2 | 0/0 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
