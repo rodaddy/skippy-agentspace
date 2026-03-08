@@ -14,19 +14,21 @@ set -euo pipefail
 # Source shared library with graceful fallback
 # ---------------------------------------------------------------------------
 
-_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
 if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
 else
-    # Fallback: define minimal stubs so script still works without common.sh
-    # CRITICAL: Bash 3.2-compatible syntax only (no associative arrays, no ${var,,}, no |&, no mapfile)
-    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
-    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
-    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
-    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
-    skippy_suggest() { echo "    Fix: $1"; }
-    skippy_section() { echo ""; echo "=== $1 ==="; }
+    # Fallback: define stubs so script still works without common.sh
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_PASS++)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_WARN++)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_FAIL++)); }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
 fi
 
 # ---------------------------------------------------------------------------
@@ -111,7 +113,7 @@ prompt_install() {
         case "$response" in
             y|Y|yes|YES)
                 echo "    Running: $install_cmd"
-                if eval "$install_cmd"; then
+                if bash -c "$install_cmd"; then
                     echo "    Installed successfully."
                     return 0
                 else
@@ -167,10 +169,10 @@ check_git() {
     if command -v git >/dev/null 2>&1; then
         local version
         version="$(git --version | cut -d' ' -f3)"
-        skippy_pass "git $version"
+        printf '  \033[32m✓\033[0m git %s\n' "$version"
         return 0
     else
-        skippy_fail "git"
+        printf '  \033[31m✗\033[0m git\n'
         prompt_install "git" "$(get_install_cmd git)" && check_git
         return 1
     fi
@@ -181,7 +183,7 @@ check_bash() {
     bash_path="$(command -v bash 2>/dev/null || true)"
 
     if [ -z "$bash_path" ]; then
-        skippy_fail "bash"
+        printf '  \033[31m✗\033[0m bash\n'
         prompt_install "bash" "$(get_install_cmd bash)" && check_bash
         return 1
     fi
@@ -193,10 +195,10 @@ check_bash() {
     major="$(echo "$bash_version_str" | cut -d. -f1)"
 
     if [ "$major" -ge 4 ] 2>/dev/null; then
-        skippy_pass "bash $bash_version_str ($bash_path)"
+        printf '  \033[32m✓\033[0m bash %s (%s)\n' "$bash_version_str" "$bash_path"
         return 0
     else
-        skippy_warn "bash $bash_version_str (need 4+, path: $bash_path)"
+        printf '  \033[33m⚠\033[0m bash %s (need 4+, path: %s)\n' "$bash_version_str" "$bash_path"
         prompt_install "bash" "$(get_install_cmd bash)" && check_bash
         return 1
     fi
@@ -206,10 +208,10 @@ check_bun() {
     if command -v bun >/dev/null 2>&1; then
         local version
         version="$(bun --version)"
-        skippy_pass "bun $version"
+        printf '  \033[32m✓\033[0m bun %s\n' "$version"
         return 0
     else
-        skippy_fail "bun"
+        printf '  \033[31m✗\033[0m bun\n'
         prompt_install "bun" "$(get_install_cmd bun)" && check_bun
         return 1
     fi
@@ -219,10 +221,10 @@ check_jq() {
     if command -v jq >/dev/null 2>&1; then
         local version
         version="$(jq --version)"
-        skippy_pass "jq $version"
+        printf '  \033[32m✓\033[0m jq %s\n' "$version"
         return 0
     else
-        skippy_fail "jq"
+        printf '  \033[31m✗\033[0m jq\n'
         prompt_install "jq" "$(get_install_cmd jq)" && check_jq
         return 1
     fi
