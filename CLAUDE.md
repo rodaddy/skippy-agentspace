@@ -51,7 +51,7 @@ Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, 
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 4 commands, 10 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 10 reference docs
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections
@@ -77,18 +77,19 @@ INDEX.md                    # Auto-generated skill registry (4 category sections
 | `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
 | `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
 | `/skippy:migrate` | Migrate PAI skills to portable format -- scan, rank, dry-run, migrate, update integration |
+| `/skippy:upgrade` | Pull latest, re-install skills and hooks, verify, report changes and customization conflicts |
 
 ## Installation
 
 **Plugin install** (preferred):
 ```
-/plugin marketplace add owner/skippy-agentspace
+/plugin marketplace add rodaddy/skippy-agentspace
 /plugin install skippy-dev@skippy-agentspace
 ```
 
 **Manual install:**
 ```bash
-git clone <repo-url>
+git clone https://github.com/rodaddy/skippy-agentspace.git
 cd skippy-agentspace
 ./tools/install.sh    # Auto-detects ~/.claude/skills/ (modern) or ~/.claude/commands/ (legacy)
 ```

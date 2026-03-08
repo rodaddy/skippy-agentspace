@@ -7,7 +7,7 @@ Portable Claude Code skill repo. Cherry-picks the best workflow ideas from [GSD]
 ## Quick Start
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/rodaddy/skippy-agentspace.git
 cd skippy-agentspace
 bash tools/prereqs.sh
 bash tools/install.sh --all

@@ -18,7 +18,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 | check-todos [installed] | `check-todos/SKILL.md` | (none) |
 | correct [installed] | `correct/SKILL.md` | (none) |
 | session-wrap [installed] | `session-wrap/SKILL.md` | (none) |
-| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update |
+| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update, /skippy:upgrade |
 | update-todo [installed] | `update-todo/SKILL.md` | (none) |
 
 ## Utility
@@ -41,7 +41,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 This repo is also a Claude Code plugin marketplace. Install via:
 
 ```
-/plugin marketplace add owner/skippy-agentspace
+/plugin marketplace add rodaddy/skippy-agentspace
 /plugin install skippy-dev@skippy-agentspace
 ```
 

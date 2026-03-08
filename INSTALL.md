@@ -7,7 +7,7 @@ Adding individual skills or components to an existing skippy-agentspace setup. F
 If your Claude Code version supports plugins:
 
 ```
-/plugin marketplace add owner/skippy-agentspace
+/plugin marketplace add rodaddy/skippy-agentspace
 /plugin install skippy-dev@skippy-agentspace
 ```
 

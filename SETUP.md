@@ -5,7 +5,7 @@ First-time setup for skippy-agentspace. Takes you from a fresh clone to a workin
 ## Step 1: Clone the Repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/rodaddy/skippy-agentspace.git
 cd skippy-agentspace
 ```
 
