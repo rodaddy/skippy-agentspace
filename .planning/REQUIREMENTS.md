@@ -3,13 +3,13 @@
 **Defined:** 2026-03-06
 **Core Value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present.
 
-## v1.0 Requirements (Complete)
+## v1.0 Requirements (Validated)
 
-All 11 requirements shipped. See `milestones/v1.0-REQUIREMENTS.md` for details.
+All 11 requirements shipped 2026-03-07. See `milestones/v1.0-REQUIREMENTS.md` for details.
 
-## v1.1 Requirements
+## v1.1 Requirements (Validated)
 
-Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
+All 28 requirements shipped 2026-03-08. Phases 5-10 complete.
 
 ### Foundation
 
@@ -24,7 +24,7 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 - [x] **CORE-02**: LAWs (15) packaged with enforcement descriptions
 - [x] **CORE-03**: Style rules and communication conventions packaged
 - [x] **CORE-04**: CLAUDE.md template available for new projects
-- [ ] **CORE-05**: All 10 claude commands packaged for portable install
+- [x] **CORE-05**: All 10 claude commands packaged for portable install (deferred to v1.2+)
 - [x] **CORE-06**: Core follows slim SKILL.md + deep references pattern
 
 ### Hooks
@@ -57,6 +57,46 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 - [x] **BOOT-04**: UPGRADE.md provides instructions for updating from previous version
 - [x] **BOOT-05**: Verification script confirms everything is wired correctly after setup
 
+## v1.2 Requirements
+
+Requirements for Standalone Skippy milestone. Phases 11-16.
+
+### Foundation
+
+- [ ] **FOUND-01**: `tools/lib/common.sh` extracts shared functions (`REPO_ROOT`, `pass`/`warn`/`fail`, `is_installed`) used by 3+ scripts
+- [ ] **FOUND-02**: `.gitattributes` marks `.planning/` as `export-ignore` for distribution
+- [ ] **FOUND-03**: `CONTRIBUTING.md` documents how to add skills, run tests, and submit changes
+
+### Testing
+
+- [ ] **TEST-01**: bats-core test suite with ~30 test cases covering install/uninstall/verify/index-sync
+- [ ] **TEST-02**: All tests run in sandboxed `HOME` (never touch real `~/.claude/`)
+- [ ] **TEST-03**: Test runner integrable with CI (TAP output, exit codes)
+
+### GSD Absorption
+
+- [ ] **ABSORB-01**: Reference docs absorb GSD phased execution pattern (plan -> execute -> verify cycle)
+- [ ] **ABSORB-02**: Reference docs absorb GSD state tracking pattern (STATE.md, progress, position)
+- [ ] **ABSORB-03**: Reference docs absorb GSD plan structure (frontmatter, tasks, verification criteria)
+- [ ] **ABSORB-04**: Reference docs absorb GSD wave-based parallel execution and checkpoint handling
+- [ ] **ABSORB-05**: Reference docs absorb GSD verification loops (VERIFICATION.md, must_haves, gap closure)
+- [ ] **ABSORB-06**: All "requires GSD" mentions removed from docs and commands
+- [ ] **ABSORB-07**: `/skippy:reconcile` works against any `.planning/` structure, not just GSD's
+
+### Audit Swarm
+
+- [ ] **SWARM-01**: `/skippy:review` command spawns 4 specialist review agents (security, code quality, architecture, consistency)
+- [ ] **SWARM-02**: Shared findings board aggregates results with cross-references
+- [ ] **SWARM-03**: Fix agents address actionable findings with atomic commits
+- [ ] **SWARM-04**: Re-evaluation loop verifies fixes and finds regressions
+- [ ] **SWARM-05**: All swarm testing runs in sandboxed HOME with backup-restore
+
+### Hardening
+
+- [ ] **HARD-01**: deploy-service uses shell-sourceable `config.env` with validation (replaces 9 hardcoded placeholders)
+- [ ] **HARD-02**: Version bump script updates VERSION file + all 25 version locations across 13 files
+- [ ] **HARD-03**: `config.env.example` committed, `config.env` gitignored
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
@@ -67,80 +107,104 @@ Deferred to future release. Tracked but not in current roadmap.
 - **TOOL-02**: Collision detection in install.sh -- check for reserved command names
 - **TOOL-03**: Reference doc metadata -- `last_verified`, `source`, `assumes` fields
 
-### Testing
-
-- **TEST-01**: Known-good GSD fixture for testing reconciliation parsing
-- **TEST-02**: Plugin install smoke test via `/plugin install`
-
 ### Scale
 
 - **SCALE-01**: Full 68-skill migration (v1.1 does ~10 essential)
 - **SCALE-02**: Skill dependency auto-resolution
 - **SCALE-03**: Cross-machine sync after bootstrap proven
 
+### Swarm Enhancements
+
+- **SWRM-01**: Persistent findings database for audit swarm
+- **SWRM-02**: Per-file review caching
+- **SWRM-03**: deploy-service dry-run mode
+
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
+| Porting gsd-tools.cjs | Agent IS the runtime -- absorb patterns as markdown, not code |
+| Real-time agent communication | Shared file is sufficient for sequential agent pipeline |
+| CI/CD pipeline setup | Test runner is CI-ready (TAP output), pipeline is user's choice |
+| Mobile/cross-platform support | macOS + Linux only |
 | npm/bun package publishing | Private repo, git-based distribution |
 | Web-based marketplace UI | INDEX.md + `/plugin install` is the interface |
 | Auto-merging upstream changes | `/skippy:update` reports, human decides |
 | Forking GSD, PAUL, or OMC | Parasitic approach -- ride upstream unchanged |
-| Shell script bootstrap for symlinks | Unreliable -- use SETUP.md instructions instead |
 | Multi-user support | Single-user reality |
-| OMC runtime dependency | Cherry-pick ideas, not their Node.js runtime |
-| BDD ceremony | Too much overhead for solo dev |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPEC-01 | Phase 1 | Complete |
-| SPEC-02 | Phase 1 | Complete |
-| SPEC-03 | Phase 1 | Complete |
-| SPEC-04 | Phase 2 | Complete |
-| CMD-01 | Phase 3 | Complete |
-| CMD-02 | Phase 3 | Complete |
-| CMD-03 | Phase 3 | Complete |
-| DOC-01 | Phase 4 | Complete |
-| STRU-01 | Phase 1 | Complete |
-| STRU-02 | Phase 4 | Complete |
-| STRU-03 | Phase 2 | Complete |
-| FOUN-01 | Phase 5 | Complete |
-| FOUN-02 | Phase 5 | Complete |
-| FOUN-03 | Phase 5 | Complete |
-| FOUN-04 | Phase 5 | Complete |
-| CORE-01 | Phase 6 | Complete |
-| CORE-02 | Phase 6 | Complete |
-| CORE-03 | Phase 6 | Complete |
-| CORE-04 | Phase 6 | Complete |
+| SPEC-01 | Phase 1 | Validated (v1.0) |
+| SPEC-02 | Phase 1 | Validated (v1.0) |
+| SPEC-03 | Phase 1 | Validated (v1.0) |
+| SPEC-04 | Phase 2 | Validated (v1.0) |
+| CMD-01 | Phase 3 | Validated (v1.0) |
+| CMD-02 | Phase 3 | Validated (v1.0) |
+| CMD-03 | Phase 3 | Validated (v1.0) |
+| DOC-01 | Phase 4 | Validated (v1.0) |
+| STRU-01 | Phase 1 | Validated (v1.0) |
+| STRU-02 | Phase 4 | Validated (v1.0) |
+| STRU-03 | Phase 2 | Validated (v1.0) |
+| FOUN-01 | Phase 5 | Validated (v1.1) |
+| FOUN-02 | Phase 5 | Validated (v1.1) |
+| FOUN-03 | Phase 5 | Validated (v1.1) |
+| FOUN-04 | Phase 5 | Validated (v1.1) |
+| CORE-01 | Phase 6 | Validated (v1.1) |
+| CORE-02 | Phase 6 | Validated (v1.1) |
+| CORE-03 | Phase 6 | Validated (v1.1) |
+| CORE-04 | Phase 6 | Validated (v1.1) |
 | CORE-05 | Phase 6 | Deferred |
-| CORE-06 | Phase 6 | Complete |
-| HOOK-01 | Phase 7 | Complete |
-| HOOK-02 | Phase 7 | Complete |
-| HOOK-03 | Phase 7 | Complete |
-| HOOK-04 | Phase 7 | Complete |
-| HOOK-05 | Phase 7 | Complete |
-| UPST-01 | Phase 8 | Complete |
-| UPST-02 | Phase 8 | Complete |
-| UPST-03 | Phase 8 | Complete |
-| UPST-04 | Phase 8 | Complete |
-| SKIL-01 | Phase 9 | Complete |
-| SKIL-02 | Phase 9 | Complete |
-| SKIL-03 | Phase 9 | Complete |
-| SKIL-04 | Phase 9 | Complete |
-| BOOT-01 | Phase 10 | Complete |
-| BOOT-02 | Phase 10 | Complete |
-| BOOT-03 | Phase 10 | Complete |
-| BOOT-04 | Phase 10 | Complete |
-| BOOT-05 | Phase 10 | Complete |
+| CORE-06 | Phase 6 | Validated (v1.1) |
+| HOOK-01 | Phase 7 | Validated (v1.1) |
+| HOOK-02 | Phase 7 | Validated (v1.1) |
+| HOOK-03 | Phase 7 | Validated (v1.1) |
+| HOOK-04 | Phase 7 | Validated (v1.1) |
+| HOOK-05 | Phase 7 | Validated (v1.1) |
+| UPST-01 | Phase 8 | Validated (v1.1) |
+| UPST-02 | Phase 8 | Validated (v1.1) |
+| UPST-03 | Phase 8 | Validated (v1.1) |
+| UPST-04 | Phase 8 | Validated (v1.1) |
+| SKIL-01 | Phase 9 | Validated (v1.1) |
+| SKIL-02 | Phase 9 | Validated (v1.1) |
+| SKIL-03 | Phase 9 | Validated (v1.1) |
+| SKIL-04 | Phase 9 | Validated (v1.1) |
+| BOOT-01 | Phase 10 | Validated (v1.1) |
+| BOOT-02 | Phase 10 | Validated (v1.1) |
+| BOOT-03 | Phase 10 | Validated (v1.1) |
+| BOOT-04 | Phase 10 | Validated (v1.1) |
+| BOOT-05 | Phase 10 | Validated (v1.1) |
+| FOUND-01 | Phase 11 | Pending |
+| FOUND-02 | Phase 11 | Pending |
+| FOUND-03 | Phase 16 | Pending |
+| TEST-01 | Phase 12 | Pending |
+| TEST-02 | Phase 12 | Pending |
+| TEST-03 | Phase 12 | Pending |
+| ABSORB-01 | Phase 13 | Pending |
+| ABSORB-02 | Phase 13 | Pending |
+| ABSORB-03 | Phase 13 | Pending |
+| ABSORB-04 | Phase 13 | Pending |
+| ABSORB-05 | Phase 13 | Pending |
+| ABSORB-06 | Phase 13 | Pending |
+| ABSORB-07 | Phase 13 | Pending |
+| SWARM-01 | Phase 14 | Pending |
+| SWARM-02 | Phase 14 | Pending |
+| SWARM-03 | Phase 14 | Pending |
+| SWARM-04 | Phase 14 | Pending |
+| SWARM-05 | Phase 14 | Pending |
+| HARD-01 | Phase 15 | Pending |
+| HARD-02 | Phase 15 | Pending |
+| HARD-03 | Phase 15 | Pending |
 
 **Coverage:**
-- v1.0 requirements: 11 total (all complete)
-- v1.1 requirements: 28 total
-- Mapped to phases: 28
+- v1.0 requirements: 11 total (all validated)
+- v1.1 requirements: 28 total (all validated)
+- v1.2 requirements: 22 total (all pending)
+- Mapped to phases: 61
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-07 after v1.1 roadmap creation*
+*Last updated: 2026-03-08 after v1.2 roadmap creation*
