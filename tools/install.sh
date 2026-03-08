@@ -19,7 +19,7 @@ set -euo pipefail
 # Legacy installs symlink the commands/ subdirectory only (slash commands, no SKILL.md discovery).
 
 # Source shared library with graceful fallback
-_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
+_COMMON_SH="$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
@@ -37,6 +37,10 @@ fi
 
 validate_skill_name() {
     local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Error: Skill name cannot be empty" >&2
+        return 1
+    fi
     if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
         echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
         return 1
