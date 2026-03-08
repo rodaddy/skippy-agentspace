@@ -27,7 +27,7 @@ else
     skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
     skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
     skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
-    skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; { [[ "$n" =~ [/\\] ]] || [[ "$n" == .* ]]; } && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
+    skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; ! [[ "$n" =~ ^[a-zA-Z0-9_-]+$ ]] && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
 fi
 
 REPO_ROOT="$(skippy_repo_root)"

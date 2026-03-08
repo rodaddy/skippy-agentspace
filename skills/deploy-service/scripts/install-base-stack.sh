@@ -10,8 +10,15 @@ if [[ ! -f "$CONFIG" ]]; then
     exit 1
 fi
 
-# shellcheck source=/dev/null
-source "$CONFIG"
+# Safe config load: only export KEY=VALUE lines (no arbitrary code execution)
+while IFS='=' read -r key value; do
+    [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+    key="${key## }"; key="${key%% }"
+    value="${value## }"; value="${value%% }"
+    value="${value#\"}"; value="${value%\"}"
+    value="${value#\'}"; value="${value%\'}"
+    export "$key=$value"
+done < "$CONFIG"
 
 : "${DEPLOY_VAULTWARDEN_URL:?DEPLOY_VAULTWARDEN_URL not set in config.env}"
 

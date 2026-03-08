@@ -25,13 +25,14 @@ if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
 else
-    # Minimal fallback stubs (use $0 for path derivation per project gotcha)
+    # Canonical fallback stubs (use $0 for path derivation per project gotcha #6)
     SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
-    skippy_repo_root() { cd "$(dirname "$0")/.." && pwd; }
-    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
-    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
-    skippy_section() { echo ""; echo "=== $1 ==="; }
-    skippy_summary() { echo ""; echo "  $SKIPPY_PASS passed, $SKIPPY_WARN warnings, $SKIPPY_FAIL failures"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_repo_root() { local d; d="$(cd "$(dirname "$0")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
 fi
 
 # ---------------------------------------------------------------------------
