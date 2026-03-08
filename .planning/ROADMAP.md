@@ -155,11 +155,12 @@ Plans:
   2. A cross-package analysis document identifies patterns that appear in 2+ upstreams (e.g., model routing, task verification, context management) with notes on which implementation is best
   3. At least 3 "best-of-breed" skippy reference docs exist that synthesize the strongest version of shared patterns across upstreams
   4. `/skippy:update` uses a generic upstream checker that iterates `upstreams/*/upstream.json` instead of hardcoded repo URLs
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
+- [ ] 08-01-PLAN.md -- OMC upstream registration + cross-package analysis document
+- [ ] 08-02-PLAN.md -- Best-of-breed reference docs (3-5 synthesized pattern guides)
+- [ ] 08-03-PLAN.md -- Generic AI-driven /skippy:update + legacy cleanup
 
 ### Phase 9: Skill System
 **Goal**: Users can selectively install individual skills or the full suite, and ~10 essential PAI skills are migrated into the portable format
@@ -206,7 +207,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Documentation | v1.0 | 2/2 | Complete | 2026-03-07 |
 | 5. Foundation | v1.1 | 2/2 | Complete | 2026-03-07 |
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
-| 7. Hook Installation | 3/3 | Complete   | 2026-03-07 | - |
-| 8. Upstream Analysis | v1.1 | 0/? | Not started | - |
+| 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
+| 8. Upstream Analysis | v1.1 | 0/3 | Planned | - |
 | 9. Skill System | v1.1 | 0/? | Not started | - |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |
