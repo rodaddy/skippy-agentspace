@@ -67,10 +67,20 @@ case "$MODE" in
 
         # Check for INDEX entries with no matching directory
         # Extract skill names from INDEX.md table rows (pipe-delimited)
+        # Skip non-skill rows: table headers, separators, and badge legend entries
         while IFS='|' read -r _ name _rest; do
             # Strip badges and whitespace from name
             name="$(echo "$name" | sed 's/\[installed\]//' | xargs)"
-            if [[ -n "$name" && ! -d "$SKILLS_DIR/$name" ]]; then
+            # Skip empty names, table headers/separators, and badge legend rows
+            if [[ -z "$name" ]]; then
+                continue
+            fi
+            case "$name" in
+                Badge|Standalone|"Needs bun"|"Needs infra"|---*|"**"*)
+                    continue
+                    ;;
+            esac
+            if [[ ! -d "$SKILLS_DIR/$name" ]]; then
                 echo "  ORPHAN: $name in INDEX.md but no directory"
                 errors=$((errors + 1))
             fi
