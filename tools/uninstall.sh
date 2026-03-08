@@ -138,6 +138,26 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
         echo "  WARN: No symlinked skills found -- nothing to uninstall"
     fi
 
+    # --- Hook cleanup ---
+    # After removing all skills, offer to remove PAI hooks from settings.json
+    SETTINGS_FILE="$HOME/.claude/settings.json"
+    if [[ -f "$SETTINGS_FILE" ]] && grep -q 'skills/core/hooks/' "$SETTINGS_FILE" 2>/dev/null; then
+        echo ""
+        echo "PAI hooks detected in $SETTINGS_FILE."
+        read -r -p "Also remove PAI hooks from settings.json? (y/n) " answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            HOOK_UNINSTALLER="$(cd "$(dirname "$0")/.." && pwd)/skills/core/hooks/uninstall-hooks.sh"
+            if [[ -f "$HOOK_UNINSTALLER" ]]; then
+                bash "$HOOK_UNINSTALLER"
+            else
+                echo "  WARN: Hook uninstaller not found at $HOOK_UNINSTALLER"
+                echo "  Manual removal: edit $SETTINGS_FILE and remove entries containing 'skills/core/hooks/'"
+            fi
+        else
+            echo "  Skipped hook removal. Hooks remain in $SETTINGS_FILE."
+        fi
+    fi
+
     echo "=== Done. Run /clear to refresh skill list. ==="
 elif [[ ${#SKILL_NAMES[@]} -gt 0 ]]; then
     echo "=== Uninstalling ${#SKILL_NAMES[@]} skill(s) ==="
