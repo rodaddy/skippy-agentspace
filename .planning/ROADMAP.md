@@ -34,7 +34,7 @@
 
 - [x] **Phase 11: Foundation** - Shared shell library and repo hygiene (.gitattributes) (completed 2026-03-08)
 - [ ] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation
-- [ ] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns
+- [x] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns (completed 2026-03-08)
 - [ ] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command
 - [ ] **Phase 15: Hardening** - deploy-service config mechanism and version management
 - [ ] **Phase 16: Integration & Polish** - Final verification, doc consistency, CONTRIBUTING.md
@@ -289,7 +289,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | 2/3 | In Progress|  | - |
+| 13. GSD Pattern Absorption | 3/3 | Complete   | 2026-03-08 | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
 | 15. Hardening | v1.2 | 0/0 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
