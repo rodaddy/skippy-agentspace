@@ -1,16 +1,20 @@
+# OMC plugin cache
+.omc/
+
+# Hook backup files
+*.backup-*
+
+# Reports directory
+.reports/
+
+# OS artifacts
 .DS_Store
+Thumbs.db
+
+# Editor files
 *.swp
 *.swo
 *~
-.env
-.env.*
-node_modules/
 
-# Private content safety net
-# Primary protection: private content lives at ~/.config/pai-private/
-# These patterns are a secondary defense against accidental inclusion
-*.secret
-*.credentials
-*.private
-credentials/
-secrets/
+# Node
+node_modules/
