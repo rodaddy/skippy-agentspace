@@ -1,184 +1,203 @@
 # Project Research Summary
 
-**Project:** skippy-agentspace v1.1 -- Portable PAI Infrastructure Packaging
-**Domain:** Developer tooling / dotfiles infrastructure / Claude Code skill ecosystem
-**Researched:** 2026-03-07
-**Confidence:** MEDIUM-HIGH
+**Project:** skippy-agentspace v1.2 -- Standalone Skippy
+**Domain:** Portable Claude Code skill framework -- standalone execution, multi-agent audit, automated testing, infrastructure hardening
+**Researched:** 2026-03-08
+**Confidence:** HIGH
 
 ## Executive Summary
 
-skippy-agentspace v1.1 transforms this repo from a single-skill plugin (skippy-dev) into a portable infrastructure package that makes PAI (Personal AI Infrastructure) reproducible on any machine. The core problem: Rico's PAI system -- 69 skills, 25+ hooks, 4 personas, LAWs, rules, memory systems -- is scattered across `~/.config/pai/`, `~/.config/pai-private/`, and `~/.claude/`. None of it is version-controlled as a unit or installable from scratch. v1.1 fixes this with a "clone + bootstrap = working PAI" approach modeled on dotfiles managers (chezmoi, dotbot) but purpose-built for Claude Code's skill/hook/plugin architecture.
+Skippy-agentspace v1.2 transforms from a "parasitic skill" riding GSD into a standalone framework. The core challenge is absorbing GSD's execution patterns (phased execution, wave parallelism, state tracking, checkpoints) without absorbing its tooling (gsd-tools.cjs, 2000+ lines of Node.js). Research unanimously recommends absorbing patterns as markdown reference docs -- not code -- because skippy's commands are AI-driven: the agent IS the runtime. This sidesteps the entire "reimplement gsd-tools.cjs in bash" trap that would violate the project's no-build-step, shell-scripts-plus-markdown constraint. Five to six new reference docs under `skills/skippy-dev/references/` complete the absorption, following the same pattern successfully used for 10 existing PAUL/OMC cherry-picks.
 
-The recommended approach uses the same parasitic pattern proven in v1.0: ride upstream frameworks (GSD, PAUL) unchanged, inject enhancements as additive reference docs and self-contained skills. v1.1 extends this to OMC (oh-my-claudecode, 37 skills) as a third cherry-pick source and replaces the hardcoded upstream tracking with an extensible registry. The stack stays zero-dependency: bash scripts + markdown + symlinks. The only new runtime prerequisite is `jq` for non-destructive `settings.json` hook merging -- a justified addition given the alternative (hand-rolling JSON manipulation in bash).
+The headline feature is `/skippy:review`, a multi-agent audit swarm that spawns 3 specialist agents (reviewer, fixer, evaluator) to provide structured code review. This is well-supported by Claude Code's native Task() subagent system -- no experimental features needed. The critical risk here is real: a prior session had a red team agent run `uninstall --all` against real `$HOME`, nuking 71 installed skills. Every agent-spawning feature MUST override `$HOME` to a temp directory before any agent touches the filesystem.
 
-The primary risks are: (1) hook installation complexity -- `settings.json` is shared by GSD, OMC, and PAI, and a botched merge destroys all three systems' hooks; (2) public/private content split -- some PAI content (contacts, security protocols, credential patterns) must never enter a git repo, requiring a clean architectural boundary before any packaging begins; (3) scope creep from migrating 68 skills -- the temptation to restructure everything will stall the project. Mitigation: install hooks via read-merge-write with `jq` (never overwrite), establish the public/private convention as an early architectural decision, and migrate only essential skills (~10) for v1.1 with bulk migration deferred.
+The remaining v1.2 work is infrastructure hardening: extract a shared shell library from 6 duplicated tool scripts, add bats-core automated tests (the project currently has zero), create a deploy-service config mechanism to replace hardcoded placeholders, and add version bump automation across 25 version string locations. All of these are well-understood patterns with high-confidence research. The dependency chain is clear: shared library first (everything depends on it), tests next (safety net for refactoring), then features can parallelize.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The stack is deliberately minimal. v1.0 proved that bash + markdown + symlinks is sufficient for skill packaging. v1.1 adds no new languages or build steps.
+The existing stack is locked (bash, markdown, symlinks, bun for hooks). v1.2 adds six capabilities within the existing constraint of no new runtime dependencies beyond git, bash 4+, bun, and jq.
 
-**Core technologies (locked from v1.0):**
-- **Bash 4+**: All scripts. Associative arrays needed. macOS ships 3.2, so `brew install bash` is a prerequisite.
-- **Markdown**: Rules, references, SKILL.md entry points. Claude Code's native format.
-- **Symlinks**: Installation mechanism. Repo is single source of truth; `git pull` updates everything.
+**Core technologies:**
+- **Markdown reference docs** for GSD pattern absorption -- distill 11,452 lines of GSD workflows into 5-6 skippy-native references. No code porting. Agents load on demand.
+- **Claude Code Task() subagents** for `/skippy:review` -- native, production-ready subagent system. Explicitly NOT Agent Teams (experimental, adds coordination overhead for independent review agents).
+- **bats-core 1.13.0** via brew for shell testing -- the community standard for bash. Helpers (bats-assert, bats-support, bats-file) via git submodules for portable `load` paths.
+- **Single `tools/lib/common.sh`** for DRY extraction -- ~80-100 lines, `skippy_` namespaced functions, sourced by all 6 tool scripts with graceful fallback.
+- **Shell-sourceable `deploy.conf`** for deploy-service config -- bash `source` with validation, zero parser dependencies. Gitignored for real values.
+- **Plain `VERSION` file + `tools/bump-version.sh`** for version management -- inline semver bump, atomic update across 25 locations (13 in marketplace.json, 12 in SKILL.md files).
 
-**New for v1.1:**
-- **Bash key=value conf files** (`upstreams/<name>/upstream.conf`): Extensible upstream registry. No YAML/JSON parser needed -- bash reads these natively.
-- **`jq`**: Required for non-destructive `settings.json` hook merging. The only new dependency, justified by the alternative (fragile sed/awk on nested JSON).
-- **Directory-per-upstream pattern**: `upstreams/<name>/` with `upstream.conf` + `CHERRY-PICKS.md`. Adding an upstream = creating a directory. No code changes.
+**Critical version requirements:** Bash 4.0+ (macOS ships 3.2), bats-core 1.13.0, Bun 1.0+, Git 2.20+.
 
-**Explicitly avoided:** npm/yarn, Python, YAML/TOML parsers, Makefiles, Docker, Ansible, OMC's runtime (`oh-my-claude-sisyphus`).
-
-See [STACK.md](STACK.md) for full rationale and alternatives considered.
+See [STACK.md](STACK.md) for full rationale, alternatives considered, and stack patterns by capability.
 
 ### Expected Features
 
-**Must have (table stakes):**
-- One-command bootstrap (`git clone && ./bootstrap.sh`) -- dotfiles ecosystem standard
-- Core infrastructure package (personas, LAWs, hooks, CLAUDE.md template) -- the whole point of the project
-- Public/private content split -- some content is sensitive, must never be committed
-- Selective skill install (`--core`, `--skill <name>`, `--all`) -- can't install all 70 skills on every machine
-- Idempotent operations -- re-running install must not break existing config
-- Upstream version tracking for OMC -- natural extension of existing GSD+PAUL tracking
+**Must have (table stakes -- required for "standalone" claim):**
+- GSD pattern absorption as reference docs (phased execution, wave parallelism, state tracking, checkpoints, plan structure)
+- GSD command independence validation (zero runtime dependency on gsd-tools.cjs)
+- Shared shell library (DRY extraction from 1507 lines across 6 scripts)
+- bats-core test suite (~30 tests, ~260+ lines -- currently zero automated tests)
+- Version bump mechanism (25 locations across 13 files)
 
 **Should have (differentiators):**
-- Extensible upstream registry -- future-proof for frameworks beyond GSD/PAUL/OMC
-- OMC cherry-pick system -- selectively absorb best ideas (ralplan, learner, deepsearch, security-review) without installing all 37 skills
-- Add-on skill system with dependency declarations -- skills declare what they need
-- Bootstrap verification -- post-install health check confirms everything is wired correctly
+- `/skippy:review` multi-agent audit swarm (headline feature, 3-agent reviewer/fixer/evaluator pipeline)
+- deploy-service config mechanism + input validation + root guards
+- `.gitattributes` export-ignore
+- CONTRIBUTING.md
 
-**Defer (v2+):**
-- Skill dependency auto-resolution -- self-contained skills are simpler at current scale
-- Plugin marketplace publishing -- private/personal repo
-- Multi-user support -- single-user reality
-- Cross-machine sync -- solve after bootstrap proven on second machine
-- Full 68-skill audit/restructuring -- migrate only essentials for v1.1
+**Defer (v1.3+):**
+- Persistent findings database for audit swarm
+- Per-file review caching
+- deploy-service dry-run mode
+- Skill scaffolding (`tools/new-skill.sh`)
+- Full 68-skill migration
+- Cross-machine sync
 
 See [FEATURES.md](FEATURES.md) for dependency graph, MVP definition, and competitor analysis.
 
 ### Architecture Approach
 
-The architecture extends v1.0's flat `skills/<name>/` pattern with two new top-level components: `core/` (infrastructure package) and `upstreams/` (extensible tracking). All installation remains symlink-based. The hardest integration point is hook installation, which requires merging into the shared `settings.json` without destroying GSD or OMC hook registrations.
+v1.2 is additive -- new features integrate into the existing skill structure without reorganization. New reference docs go in `skills/skippy-dev/references/`, the review command goes in `skills/skippy-dev/commands/`, the shared library goes in `tools/lib/`, and tests go in `tests/` at repo root. The key architectural insight is that `tools/` scripts source `common.sh` but `skills/*/scripts/` do NOT -- skill scripts remain standalone per the portability constraint.
 
 **Major components:**
-1. **`core/`** -- Personas, LAWs, rules, hooks, CLAUDE.md template. The "operating system" layer. Source of truth for everything currently scattered across `~/.config/pai/` and `~/.config/pai-private/`.
-2. **`core/hooks/` + `hook-manifest.json`** -- Declares all hooks and their `settings.json` registrations. `install-hooks.sh` does read-merge-write via `jq`.
-3. **`skills/`** -- Flat directory of self-contained add-on skills. Each has SKILL.md (150 lines max) + `references/` for deep docs.
-4. **`upstreams/`** -- Directory-per-upstream with `upstream.conf` (bash key=value) and `CHERRY-PICKS.md` (provenance log). Generic `upstream-check.sh` replaces hardcoded `skippy-update.sh`.
-5. **`tools/`** -- Extended install/uninstall/bootstrap scripts. New `migrate-skill.sh` for importing skills from `~/.config/pai/Skills/`.
+1. **Reference docs (5-6 new)** -- absorbed GSD patterns as standalone markdown, loaded by agents on demand
+2. **`/skippy:review` command** -- orchestrates 3 sequential agents (reviewer -> fixer -> evaluator) with structured output
+3. **`tools/lib/common.sh`** -- shared functions for repo root resolution, pass/fail/warn reporting, skill queries
+4. **`tests/` suite** -- bats-core tests with HOME isolation for all tool scripts
+5. **`tools/bump-version.sh`** -- atomic version propagation across marketplace.json + 12 SKILL.md files
+6. **`deploy.conf` mechanism** -- shell-sourceable config replacing 9 hardcoded placeholders in deploy-service
 
-**Key patterns:** Symlink-as-package-manager. Slim-core SKILL.md (150 lines max, deep docs in references/). Non-destructive JSON merge for settings.json. Registry-driven upstream tracking.
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for full component diagram, integration points, and build order.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for full file tree, data flow diagram, build order, and anti-patterns.
 
 ### Critical Pitfalls
 
-*Note: PITFALLS.md was not produced by the pitfalls researcher. The following are derived from anti-pattern sections across the other three research files.*
+1. **Swarm agents destroy real HOME** -- A prior session had a red team agent run `uninstall --all` against real `$HOME`, nuking 71 skills. Prevention: override `HOME` to temp directory before ANY agent spawn, block destructive command patterns, include explicit `DO NOT MODIFY` boundaries in agent prompts.
 
-1. **settings.json corruption during hook install** -- Multiple systems (GSD, OMC, PAI) write to this file. Overwriting it destroys all hook registrations. Prevention: read-merge-write with `jq`, detect existing entries by command path, validate JSON before writing. Always back up before modifying.
-2. **Private content leaking into git** -- PAI infrastructure includes contacts, security protocols, credential patterns. If `core/` packaging isn't careful, sensitive content enters a potentially-public repo. Prevention: establish public/private split as the first architectural decision. Use `.gitignore` on `core/private/`. Never auto-package from `~/.config/pai-private/` without explicit filtering.
-3. **Scope creep from 68-skill migration** -- Attempting to migrate and restructure all 68 PAI skills will stall the project indefinitely. Many skills violate the slim-core pattern and need restructuring. Prevention: migrate only ~10 essential skills for v1.1. Build `migrate-skill.sh` for the pattern, defer bulk migration.
-4. **Breaking existing install by changing .versions** -- Current `skippy-update.sh` reads `.versions`. Replacing it with `upstreams/registry.json` without a migration path breaks the existing command. Prevention: keep `.versions` as legacy fallback during v1.1, deprecate in v1.2.
-5. **Bootstrap assuming clean machine** -- Bootstrap script that fails on a machine with existing partial PAI setup. Prevention: idempotent operations throughout. Check for existing symlinks before creating. Detect and skip already-installed components.
+2. **GSD absorption loses execution fidelity** -- GSD's execute-phase.md alone is 460 lines with dozens of edge cases (decimal phase handling, segment routing, deviation classification). Prevention: absorb by reference not rewrite, create a fidelity matrix mapping GSD behaviors to skippy equivalents, keep GSD upstream tracking active.
+
+3. **Test suite modifies real filesystem** -- bats tests for install/uninstall/hooks that touch real `~/.claude/` instead of isolated temp dirs. Prevention: every test file's `setup()` MUST override `HOME` to `$BATS_TEST_TMPDIR`, CI safeguard refuses to run if HOME contains `.zshrc`.
+
+4. **Shared library breaks standalone execution** -- Scripts fail when `source tools/lib/common.sh` can't find the file. Prevention: use `BASH_SOURCE[0]` not `$0` for path resolution, source with existence guard and graceful fallback, include guards to prevent double-sourcing.
+
+5. **gsd-tools.cjs lock-in through absorbed patterns** -- GSD workflows call gsd-tools.cjs 15+ times per phase execution. Prevention: absorb PATTERNS as markdown, NOT tooling. Agents handle file manipulation directly. Grep all absorbed docs for zero `gsd-tools.cjs` references.
+
+6. **Model availability breaks swarm** -- Rate limits or model deprecation stalls multi-agent execution. Prevention: design for sequential execution as default, role-based model selection from config, timeout handling for stalled agents.
+
+See [PITFALLS.md](PITFALLS.md) for full analysis, recovery strategies, technical debt patterns, and "looks done but isn't" checklist.
 
 ## Implications for Roadmap
 
 Based on research, suggested phase structure (6 phases):
 
-### Phase 1: Foundation -- Public/Private Split and Upstream Registry
-**Rationale:** These are architectural decisions with zero dependencies on other new components. The public/private boundary must be defined before any content packaging. The upstream registry must exist before OMC tracking.
-**Delivers:** `upstreams/` directory structure with `upstream.conf` per tracked repo. Public/private content convention documented. Migration of `.versions` data into new format.
-**Addresses:** Extensible upstream registry (P1), upstream version tracking (table stakes)
-**Avoids:** Hardcoded upstream special cases, private content leakage
+### Phase 1: Foundation -- Shared Library + Test Infrastructure
 
-### Phase 2: Core Infrastructure Package
-**Rationale:** Depends on Phase 1's public/private split decision. This is the highest-value deliverable -- without it, bootstrap has nothing to install.
-**Delivers:** `core/` directory with personas, LAWs, rules, CLAUDE.md template, memory templates. `core/SKILL.md` as entry point.
-**Addresses:** Core infrastructure package (P1), slim SKILL.md pattern (table stakes)
-**Avoids:** Monolithic SKILL.md, including private content in public package
+**Rationale:** Everything depends on this. The shared library enables DRY refactoring of 6 tool scripts, and bats tests provide the safety net for that refactoring. Without tests, the DRY extraction and all subsequent changes are reckless. Architecture research confirms common.sh has NO dependencies on other new features.
+**Delivers:** `tools/lib/common.sh` (~80-100 lines), refactored tool scripts sourcing it, `tests/` directory with bats infrastructure, ~30 test cases covering all tool scripts.
+**Addresses:** Shared shell library (table stakes), bats-core test suite (table stakes).
+**Avoids:** Pitfall 3 (test suite modifies real filesystem -- establish HOME isolation from day one), Pitfall 4 (shared library breaks standalone -- test the extraction itself).
 
-### Phase 3: Hook Installation System
-**Rationale:** Depends on Phase 2 (hooks live in `core/hooks/`). This is the technically hardest part -- `settings.json` merging. Isolating it lets the team focus on getting it right.
-**Delivers:** `hook-manifest.json`, `install-hooks.sh` (jq-based merge), idempotent hook registration/unregistration.
-**Addresses:** Core infrastructure package (hooks portion), idempotent operations
-**Avoids:** settings.json corruption, clobbering GSD/OMC hooks
+### Phase 2: GSD Pattern Absorption
 
-### Phase 4: OMC Analysis and Cherry-Pick
-**Rationale:** Depends on Phase 1's upstream registry. Can partially overlap with Phases 2-3. Produces reference docs that enrich the skill ecosystem.
-**Delivers:** OMC added to upstream registry. 3-5 cherry-picked reference docs (ralplan, persistent notepad, learner, deepsearch pattern, model routing). Updated `/skippy:update` to use generic `upstream-check.sh`.
-**Addresses:** OMC cherry-pick (P1), extensible upstream registry validation
-**Avoids:** Forking OMC, importing their runtime, installing all 37 skills
+**Rationale:** Defines skippy's standalone identity. The reference docs make the "skippy IS the framework" claim true. Can run in PARALLEL with Phase 1 (pure markdown, no code dependencies). Architecture research confirms these are independent.
+**Delivers:** 5-6 new reference docs (phased-execution.md, wave-parallelism.md, state-tracking.md, checkpoints.md, plan-structure.md), updated gsd-dependency-map.md, validated command independence.
+**Addresses:** GSD pattern absorption (table stakes), GSD command independence (table stakes).
+**Avoids:** Pitfall 2 (absorption loses fidelity -- use fidelity matrix), Pitfall 5 (gsd-tools.cjs lock-in -- absorb patterns not tooling).
 
-### Phase 5: Skill System and Selective Install
-**Rationale:** Depends on Phase 2 (core must exist as a skill). Extends existing `install.sh` with new flags. Migrates ~10 essential skills.
-**Delivers:** Extended `install.sh` (`--core`, `--skill`, `--category`, `--list`, `--check`). `migrate-skill.sh` tool. ~10 essential skills migrated with proper frontmatter. Updated INDEX.md with categories.
-**Addresses:** Selective skill install (P1), add-on skill system (differentiator), skill registry (table stakes)
-**Avoids:** Migrating all 68 skills, cross-skill dependencies, category subdirectories
+### Phase 3: `/skippy:review` Audit Swarm
 
-### Phase 6: Bootstrap and Verification
-**Rationale:** Depends on all previous phases. This is the integration phase -- `bootstrap.sh` calls everything else.
-**Delivers:** `bootstrap.sh` (idempotent, prerequisite-checking, works on fresh macOS). Optional post-install verification. Updated documentation (CLAUDE.md, README if needed).
-**Addresses:** One-command bootstrap (table stakes), bootstrap verification (differentiator)
-**Avoids:** Non-idempotent operations, assuming clean machine, auto-installing MCP servers
+**Rationale:** Headline feature of v1.2. Benefits from stable foundation (Phase 1) and absorbed patterns (Phase 2 -- verification loops inform the swarm's cycling). Can run in parallel with Phase 2 since it depends on existing v1.1 references, not the new ones.
+**Delivers:** `skills/skippy-dev/commands/review.md` (~120 lines), 3-agent pipeline (reviewer/fixer/evaluator), structured findings output.
+**Addresses:** `/skippy:review` audit swarm (differentiator).
+**Avoids:** Pitfall 1 (swarm destroys real HOME -- sandbox design BEFORE agent logic), Pitfall 6 (model availability -- sequential default, configurable models).
+
+### Phase 4: deploy-service Hardening
+
+**Rationale:** Independent feature that replaces 9 hardcoded placeholders with a config mechanism. No dependencies on other phases. Can run in parallel with Phases 2-3.
+**Delivers:** `deploy.conf.example` template, config loading with validation, input validation functions, root guards, updated deploy-workflow.md and find-next-ip.sh.
+**Addresses:** deploy-service config mechanism (differentiator), input validation + root guards (differentiator).
+**Avoids:** No critical pitfalls specific to this phase (standard bash patterns).
+
+### Phase 5: Version Management
+
+**Rationale:** Should come after Phase 1 (sources common.sh, includes bump-version.bats). Quick win -- ~120 line script with well-defined behavior.
+**Delivers:** `VERSION` file, `tools/bump-version.sh` with --dry-run and --tag support, atomic update across 25 version locations.
+**Addresses:** Version bump mechanism (table stakes).
+**Avoids:** Anti-pattern of single VERSION file as dynamic source (marketplace.json is canonical, bump script propagates atomically).
+
+### Phase 6: Integration + Documentation
+
+**Rationale:** Depends on ALL above. Final integration, docs, verification.
+**Delivers:** CONTRIBUTING.md, `.gitattributes` export-ignore, updated CLAUDE.md ("Skippy IS the framework"), final `verify.sh` run, INDEX.md regeneration.
+**Addresses:** .gitattributes (should have), CONTRIBUTING.md (should have).
+**Avoids:** No specific pitfalls -- this is polish.
 
 ### Phase Ordering Rationale
 
-- **Phase 1 first** because every other phase depends on either the public/private boundary or the upstream registry pattern. These are architectural decisions, not code -- they're fast to establish.
-- **Phases 2, 3, 4 are partially parallelizable.** Phase 3 depends on Phase 2 (hooks are in core/), but Phase 4 (OMC cherry-pick) only depends on Phase 1. In practice, Phase 2 should come before 3 sequentially, while Phase 4 can overlap.
-- **Phase 5 before 6** because bootstrap needs the install system to exist. But Phase 5 can start as soon as Phase 2 delivers `core/`.
-- **Phase 6 last** because it's pure integration -- it calls everything built in Phases 1-5.
+- **Phase 1 is foundational** -- all research files agree that shared library + tests must come first. Architecture research shows common.sh has zero dependencies on other features. Pitfalls research warns that refactoring without tests is reckless.
+- **Phases 1-4 can parallelize** -- architecture research explicitly maps the dependency graph and confirms Phases 1-4 are independent. Only Phase 5 depends on Phase 1, and Phase 6 depends on all.
+- **Review swarm is Phase 3, not Phase 1** -- despite being the headline feature, the swarm has the highest complexity and the most dangerous pitfall (real HOME destruction). Building it on top of tested infrastructure reduces risk.
+- **Version management is late** -- it's low-risk, low-complexity, and depends on common.sh. Slot it as a quick win after the foundation stabilizes.
+
+### Suggested Wave Structure
+
+```
+Wave 1: [Phase 1] [Phase 2] [Phase 3] [Phase 4]   (all parallelizable)
+Wave 2: [Phase 5]                                   (needs Phase 1)
+Wave 3: [Phase 6]                                   (needs all)
+```
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 3 (Hook Installation):** The `settings.json` structure is complex and underdocumented. Need to map the exact JSON schema for hook registrations, understand matcher precedence, and test `jq` merge operations against real configs. Research the Claude Code hook API surface.
-- **Phase 4 (OMC Cherry-Pick):** Need targeted analysis of OMC's ralplan, learner, and deepsearch skills. The v4.7.3 cache exists locally but specific extraction decisions require reading each skill file.
+- **Phase 2 (GSD Pattern Absorption):** 11,452 lines of GSD workflows to distill. Absorption boundary decisions (what to include, what to drop, what to mark "requires GSD") need careful analysis. The fidelity matrix is non-trivial.
+- **Phase 3 (`/skippy:review` Swarm):** Real incident history demands careful sandbox design. The 3-agent sequential pipeline (reviewer -> fixer -> evaluator) needs prompt engineering and structured output format definition.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Foundation):** Well-established patterns -- bash conf files, directory conventions. STACK.md already specifies the exact format.
-- **Phase 2 (Core Package):** Direct packaging of existing files. Source material is known and inspected. No unknowns.
-- **Phase 5 (Skill System):** Extending existing `install.sh`. Patterns established in v1.0. STACK.md specifies the exact frontmatter additions.
-- **Phase 6 (Bootstrap):** Standard dotfiles bootstrap patterns. chezmoi/dotbot precedent is well-documented.
+- **Phase 1 (Foundation):** bats-core is well-documented, DRY extraction is straightforward bash.
+- **Phase 4 (deploy-service):** Shell-sourceable config is a standard pattern.
+- **Phase 5 (Version Management):** Simple find-and-replace script.
+- **Phase 6 (Integration):** Documentation and final verification.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All decisions extend proven v1.0 patterns. Sources are direct filesystem inspection. Only new dependency (jq) is well-justified. |
-| Features | MEDIUM-HIGH | Feature list is clear and well-prioritized. OMC cherry-pick targets need validation during Phase 4 planning. Competitor analysis is solid. |
-| Architecture | HIGH | Based on direct inspection of all component sources (69 skills, 25+ hooks, settings.json). Build order accounts for dependencies. |
-| Pitfalls | MEDIUM | No dedicated PITFALLS.md was produced. Pitfalls derived from anti-pattern sections in other files. May be missing edge cases around macOS-specific issues, Claude Code version compatibility, or skill context budget limits. |
+| Stack | HIGH | All technologies verified against official docs and direct codebase inspection. No speculative choices -- everything extends existing prereqs. |
+| Features | HIGH | Feature list derived from direct codebase analysis (grep for duplication, placeholder audit, version string count). Dependency graph verified. |
+| Architecture | HIGH | Based on direct inspection of all 6 tools/ scripts, all 12 skill directories, GSD source at ~/.claude/get-shit-done/. Integration points mapped file-by-file. |
+| Pitfalls | HIGH | Includes a real incident (71 skills nuked by unsandboxed agent). All pitfalls cite specific code locations or documented behaviors. Recovery strategies provided. |
 
-**Overall confidence:** MEDIUM-HIGH
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **PITFALLS.md missing:** The pitfalls researcher did not produce output. Risk areas were derived from anti-pattern sections in the other three files, but a dedicated pitfalls analysis would improve coverage -- particularly around Claude Code version compatibility, context window budget constraints at 70 skills, and macOS-specific bash 3.2 gotchas.
-- **Hook registration JSON schema:** The exact structure of `settings.json` hook registrations needs validation during Phase 3 planning. The architecture research references it but doesn't include the full schema.
-- **OMC cherry-pick validation:** The specific OMC skills worth extracting (ralplan, learner, deepsearch) need hands-on analysis of their SKILL.md files during Phase 4. Current assessment is from high-level repo inspection.
-- **Context budget at scale:** Claude Code limits skill context to ~2% of the context window. With 70 skills, even slim SKILL.md files may hit the budget. Need to verify whether only installed (symlinked) skills count, or all skills in the repo.
-- **`jq` availability on fresh macOS:** `jq` is not included with macOS. Bootstrap must either require `brew install jq` as a prerequisite or bundle a fallback. This needs a decision during Phase 3 planning.
+- **macOS `readlink -f` incompatibility:** Research flags this but doesn't confirm whether existing scripts use it. Grep all bash scripts during Phase 1 planning to verify.
+- **Swarm agent prompt engineering:** The 3-agent pipeline is architecturally sound but actual agent prompts (what the reviewer looks for, how the evaluator grades) need definition during Phase 3 planning.
+- **GSD upstream drift detection:** Absorbed patterns will diverge from GSD over time. `/skippy:update` tracks upstream changes but doesn't auto-diff absorbed reference docs against their sources. This is a v1.3 concern.
+- **CI runner selection:** Tests target macOS (BSD sed, no `readlink -f`). If CI is added, macOS runners are required but slower and more expensive. Consider whether CI is needed for a private solo-dev repo.
+- **bats helper installation method:** STACK.md recommends git submodules for helpers, ARCHITECTURE.md shows brew paths (`/opt/homebrew/lib/`). Need to pick one approach during Phase 1 planning. Recommendation: git submodules (portable, reproducible).
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Direct filesystem inspection: `~/.config/pai/Skills/` (69 directories), `~/.config/pai-private/hooks/` (25+ scripts), `~/.claude/settings.json`, `~/.claude/plugins/cache/omc/oh-my-claudecode/4.7.3/`
-- Existing codebase: `tools/install.sh`, `tools/uninstall.sh`, `tools/index-sync.sh`, `skills/skippy-dev/` (v1.0 working implementation)
-- PAI infrastructure audit (`.planning/PAI-INFRASTRUCTURE-AUDIT.md`) -- 68 skills, 12 agents, 34 workflows catalogued
+- GSD source code at `~/.claude/get-shit-done/` -- 34 workflows (11,452 lines), 13 references, 27 templates, VERSION 1.22.4
+- Existing skippy-agentspace codebase -- 6 tools/ scripts (1507 lines), 12 skills, marketplace.json, all SKILL.md files
+- deploy-service skill -- 9 unique placeholders across SKILL.md, deploy-workflow.md, find-next-ip.sh
+- [bats-core official docs](https://bats-core.readthedocs.io/en/stable/) -- test lifecycle, helpers, temp directories
+- [Claude Code official docs](https://code.claude.com/docs/) -- Task() system, sandboxing architecture
 
 ### Secondary (MEDIUM confidence)
-- [oh-my-claudecode GitHub repo](https://github.com/Yeachan-Heo/oh-my-claudecode) -- skill/agent/hook structure analysis
-- [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills) -- SKILL.md format, context budget, auto-discovery
-- [Claude Code Plugins Reference](https://code.claude.com/docs/en/plugins-reference) -- marketplace.json format
-- [dotfiles.github.io](https://dotfiles.github.io/bootstrap/) -- bootstrap patterns, idempotency conventions
-- [chezmoi docs](https://www.chezmoi.io/) -- template system, secrets management patterns
+- [Claude Code swarm orchestration patterns](https://gist.github.com/kieranklaassen/4f2aba89594a4aea4ad64d753984b2ea) -- specialist subagent roles
+- [metaswarm multi-agent framework](https://github.com/dsifry/metaswarm) -- 5-agent design review gate, 3-iteration cap
+- [gruntwork-io/bash-commons](https://github.com/gruntwork-io/bash-commons) -- bash library best practices
+- [OWASP 2026 -- Managing Agentic Blast Radius](https://medium.com/@parmindersk/managing-the-agentic-blast-radius-in-multi-agent-systems-owasp-2026-7f2a84337d8d) -- multi-agent containment
+- [Anthropic engineering -- Claude Code sandboxing](https://www.anthropic.com/engineering/claude-code-sandboxing) -- filesystem + network isolation design
 
-### Tertiary (needs validation)
-- OMC cherry-pick targets (ralplan, learner, deepsearch) -- assessed from repo structure, not hands-on usage
-- Context budget limits at 70 skills -- needs empirical testing
+### Tertiary (LOW confidence -- needs validation)
+- [Claude Code multi-agent guide](https://help.apiyi.com/en/claude-code-swarm-mode-multi-agent-guide-en.html) -- patterns verified but claims not cross-checked
+- [shdotenv](https://github.com/ko1nksm/shdotenv) -- evaluated, rejected for this project
 
 ---
-*Research completed: 2026-03-07*
+*Research completed: 2026-03-08*
 *Ready for roadmap: yes*
