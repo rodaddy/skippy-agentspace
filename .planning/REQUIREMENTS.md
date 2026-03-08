@@ -75,10 +75,10 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 ### GSD Absorption
 
-- [ ] **ABSORB-01**: Reference docs absorb GSD phased execution pattern (plan -> execute -> verify cycle)
-- [ ] **ABSORB-02**: Reference docs absorb GSD state tracking pattern (STATE.md, progress, position)
-- [ ] **ABSORB-03**: Reference docs absorb GSD plan structure (frontmatter, tasks, verification criteria)
-- [ ] **ABSORB-04**: Reference docs absorb GSD wave-based parallel execution and checkpoint handling
+- [x] **ABSORB-01**: Reference docs absorb GSD phased execution pattern (plan -> execute -> verify cycle)
+- [x] **ABSORB-02**: Reference docs absorb GSD state tracking pattern (STATE.md, progress, position)
+- [x] **ABSORB-03**: Reference docs absorb GSD plan structure (frontmatter, tasks, verification criteria)
+- [x] **ABSORB-04**: Reference docs absorb GSD wave-based parallel execution and checkpoint handling
 - [ ] **ABSORB-05**: Reference docs absorb GSD verification loops (VERIFICATION.md, must_haves, gap closure)
 - [ ] **ABSORB-06**: All "requires GSD" mentions removed from docs and commands
 - [ ] **ABSORB-07**: `/skippy:reconcile` works against any `.planning/` structure, not just GSD's
@@ -182,10 +182,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | TEST-01 | Phase 12 | Pending |
 | TEST-02 | Phase 12 | Pending |
 | TEST-03 | Phase 12 | Pending |
-| ABSORB-01 | Phase 13 | Pending |
-| ABSORB-02 | Phase 13 | Pending |
-| ABSORB-03 | Phase 13 | Pending |
-| ABSORB-04 | Phase 13 | Pending |
+| ABSORB-01 | Phase 13 | Complete |
+| ABSORB-02 | Phase 13 | Complete |
+| ABSORB-03 | Phase 13 | Complete |
+| ABSORB-04 | Phase 13 | Complete |
 | ABSORB-05 | Phase 13 | Pending |
 | ABSORB-06 | Phase 13 | Pending |
 | ABSORB-07 | Phase 13 | Pending |

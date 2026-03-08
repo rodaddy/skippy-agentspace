@@ -223,7 +223,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 13-01-PLAN.md -- Create 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints)
+- [x] 13-01-PLAN.md -- Create 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints) (completed 2026-03-08)
 - [ ] 13-02-PLAN.md -- Create skippy-state.ts parser + update reconcile.md for markdown task format
 - [ ] 13-03-PLAN.md -- GSD language cleanup across 8 reference docs, SKILL.md update, PROJECT.md update, delete superseded files
 
@@ -289,7 +289,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | v1.2 | 0/3 | Planned | - |
+| 13. GSD Pattern Absorption | v1.2 | 1/3 | In Progress | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
 | 15. Hardening | v1.2 | 0/0 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |

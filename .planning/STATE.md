@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
-status: completed
-stopped_at: Phase 13 context gathered
-last_updated: "2026-03-08T18:54:19.451Z"
-last_activity: "2026-03-08 -- Phase 11 audit fixes applied (PR #7)"
+status: in_progress
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-03-08T19:21:26.802Z"
+last_activity: "2026-03-08 -- Phase 13 Plan 01 complete (4 reference docs)"
 progress:
   total_phases: 16
   completed_phases: 11
-  total_plans: 27
-  completed_plans: 27
-  percent: 100
+  total_plans: 30
+  completed_plans: 28
+  percent: 93
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 11 complete, Phase 12 next
+**Current focus:** v1.2 Standalone Skippy -- Phase 13 GSD Pattern Absorption in progress
 
 ## Current Position
 
-Phase: 11-foundation (complete, audited)
-Plan: 2 of 2
-Status: Phase 11 complete -- 3-round audit with 23 agents, 17 findings, all fixed
-Last activity: 2026-03-08 -- Phase 11 audit fixes applied (PR #7)
+Phase: 13-gsd-pattern-absorption (in progress)
+Plan: 1 of 3 complete
+Status: Plan 01 complete -- 4 standalone reference docs created
+Last activity: 2026-03-08 -- Phase 13 Plan 01 complete (4 reference docs)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 93%
 
-**Next step:** Begin Phase 12 planning
+**Next step:** Execute Phase 13 Plan 02
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 27 (v1.0 + v1.1 + Phase 11)
+- Total plans completed: 28 (v1.0 + v1.1 + Phase 11 + Phase 13 plan 01)
 - Average duration: --
 - Total execution time: --
 
@@ -57,6 +57,7 @@ Progress: [██████████] 100%
 | Phase | Plans | Duration | Files |
 |-------|-------|----------|-------|
 | 11. Foundation | 2/2 | 6min | 8 |
+| 13. GSD Absorption | 1/3 | 3min | 4 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -103,6 +104,8 @@ Recent decisions affecting current work:
 - [11-02]: prereqs.sh keeps own exit-code logic -- skippy_summary not used due to interactive install-prompt flow
 - [11-02]: Minimal vs full fallback stubs -- heavy scripts get all functions, light scripts get only what they need
 - [11-02]: Fallback stubs use $0 for path derivation -- BASH_SOURCE context differs in inline fallback
+- [13-01]: Deviation rules in plan-structure.md (execution context), cross-ref from checkpoints.md for Rule 1
+- [13-01]: Markdown+YAML task format as skippy's canonical spec, superseding XML task blocks and task-anatomy.md
 
 ### Pending Todos
 
@@ -114,6 +117,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T18:54:19.448Z
-Stopped at: Phase 13 context gathered
-Resume file: .planning/phases/13-gsd-pattern-absorption/13-CONTEXT.md
+Last session: 2026-03-08T19:20:26Z
+Stopped at: Completed 13-01-PLAN.md
+Resume file: None
