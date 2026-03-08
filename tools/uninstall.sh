@@ -2,7 +2,11 @@
 set -euo pipefail
 
 # uninstall -- Remove skill symlinks from Claude Code discovery paths
-# Usage: uninstall.sh <skill-name> | uninstall.sh --all
+#
+# Usage:
+#   uninstall.sh                            Show usage and installed skills
+#   uninstall.sh <skill-name> [skill...]    Uninstall one or more skills
+#   uninstall.sh --all                      Uninstall all symlinked skills
 #
 # Checks both modern (~/.claude/skills/) and legacy (~/.claude/commands/) targets.
 # Removes from whichever locations have symlinks. Source files are untouched.
@@ -64,51 +68,96 @@ uninstall_skill() {
 
     if [[ "$removed" -eq 0 ]]; then
         echo "  WARN: $name not found in $SKILLS_DIR/ or $COMMANDS_DIR/ -- nothing to uninstall"
+        return 1
     fi
 
     return 0
 }
 
-case "${1:-}" in
-    --all)
-        echo "=== Uninstalling all symlinked skills ==="
-        found_any=0
+# --- Argument parsing ---
 
-        if [[ -d "$SKILLS_DIR" ]]; then
-            for link in "$SKILLS_DIR"/*/; do
-                link="${link%/}"
-                if [[ -L "$link" ]]; then
-                    found_any=1
-                    uninstall_skill "$(basename "$link")"
-                fi
-            done
+SKILL_NAMES=()
+UNINSTALL_ALL=false
+
+for arg in "$@"; do
+    case "$arg" in
+        --all)
+            UNINSTALL_ALL=true
+            ;;
+        -h|--help)
+            echo "Usage: uninstall.sh <skill-name> [skill-name...]"
+            echo "       uninstall.sh --all"
+            echo ""
+            echo "Modes:"
+            echo "  (no args)            Show usage and list installed skills"
+            echo "  <skill> [skill...]   Uninstall one or more skills by name"
+            echo "  --all                Uninstall all symlinked skills"
+            echo ""
+            echo "Examples:"
+            echo "  uninstall.sh skippy-dev               Uninstall one skill"
+            echo "  uninstall.sh skippy-dev excalidraw    Uninstall multiple skills"
+            echo "  uninstall.sh --all                    Uninstall everything"
+            echo ""
+            echo "Installed skills:"
+            list_installed
+            exit 0
+            ;;
+        *)
+            SKILL_NAMES+=("$arg")
+            ;;
+    esac
+done
+
+# --- Main ---
+
+if [[ "$UNINSTALL_ALL" == true ]]; then
+    echo "=== Uninstalling all symlinked skills ==="
+    found_any=0
+
+    if [[ -d "$SKILLS_DIR" ]]; then
+        for link in "$SKILLS_DIR"/*/; do
+            link="${link%/}"
+            if [[ -L "$link" ]]; then
+                found_any=1
+                uninstall_skill "$(basename "$link")"
+            fi
+        done
+    fi
+
+    if [[ -d "$COMMANDS_DIR" ]]; then
+        for link in "$COMMANDS_DIR"/*/; do
+            link="${link%/}"
+            if [[ -L "$link" ]]; then
+                found_any=1
+                uninstall_skill "$(basename "$link")"
+            fi
+        done
+    fi
+
+    if [[ "$found_any" -eq 0 ]]; then
+        echo "  WARN: No symlinked skills found -- nothing to uninstall"
+    fi
+
+    echo "=== Done. Run /clear to refresh skill list. ==="
+elif [[ ${#SKILL_NAMES[@]} -gt 0 ]]; then
+    echo "=== Uninstalling ${#SKILL_NAMES[@]} skill(s) ==="
+    failed=0
+    succeeded=0
+    for name in "${SKILL_NAMES[@]}"; do
+        if uninstall_skill "$name"; then
+            succeeded=$((succeeded + 1))
+        else
+            failed=$((failed + 1))
         fi
-
-        if [[ -d "$COMMANDS_DIR" ]]; then
-            for link in "$COMMANDS_DIR"/*/; do
-                link="${link%/}"
-                if [[ -L "$link" ]]; then
-                    found_any=1
-                    uninstall_skill "$(basename "$link")"
-                fi
-            done
-        fi
-
-        if [[ "$found_any" -eq 0 ]]; then
-            echo "  WARN: No symlinked skills found -- nothing to uninstall"
-        fi
-
-        echo "=== Done. Run /clear to refresh skill list. ==="
-        ;;
-    "")
-        echo "Usage: uninstall.sh <skill-name> | uninstall.sh --all"
-        echo ""
-        echo "Installed skills (symlinked):"
-        list_installed
-        ;;
-    *)
-        echo "=== Uninstalling: $1 ==="
-        uninstall_skill "$1"
-        echo "Source files are untouched. Run /clear to refresh skill list."
-        ;;
-esac
+    done
+    echo "=== Done: $succeeded removed, $failed not found. Run /clear to refresh skill list. ==="
+    if [[ "$failed" -gt 0 ]]; then
+        exit 1
+    fi
+else
+    echo "Usage: uninstall.sh <skill-name> [skill-name...]"
+    echo "       uninstall.sh --all"
+    echo ""
+    echo "Installed skills (symlinked):"
+    list_installed
+fi
