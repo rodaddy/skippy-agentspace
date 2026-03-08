@@ -11,7 +11,9 @@ metadata:
 
 Additive rules and tools that sharpen GSD's planning and execution. No GSD files modified -- everything here is referenced guidance that agents and main context can load on demand.
 
-## 5 Enhancements
+## Enhancements
+
+Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 
 | # | Enhancement | Reference | When It Applies |
 |---|-------------|-----------|-----------------|
@@ -20,6 +22,11 @@ Additive rules and tools that sharpen GSD's planning and execution. No GSD files
 | 3 | Task Anatomy | `references/task-anatomy.md` | During plan creation (plan-phase) |
 | 4 | Plan Boundaries | `references/plan-boundaries.md` | During plan creation -- define what NOT to touch |
 | 5 | State Consistency | `references/state-consistency.md` | Before/after phase execution -- cross-file alignment |
+| 6 | Model Routing | `references/model-routing.md` | Agent spawning -- match model to task complexity |
+| 7 | Verification Loops | `references/verification-loops.md` | Post-implementation -- structured quality feedback |
+| 8 | Session Persistence | `references/session-persistence.md` | Session start/end -- context transfer across sessions |
+| 9 | Structured Deliberation | `references/structured-deliberation.md` | Architecture decisions -- PDOC framework for options analysis |
+| 10 | Skill Extraction | `references/skill-extraction.md` | Pattern promotion -- correction to pattern to skill graduation |
 
 ## Commands
 
@@ -44,13 +51,17 @@ Compare what was planned vs what was actually done for the most recent phase.
 
 ### `/skippy:update`
 
-Check GSD and PAUL repos for upstream changes worth absorbing.
+Check all tracked upstreams for changes and suggest cherry-picks.
 
 **Workflow:**
 
-1. Run `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh`
-2. Review the diff report
-3. Human decides what to absorb -- no auto-merge
+1. Read all `upstreams/*/upstream.json` files from the repo root
+2. For each upstream: clone or fetch, compare HEAD against last_checked_sha
+3. Report changes grouped by area, highlight cherry-picked regions
+4. Update tracking (last_checked_sha, last_check) in each upstream.json
+5. Flag cross-package analysis for re-review if significant changes detected
+
+No auto-merge -- present findings and let the user decide.
 
 ### `/skippy:cleanup`
 
@@ -84,3 +95,4 @@ Don't load all references into every agent -- pick the relevant one.
 | Reference | Purpose |
 |-----------|---------|
 | `references/gsd-dependency-map.md` | Every `.planning/` integration point with breakage risk -- check before GSD updates |
+| `docs/cross-package-analysis.md` | Cross-package pattern analysis across all upstreams -- re-review when `/skippy:update` flags significant changes |

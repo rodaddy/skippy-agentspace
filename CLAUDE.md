@@ -9,7 +9,7 @@
 
 ## What This Is
 
-A skill marketplace repo containing **core** (PAI identity -- personas, LAWs, rules, templates) and **skippy-dev** (5 workflow enhancements and 3 utility commands from GSD + PAUL). Installs as a Claude Code plugin or via manual symlinks.
+A skill marketplace repo containing **core** (PAI identity -- personas, LAWs, rules, templates) and **skippy-dev** (10 workflow enhancements and 3 utility commands cherry-picked from GSD, PAUL, and OMC). Installs as a Claude Code plugin or via manual symlinks.
 
 **Not a fork.** Both upstreams ride unchanged -- all enhancements are additive reference docs and utility commands.
 
@@ -56,10 +56,10 @@ skills/core/
   references/rules/       # 4 opinionated default rules
   references/templates/   # CLAUDE.md and user.md project starters
 skills/skippy-dev/
-  SKILL.md                # Entry point -- 3 commands, 5 enhancement refs
+  SKILL.md                # Entry point -- 3 commands, 10 enhancement refs
   commands/               # /skippy:reconcile, /skippy:update, /skippy:cleanup
-  references/             # 5 PAUL enhancement docs
-  scripts/                # skippy-update.sh, skippy-cleanup.sh
+  references/             # 10 best-of-breed enhancement docs (PAUL + OMC + cross-package)
+  scripts/                # skippy-cleanup.sh
 tools/
   install.sh              # Dual-target installer (skills/ or commands/)
   uninstall.sh            # Dual-target uninstaller
@@ -72,7 +72,7 @@ INDEX.md                  # Auto-generated skill registry
 | Command | What It Does |
 |---------|-------------|
 | `/skippy:reconcile` | Compare planned vs actual for the most recent GSD phase -- reports deviations, flags state drift |
-| `/skippy:update` | Check GSD and PAUL repos for upstream changes. Reports diffs, human decides what to absorb |
+| `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
 | `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
 
 ## Installation

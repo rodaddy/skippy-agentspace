@@ -9,7 +9,7 @@ Private content lives externally at `~/.config/pai-private/`. The repo itself is
 | Skills | Public | `skills/` | SKILL.md, commands/, references/ |
 | References | Public | `skills/*/references/` | context-brackets.md, plan-boundaries.md |
 | Commands | Public | `skills/*/commands/` | reconcile.md, update.md, cleanup.md |
-| Tools/Scripts | Public | `tools/`, `skills/*/scripts/` | install.sh, skippy-update.sh |
+| Tools/Scripts | Public | `tools/`, `skills/*/scripts/` | install.sh, skippy-cleanup.sh |
 | Plugin metadata | Public | `.claude-plugin/` | marketplace.json |
 | Upstream tracking | Public | `upstreams/` | upstream.json per upstream |
 | Planning artifacts | Public | `.planning/` | STATE.md, ROADMAP.md, plans |
@@ -52,7 +52,7 @@ Each upstream is a directory under `upstreams/` containing an `upstream.json` fi
 2. Create `upstreams/<name>/upstream.json` with the schema fields above
 3. Done -- no code changes required
 
-Phase 8 will add `upstreams/omc/` using this exact process.
+`upstreams/omc/` was added in Phase 8 using this exact process.
 
 ### Example
 
