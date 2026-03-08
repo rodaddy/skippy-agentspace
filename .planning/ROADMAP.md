@@ -254,7 +254,11 @@ Plans:
   3. `tools/bump-version.sh` reads current version from `marketplace.json`, accepts `--patch`/`--minor`/`--major`/`--dry-run`, and updates all 25 version locations across 13 files
   4. Running `bump-version.sh --dry-run --patch` shows all files that would change without modifying anything
   5. After a real bump, `grep -r "old-version" .claude-plugin/ skills/*/SKILL.md` returns zero matches
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 15-01-PLAN.md -- deploy-service config.env mechanism (HARD-01, HARD-03)
+- [ ] 15-02-PLAN.md -- bump-version.sh version automation (HARD-02)
 
 ### Phase 16: Integration & Polish
 **Goal**: Final verification pass, documentation consistency, and README updates reflecting "Skippy IS the framework"
@@ -296,5 +300,5 @@ Wave 3: [Phase 16]                          (needs all)
 | 12. Testing | v1.2 | 0/3 | Planned | - |
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
-| 15. Hardening | v1.2 | 0/0 | Planned | - |
+| 15. Hardening | v1.2 | 0/2 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
