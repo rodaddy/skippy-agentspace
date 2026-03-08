@@ -109,9 +109,9 @@ mkdir -p skills/<name>/references skills/<name>/commands skills/<name>/scripts
 **Flatten directories** per the mapping in step 3. Preserve file names within the flattened structure.
 
 **Sanitize private content** using these regex replacements:
-- IPs: `10\.71\.\d+\.\d+` -> `<your-server-ip>`
-- Domains: `rodaddy\.live` -> `<your-domain>`
-- Credential names matching known PAI patterns -> `<your-credential>`
+- IPs: Private IP patterns (e.g., `10\.x\.y\.z`) -> `<your-server-ip>`
+- Domains: Private domain patterns -> `<your-domain>`
+- Credential names matching known patterns -> `<your-credential>`
 - Server/host names matching known infrastructure -> `<your-host>`
 - Paths: `~/.config/pai-private/` references -> note as "PAI-private, not included"
 

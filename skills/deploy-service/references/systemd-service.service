@@ -1,0 +1,15 @@
+[Unit]
+Description={{SERVICE_NAME}} Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory={{WORKING_DIR}}
+Environment="PORT={{PORT}}"
+ExecStart={{EXEC_START}}
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
