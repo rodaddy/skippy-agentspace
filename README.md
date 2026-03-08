@@ -2,6 +2,8 @@
 
 Portable Claude Code skill repo. Cherry-picks the best workflow ideas from [GSD](https://github.com/gsd-build/get-shit-done) and [PAUL](https://github.com/ChristopherKahler/paul) into standalone, installable skills.
 
+PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think dotfiles for AI assistants. This repo packages PAI's best skills as portable, installable modules.
+
 12 skills across 4 categories: core identity, workflow automation, utility tools, and domain-specific deployment. Each skill is self-contained with no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
 
 ## Quick Start
@@ -15,6 +17,13 @@ bash tools/verify.sh
 ```
 
 Run `/clear` in Claude Code to pick up the new skills.
+
+## Try It
+
+After install, try these in any project with Claude Code:
+- `/check-todos` -- see project and global todos
+- `/add-todo fix the login bug` -- capture an idea
+- `/skippy:reconcile` -- compare planned vs actual work (requires GSD)
 
 ## Documentation
 

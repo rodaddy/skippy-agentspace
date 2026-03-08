@@ -4,37 +4,45 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 **Base path:** `skills/`
 
+### Requires Legend
+
+| Badge | Meaning |
+|-------|---------|
+| Standalone | Works with vanilla Claude Code, no extra dependencies |
+| Needs bun | Requires bun runtime (brew-installable) |
+| Needs infra | Requires external infrastructure (MCP servers, Proxmox, etc.) |
+
 ## Core
 
-| Skill | Path | Commands |
-|-------|------|----------|
-| core [installed] | `core/SKILL.md` | (none) |
+| Skill | Path | Commands | Requires |
+|-------|------|----------|----------|
+| core [installed] | `core/SKILL.md` | (none) | Needs bun |
 
 ## Workflow
 
-| Skill | Path | Commands |
-|-------|------|----------|
-| add-todo [installed] | `add-todo/SKILL.md` | (none) |
-| check-todos [installed] | `check-todos/SKILL.md` | (none) |
-| correct [installed] | `correct/SKILL.md` | (none) |
-| session-wrap [installed] | `session-wrap/SKILL.md` | (none) |
-| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update, /skippy:upgrade |
-| update-todo [installed] | `update-todo/SKILL.md` | (none) |
+| Skill | Path | Commands | Requires |
+|-------|------|----------|----------|
+| add-todo [installed] | `add-todo/SKILL.md` | (none) | Standalone |
+| check-todos [installed] | `check-todos/SKILL.md` | (none) | Standalone |
+| correct [installed] | `correct/SKILL.md` | (none) | Standalone |
+| session-wrap [installed] | `session-wrap/SKILL.md` | (none) | Standalone |
+| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update, /skippy:upgrade | Standalone |
+| update-todo [installed] | `update-todo/SKILL.md` | (none) | Standalone |
 
 ## Utility
 
-| Skill | Path | Commands |
-|-------|------|----------|
-| browser [installed] | `browser/SKILL.md` | (none) |
-| excalidraw [installed] | `excalidraw/SKILL.md` | (none) |
-| fabric [installed] | `fabric/SKILL.md` | (none) |
-| vaultwarden [installed] | `vaultwarden/SKILL.md` | (none) |
+| Skill | Path | Commands | Requires |
+|-------|------|----------|----------|
+| browser [installed] | `browser/SKILL.md` | (none) | Needs infra |
+| excalidraw [installed] | `excalidraw/SKILL.md` | (none) | Needs infra |
+| fabric [installed] | `fabric/SKILL.md` | (none) | Needs infra |
+| vaultwarden [installed] | `vaultwarden/SKILL.md` | (none) | Needs infra |
 
 ## Domain
 
-| Skill | Path | Commands |
-|-------|------|----------|
-| deploy-service [installed] | `deploy-service/SKILL.md` | (none) |
+| Skill | Path | Commands | Requires |
+|-------|------|----------|----------|
+| deploy-service [installed] | `deploy-service/SKILL.md` | (none) | Needs infra |
 
 ## Plugin Distribution
 

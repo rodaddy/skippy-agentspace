@@ -77,6 +77,8 @@ This shows a status table with `[installed]` or `[available]` badges for each sk
 bash skills/core/hooks/install-hooks.sh
 ```
 
+LAWs are hook-enforced rules (like "never commit to main", "use `env bash` not `/bin/bash`", "max 750 lines per file"). The core skill installs hooks that enforce these automatically.
+
 Hooks enforce LAWs automatically during Claude Code sessions -- shebang checks, branch protection, and other guardrails. They merge into your `~/.claude/settings.json` non-destructively (existing settings are preserved).
 
 This step is optional. Skills work without hooks. Hooks add enforcement for PAI-specific conventions. They require bun at runtime.
