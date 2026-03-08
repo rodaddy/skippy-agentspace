@@ -3,8 +3,8 @@
   "description": "Get Shit Done -- phased execution framework for Claude Code",
   "repo": "https://github.com/gsd-build/get-shit-done.git",
   "branch": "main",
-  "last_checked_sha": "none",
-  "last_check": "never",
+  "last_checked_sha": "2eaed7a8475839958f9ec76ca4c26d9a0bbfc33f",
+  "last_check": "2026-03-08T04:30:17Z",
   "cherry_picks": [],
   "notes": "Base infrastructure -- we augment, never modify"
 }
