@@ -28,7 +28,7 @@
     },
     {
       "name": "add-todo",
-      "description": "Scope-aware todo/idea capture - routes to project or global store",
+      "description": "Scope-aware todo/idea capture - routes to project (.planning/todos/) or global (.claude_ideas/) store. Supports single items and bulk extraction.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -37,7 +37,7 @@
     },
     {
       "name": "browser",
-      "description": "Browser automation via agent-browser MCP and browse CLI",
+      "description": "Browser automation via agent-browser MCP and browse CLI. Navigate, interact, extract data from web UIs.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -46,7 +46,7 @@
     },
     {
       "name": "check-todos",
-      "description": "Unified todo checker - shows project todos and global ideas in a single list",
+      "description": "Unified todo checker - shows both project todos and global ideas in a single numbered list, then routes selection to action.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -55,7 +55,7 @@
     },
     {
       "name": "correct",
-      "description": "Add corrections to appropriate docs when Claude repeats mistakes",
+      "description": "Add a correction to the appropriate doc when Claude repeatedly makes the same mistake. Quick way to capture recurring rules.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -64,7 +64,7 @@
     },
     {
       "name": "deploy-service",
-      "description": "Deploy a new service to LXC with nginx proxy and DNS setup",
+      "description": "Deploy a new service to LXC with nginx proxy and DNS setup. Automates container creation, networking, base packages, reverse proxy, and DNS.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -73,7 +73,7 @@
     },
     {
       "name": "excalidraw",
-      "description": "Generate Excalidraw diagrams from natural language using Mermaid pipeline",
+      "description": "Generate Excalidraw diagrams from natural language using a Mermaid-based pipeline.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -82,7 +82,7 @@
     },
     {
       "name": "fabric",
-      "description": "Process content through Fabric AI patterns - YouTube, URLs, and text",
+      "description": "Process content through Fabric AI patterns (228+ available). Handles YouTube videos, URLs, and text input.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -91,7 +91,7 @@
     },
     {
       "name": "session-wrap",
-      "description": "End-of-session workflow - session file, history, briefing update, commit",
+      "description": "Wrap up a session - create session file + dated history file + briefing update, commit on current branch.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -100,7 +100,7 @@
     },
     {
       "name": "update-todo",
-      "description": "Update any todo or idea - progress notes, complete, defer, or drop",
+      "description": "Update any todo or idea -- add progress notes, complete, defer, or drop. Works with both project todos and global ideas.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
@@ -109,7 +109,7 @@
     },
     {
       "name": "vaultwarden",
-      "description": "Fast credential lookup via vaultwarden-secrets MCP",
+      "description": "Fast credential lookup via vaultwarden-secrets MCP. One call, not three.",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
