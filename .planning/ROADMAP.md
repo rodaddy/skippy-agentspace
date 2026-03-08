@@ -188,11 +188,11 @@ Plans:
   3. INSTALL.md covers adding individual skills or components to an existing setup
   4. UPGRADE.md covers updating from a previous version without losing customizations
   5. A verification script confirms symlinks resolve, hooks are registered, commands are accessible, and core files are in place -- outputting pass/fail per check
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
+- [ ] 10-01-PLAN.md -- prereqs.sh + verify.sh (bootstrap scripts)
+- [ ] 10-02-PLAN.md -- SETUP.md, INSTALL.md, UPGRADE.md, README.md, /skippy:upgrade command
 
 ## Progress
 
@@ -209,6 +209,6 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. Foundation | v1.1 | 2/2 | Complete | 2026-03-07 |
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
-| 8. Upstream Analysis | 3/3 | Complete   | 2026-03-08 | - |
+| 8. Upstream Analysis | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
-| 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |
+| 10. Bootstrap & Docs | v1.1 | 0/2 | Not started | - |
