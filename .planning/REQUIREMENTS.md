@@ -40,7 +40,7 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 - [x] **UPST-01**: OMC added as third upstream source in registry
 - [x] **UPST-02**: Cross-package analysis identifies patterns common across GSD, PAUL, and OMC
 - [x] **UPST-03**: Best-of-breed skippy versions created for common patterns
-- [ ] **UPST-04**: `/skippy:update` uses generic upstream checker instead of hardcoded repos
+- [x] **UPST-04**: `/skippy:update` uses generic upstream checker instead of hardcoded repos
 
 ### Skill System
 
@@ -124,7 +124,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | UPST-01 | Phase 8 | Complete |
 | UPST-02 | Phase 8 | Complete |
 | UPST-03 | Phase 8 | Complete |
-| UPST-04 | Phase 8 | Pending |
+| UPST-04 | Phase 8 | Complete |
 | SKIL-01 | Phase 9 | Pending |
 | SKIL-02 | Phase 9 | Pending |
 | SKIL-03 | Phase 9 | Pending |
