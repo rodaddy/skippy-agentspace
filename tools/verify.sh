@@ -21,24 +21,20 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 
 # Source shared library with graceful fallback
-_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
 else
-    # Fallback: define minimal stubs so script still works without common.sh
-    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
-    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
-    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
-    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
-    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
-    skippy_suggest() { echo "    Fix: $1"; }
-    skippy_section() { echo ""; echo "=== $1 ==="; }
-    skippy_summary() {
-        echo ""; echo "  $SKIPPY_PASS passed, $SKIPPY_WARN warnings, $SKIPPY_FAIL failures"
-        [[ "$SKIPPY_FAIL" -gt 0 ]] && return 1; return 0
-    }
-    skippy_is_installed() { [[ -L "$HOME/.claude/skills/$1" ]] || [[ -L "$HOME/.claude/commands/$1" ]]; }
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_PASS++)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_WARN++)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_FAIL++)); }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
 fi
 
 REPO_ROOT="$(skippy_repo_root)"
@@ -161,15 +157,15 @@ if [ -f "$settings_file" ]; then
         # Derive expected hook count from manifest instead of hardcoding
         manifest_file="$REPO_ROOT/skills/core/hooks/manifest.json"
         if [ -f "$manifest_file" ]; then
-            expected_hooks="$(bun -e "const m = JSON.parse(require('fs').readFileSync('$manifest_file','utf-8')); console.log(m.hooks.length)" 2>/dev/null || echo "0")"
+            expected_hooks="$(MANIFEST="$manifest_file" bun -e "const m = JSON.parse(require('fs').readFileSync(process.env.MANIFEST,'utf-8')); console.log(m.hooks.length)" 2>/dev/null || echo "0")"
         else
             expected_hooks="0"
             skippy_warn "hooks manifest not found at $manifest_file"
         fi
 
-        pai_hook_count="$(bun -e "
+        pai_hook_count="$(SETTINGS="$settings_file" bun -e "
             const fs = require('fs');
-            const s = JSON.parse(fs.readFileSync('$settings_file', 'utf-8'));
+            const s = JSON.parse(fs.readFileSync(process.env.SETTINGS, 'utf-8'));
             let c = 0;
             for (const gs of Object.values(s.hooks || {})) {
                 for (const g of gs) {
