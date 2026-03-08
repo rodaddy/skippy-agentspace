@@ -51,7 +51,7 @@ Three approaches evaluated. We chose **portable skill repo** -- standalone execu
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 14 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 15 reference docs
     agents/                 # Subagent definitions for /skippy:review audit swarm
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
