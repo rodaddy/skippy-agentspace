@@ -123,7 +123,7 @@ v1 complete. v1.1 in progress -- 12 skills migrated, skill system operational.
 | 6. Skill Content | Core + skippy-dev content | Complete |
 | 7. Hooks | LAW enforcement hooks | Complete |
 | 8. Upstream Integration | OMC cherry-picks, reference docs | Complete |
-| 9. Skill System | Selective install, migrate, 12 skills | In Progress |
+| 9. Skill System | Selective install, migrate, 12 skills | Complete |
 | 10. Production Readiness | Final validation | Planned |
 
 ## Key Files
