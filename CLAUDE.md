@@ -51,7 +51,8 @@ Three approaches evaluated. We chose **portable skill repo** -- standalone execu
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 11 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 14 reference docs
+    agents/                 # Subagent definitions for /skippy:review audit swarm
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections
@@ -76,6 +77,7 @@ INDEX.md                    # Auto-generated skill registry (4 category sections
 | Command | What It Does |
 |---------|-------------|
 | `/skippy:reconcile` | Compare planned vs actual for the most recent phase -- reports deviations, flags state drift |
+| `/skippy:review` | Multi-agent audit swarm -- spawns specialist reviewers, aggregates findings, applies fixes |
 | `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
 | `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
 | `/skippy:migrate` | Migrate PAI skills to portable format -- scan, rank, dry-run, migrate, update integration |

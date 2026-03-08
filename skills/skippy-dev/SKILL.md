@@ -31,6 +31,7 @@ Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 | 11 | Phased Execution | `references/phased-execution.md` | Phase execution with wave-based parallelism |
 | 12 | State Tracking | `references/state-tracking.md` | STATE.md lifecycle, progress tracking, size management |
 | 13 | Checkpoints | `references/checkpoints.md` | Human-in-the-loop verification during execution |
+| 14 | Audit Swarm | `references/audit-swarm.md` | Multi-agent review -- spawning, findings, fix/eval cycling |
 
 ## Commands
 
@@ -107,6 +108,21 @@ Migrate PAI skills from `~/.config/pai/Skills/` into portable format under `skil
 
 No auto-migration -- presents findings and lets the user decide what to migrate.
 
+### `/skippy:review`
+
+Run a multi-agent code review cycle on the current project or specified scope.
+
+**Workflow:**
+
+1. Determine scope (phase, directory, or full repo)
+2. Spawn 4 specialist reviewers sequentially (security, code quality, architecture, consistency)
+3. Aggregate findings into shared board at `.reports/skippy-review/findings-{timestamp}.md`
+4. Spawn fix agents for CRITICAL and HIGH severity findings
+5. Evaluate fixes, cycle if regressions found (max 3 iterations)
+6. Generate final audit report with statistics
+
+**Output:** Findings board at `.reports/skippy-review/` with severity-rated findings, fix log, and evaluation results.
+
 ## For Agents
 
 When spawning agents (planner, executor, verifier), you can enhance their prompts:
@@ -126,6 +142,9 @@ Read ${CLAUDE_SKILL_DIR}/references/phased-execution.md
 
 Read ${CLAUDE_SKILL_DIR}/references/checkpoints.md
 # Include when the plan has human verification steps
+
+Read ${CLAUDE_SKILL_DIR}/references/audit-swarm.md
+# Include when spawning review agents or running audit cycles
 ```
 
 Don't load all references into every agent -- pick the relevant one.
