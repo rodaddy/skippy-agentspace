@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
 status: in-progress
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-03-08T20:31:00Z"
-last_activity: 2026-03-08 -- Phase 12 Plan 01 complete (bats-core test infrastructure + common-lib tests)
+stopped_at: Completed 12-02-PLAN.md
+last_updated: "2026-03-08T20:36:00Z"
+last_activity: 2026-03-08 -- Phase 12 Plan 02 complete (install/uninstall tests, 14 tests passing)
 progress:
   total_phases: 16
   completed_phases: 12
   total_plans: 37
-  completed_plans: 31
-  percent: 84
+  completed_plans: 32
+  percent: 86
 ---
 
 # Project State
@@ -26,18 +26,18 @@ See: .planning/PROJECT.md (updated 2026-03-08)
 ## Current Position
 
 Phase: 12-testing (in progress)
-Plan: 1 of 3 complete
-Status: Plan 01 complete -- bats-core infrastructure + 10 common-lib tests passing
-Last activity: 2026-03-08 -- Phase 12 Plan 01 complete (bats-core test infrastructure + common-lib tests)
+Plan: 2 of 3 complete
+Status: Plan 02 complete -- install/uninstall tests, 14 tests passing (24 total)
+Last activity: 2026-03-08 -- Phase 12 Plan 02 complete (install/uninstall tests, 14 tests passing)
 
-Progress: [████████░░] 84%
+Progress: [█████████░] 86%
 
-**Next step:** Execute 12-02-PLAN.md (install/uninstall tests)
+**Next step:** Execute 12-03-PLAN.md (index-sync and end-to-end tests)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 31 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 plan 01)
+- Total plans completed: 32 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 plans 01-02)
 - Average duration: --
 - Total execution time: --
 
@@ -58,7 +58,7 @@ Progress: [████████░░] 84%
 |-------|-------|----------|-------|
 | 11. Foundation | 2/2 | 6min | 8 |
 | 13. GSD Absorption | 3/3 | 11min | 21 |
-| 12. Testing | 1/3 | 3min | 6 |
+| 12. Testing | 2/3 | 5min | 8 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -113,6 +113,7 @@ Recent decisions affecting current work:
 - [13-03]: 3 additional skills/core/ files cleaned beyond planned 8 reference docs to satisfy full skills/ grep scan
 - [12-01]: Load paths in test helper use test_helper/ prefix -- bats resolves relative to .bats file, not the helper
 - [12-01]: 10 tests instead of planned 8 -- added SKIPPY_ROOT fallback and color-disable tests for completeness
+- [12-02]: Used skippy-dev instead of core for --target=commands test -- core has no commands/ subdirectory
 
 ### Pending Todos
 
@@ -124,6 +125,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T20:31:00Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-03-08T20:36:00Z
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None
