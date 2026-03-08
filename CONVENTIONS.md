@@ -69,6 +69,31 @@ Each upstream is a directory under `upstreams/` containing an `upstream.json` fi
 }
 ```
 
+## Shell Library Conventions
+
+All `tools/` scripts source `tools/lib/common.sh` for shared functionality. Skill scripts (`skills/*/scripts/*.sh`) remain standalone per the portability constraint.
+
+### Sourcing Pattern
+
+Every `tools/` script uses a standardized fallback:
+```bash
+_COMMON="$(cd "$(dirname "$0")" && cd lib && pwd)/common.sh"
+[[ -f "$_COMMON" ]] && source "$_COMMON" || { # inline fallback stubs }
+```
+
+### Namespace
+
+All shared functions use the `skippy_` prefix. Private variables use `_SKIPPY_` prefix (e.g., `_SKIPPY_RED`, `_SKIPPY_PASS`, `_SKIPPY_FAIL_COUNT`).
+
+Key functions: `skippy_pass`, `skippy_warn`, `skippy_fail`, `skippy_info`, `skippy_summary`, `skippy_repo_root`, `skippy_is_installed`, `validate_skill_name`.
+
+### Rules
+
+- `validate_skill_name()` is required for any user-supplied skill name argument -- prevents path traversal and injection
+- `bun -e` must use `process.env.VARNAME`, never string interpolation (shell variables in JS strings break quoting)
+- `echo -e` for color output -- consistent with existing script patterns
+- `prereqs.sh` keeps its own exit-code logic -- `skippy_summary` is not used there due to its interactive install-prompt flow
+
 ## Installation Philosophy
 
 v1.1 shifts the installation approach:
