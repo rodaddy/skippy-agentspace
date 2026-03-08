@@ -12,7 +12,7 @@ set -euo pipefail
 # Removes from whichever locations have symlinks. Source files are untouched.
 
 # Source shared library with graceful fallback
-_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
+_COMMON_SH="$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
@@ -20,9 +20,9 @@ else
     # Fallback: define all stubs when common.sh is missing
     SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
     skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
-    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_PASS++)); }
-    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_WARN++)); }
-    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_FAIL++)); }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
     skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
     skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
     skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
