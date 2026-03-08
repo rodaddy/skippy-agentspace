@@ -4,7 +4,7 @@ description: Process content through Fabric AI patterns (228+ available). Handle
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: utility
 ---
 

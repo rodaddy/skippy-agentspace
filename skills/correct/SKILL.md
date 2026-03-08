@@ -4,7 +4,7 @@ description: Add a correction to the appropriate doc when Claude repeatedly make
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 ---
 

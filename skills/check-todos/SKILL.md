@@ -4,7 +4,7 @@ description: Unified todo checker - shows both project todos and global ideas in
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 ---
 

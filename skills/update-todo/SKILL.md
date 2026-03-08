@@ -4,7 +4,7 @@ description: Update any todo or idea -- add progress notes, complete, defer, or 
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 ---
 

@@ -4,7 +4,7 @@ description: PAI core infrastructure -- personas, LAWs, rules, and project templ
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: core
 ---
 

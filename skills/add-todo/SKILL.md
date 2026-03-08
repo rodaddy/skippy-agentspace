@@ -4,7 +4,7 @@ description: Scope-aware todo/idea capture - routes to project (.planning/todos/
 metadata:
   version: 0.1.0
   author: Rico
-  source: https://github.com/rico/skippy-agentspace
+  source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 ---
 
