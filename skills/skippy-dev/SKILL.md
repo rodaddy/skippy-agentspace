@@ -1,20 +1,20 @@
 ---
 name: skippy-dev
-description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, and state consistency. Augments GSD with best-of-breed ideas from the PAUL framework.
-triggers:
-  - /skippy:reconcile
-  - /skippy:update
-  - /skippy:cleanup
-  - reconcile plan
-  - check upstream
-  - cleanup ephemeral
+description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
+metadata:
+  version: 0.1.0
+  author: Rico
+  source: https://github.com/rodaddy/skippy-agentspace
+  category: workflow
 ---
 
 # skippy-dev -- Development Workflow Enhancements
 
 Additive rules and tools that sharpen GSD's planning and execution. No GSD files modified -- everything here is referenced guidance that agents and main context can load on demand.
 
-## 5 Enhancements
+## Enhancements
+
+Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 
 | # | Enhancement | Reference | When It Applies |
 |---|-------------|-----------|-----------------|
@@ -23,6 +23,11 @@ Additive rules and tools that sharpen GSD's planning and execution. No GSD files
 | 3 | Task Anatomy | `references/task-anatomy.md` | During plan creation (plan-phase) |
 | 4 | Plan Boundaries | `references/plan-boundaries.md` | During plan creation -- define what NOT to touch |
 | 5 | State Consistency | `references/state-consistency.md` | Before/after phase execution -- cross-file alignment |
+| 6 | Model Routing | `references/model-routing.md` | Agent spawning -- match model to task complexity |
+| 7 | Verification Loops | `references/verification-loops.md` | Post-implementation -- structured quality feedback |
+| 8 | Session Persistence | `references/session-persistence.md` | Session start/end -- context transfer across sessions |
+| 9 | Structured Deliberation | `references/structured-deliberation.md` | Architecture decisions -- PDOC framework for options analysis |
+| 10 | Skill Extraction | `references/skill-extraction.md` | Pattern promotion -- correction to pattern to skill graduation |
 
 ## Commands
 
@@ -47,13 +52,17 @@ Compare what was planned vs what was actually done for the most recent phase.
 
 ### `/skippy:update`
 
-Check GSD and PAUL repos for upstream changes worth absorbing.
+Check all tracked upstreams for changes and suggest cherry-picks.
 
 **Workflow:**
 
-1. Run `~/.config/pai/Skills/skippy-dev/bin/skippy-update.sh`
-2. Review the diff report
-3. Human decides what to absorb -- no auto-merge
+1. Read all `upstreams/*/upstream.json` files from the repo root
+2. For each upstream: clone or fetch, compare HEAD against last_checked_sha
+3. Report changes grouped by area, highlight cherry-picked regions
+4. Update tracking (last_checked_sha, last_check) in each upstream.json
+5. Flag cross-package analysis for re-review if significant changes detected
+
+No auto-merge -- present findings and let the user decide.
 
 ### `/skippy:cleanup`
 
@@ -61,23 +70,60 @@ Manage ephemeral files (debug logs, telemetry, session history).
 
 **Workflow:**
 
-1. Run `~/.config/pai/Skills/skippy-dev/bin/skippy-cleanup.sh [--quarantine|--nuke]`
-2. Default is `--quarantine` (moves to `/Volumes/ThunderBolt/_tmp/skippy-cleanup/`)
+1. Run `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh [--quarantine|--nuke]`
+2. Default is `--quarantine` (moves to a configurable quarantine directory)
 3. Reports space freed
+
+### `/skippy:upgrade`
+
+Upgrade skippy-agentspace to latest version preserving customizations.
+
+**Workflow:**
+
+1. Snapshot current state (installed skills, hook count, HEAD commit)
+2. Pull latest from origin
+3. Re-install all skills and hooks (`tools/install.sh --all`, `skills/core/hooks/install-hooks.sh`)
+4. Run `tools/verify.sh` and compare against pre-upgrade snapshot
+5. Report changes, new/removed skills, and any customization conflicts
+
+No auto-resolve -- presents options and lets the user decide.
+
+### `/skippy:migrate`
+
+Migrate PAI skills from `~/.config/pai/Skills/` into portable format under `skills/`.
+
+**Workflow:**
+
+1. Scan all directories under `~/.config/pai/Skills/` -- count files, lines, subdirectory structure
+2. Check which skills already exist under `skills/` (flag as "already migrated")
+3. Rank candidates by priority: daily driver frequency > foundational chain > portable value
+4. Present ranked table to user -- wait for approval before proceeding
+5. For each approved skill, show dry-run preview (target file tree, SKILL.md preview, what gets stripped/flattened)
+6. Migrate: create target directory, slim SKILL.md to <150 lines, flatten subdirs, sanitize private content
+7. Update integration files: `marketplace.json`, rebuild `INDEX.md` via `tools/index-sync.sh`
+
+No auto-migration -- presents findings and lets the user decide what to migrate.
 
 ## For Agents
 
 When spawning GSD agents (planner, executor, verifier), you can enhance their prompts:
 
 ```
-Read ~/.config/pai/Skills/skippy-dev/references/task-anatomy.md
+Read ${CLAUDE_SKILL_DIR}/references/task-anatomy.md
 # Include when the agent is creating plans
 
-Read ~/.config/pai/Skills/skippy-dev/references/plan-boundaries.md
+Read ${CLAUDE_SKILL_DIR}/references/plan-boundaries.md
 # Include when the plan needs scope protection
 
-Read ~/.config/pai/Skills/skippy-dev/references/state-consistency.md
+Read ${CLAUDE_SKILL_DIR}/references/state-consistency.md
 # Include when the agent touches state files
 ```
 
 Don't load all references into every agent -- pick the relevant one.
+
+## Maintenance
+
+| Reference | Purpose |
+|-----------|---------|
+| `references/gsd-dependency-map.md` | Every `.planning/` integration point with breakage risk -- check before GSD updates |
+| `../../docs/cross-package-analysis.md` | Cross-package pattern analysis across all upstreams -- re-review when `/skippy:update` flags significant changes |

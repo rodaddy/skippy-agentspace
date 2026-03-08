@@ -1,0 +1,125 @@
+# skippy-agentspace
+
+## What This Is
+
+A portable PAI infrastructure package for Claude Code. Core system (personas, LAWs, hooks, commands) plus add-on skills -- all bootstrappable on a new machine from a single repo. Cherry-picks the best ideas from GSD, PAUL, and OMC as upstream sources. Every skill follows the slim-core pattern: small SKILL.md entry point with deep reference docs in folders, so everything is available without eating context.
+
+## Core Value
+
+Every skill works standalone with vanilla Claude Code -- no PAI dependency required. Skills are self-contained, installable, and enhanced (not broken) by PAI infrastructure when present.
+
+## Current Milestone: v1.1 Portable PAI
+
+**Goal:** Transform skippy-agentspace from a single-skill repo into a portable PAI infrastructure package -- core system + add-on skills, bootstrappable on a new machine.
+
+**Target features:**
+- OMC analysis and cherry-pick (third upstream alongside GSD and PAUL)
+- Extensible upstream system -- add new packages/marketplaces to cherry-pick from
+- Core infrastructure package (personas, LAWs, hooks, commands)
+- All PAI skills restructured to slim SKILL.md + deep references pattern
+- Add-on skill system (opt-in installation per skill)
+- New machine bootstrap (clone + install = working PAI)
+
+## Requirements
+
+### Validated
+
+<!-- Shipped in v1.0 and confirmed working. -->
+
+- ✓ Origin documentation -- full story of why this exists — v1.0
+- ✓ 5 PAUL enhancement reference docs with real, actionable content — v1.0
+- ✓ `/skippy:reconcile` command works against a real `.planning/` project — v1.0
+- ✓ `/skippy:update` script clones both repos, tracks versions, reports diffs — v1.0
+- ✓ `/skippy:cleanup` script quarantines or nukes ephemeral files — v1.0
+- ✓ Install/uninstall tooling correctly symlinks skills — v1.0
+- ✓ Index sync validates INDEX.md matches actual skills — v1.0
+- ✓ Cold session context for new sessions — v1.0
+- ✓ CLAUDE.md includes origin story and architectural decisions — v1.0
+- ✓ All scripts pass basic functional testing — v1.0
+
+### Active
+
+<!-- v1.1 scope -- defined during requirements phase. -->
+
+(Defining in v1.1 milestone)
+
+### Out of Scope
+
+<!-- Updated for v1.1 -->
+
+- Forking GSD, PAUL, or OMC -- we ride upstream, never fork
+- Auto-merging upstream changes -- report, human decides
+- Publishing to npm or any package registry -- private repo, manual install
+- BDD Given/When/Then ceremony -- too much overhead for solo dev
+
+### Out of Scope
+
+- Forking GSD or PAUL -- we ride upstream, never fork
+- Auto-merging upstream changes -- `/skippy:update` reports, human decides
+- Hooks in `~/.claude/settings.json` -- enhancements are rule-based (reference docs), not hook-enforced
+- BDD Given/When/Then ceremony for acceptance criteria -- too much overhead for solo dev
+- PAUL's "no subagents for execution" philosophy -- GSD's parallel execution is correct at scale
+- Publishing to npm or any package registry -- private repo, manual install
+
+## Context
+
+### Origin Story
+
+On 2026-03-06, we watched a YouTube video (MppKHh_MfFc) comparing GSD vs the PAUL framework. After running `fabric extract_wisdom` on it, we cloned PAUL's repo (ChristopherKahler/paul) and did a deep code review.
+
+**What PAUL does well (stolen):**
+1. **Context Brackets** -- FRESH/MODERATE/DEEP/CRITICAL behavior adaptation based on context window usage
+2. **Mandatory Reconciliation (UNIFY)** -- plan-vs-actual comparison after every phase
+3. **Task Anatomy** -- 4 required fields per task: files, action, verify, done
+4. **Plan Boundaries** -- explicit DO NOT CHANGE and SCOPE LIMITS in every plan
+5. **State Consistency** -- cross-file alignment verification at phase transitions
+
+**What PAUL gets wrong (rejected):**
+- No subagents for execution -- works for tiny projects, dies at scale
+- "Plans are prompts" -- clever framing for "write specific plans," not novel
+- BDD for every acceptance criterion -- ceremony for ceremony's sake on solo projects
+- The "70% context loss" claim about GSD subagents -- GSD writes structured artifacts for context transfer
+
+### Architectural Decision
+
+Three approaches were considered:
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **PAI Skill + Hooks** (chosen) | No forks, modular, zero upstream maintenance | Parasitic on GSD |
+| Full Skippy Framework | Full control, unified commands | Massive maintenance, diverges from both upstreams |
+| Just Patch GSD | 30 minutes of work | No update mechanism, per-project, coupled to GSD internals |
+
+We chose the parasitic approach: keep GSD unchanged, inject PAUL's ideas as reference docs that GSD agents can load on demand, and add utility commands for reconciliation, upstream monitoring, and cleanup.
+
+### Relationship to PAI
+
+- **Source:** This repo (`skippy-agentspace/`) is the development copy
+- **Installed copy:** `~/.config/pai/Skills/skippy-dev/` (symlinked via `tools/install.sh`)
+- **Commands registered:** `~/.claude/commands/skippy/` (symlinks to `skills/skippy-dev/commands/`)
+- **Agent access:** Listed in `~/.config/pai/Skills/AGENT-INDEX.md` under "Development Workflow"
+
+### Backup
+
+Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-dev/` with restore script. Ephemeral files (2.5G of debug/telemetry/history) quarantined to `/Volumes/ThunderBolt/_tmp/claude-cleanup-2026-03-06/`.
+
+## Constraints
+
+- **Portability**: Every skill must work with vanilla Claude Code (`~/.claude/commands/`). PAI enhancements are optional.
+- **Self-contained**: Each skill declares its own triggers, references, and commands. No cross-skill imports.
+- **Slim core**: SKILL.md is the entry point (~150 lines max). Detail lives in `references/`.
+- **No GSD modification**: All enhancements are additive references, never patches to GSD source.
+- **Stack**: Shell scripts (`#!/usr/bin/env bash`), markdown for rules/references. No TypeScript/Node dependencies.
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Parasitic skill over fork | Zero maintenance, modular, upgradeable | -- Pending |
+| Reference docs over hooks | Hooks can't detect context usage; rules are self-enforced | -- Pending |
+| Shell scripts for tooling | No build step, no dependencies, portable | -- Pending |
+| Quarantine before delete for cleanup | Safer -- verify nothing breaks before nuking | -- Pending |
+| Separate agentspace repo | Skills should be portable, not buried in PAI config | -- Pending |
+
+---
+*Last updated: 2026-03-07 after v1.1 milestone start*

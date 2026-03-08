@@ -1,22 +1,148 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# install -- Install a skill into Claude Code's command discovery
-# Usage: install.sh <skill-name> | install.sh --all
+# install -- Install skills into Claude Code's discovery system
 #
-# Creates symlink: ~/.claude/commands/<skill-name> -> <repo>/skills/<skill-name>/commands/
-# If skill has no commands/ dir, only registers in AGENT-INDEX (no slash commands).
+# Usage:
+#   install.sh                            Show status table of all skills
+#   install.sh <skill-name> [skill...]    Install one or more skills (auto-detect target)
+#   install.sh --core                     Install only the core skill
+#   install.sh --all                      Install all skills
+#   install.sh [options] --target=X       Override target (skills|commands|auto)
+#
+# Targets:
+#   skills   -> ~/.claude/skills/<name>/    (modern -- full skill with SKILL.md)
+#   commands -> ~/.claude/commands/<name>   (legacy -- slash commands only)
+#   auto     -> detect best target (default)
+#
+# Modern installs symlink the entire skill directory (SKILL.md, commands/, references/, scripts/).
+# Legacy installs symlink the commands/ subdirectory only (slash commands, no SKILL.md discovery).
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SKILLS_DIR="$REPO_ROOT/skills"
-COMMANDS_DIR="$HOME/.claude/commands"
-SKILL_NAME="${1:-}"
+TARGET="auto"
+SKILL_NAMES=()
+INSTALL_ALL=false
+INSTALL_CORE=false
+
+# --- Functions (must be defined before argument parsing uses them) ---
+
+list_skills() {
+    for skill_dir in "$SKILLS_DIR"/*/; do
+        [[ -d "$skill_dir" ]] || continue
+        local name
+        name="$(basename "$skill_dir")"
+        local desc
+        desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
+        echo "  $name -- ${desc:-no description}"
+    done
+}
+
+show_status() {
+    printf "%-20s %-14s %s\n" "SKILL" "STATUS" "DESCRIPTION"
+    printf "%-20s %-14s %s\n" "-----" "------" "-----------"
+    for skill_dir in "$SKILLS_DIR"/*/; do
+        [[ -d "$skill_dir" ]] || continue
+        local name
+        name="$(basename "$skill_dir")"
+        local desc
+        desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
+        local status="available"
+        if [[ -L "$HOME/.claude/skills/$name" ]] || [[ -L "$HOME/.claude/commands/$name" ]]; then
+            status="installed"
+        fi
+        printf "%-20s %-14s %s\n" "$name" "[$status]" "${desc:-no description}"
+    done
+}
+
+detect_target() {
+    case "$TARGET" in
+        skills)   echo "skills" ;;
+        commands) echo "commands" ;;
+        auto)
+            if [[ -d "$HOME/.claude/skills" ]]; then
+                echo "skills"
+            elif [[ -d "$HOME/.claude/commands" ]]; then
+                echo "commands"
+            else
+                # Fresh machine: prefer modern skills/ target
+                mkdir -p "$HOME/.claude/skills"
+                echo "skills"
+            fi
+            ;;
+    esac
+}
+
+warn_plugin_conflict() {
+    local name="$1"
+    local cache_dir="$HOME/.claude/plugins/cache"
+
+    if [[ -d "$cache_dir" ]]; then
+        # Check if any cached plugin contains this skill
+        local match
+        match=$(find "$cache_dir" -maxdepth 3 -name "SKILL.md" -path "*/$name/*" 2>/dev/null | head -1)
+        if [[ -n "$match" ]]; then
+            echo "  WARN: Skill '$name' appears to be installed via plugin system"
+            echo "        Plugin path: $(dirname "$match")"
+            echo "        Manual install may create duplicate slash commands."
+            echo "        Consider running 'tools/uninstall.sh $name' if you switch install methods."
+        fi
+    fi
+}
+
+install_skill_modern() {
+    local name="$1"
+    local src="$SKILLS_DIR/$name"
+    local dest="$HOME/.claude/skills/$name"
+
+    mkdir -p "$HOME/.claude/skills"
+
+    if [[ -L "$dest" ]]; then
+        echo "  UPDATE: Removing existing symlink at $dest"
+        unlink "$dest"
+    elif [[ -e "$dest" ]]; then
+        echo "  ERROR: $dest exists and is not a symlink -- remove manually"
+        return 1
+    fi
+
+    ln -s "$src" "$dest"
+    echo "  INSTALLED (skills): $name -> $dest"
+    echo "    Skill entry: $src/SKILL.md"
+    if [[ -d "$src/commands" ]]; then
+        echo "    Commands: $(ls "$src/commands/"*.md 2>/dev/null | xargs -I{} basename {} .md | tr '\n' ', ' | sed 's/,$//')"
+    fi
+}
+
+install_skill_legacy() {
+    local name="$1"
+    local commands_src="$SKILLS_DIR/$name/commands"
+    local dest="$HOME/.claude/commands/$name"
+
+    if [[ ! -d "$commands_src" ]]; then
+        echo "  SKIP (commands): $name has no commands/ directory -- nothing to symlink in legacy mode"
+        return 0
+    fi
+
+    mkdir -p "$HOME/.claude/commands"
+
+    if [[ -L "$dest" ]]; then
+        echo "  UPDATE: Removing existing symlink at $dest"
+        unlink "$dest"
+    elif [[ -e "$dest" ]]; then
+        echo "  ERROR: $dest exists and is not a symlink -- remove manually"
+        return 1
+    fi
+
+    ln -s "$commands_src" "$dest"
+    echo "  INSTALLED (commands): $name -> $dest"
+    echo "    Commands: $(ls "$commands_src"/*.md 2>/dev/null | xargs -I{} basename {} .md | tr '\n' ', ' | sed 's/,$//')"
+}
 
 install_skill() {
     local name="$1"
     local skill_dir="$SKILLS_DIR/$name"
-    local commands_src="$skill_dir/commands"
-    local commands_dest="$COMMANDS_DIR/$name"
+    local resolved_target
+    resolved_target="$(detect_target)"
 
     if [[ ! -d "$skill_dir" ]]; then
         echo "ERROR: Skill '$name' not found in $SKILLS_DIR/"
@@ -24,48 +150,101 @@ install_skill() {
     fi
 
     if [[ ! -f "$skill_dir/SKILL.md" ]]; then
-        echo "ERROR: $name/ has no SKILL.md"
+        echo "ERROR: $name/ has no SKILL.md -- not a valid skill"
         return 1
     fi
 
-    # Symlink commands/ if it exists
-    if [[ -d "$commands_src" ]]; then
-        if [[ -L "$commands_dest" ]]; then
-            echo "  UPDATE: $name (removing old symlink)"
-            unlink "$commands_dest"
-        elif [[ -d "$commands_dest" ]]; then
-            echo "  WARN: $commands_dest exists as directory, skipping (remove manually)"
-            return 1
-        fi
+    # Warn about potential plugin conflicts
+    warn_plugin_conflict "$name"
 
-        ln -s "$commands_src" "$commands_dest"
-        echo "  INSTALLED: $name -> $commands_dest"
-        echo "    Commands: $(ls "$commands_src"/*.md 2>/dev/null | xargs -I{} basename {} .md | tr '\n' ', ' | sed 's/,$//')"
-    else
-        echo "  REGISTERED: $name (no commands/ -- skill loaded via SKILL.md only)"
-    fi
+    case "$resolved_target" in
+        skills)
+            install_skill_modern "$name"
+            ;;
+        commands)
+            install_skill_legacy "$name"
+            ;;
+    esac
 }
 
-case "${SKILL_NAME}" in
-    --all)
-        echo "=== Installing all skills ==="
-        for skill_dir in "$SKILLS_DIR"/*/; do
-            install_skill "$(basename "$skill_dir")"
-        done
-        echo "=== Done. Run /clear to refresh skill list. ==="
-        ;;
-    "")
-        echo "Usage: install.sh <skill-name> | install.sh --all"
-        echo ""
-        echo "Available skills:"
-        for skill_dir in "$SKILLS_DIR"/*/; do
-            name="$(basename "$skill_dir")"
-            desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
-            echo "  $name -- $desc"
-        done
-        ;;
-    *)
-        install_skill "$SKILL_NAME"
-        echo "Run /clear to refresh skill list."
-        ;;
-esac
+# --- Argument parsing ---
+
+for arg in "$@"; do
+    case "$arg" in
+        --target=*)
+            TARGET="${arg#--target=}"
+            if [[ "$TARGET" != "skills" && "$TARGET" != "commands" && "$TARGET" != "auto" ]]; then
+                echo "ERROR: --target must be 'skills', 'commands', or 'auto' (got '$TARGET')"
+                exit 1
+            fi
+            ;;
+        --all)
+            INSTALL_ALL=true
+            ;;
+        --core)
+            INSTALL_CORE=true
+            ;;
+        -h|--help)
+            echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+            echo ""
+            echo "Modes:"
+            echo "  (no args)            Show status table of all skills"
+            echo "  <skill> [skill...]   Install one or more skills by name"
+            echo "  --core               Install only the core skill"
+            echo "  --all                Install all skills"
+            echo ""
+            echo "Options:"
+            echo "  --target=X           Override target (skills|commands|auto, default: auto)"
+            echo "                       auto prefers skills/ if ~/.claude/skills/ exists"
+            echo ""
+            echo "Examples:"
+            echo "  install.sh                          Show status of all skills"
+            echo "  install.sh --core                   Install core skill only"
+            echo "  install.sh skippy-dev               Install one skill"
+            echo "  install.sh skippy-dev excalidraw    Install multiple skills"
+            echo "  install.sh --all                    Install everything"
+            echo ""
+            echo "Available skills:"
+            list_skills
+            exit 0
+            ;;
+        *)
+            SKILL_NAMES+=("$arg")
+            ;;
+    esac
+done
+
+# --- Main ---
+
+if [[ "$INSTALL_ALL" == true ]]; then
+    echo "=== Installing all skills (target: $(detect_target)) ==="
+    for skill_dir in "$SKILLS_DIR"/*/; do
+        [[ -d "$skill_dir" ]] || continue
+        install_skill "$(basename "$skill_dir")"
+    done
+    echo "=== Done. Run /clear to refresh skill list. ==="
+elif [[ "$INSTALL_CORE" == true ]]; then
+    echo "=== Installing core skill (target: $(detect_target)) ==="
+    install_skill "core"
+    echo "Run /clear to refresh skill list."
+elif [[ ${#SKILL_NAMES[@]} -gt 0 ]]; then
+    echo "=== Installing ${#SKILL_NAMES[@]} skill(s) (target: $(detect_target)) ==="
+    failed=0
+    succeeded=0
+    for name in "${SKILL_NAMES[@]}"; do
+        if install_skill "$name"; then
+            succeeded=$((succeeded + 1))
+        else
+            failed=$((failed + 1))
+        fi
+    done
+    echo "=== Done: $succeeded installed, $failed failed. Run /clear to refresh skill list. ==="
+    if [[ "$failed" -gt 0 ]]; then
+        exit 1
+    fi
+else
+    show_status
+    echo ""
+    echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+    echo "Run install.sh --help for more details."
+fi

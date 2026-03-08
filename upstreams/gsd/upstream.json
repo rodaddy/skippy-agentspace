@@ -1,0 +1,10 @@
+{
+  "name": "gsd",
+  "description": "Get Shit Done -- phased execution framework for Claude Code",
+  "repo": "https://github.com/gsd-build/get-shit-done.git",
+  "branch": "main",
+  "last_checked_sha": "none",
+  "last_check": "never",
+  "cherry_picks": [],
+  "notes": "Base infrastructure -- we augment, never modify"
+}

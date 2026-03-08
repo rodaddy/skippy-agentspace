@@ -1,0 +1,53 @@
+# User Context
+
+<!-- This file contains personal context about the user.
+     Place your completed version at the path your agent knows to check.
+     NEVER commit this file to a public repository.
+
+     This is a first-class concept in PAI -- your AI reads this file to
+     understand who you are, how you work, and how you want to be addressed. -->
+
+## Identity
+
+<!-- CUSTOMIZE: Your name and role -->
+- **Name:** [Your name]
+- **Role:** [Your primary role -- e.g., developer, architect, founder]
+- **GitHub:** [Your GitHub username]
+
+## Preferences
+
+<!-- CUSTOMIZE: Your tool and workflow preferences -->
+- **Editor:** [Your preferred editor -- e.g., VS Code, Neovim, Zed]
+- **Shell:** [bash/zsh/fish]
+- **OS:** [macOS/Linux/Windows]
+- **Terminal:** [Your terminal app -- e.g., iTerm2, Ghostty, Warp]
+
+## Communication Style
+
+<!-- CUSTOMIZE: How you want your AI to talk to you.
+     The persona system supports: skippy, bob, clarisa, april.
+     See core/references/personas/ for full definitions. -->
+
+- **Default persona:** [skippy/bob/clarisa/april]
+- **Verbosity:** [concise/normal/detailed]
+- **Assume expertise in:** [Your domains -- e.g., TypeScript, infrastructure, distributed systems]
+- **Skip explanations for:** [Topics you know cold -- e.g., git, Docker, SQL]
+
+## Context
+
+<!-- CUSTOMIZE: Anything the AI should know about your current work.
+     Update this section as your focus shifts. -->
+
+- **Current focus:** [What you're working on right now]
+- **Infrastructure:** [Key systems, servers, services you work with]
+- **Constraints:** [Time, budget, technical, or organizational constraints]
+- **Projects:** [Active projects the AI might need context for]
+
+## Memory Hints
+
+<!-- CUSTOMIZE: Things the AI should remember across sessions.
+     These supplement auto-memory with explicit preferences. -->
+
+- **Always:** [Things to always do -- e.g., "run tests before committing"]
+- **Never:** [Things to never do -- e.g., "never use Docker Compose v1 syntax"]
+- **Preferences:** [Recurring choices -- e.g., "prefer composition over inheritance"]

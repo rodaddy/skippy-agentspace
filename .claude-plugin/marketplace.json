@@ -1,0 +1,120 @@
+{
+  "name": "skippy-agentspace",
+  "owner": {
+    "name": "Rico"
+  },
+  "metadata": {
+    "description": "Portable Claude Code skill repo -- core identity, workflow enhancements, and utility skills",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "core",
+      "description": "PAI core infrastructure -- personas, LAWs, rules, and project templates",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/core"]
+    },
+    {
+      "name": "skippy-dev",
+      "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/skippy-dev"]
+    },
+    {
+      "name": "add-todo",
+      "description": "Scope-aware todo/idea capture - routes to project (.planning/todos/) or global (.claude_ideas/) store. Supports single items and bulk extraction.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/add-todo"]
+    },
+    {
+      "name": "browser",
+      "description": "Browser automation via agent-browser MCP and browse CLI. Navigate, interact, extract data from web UIs.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/browser"]
+    },
+    {
+      "name": "check-todos",
+      "description": "Unified todo checker - shows both project todos and global ideas in a single numbered list, then routes selection to action.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/check-todos"]
+    },
+    {
+      "name": "correct",
+      "description": "Add a correction to the appropriate doc when Claude repeatedly makes the same mistake. Quick way to capture recurring rules.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/correct"]
+    },
+    {
+      "name": "deploy-service",
+      "description": "Deploy a new service to LXC with nginx proxy and DNS setup. Automates container creation, networking, base packages, reverse proxy, and DNS.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/deploy-service"]
+    },
+    {
+      "name": "excalidraw",
+      "description": "Generate Excalidraw diagrams from natural language using a Mermaid-based pipeline.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/excalidraw"]
+    },
+    {
+      "name": "fabric",
+      "description": "Process content through Fabric AI patterns (228+ available). Handles YouTube videos, URLs, and text input.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/fabric"]
+    },
+    {
+      "name": "session-wrap",
+      "description": "Wrap up a session - create session file + dated history file + briefing update, commit on current branch.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/session-wrap"]
+    },
+    {
+      "name": "update-todo",
+      "description": "Update any todo or idea -- add progress notes, complete, defer, or drop. Works with both project todos and global ideas.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/update-todo"]
+    },
+    {
+      "name": "vaultwarden",
+      "description": "Fast credential lookup via vaultwarden-secrets MCP. One call, not three.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/vaultwarden"]
+    }
+  ]
+}
