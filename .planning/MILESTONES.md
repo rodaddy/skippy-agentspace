@@ -1,5 +1,20 @@
 # Milestones
 
+## v1.2 Standalone Skippy (Shipped: 2026-03-08)
+
+**Phases completed:** 6 phases (11-16), 14 plans
+**Stats:** 74 commits, 309 files changed, 41K insertions, 3K shell LOC, 10K markdown LOC
+
+**Key accomplishments:**
+- Shared shell library (`tools/lib/common.sh`) with 8 `skippy_`-namespaced functions, DRY extraction across all 6 tool scripts
+- bats-core test suite (37 tests across 6 `.bats` files) with vendored submodules and sandboxed HOME isolation
+- GSD pattern absorption into 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints) -- zero runtime GSD dependency
+- Multi-agent audit swarm (`/skippy:review`) with 6 specialist subagent definitions and 3-layer sandbox protocol
+- deploy-service hardening (`config.env` mechanism replacing 9 placeholders) + version bump automation (`bump-version.sh` across 26 locations)
+- CONTRIBUTING.md, standalone identity framing across all docs, and CI workflow for GitHub Actions
+
+---
+
 ## v1.1 Portable PAI (Shipped: 2026-03-08)
 
 **Phases completed:** 6 phases (5-10), 16 plans

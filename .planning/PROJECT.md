@@ -8,19 +8,27 @@ A portable PAI infrastructure package for Claude Code. Core system (personas, LA
 
 Every skill works standalone with vanilla Claude Code -- no PAI dependency required. Skills are self-contained, installable, and enhanced (not broken) by PAI infrastructure when present.
 
-## Current Milestone: v1.2 Standalone Skippy
+## Milestones
 
-**Goal:** Skippy IS the framework -- no external dependencies on GSD, PAUL, or OMC at runtime. Automated testing, code quality, and a formalized multi-agent audit swarm.
+### v1.2 Standalone Skippy (shipped 2026-03-08)
 
-**Target features:**
-- GSD pattern absorption (phased execution, state tracking, plan structure, wave-based parallelism, checkpoints, verification loops)
-- `/skippy:review` audit swarm command (multi-agent review/fix/eval loop, sandboxed)
-- bats-core test suite (~260 lines minimum)
-- DRY extraction (`tools/lib/common.sh`)
-- deploy-service hardening (config mechanism, input validation, root guards)
-- CONTRIBUTING.md
-- `.gitattributes` export-ignore for `.planning/`
-- Version bump mechanism
+Skippy IS the framework -- no external dependencies on GSD, PAUL, or OMC at runtime. 6 phases, 14 plans, 22 requirements -- all satisfied.
+
+**What shipped:**
+- Shared shell library (`tools/lib/common.sh`) with DRY extraction across all tool scripts
+- bats-core test suite (37 tests) with vendored submodules and sandboxed HOME isolation
+- GSD pattern absorption into 4 standalone reference docs -- zero runtime GSD dependency
+- Multi-agent audit swarm (`/skippy:review`) with 6 specialist subagent definitions
+- deploy-service hardening (`config.env` mechanism) + version bump automation (`bump-version.sh`)
+- CONTRIBUTING.md, `.gitattributes` export-ignore, CI workflow, standalone identity framing
+
+### v1.1 Portable PAI (shipped 2026-03-08)
+
+12 skills across 4 categories, 15 reference docs, 3 upstream tracking configs, bootstrap tools.
+
+### v1.0 Initial Release (shipped 2026-03-07)
+
+Origin documentation, 5 PAUL enhancement reference docs, 3 utility commands, install/uninstall tooling.
 
 ## Requirements
 
@@ -47,9 +55,9 @@ Every skill works standalone with vanilla Claude Code -- no PAI dependency requi
 
 ### Active
 
-<!-- v1.2 scope -- defined during requirements phase. -->
+<!-- All milestones through v1.2 shipped. -->
 
-(Defining in v1.2 milestone)
+All v1.2 requirements satisfied. See `REQUIREMENTS.md` for full traceability and `.planning/milestones/` for archived snapshots.
 
 ### Out of Scope
 
@@ -120,4 +128,4 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-de
 | Separate agentspace repo | Skills should be portable, not buried in PAI config | -- Pending |
 
 ---
-*Last updated: 2026-03-08 after v1.2 milestone start*
+*Last updated: 2026-03-08 after v1.2 milestone complete*
