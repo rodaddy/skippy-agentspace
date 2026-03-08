@@ -4,7 +4,24 @@ set -euo pipefail
 # index-sync -- Validate or regenerate INDEX.md from skills/*/SKILL.md frontmatter
 # Usage: index-sync.sh [--check|--generate]
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Source shared library with graceful fallback
+_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 INDEX_FILE="$REPO_ROOT/INDEX.md"
 SKILLS_DIR="$REPO_ROOT/skills"
 MODE="${1:---check}"
@@ -18,15 +35,6 @@ capitalize() {
     echo "$(echo "${word:0:1}" | tr '[:lower:]' '[:upper:]')${word:1}"
 }
 
-# Check if a skill is installed (symlinked into ~/.claude/skills/ or ~/.claude/commands/)
-is_installed() {
-    local skill_name="$1"
-    if [[ -L "$HOME/.claude/skills/$skill_name" ]] || [[ -L "$HOME/.claude/commands/$skill_name" ]]; then
-        return 0
-    fi
-    return 1
-}
-
 # Extract category from SKILL.md frontmatter
 get_category() {
     local skill_file="$1"
@@ -37,8 +45,7 @@ get_category() {
 
 case "$MODE" in
     --check)
-        echo "=== Index Sync: Checking ==="
-        errors=0
+        skippy_section "Index Sync: Checking"
 
         # Scan each skill directory for SKILL.md
         for skill_dir in "$SKILLS_DIR"/*/; do
@@ -46,22 +53,21 @@ case "$MODE" in
             skill_file="$skill_dir/SKILL.md"
 
             if [[ ! -f "$skill_file" ]]; then
-                echo "  WARN: $skill_name/ has no SKILL.md"
+                skippy_warn "$skill_name/ has no SKILL.md"
                 continue
             fi
 
             # Check if skill is in INDEX.md
             if ! grep -q "$skill_name" "$INDEX_FILE" 2>/dev/null; then
-                echo "  MISSING: $skill_name not in INDEX.md"
-                errors=$((errors + 1))
+                skippy_fail "$skill_name not in INDEX.md"
             else
-                echo "  OK: $skill_name"
+                skippy_pass "$skill_name"
             fi
 
             # Check for category field (informational, non-fatal)
             category="$(get_category "$skill_file")"
             if [[ "$category" == "uncategorized" ]]; then
-                echo "  INFO: $skill_name has no category in frontmatter"
+                skippy_suggest "$skill_name has no category in frontmatter"
             fi
         done
 
@@ -81,17 +87,11 @@ case "$MODE" in
                     ;;
             esac
             if [[ ! -d "$SKILLS_DIR/$name" ]]; then
-                echo "  ORPHAN: $name in INDEX.md but no directory"
-                errors=$((errors + 1))
+                skippy_warn "ORPHAN: $name in INDEX.md but no directory"
             fi
         done < <(grep "^| " "$INDEX_FILE" 2>/dev/null | grep -v "^| Skill" | grep -v "^|---")
 
-        if [[ "$errors" -eq 0 ]]; then
-            echo "=== All skills indexed ==="
-        else
-            echo "=== $errors issues found. Run --generate to rebuild. ==="
-            exit 1
-        fi
+        skippy_summary
         ;;
 
     --generate)
@@ -130,7 +130,7 @@ case "$MODE" in
 
             # Build display name with install badge
             display_name="$skill_name"
-            if is_installed "$skill_name"; then
+            if skippy_is_installed "$skill_name"; then
                 display_name="$skill_name [installed]"
             fi
 

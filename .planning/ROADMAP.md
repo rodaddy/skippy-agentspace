@@ -3,7 +3,8 @@
 ## Milestones
 
 - [x] **v1.0 Initial Release** - Phases 1-4 (shipped 2026-03-07)
-- [ ] **v1.1 Portable PAI** - Phases 5-10 (in progress)
+- [x] **v1.1 Portable PAI** - Phases 5-10 (shipped 2026-03-08)
+- [ ] **v1.2 Standalone Skippy** - Phases 11-16 (in progress)
 
 ## Phases
 
@@ -17,18 +18,26 @@
 
 </details>
 
-### v1.1 Portable PAI
-
-**Phase Numbering:**
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (5.1, 5.2): Urgent insertions (marked with INSERTED)
+<details>
+<summary>v1.1 Portable PAI (Phases 5-10) - SHIPPED 2026-03-08</summary>
 
 - [x] **Phase 5: Foundation** - Public/private content boundary and extensible upstream registry (completed 2026-03-07)
-- [x] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, and CLAUDE.md template packaged as portable core (commands deferred) (completed 2026-03-07)
+- [x] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, and CLAUDE.md template packaged as portable core (completed 2026-03-07)
 - [x] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall (completed 2026-03-07)
 - [x] **Phase 8: Upstream Analysis** - OMC as third upstream, cross-package analysis, and generic upstream checker (completed 2026-03-08)
 - [x] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported (completed 2026-03-08)
 - [x] **Phase 10: Bootstrap & Docs** - Prerequisite validation, setup/install/upgrade docs, and post-install verification (completed 2026-03-08)
+
+</details>
+
+### v1.2 Standalone Skippy
+
+- [x] **Phase 11: Foundation** - Shared shell library and repo hygiene (.gitattributes) (completed 2026-03-08)
+- [ ] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation
+- [ ] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns
+- [ ] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command
+- [ ] **Phase 15: Hardening** - deploy-service config mechanism and version management
+- [ ] **Phase 16: Integration & Polish** - Final verification, doc consistency, CONTRIBUTING.md
 
 ## Phase Details
 
@@ -96,6 +105,9 @@ Plans:
 
 </details>
 
+<details>
+<summary>v1.1 Phase Details (Phases 5-10) - SHIPPED 2026-03-08</summary>
+
 ### Phase 5: Foundation
 **Goal**: Architectural conventions are established so all subsequent phases build on a clean public/private boundary and an extensible upstream tracking system
 **Depends on**: Phase 4 (v1.0 complete)
@@ -105,73 +117,51 @@ Plans:
   2. Running `ls upstreams/` shows one directory per tracked upstream (gsd, paul), each containing an `upstream.json` with repo URL, branch, and last-checked SHA
   3. Adding a new upstream source requires only creating a new directory under `upstreams/` with the standard files -- no script or code changes needed
   4. Existing `.versions` tracking data is present in the new upstream format with no data loss
-**Plans**: 2 plans
+**Plans**: 2/2 complete
 
 Plans:
-- [ ] 05-01-PLAN.md -- Public/private content boundary (CONVENTIONS.md, .gitignore, CLAUDE.md ref)
-- [ ] 05-02-PLAN.md -- Upstream registry (upstreams/gsd + paul, .versions removal)
+- [x] 05-01-PLAN.md -- Public/private content boundary (CONVENTIONS.md, .gitignore, CLAUDE.md ref)
+- [x] 05-02-PLAN.md -- Upstream registry (upstreams/gsd + paul, .versions removal)
 
 ### Phase 6: Core Infrastructure
 **Goal**: The essential PAI operating layer -- personas, LAWs, rules, and project templates -- is packaged as a portable, installable core that follows the slim SKILL.md pattern
 **Depends on**: Phase 5 (public/private boundary defined)
 **Requirements**: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06
-**Note**: CORE-05 (command packaging) deferred per discuss-phase decision. Acknowledged in SKILL.md but not implemented this phase.
-**Success Criteria** (what must be TRUE):
-  1. All 4 personas (Skippy, Bob, Clarisa, April) exist as individual definition files under `skills/core/` with name, style, and behavioral rules
-  2. All 15 LAWs are packaged with enforcement descriptions (which are hook-enforced vs convention-enforced)
-  3. A CLAUDE.md template exists that a new project can copy and customize, pre-wired with LAW references and persona defaults
-  4. ~~All 10 claude commands packaged~~ DEFERRED -- command packaging moved to future phase pending todo system research
-  5. `skills/core/SKILL.md` is under 150 lines, with all detail in `core/references/` subdirectories
-**Plans**: 3 plans
+**Note**: CORE-05 (command packaging) deferred per discuss-phase decision.
+**Plans**: 3/3 complete
 
 Plans:
-- [ ] 06-01-PLAN.md -- Personas and LAWs extraction (4 persona files + 15 LAW files)
-- [ ] 06-02-PLAN.md -- Rules and templates (4 rule files + 2 template files)
-- [ ] 06-03-PLAN.md -- SKILL.md entry point + INDEX.md/marketplace.json/CLAUDE.md integration
+- [x] 06-01-PLAN.md -- Personas and LAWs extraction (4 persona files + 15 LAW files)
+- [x] 06-02-PLAN.md -- Rules and templates (4 rule files + 2 template files)
+- [x] 06-03-PLAN.md -- SKILL.md entry point + INDEX.md/marketplace.json/CLAUDE.md integration
 
 ### Phase 7: Hook Installation
 **Goal**: Users can install and uninstall PAI hooks into Claude Code's settings.json without destroying existing hook registrations from GSD, OMC, or other systems
 **Depends on**: Phase 6 (hooks live in core/)
 **Requirements**: HOOK-01, HOOK-02, HOOK-03, HOOK-04, HOOK-05
-**Success Criteria** (what must be TRUE):
-  1. A hook manifest file declares every hook with its event type, matcher pattern, command, and description
-  2. Running the hook installer on a settings.json that already contains GSD hooks results in both PAI and GSD hooks present -- no GSD hooks removed or modified
-  3. Running the hook uninstaller removes only PAI-registered hooks, leaving all other hooks intact
-  4. Running the installer twice produces the same settings.json as running it once (idempotent)
-  5. A timestamped backup of settings.json is created before any modification
-**Plans**: 3 plans
+**Plans**: 3/3 complete
 
 Plans:
-- [ ] 07-01-PLAN.md -- Manifest + shared lib (types, context, feedback utilities)
-- [ ] 07-02-PLAN.md -- 15 LAW hook scripts (10 ports + 5 new)
-- [ ] 07-03-PLAN.md -- Installer, uninstaller, INSTALL.md, SKILL.md update
+- [x] 07-01-PLAN.md -- Manifest + shared lib (types, context, feedback utilities)
+- [x] 07-02-PLAN.md -- 15 LAW hook scripts (10 ports + 5 new)
+- [x] 07-03-PLAN.md -- Installer, uninstaller, INSTALL.md, SKILL.md update
 
 ### Phase 8: Upstream Analysis
 **Goal**: OMC is tracked as a third upstream source, cross-package patterns are identified and cherry-picked, and `/skippy:update` works generically against any registered upstream
 **Depends on**: Phase 5 (upstream registry exists)
 **Requirements**: UPST-01, UPST-02, UPST-03, UPST-04
-**Success Criteria** (what must be TRUE):
-  1. `upstreams/omc/` exists with upstream.json pointing to oh-my-claudecode repo, and `/skippy:update` reports its version status alongside GSD and PAUL
-  2. A cross-package analysis document identifies patterns that appear in 2+ upstreams (e.g., model routing, task verification, context management) with notes on which implementation is best
-  3. At least 3 "best-of-breed" skippy reference docs exist that synthesize the strongest version of shared patterns across upstreams
-  4. `/skippy:update` uses a generic upstream checker that iterates `upstreams/*/upstream.json` instead of hardcoded repo URLs
-**Plans**: 3 plans
+**Plans**: 3/3 complete
 
 Plans:
-- [ ] 08-01-PLAN.md -- OMC upstream registration + cross-package analysis document
-- [ ] 08-02-PLAN.md -- Best-of-breed reference docs (3-5 synthesized pattern guides)
-- [ ] 08-03-PLAN.md -- Generic AI-driven /skippy:update + legacy cleanup
+- [x] 08-01-PLAN.md -- OMC upstream registration + cross-package analysis document
+- [x] 08-02-PLAN.md -- Best-of-breed reference docs (3-5 synthesized pattern guides)
+- [x] 08-03-PLAN.md -- Generic AI-driven /skippy:update + legacy cleanup
 
 ### Phase 9: Skill System
 **Goal**: Users can selectively install individual skills or the full suite, and ~10 essential PAI skills are migrated into the portable format
 **Depends on**: Phase 6 (core exists as installable unit)
 **Requirements**: SKIL-01, SKIL-02, SKIL-03, SKIL-04
-**Success Criteria** (what must be TRUE):
-  1. `install.sh --core` installs only the core infrastructure; `install.sh --skill skippy-dev` installs a single skill; `install.sh --all` installs everything
-  2. `migrate-skill.sh` takes a skill directory from `~/.config/pai/Skills/` and produces a portable version with slim SKILL.md + deep references under `skills/`
-  3. At least 10 essential skills are migrated and installable, each with a SKILL.md under 150 lines
-  4. INDEX.md lists all available skills with categories (core, workflow, utility, domain) and current install status
-**Plans**: 3 plans
+**Plans**: 3/3 complete
 
 Plans:
 - [x] 09-01-PLAN.md -- Selective install/uninstall (install.sh + uninstall.sh enhancement)
@@ -182,23 +172,101 @@ Plans:
 **Goal**: A user on a fresh machine can clone this repo and reach a working PAI setup by following documented steps, with automated verification confirming everything is wired correctly
 **Depends on**: Phases 5-9 (everything must exist before bootstrap can orchestrate it)
 **Requirements**: BOOT-01, BOOT-02, BOOT-03, BOOT-04, BOOT-05
+**Plans**: 2/2 complete
+
+Plans:
+- [x] 10-01-PLAN.md -- prereqs.sh + verify.sh (bootstrap scripts)
+- [x] 10-02-PLAN.md -- SETUP.md, INSTALL.md, UPGRADE.md, README.md, /skippy:upgrade command
+
+</details>
+
+### Phase 11: Foundation
+**Goal**: Extract shared shell functions into `tools/lib/common.sh` and add `.gitattributes` for clean distribution
+**Depends on**: Phase 10 (v1.1 complete)
+**Requirements**: FOUND-01, FOUND-02
 **Success Criteria** (what must be TRUE):
-  1. `prereqs.sh` checks for bun, jq, bash 4+, and git -- reports missing tools with install instructions (e.g., "brew install jq")
-  2. SETUP.md walks a first-time user from clone to working PAI in numbered steps, with no assumed knowledge beyond "you have a Mac with Homebrew"
-  3. INSTALL.md covers adding individual skills or components to an existing setup
-  4. UPGRADE.md covers updating from a previous version without losing customizations
-  5. A verification script confirms symlinks resolve, hooks are registered, commands are accessible, and core files are in place -- outputting pass/fail per check
+  1. `tools/lib/common.sh` exists with `skippy_`-namespaced functions for repo root resolution, pass/warn/fail reporting, and install status detection
+  2. All 6 `tools/` scripts source `common.sh` with graceful fallback if the file is missing
+  3. No skill scripts (`skills/*/scripts/*.sh`) source `common.sh` -- they remain standalone per portability constraint
+  4. `.gitattributes` marks `.planning/` and other dev-only paths as `export-ignore`
+  5. `bats tests/common-lib.bats` passes (if tests exist from Phase 12; otherwise manual verification)
 **Plans**: 2 plans
 
 Plans:
-- [ ] 10-01-PLAN.md -- prereqs.sh + verify.sh (bootstrap scripts)
-- [ ] 10-02-PLAN.md -- SETUP.md, INSTALL.md, UPGRADE.md, README.md, /skippy:upgrade command
+- [x] 11-01-PLAN.md -- Create tools/lib/common.sh shared library + .gitattributes (completed 2026-03-08)
+- [x] 11-02-PLAN.md -- Migrate all 6 tools/ scripts to source common.sh (completed 2026-03-08)
+
+### Phase 12: Testing
+**Goal**: Establish a bats-core test suite with ~30 test cases covering all tool scripts, running in sandboxed HOME isolation
+**Depends on**: Phase 11 (common.sh exists for testing)
+**Requirements**: TEST-01, TEST-02, TEST-03
+**Success Criteria** (what must be TRUE):
+  1. `bats tests/` runs ~30 tests and produces TAP-format output with correct exit codes
+  2. Every test file's `setup()` overrides `HOME` to `$BATS_TEST_TMPDIR` -- no test ever touches real `~/.claude/`
+  3. Test helper at `tests/test_helper/common.bash` loads bats-support and bats-assert
+  4. CI workflow at `.github/workflows/test.yml` runs tests on macOS runner
+  5. All tests pass on a clean clone (no pre-existing installation required)
+**Plans**: TBD
+
+### Phase 13: GSD Pattern Absorption
+**Goal**: Absorb GSD's core execution patterns as standalone skippy reference docs, removing all runtime dependency on GSD
+**Depends on**: Phase 10 (v1.1 complete -- no dependency on Phases 11-12)
+**Requirements**: ABSORB-01, ABSORB-02, ABSORB-03, ABSORB-04, ABSORB-05, ABSORB-06, ABSORB-07
+**Success Criteria** (what must be TRUE):
+  1. Five new reference docs exist under `skills/skippy-dev/references/`: `phased-execution.md`, `state-tracking.md`, `plan-structure.md`, `wave-parallelism.md`, `checkpoints.md`
+  2. Each reference doc is a standalone skippy specification -- no "requires GSD" language, no references to `gsd-tools.cjs`
+  3. `grep -r "requires GSD\|gsd-tools" skills/ tools/` returns zero matches (excluding gsd-dependency-map.md historical notes)
+  4. `/skippy:reconcile` works against any `.planning/` directory following skippy's own format specification
+  5. `gsd-dependency-map.md` updated with header noting format absorption -- risks reframed as "format drift" not "GSD dependency"
+**Plans**: TBD
+
+### Phase 14: Audit Swarm
+**Goal**: Implement `/skippy:review` as a multi-agent audit command that spawns specialist review agents with sandboxed execution
+**Depends on**: Phase 10 (v1.1 complete -- uses existing references for agent prompts)
+**Requirements**: SWARM-01, SWARM-02, SWARM-03, SWARM-04, SWARM-05
+**Success Criteria** (what must be TRUE):
+  1. `skills/skippy-dev/commands/review.md` exists following the standard command pattern (YAML frontmatter + process)
+  2. Running `/skippy:review` spawns 4 specialist agents: security, code quality, architecture, and consistency reviewers
+  3. A shared findings board (markdown file) aggregates results with severity ratings and cross-references
+  4. Fix agents apply changes via atomic commits, and an evaluator agent verifies fixes and checks for regressions
+  5. All agent execution overrides `$HOME` to a temp directory -- no agent touches real `~/.claude/` (learned from 71-skill nuke incident)
+**Plans**: TBD
+
+### Phase 15: Hardening
+**Goal**: Replace hardcoded placeholders in deploy-service with a config mechanism, and add version bump automation
+**Depends on**: Phase 11 (common.sh exists for bump-version.sh to source)
+**Requirements**: HARD-01, HARD-02, HARD-03
+**Success Criteria** (what must be TRUE):
+  1. `skills/deploy-service/config.env.example` exists with all 9 configuration variables documented
+  2. `skills/deploy-service/config.env` is gitignored; scripts source it with validation (`:?` parameter expansion for required values)
+  3. `tools/bump-version.sh` reads current version from `marketplace.json`, accepts `--patch`/`--minor`/`--major`/`--dry-run`, and updates all 25 version locations across 13 files
+  4. Running `bump-version.sh --dry-run --patch` shows all files that would change without modifying anything
+  5. After a real bump, `grep -r "old-version" .claude-plugin/ skills/*/SKILL.md` returns zero matches
+**Plans**: TBD
+
+### Phase 16: Integration & Polish
+**Goal**: Final verification pass, documentation consistency, and README updates reflecting "Skippy IS the framework"
+**Depends on**: Phases 11-15 (all v1.2 features complete)
+**Requirements**: FOUND-03
+**Success Criteria** (what must be TRUE):
+  1. `CONTRIBUTING.md` documents: how to add a skill, how to run tests, how to submit changes, and the slim SKILL.md convention
+  2. `CLAUDE.md` updated to reflect standalone identity -- "Skippy IS the framework" replaces "No GSD modification" constraint
+  3. `tools/verify.sh` passes with zero failures after all v1.2 changes
+  4. `INDEX.md` regenerated with `/skippy:review` in skippy-dev's command list
+  5. README.md updated with test instructions (`bats tests/`) and standalone framing
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
-(Phase 8 depends only on Phase 5 and could overlap with 6-7 in theory, but sequential execution is simpler.)
+
+Phases 11-12 are sequential (tests depend on common.sh). Phases 13-14 are independent of 11-12 and can run in parallel. Phase 15 depends on Phase 11. Phase 16 depends on all.
+
+```
+Wave 1: [Phase 11] [Phase 13] [Phase 14]   (parallelizable)
+Wave 2: [Phase 12] [Phase 15]              (need Phase 11)
+Wave 3: [Phase 16]                          (needs all)
+```
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -211,4 +279,10 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 8. Upstream Analysis | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
-| 10. Bootstrap & Docs | 2/2 | Complete    | 2026-03-08 | - |
+| 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
+| 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
+| 12. Testing | v1.2 | 0/0 | Planned | - |
+| 13. GSD Pattern Absorption | v1.2 | 0/0 | Planned | - |
+| 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
+| 15. Hardening | v1.2 | 0/0 | Planned | - |
+| 16. Integration & Polish | v1.2 | 0/0 | Planned | - |

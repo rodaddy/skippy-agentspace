@@ -63,6 +63,8 @@ skills/
   vaultwarden/              # [utility] Fast credential lookup via MCP
   deploy-service/           # [domain] LXC + nginx proxy + DNS deployment
 tools/
+  lib/
+    common.sh               # Shared shell library (skippy_* helpers: colors, logging, repo root, summary)
   install.sh                # Selective installer (--core, --all, positional args)
   uninstall.sh              # Selective uninstaller
   index-sync.sh             # Category-grouped INDEX.md generator
@@ -116,7 +118,7 @@ Monitor for upstream changes: `/skippy:update`
 
 ## Project Status
 
-v1 complete. v1.1 complete -- 12 skills migrated, skill system operational.
+v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 Phase 11 complete -- shared shell library and repo hygiene.
 
 | Phase | Goal | Status |
 |-------|------|--------|
@@ -127,6 +129,7 @@ v1 complete. v1.1 complete -- 12 skills migrated, skill system operational.
 | 8. Upstream Integration | OMC cherry-picks, reference docs | Complete |
 | 9. Skill System | Selective install, migrate, 12 skills | Complete |
 | 10. Bootstrap & Docs | Final validation | Complete |
+| 11. Foundation | Shared shell library (common.sh), .gitattributes | Complete |
 
 ## Key Files
 

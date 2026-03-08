@@ -18,7 +18,36 @@ set -euo pipefail
 # Modern installs symlink the entire skill directory (SKILL.md, commands/, references/, scripts/).
 # Legacy installs symlink the commands/ subdirectory only (slash commands, no SKILL.md discovery).
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Source shared library with graceful fallback
+_COMMON_SH="$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
+fi
+
+validate_skill_name() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Error: Skill name cannot be empty" >&2
+        return 1
+    fi
+    if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
+        echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
+        return 1
+    fi
+}
+
+REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$REPO_ROOT/skills"
 TARGET="auto"
 SKILL_NAMES=()
@@ -48,7 +77,7 @@ show_status() {
         local desc
         desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
         local status="available"
-        if [[ -L "$HOME/.claude/skills/$name" ]] || [[ -L "$HOME/.claude/commands/$name" ]]; then
+        if skippy_is_installed "$name"; then
             status="installed"
         fi
         printf "%-20s %-14s %s\n" "$name" "[$status]" "${desc:-no description}"
@@ -109,7 +138,14 @@ install_skill_modern() {
     echo "  INSTALLED (skills): $name -> $dest"
     echo "    Skill entry: $src/SKILL.md"
     if [[ -d "$src/commands" ]]; then
-        echo "    Commands: $(ls "$src/commands/"*.md 2>/dev/null | xargs -I{} basename {} .md | tr '\n' ', ' | sed 's/,$//')"
+        local cmd_list=""
+        for cmd_file in "$src/commands/"*.md; do
+            [[ -f "$cmd_file" ]] || continue
+            local cmd_name
+            cmd_name="$(basename "$cmd_file" .md)"
+            cmd_list="${cmd_list:+$cmd_list, }$cmd_name"
+        done
+        echo "    Commands: $cmd_list"
     fi
 }
 
@@ -135,11 +171,19 @@ install_skill_legacy() {
 
     ln -s "$commands_src" "$dest"
     echo "  INSTALLED (commands): $name -> $dest"
-    echo "    Commands: $(ls "$commands_src"/*.md 2>/dev/null | xargs -I{} basename {} .md | tr '\n' ', ' | sed 's/,$//')"
+    local cmd_list=""
+    for cmd_file in "$commands_src"/*.md; do
+        [[ -f "$cmd_file" ]] || continue
+        local cmd_name
+        cmd_name="$(basename "$cmd_file" .md)"
+        cmd_list="${cmd_list:+$cmd_list, }$cmd_name"
+    done
+    echo "    Commands: $cmd_list"
 }
 
 install_skill() {
     local name="$1"
+    validate_skill_name "$name" || return 1
     local skill_dir="$SKILLS_DIR/$name"
     local resolved_target
     resolved_target="$(detect_target)"
@@ -209,6 +253,7 @@ for arg in "$@"; do
             exit 0
             ;;
         *)
+            validate_skill_name "$arg" || exit 1
             SKILL_NAMES+=("$arg")
             ;;
     esac

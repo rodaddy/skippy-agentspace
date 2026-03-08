@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Portable PAI
+milestone: v1.2
+milestone_name: Standalone Skippy
 status: completed
-stopped_at: Completed 10-02-PLAN.md
-last_updated: "2026-03-08T03:25:09.062Z"
-last_activity: 2026-03-08 -- Completed 10-02 bootstrap docs (README, SETUP, INSTALL, UPGRADE)
+stopped_at: Phase 11 complete, audit fixes applied (PR #7)
+last_updated: "2026-03-08T21:00:00.000Z"
+last_activity: 2026-03-08 -- Phase 11 complete + 3-round audit (23 agents, 17 findings fixed)
 progress:
-  total_phases: 10
-  completed_phases: 10
-  total_plans: 25
-  completed_plans: 25
+  total_phases: 16
+  completed_phases: 11
+  total_plans: 27
+  completed_plans: 27
   percent: 100
 ---
 
@@ -18,55 +18,49 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-07)
+See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** Phase 10 -- Bootstrap & Docs (prerequisite validation, setup/install/upgrade docs)
+**Current focus:** v1.2 Standalone Skippy -- Phase 11 complete, Phase 12 next
 
 ## Current Position
 
-Phase: 10 of 10 (Bootstrap & Docs)
-Plan: 2 of 2 complete
-Status: Complete
-Last activity: 2026-03-08 -- Completed 10-02 bootstrap docs (README, SETUP, INSTALL, UPGRADE)
+Phase: 11-foundation (complete, audited)
+Plan: 2 of 2
+Status: Phase 11 complete -- 3-round audit with 23 agents, 17 findings, all fixed
+Last activity: 2026-03-08 -- Phase 11 audit fixes applied (PR #7)
 
 Progress: [██████████] 100%
+
+**Next step:** Begin Phase 12 planning
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9 (v1.0)
+- Total plans completed: 27 (v1.0 + v1.1 + Phase 11)
 - Average duration: --
 - Total execution time: --
 
-**By Phase:**
+**By Phase (v1.1):**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Spec Compliance | 1 | -- | -- |
-| 2. Plugin Packaging | 3 | -- | -- |
-| 3. Command Validation | 3 | -- | -- |
-| 4. Documentation | 2 | -- | -- |
+| Phase | Plans | Duration | Files |
+|-------|-------|----------|-------|
+| 05. Foundation | 2 | 2min | 6 |
+| 06. Skill Content | 3 | 9min | 29 |
+| 07. Hooks | 3 | 16min | 25 |
+| 08. Upstream Integration | 3 | 16min | 14 |
+| 09. Skill System | 3 | 11min | 47 |
+| 10. Bootstrap & Docs | 2 | 4min | 7 |
+
+**By Phase (v1.2):**
+
+| Phase | Plans | Duration | Files |
+|-------|-------|----------|-------|
+| 11. Foundation | 2/2 | 6min | 8 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
-- Trend: Stable
-| Phase 05 P01 | 1min | 2 tasks | 3 files |
-| Phase 05 P02 | 1min | 2 tasks | 3 files |
-| Phase 06 P01 | 5min | 2 tasks | 19 files |
-| Phase 06 P02 | 2min | 2 tasks | 6 files |
-| Phase 06 P03 | 2min | 2 tasks | 4 files |
-| Phase 07 P01 | 2min | 2 tasks | 4 files |
-| Phase 07 P02 | 10min | 2 tasks | 15 files |
-| Phase 07 P03 | 4min | 2 tasks | 6 files |
-| Phase 08 P01 | 4min | 2 tasks | 2 files |
-| Phase 08 P02 | 9min | 2 tasks | 5 files |
-| Phase 08 P03 | 3min | 2 tasks | 7 files |
-| Phase 09 P01 | 3min | 2 tasks | 2 files |
-| Phase 09 P02 | 3min | 2 tasks | 5 files |
-| Phase 09 P03 | 5min | 3 tasks | 40 files |
-| Phase 10 P01 | 2min | 2 tasks | 2 files |
-| Phase 10 P02 | 2min | 2 tasks | 5 files |
+- v1.1 completed all 16 plans across 6 phases
 
 ## Accumulated Context
 
@@ -85,49 +79,30 @@ Recent decisions affecting current work:
 - [05-01]: CONVENTIONS.md as standalone doc with one-line reference from CLAUDE.md
 - [05-01]: Minimal .gitignore patterns (5 patterns) -- architectural prevention is primary protection
 - [05-02]: Directory-per-upstream pattern -- each upstream is a directory with upstream.json, no code changes to add new upstreams
-- [05-02]: Initialized last_checked_sha/last_check to none/never matching old .versions data exactly
 - [06-01]: Preserved original character voice in persona files rather than sanitizing to uniform style
 - [06-01]: LAW enforcement metadata honest about current state -- 5 LAWs marked Manual with Phase 7 gap note
-- [06-01]: Removed private content (IPs, server names) from LAWs 14/15 for public safety
-- [06-01]: Added Critical Thinking Style section to each persona showing LAW 4 implementation
 - [06-02]: HTML comment CUSTOMIZE syntax for template placeholders -- invisible in rendered markdown
-- [06-02]: Merged Python and TypeScript stack preferences into single stack-preferences.md
-- [06-02]: user.md.template includes Memory Hints section beyond CONTEXT.md spec
 - [06-03]: Topic-table pattern for SKILL.md -- each section is a table with File column pointing to references/
-- [06-03]: CORE-05 explicitly noted as deferred in Commands section rather than silently omitted
-- [06-03]: Restored INDEX.md Plugin Distribution section after index-sync.sh overwrote it
 - [07-01]: snake_case field names (tool_name, tool_input) per official Claude Code docs with normalizeInput() compat shim
-- [07-01]: hookSpecificOutput wrapper format for PreToolUse decisions, separate blockTopLevel() for other events
 - [07-01]: Shared lib pattern -- types.ts, context.ts, feedback.ts under hooks/lib/ imported by all 15 hooks
 - [07-02]: Inlined pattern detection in each hook rather than shared module -- portability over DRY
-- [07-02]: LAW 11 uses askDecision (warn) since ggshield is the real gate; LAWs 6, 10 also soft nudge
-- [07-02]: LAW 15 sanitized -- removed private IPs, uses hostname-based detection only
 - [07-03]: Bun-only JSON backend -- bun already a hard dependency, python3/jq fallbacks deferred
-- [07-03]: Shell orchestrator + TypeScript backend split -- bash for flow, bun for JSON operations
-- [07-03]: Check 4 grep targets input.toolName not bare toolName -- avoids false positives from local vars
 - [08-01]: All 37 OMC skills categorized with zero deferred -- every skill either cherry-picked (8) or rejected (29)
 - [08-01]: Cherry-picks grouped into 7 reference doc targets: 3 HIGH, 3 MEDIUM, 1 LOW priority
-- [08-01]: deep-interview merged into structured-deliberation doc rather than standalone
-- [08-01]: docs/ chosen over .planning/ for cross-package analysis -- project artifact, not planning artifact
-- [Phase 08]: Created all 5 reference docs (3 HIGH + 2 MEDIUM) -- both MEDIUM patterns confirmed substantial by cross-package analysis
 - [Phase 08]: PDOC framework (Principles, Drivers, Options, Commitment) coined as portable name for deliberation structure
 - [Phase 08]: Graduation path concept in skill-extraction: correction -> pattern -> skill with explicit promotion triggers
-- [08-03]: AI-driven intent description over shell script wrapper -- Claude adapts to upstream count and change patterns conversationally
-- [08-03]: Cross-package analysis flag at >10 commits or cherry-pick area changes -- balances signal vs noise
+- [08-03]: AI-driven intent description over shell script wrapper for /skippy:update
 - [09-01]: Continue-on-error for batch install/uninstall -- report failures at end rather than aborting mid-batch
-- [09-01]: show_status() with printf column formatting and [installed]/[available] badges for no-arg display
-- [09-01]: Functions moved before argument parsing in install.sh to allow --help to call list_skills
-- [09-02]: Extract commands from commands/*.md name: field instead of nonexistent triggers: frontmatter
-- [09-02]: Symlink detection checks both ~/.claude/skills/ and ~/.claude/commands/ for install badges
 - [09-02]: Category order: core, workflow, utility, domain -- uncategorized as fallback
 - [09-03]: Batch migration by complexity (LOW -> MEDIUM -> HIGH) for incremental verification
-- [09-03]: deploy-service sanitized with placeholder pattern (<your-server-ip>, <your-domain>) for public safety
-- [09-03]: excalidraw palettes kept in full -- visual content is the skill's core value
+- [09-03]: deploy-service sanitized with placeholder pattern for public safety
 - [Phase 10]: Bash 3.2 compatible prereqs.sh -- no associative arrays since it runs before bash upgrade
-- [Phase 10]: verify.sh delegates to validate-hooks.sh and index-sync.sh rather than reimplementing checks
-- [Phase 10]: README.md is thin routing layer -- overview + 5-command quick start + doc links, no CLAUDE.md duplication
-- [Phase 10]: UPGRADE.md documents both manual (any AI tool) and AI-assisted (/skippy:upgrade) paths
-- [Phase 10]: /skippy:upgrade follows Phase 8 AI command pattern with frontmatter + objective + process
+- [Phase 10]: README.md is thin routing layer -- overview + 5-command quick start + doc links
+- [11-01]: ANSI colors with automatic terminal detection in common.sh (_SKIPPY_ private var prefix)
+- [11-01]: echo -e for color output -- consistent with existing script patterns
+- [11-02]: prereqs.sh keeps own exit-code logic -- skippy_summary not used due to interactive install-prompt flow
+- [11-02]: Minimal vs full fallback stubs -- heavy scripts get all functions, light scripts get only what they need
+- [11-02]: Fallback stubs use $0 for path derivation -- BASH_SOURCE context differs in inline fallback
 
 ### Pending Todos
 
@@ -135,13 +110,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- PAI-INFRASTRUCTURE-AUDIT.md is raw conversation JSON (839KB) -- needs structured extraction for Phase 6
-- v1.0 Key Decisions all show "Pending" outcomes -- need validation before building on them
-- Phase 7 (Hooks): settings.json schema underdocumented -- needs research during planning
-- Phase 8 (Upstream): OMC cherry-pick targets need hands-on validation during planning
+None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:21:24.983Z
-Stopped at: Completed 10-02-PLAN.md
-Resume file: None
+Last session: 2026-03-08T21:00:00Z
+Stopped at: Phase 11 complete + audit fixes (PR #7)
+Resume file: Begin Phase 12 planning (bats-core test suite)

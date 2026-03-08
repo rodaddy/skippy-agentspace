@@ -11,6 +11,25 @@ set -euo pipefail
 # Checks both modern (~/.claude/skills/) and legacy (~/.claude/commands/) targets.
 # Removes from whichever locations have symlinks. Source files are untouched.
 
+# Source shared library with graceful fallback
+_COMMON_SH="$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define all stubs when common.sh is missing
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$HOME/.claude/skills"
 COMMANDS_DIR="$HOME/.claude/commands"
 
@@ -44,6 +63,7 @@ list_installed() {
 
 uninstall_skill() {
     local name="$1"
+    validate_skill_name "$name" || return 1
     local removed=0
 
     # Check modern target: ~/.claude/skills/<name>
@@ -72,6 +92,20 @@ uninstall_skill() {
     fi
 
     return 0
+}
+
+# --- Input validation ---
+
+validate_skill_name() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Error: Skill name cannot be empty" >&2
+        return 1
+    fi
+    if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
+        echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
+        return 1
+    fi
 }
 
 # --- Argument parsing ---
@@ -103,6 +137,7 @@ for arg in "$@"; do
             exit 0
             ;;
         *)
+            validate_skill_name "$arg" || exit 1
             SKILL_NAMES+=("$arg")
             ;;
     esac
@@ -116,7 +151,7 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
 
     # CRITICAL: Only remove symlinks that point INTO this repo's skills/ directory.
     # Never touch symlinks belonging to other projects (PAI, n8n, etc.)
-    REPO_SKILLS_DIR="$(cd "$(dirname "$0")/.." && pwd)/skills"
+    REPO_SKILLS_DIR="$REPO_ROOT/skills"
 
     if [[ -d "$SKILLS_DIR" ]]; then
         for link in "$SKILLS_DIR"/*/; do
@@ -156,7 +191,7 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
         echo "PAI hooks detected in $SETTINGS_FILE."
         read -r -p "Also remove PAI hooks from settings.json? (y/n) " answer
         if [[ "$answer" =~ ^[Yy]$ ]]; then
-            HOOK_UNINSTALLER="$(cd "$(dirname "$0")/.." && pwd)/skills/core/hooks/uninstall-hooks.sh"
+            HOOK_UNINSTALLER="$REPO_ROOT/skills/core/hooks/uninstall-hooks.sh"
             if [[ -f "$HOOK_UNINSTALLER" ]]; then
                 bash "$HOOK_UNINSTALLER"
             else
