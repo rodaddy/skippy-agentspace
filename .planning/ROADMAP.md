@@ -27,7 +27,7 @@
 - [x] **Phase 6: Core Infrastructure** - Personas, LAWs, rules, and CLAUDE.md template packaged as portable core (commands deferred) (completed 2026-03-07)
 - [x] **Phase 7: Hook Installation** - Non-destructive settings.json hook merging with manifest-driven install/uninstall (completed 2026-03-07)
 - [x] **Phase 8: Upstream Analysis** - OMC as third upstream, cross-package analysis, and generic upstream checker (completed 2026-03-08)
-- [ ] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported
+- [x] **Phase 9: Skill System** - Selective install flags, skill migration tool, and ~10 essential skills ported (completed 2026-03-08)
 - [ ] **Phase 10: Bootstrap & Docs** - Prerequisite validation, setup/install/upgrade docs, and post-install verification
 
 ## Phase Details
@@ -174,9 +174,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 09-01-PLAN.md -- Selective install/uninstall (install.sh + uninstall.sh enhancement)
-- [ ] 09-02-PLAN.md -- INDEX.md categories + /skippy:migrate AI command
-- [ ] 09-03-PLAN.md -- Migrate ~10 essential skills + integration files
+- [x] 09-01-PLAN.md -- Selective install/uninstall (install.sh + uninstall.sh enhancement)
+- [x] 09-02-PLAN.md -- INDEX.md categories + /skippy:migrate AI command
+- [x] 09-03-PLAN.md -- Migrate ~10 essential skills + integration files
 
 ### Phase 10: Bootstrap & Docs
 **Goal**: A user on a fresh machine can clone this repo and reach a working PAI setup by following documented steps, with automated verification confirming everything is wired correctly
@@ -210,5 +210,5 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 8. Upstream Analysis | 3/3 | Complete   | 2026-03-08 | - |
-| 9. Skill System | 2/3 | In Progress|  | - |
+| 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |
