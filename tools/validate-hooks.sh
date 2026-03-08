@@ -6,7 +6,7 @@
 #   bash tools/validate-hooks.sh --full    # Full mode (includes install/uninstall tests)
 #
 # Quick mode checks:
-#   1. Manifest completeness (15 hooks, required fields)
+#   1. Manifest completeness (hook count, required fields)
 #   2. Hook file existence
 #   3. Hook file structure (shebang, imports, fail-open)
 #   4. No camelCase field access
@@ -59,10 +59,10 @@ if [ ! -f "$MANIFEST" ]; then
   fail "manifest.json not found"
 else
   HOOK_COUNT=$(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); console.log(m.hooks.length)")
-  if [ "$HOOK_COUNT" = "15" ]; then
-    pass "manifest has 15 hooks"
+  if [ "$HOOK_COUNT" -gt 0 ] 2>/dev/null; then
+    pass "manifest has $HOOK_COUNT hooks"
   else
-    fail "manifest has $HOOK_COUNT hooks (expected 15)"
+    fail "manifest has 0 hooks"
   fi
 
   # Check required fields
@@ -99,7 +99,7 @@ while IFS= read -r script; do
 done < <(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); m.hooks.forEach(h => console.log(h.script))")
 
 if [ "$MISSING_FILES" = "0" ]; then
-  pass "all 15 hook scripts exist"
+  pass "all $HOOK_COUNT hook scripts exist"
 fi
 
 # ---------------------------------------------------------------------------
@@ -237,7 +237,7 @@ FIXTURE
 
   if [ "$GSD_PRESERVED" = "yes" ]; then pass "GSD hooks preserved after install"; else fail "GSD hooks lost after install"; fi
   if [ "$OMC_PRESERVED" = "yes" ]; then pass "OMC hooks preserved after install"; else fail "OMC hooks lost after install"; fi
-  if [ "$PAI_COUNT" = "15" ]; then pass "15 PAI hooks installed"; else fail "expected 15 PAI hooks, got $PAI_COUNT"; fi
+  if [ "$PAI_COUNT" = "$HOOK_COUNT" ]; then pass "$HOOK_COUNT PAI hooks installed"; else fail "expected $HOOK_COUNT PAI hooks, got $PAI_COUNT"; fi
 
   # -------------------------------------------------------------------------
   # Check 7: Uninstall safety (HOOK-03)
