@@ -9,7 +9,13 @@ export interface Task {
 export type TaskStatus = "DONE" | "MODIFIED" | "SKIPPED" | "ADDED";
 type Classified = { task: Task; status: TaskStatus; evidence: string };
 
+// NOTE: Best-effort parser for simple YAML frontmatter. Known limitations:
+// - Multiline field values (e.g. `description: |`) only capture the first line
+// - Nested arrays-of-objects (mixed sub-lists and sub-objects under one key) may produce garbled output
+//   because ctx.obj and ctx.arr are initialized simultaneously for empty-value keys
+// For complex YAML, use a real parser (js-yaml, yaml).
 export function parseFrontmatter(content: string): Record<string, unknown> {
+  content = content.replace(/\r\n/g, "\n");
   const m = content.match(/^---\n([\s\S]*?)\n---/);
   if (!m) return {};
   const result: Record<string, unknown> = {};
@@ -64,9 +70,13 @@ export function classifyTaskStatus(planned: Task[], summaryContent: string): Cla
   const lower = summaryContent.toLowerCase();
   const devs = (summaryContent.match(/## Deviations from Plan[\s\S]*?(?=\n## |$)/)?.[0] ?? "").toLowerCase();
   const results: Classified[] = planned.map(task => {
-    const words = task.name.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-    const found = words.some(w => lower.includes(w));
-    const modified = words.some(w => devs.includes(w));
+    const allWords = task.name.toLowerCase().split(/\s+/);
+    const longWords = allWords.filter(w => w.length > 3);
+    // BUG 1 fix: If all words are <=3 chars (e.g. "Add SSH key"), longWords is empty
+    // and [].some() returns false, causing false-positive SKIPPED. Fall back to unfiltered words.
+    const needle = longWords.length > 0 ? longWords : allWords;
+    const found = needle.some(w => lower.includes(w));
+    const modified = needle.some(w => devs.includes(w));
     return { task, status: found && modified ? "MODIFIED" : found ? "DONE" : "SKIPPED", evidence: found ? (modified ? "Found with deviations noted" : "Found in summary") : "Not found in summary" };
   });
   // Detect ADDED tasks
@@ -79,7 +89,10 @@ export function classifyTaskStatus(planned: Task[], summaryContent: string): Cla
 
 if (import.meta.main) {
   const [cmd, ...args] = Bun.argv.slice(2);
-  const read = (p: string) => Bun.file(p).text();
+  const read = async (p: string) => {
+    try { return await Bun.file(p).text(); }
+    catch { console.error(`Error: File not found: ${p}`); process.exit(1); }
+  };
   if (cmd === "parse-frontmatter" && args[0]) console.log(JSON.stringify(parseFrontmatter(await read(args[0])), null, 2));
   else if (cmd === "extract-tasks" && args[0]) console.log(JSON.stringify(extractTasks(await read(args[0])), null, 2));
   else if (cmd === "classify-tasks" && args[0] && args[1])
