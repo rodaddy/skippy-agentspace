@@ -206,7 +206,12 @@ Plans:
   3. Test helper at `tests/test_helper/common.bash` loads bats-support and bats-assert
   4. CI workflow at `.github/workflows/test.yml` runs tests on macOS runner
   5. All tests pass on a clean clone (no pre-existing installation required)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 12-01-PLAN.md -- bats submodules + test helper + common-lib.bats tests
+- [ ] 12-02-PLAN.md -- install.bats + uninstall.bats tests (safety-critical scripts)
+- [ ] 12-03-PLAN.md -- verify.bats + index-sync.bats + validate-hooks.bats + CI workflow
 
 ### Phase 13: GSD Pattern Absorption
 **Goal**: Absorb GSD's core execution patterns as 4 standalone skippy reference docs, update reconcile to parse skippy's own format, and remove all GSD dependency language from distributed content
@@ -224,8 +229,8 @@ Plans:
 
 Plans:
 - [x] 13-01-PLAN.md -- Create 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints) (completed 2026-03-08)
-- [ ] 13-02-PLAN.md -- Create skippy-state.ts parser + update reconcile.md for markdown task format
-- [ ] 13-03-PLAN.md -- GSD language cleanup across 8 reference docs, SKILL.md update, PROJECT.md update, delete superseded files
+- [x] 13-02-PLAN.md -- Create skippy-state.ts parser + update reconcile.md for markdown task format (completed 2026-03-08)
+- [x] 13-03-PLAN.md -- GSD language cleanup across 8 reference docs, SKILL.md update, PROJECT.md update, delete superseded files (completed 2026-03-08)
 
 ### Phase 14: Audit Swarm
 **Goal**: Implement `/skippy:review` as a multi-agent audit command that spawns specialist review agents with sandboxed execution
@@ -288,8 +293,8 @@ Wave 3: [Phase 16]                          (needs all)
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
-| 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | 3/3 | Complete   | 2026-03-08 | - |
+| 12. Testing | v1.2 | 0/3 | Planned | - |
+| 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
 | 15. Hardening | v1.2 | 0/0 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
