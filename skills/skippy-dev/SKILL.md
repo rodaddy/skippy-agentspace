@@ -88,6 +88,22 @@ Upgrade skippy-agentspace to latest version preserving customizations.
 
 No auto-resolve -- presents options and lets the user decide.
 
+### `/skippy:migrate`
+
+Migrate PAI skills from `~/.config/pai/Skills/` into portable format under `skills/`.
+
+**Workflow:**
+
+1. Scan all directories under `~/.config/pai/Skills/` -- count files, lines, subdirectory structure
+2. Check which skills already exist under `skills/` (flag as "already migrated")
+3. Rank candidates by priority: daily driver frequency > foundational chain > portable value
+4. Present ranked table to user -- wait for approval before proceeding
+5. For each approved skill, show dry-run preview (target file tree, SKILL.md preview, what gets stripped/flattened)
+6. Migrate: create target directory, slim SKILL.md to <150 lines, flatten subdirs, sanitize private content
+7. Update integration files: `marketplace.json`, rebuild `INDEX.md` via `tools/index-sync.sh`
+
+No auto-migration -- presents findings and lets the user decide what to migrate.
+
 ## For Agents
 
 When spawning GSD agents (planner, executor, verifier), you can enhance their prompts:
@@ -110,4 +126,4 @@ Don't load all references into every agent -- pick the relevant one.
 | Reference | Purpose |
 |-----------|---------|
 | `references/gsd-dependency-map.md` | Every `.planning/` integration point with breakage risk -- check before GSD updates |
-| `docs/cross-package-analysis.md` | Cross-package pattern analysis across all upstreams -- re-review when `/skippy:update` flags significant changes |
+| `../../docs/cross-package-analysis.md` | Cross-package pattern analysis across all upstreams -- re-review when `/skippy:update` flags significant changes |
