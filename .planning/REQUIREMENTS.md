@@ -63,8 +63,8 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 ### Foundation
 
-- [ ] **FOUND-01**: `tools/lib/common.sh` extracts shared functions (`REPO_ROOT`, `pass`/`warn`/`fail`, `is_installed`) used by 3+ scripts
-- [ ] **FOUND-02**: `.gitattributes` marks `.planning/` as `export-ignore` for distribution
+- [x] **FOUND-01**: `tools/lib/common.sh` extracts shared functions (`REPO_ROOT`, `pass`/`warn`/`fail`, `is_installed`) used by 3+ scripts
+- [x] **FOUND-02**: `.gitattributes` marks `.planning/` as `export-ignore` for distribution
 - [ ] **FOUND-03**: `CONTRIBUTING.md` documents how to add skills, run tests, and submit changes
 
 ### Testing
@@ -176,8 +176,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | BOOT-03 | Phase 10 | Validated (v1.1) |
 | BOOT-04 | Phase 10 | Validated (v1.1) |
 | BOOT-05 | Phase 10 | Validated (v1.1) |
-| FOUND-01 | Phase 11 | Pending |
-| FOUND-02 | Phase 11 | Pending |
+| FOUND-01 | Phase 11 | Complete |
+| FOUND-02 | Phase 11 | Complete |
 | FOUND-03 | Phase 16 | Pending |
 | TEST-01 | Phase 12 | Pending |
 | TEST-02 | Phase 12 | Pending |
