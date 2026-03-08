@@ -67,14 +67,14 @@ case "$MODE" in
 
         # Check for INDEX entries with no matching directory
         # Extract skill names from INDEX.md table rows (pipe-delimited)
-        grep "^| " "$INDEX_FILE" 2>/dev/null | grep -v "^| Skill" | grep -v "^|---" | while IFS='|' read -r _ name _rest; do
+        while IFS='|' read -r _ name _rest; do
             # Strip badges and whitespace from name
             name="$(echo "$name" | sed 's/\[installed\]//' | xargs)"
             if [[ -n "$name" && ! -d "$SKILLS_DIR/$name" ]]; then
                 echo "  ORPHAN: $name in INDEX.md but no directory"
                 errors=$((errors + 1))
             fi
-        done
+        done < <(grep "^| " "$INDEX_FILE" 2>/dev/null | grep -v "^| Skill" | grep -v "^|---")
 
         if [[ "$errors" -eq 0 ]]; then
             echo "=== All skills indexed ==="
