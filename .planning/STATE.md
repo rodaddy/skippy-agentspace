@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-08T00:52:45.429Z"
-last_activity: 2026-03-08 -- Completed 08-01 upstream registration and cross-package analysis
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-08T01:04:46.955Z"
+last_activity: 2026-03-08 -- Completed 08-02 best-of-breed reference docs
 progress:
   total_phases: 10
   completed_phases: 7
   total_plans: 20
-  completed_plans: 18
-  percent: 90
+  completed_plans: 19
+  percent: 95
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 ## Current Position
 
 Phase: 8 of 10 (Upstream Analysis)
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In Progress
-Last activity: 2026-03-08 -- Completed 08-01 upstream registration and cross-package analysis
+Last activity: 2026-03-08 -- Completed 08-02 best-of-breed reference docs
 
-Progress: [█████████░] 90%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [█████████░] 90%
 | Phase 07 P02 | 10min | 2 tasks | 15 files |
 | Phase 07 P03 | 4min | 2 tasks | 6 files |
 | Phase 08 P01 | 4min | 2 tasks | 2 files |
+| Phase 08 P02 | 9min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ Recent decisions affecting current work:
 - [08-01]: Cherry-picks grouped into 7 reference doc targets: 3 HIGH, 3 MEDIUM, 1 LOW priority
 - [08-01]: deep-interview merged into structured-deliberation doc rather than standalone
 - [08-01]: docs/ chosen over .planning/ for cross-package analysis -- project artifact, not planning artifact
+- [Phase 08]: Created all 5 reference docs (3 HIGH + 2 MEDIUM) -- both MEDIUM patterns confirmed substantial by cross-package analysis
+- [Phase 08]: PDOC framework (Principles, Drivers, Options, Commitment) coined as portable name for deliberation structure
+- [Phase 08]: Graduation path concept in skill-extraction: correction -> pattern -> skill with explicit promotion triggers
 
 ### Pending Todos
 
@@ -116,6 +120,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T00:52:45.426Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-08T01:04:46.953Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: None
