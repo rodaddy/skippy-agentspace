@@ -51,7 +51,7 @@ Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, 
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 10 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 11 reference docs
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections
@@ -102,6 +102,7 @@ cd skippy-agentspace
 |------|-----------|-------------|
 | [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | Phased execution framework for Claude Code | Base infrastructure -- we augment, never modify |
 | [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | Plan-Apply-Unify Loop framework | 5 enhancement ideas (see table above) |
+| [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | Claude Code plugin framework (hooks, state, modes) | Plugin infrastructure, hooks system, state management |
 
 Monitor for upstream changes: `/skippy:update`
 
@@ -115,7 +116,7 @@ Monitor for upstream changes: `/skippy:update`
 
 ## Project Status
 
-v1 complete. v1.1 in progress -- 12 skills migrated, skill system operational.
+v1 complete. v1.1 complete -- 12 skills migrated, skill system operational.
 
 | Phase | Goal | Status |
 |-------|------|--------|
@@ -125,7 +126,7 @@ v1 complete. v1.1 in progress -- 12 skills migrated, skill system operational.
 | 7. Hooks | LAW enforcement hooks | Complete |
 | 8. Upstream Integration | OMC cherry-picks, reference docs | Complete |
 | 9. Skill System | Selective install, migrate, 12 skills | Complete |
-| 10. Production Readiness | Final validation | Planned |
+| 10. Bootstrap & Docs | Final validation | Complete |
 
 ## Key Files
 
