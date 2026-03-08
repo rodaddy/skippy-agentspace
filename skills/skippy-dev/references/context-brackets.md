@@ -47,9 +47,9 @@ You can't check a percentage, but these signals tell you where you are:
 - **File reads:** Each full file read adds hundreds to thousands of tokens. 10+ file reads = likely MODERATE+.
 - **Conversation length:** If the user has sent 15+ messages with substantial responses, you're likely MODERATE+.
 
-## Integration with GSD
+## Integration with Execution Agents
 
-GSD agents inherit these rules. A gsd-executor in DEEP bracket should:
+Executor agents inherit these rules. An executor in DEEP bracket should:
 1. Complete the current plan wave
 2. Commit progress
 3. Report back rather than starting new waves

@@ -31,5 +31,5 @@ A future hook would need to:
 
 ## Exceptions
 
-- Explicitly autonomous execution modes where the user has opted into silent operation (e.g., GSD auto-chain)
+- Explicitly autonomous execution modes where the user has opted into silent operation (e.g., auto-chain)
 - Minor continuation within an active conversation where context is fresh

@@ -1,6 +1,6 @@
 # Structured Deliberation -- Best-of-Breed Synthesis
 
-Multi-perspective plan review with bounded iteration and structured decision records. Synthesized from OMC and GSD.
+Multi-perspective plan review with bounded iteration and structured decision records. Synthesized from OMC and phased execution patterns.
 
 ## Source Upstreams
 
@@ -8,11 +8,11 @@ Multi-perspective plan review with bounded iteration and structured decision rec
 |----------|---------------|----------|----------|
 | OMC (ralplan) | Planner + Architect + Critic consensus (max 5 iterations) with RALPLAN-DR structured output: Principles, Decision Drivers, Viable Options, ADR | Multi-perspective review, bounded iteration, structured decision record format, deliberate mode for high-risk work | Requires OMC's multi-agent Task runtime, overkill for small tasks |
 | OMC (deep-interview) | Ambiguity scoring with weighted clarity dimensions, challenge agent modes (Contrarian, Simplifier, Ontologist) | Forces clarity before execution, mathematical gating prevents vague requests from proceeding | Heavy infrastructure, domain-specific scoring weights |
-| GSD | `plan-check` -- single checker agent reviews plans against criteria | Automated, integrated into workflow, catches issues before execution | Single reviewer perspective, no structured deliberation format, no iteration on feedback |
+| Phased Execution | `plan-check` -- single checker agent reviews plans against criteria | Automated, integrated into workflow, catches issues before execution | Single reviewer perspective, no structured deliberation format, no iteration on feedback |
 
 ## Why This Version
 
-GSD's plan-check is efficient but one-dimensional -- a single reviewer applying a checklist. OMC's insight is that DIFFERENT PERSPECTIVES catch different problems: a planner thinks about feasibility, an architect thinks about structure, a critic thinks about risk. You don't need three separate agents to get this benefit -- you need the DISCIPLINE of reviewing from multiple angles. This synthesis provides a structured deliberation framework that a single reviewer (or human) can apply sequentially.
+The plan-check step is efficient but one-dimensional -- a single reviewer applying a checklist. OMC's insight is that DIFFERENT PERSPECTIVES catch different problems: a planner thinks about feasibility, an architect thinks about structure, a critic thinks about risk. You don't need three separate agents to get this benefit -- you need the DISCIPLINE of reviewing from multiple angles. This synthesis provides a structured deliberation framework that a single reviewer (or human) can apply sequentially.
 
 ## The Pattern
 
@@ -23,7 +23,7 @@ Not every task needs multi-perspective review. Use this decision guide:
 | Task Scope | Review Approach | Why |
 |------------|----------------|-----|
 | Single file change, clear requirements | No deliberation -- just do it | Overhead exceeds value |
-| Standard feature, known patterns | Single-pass review (GSD plan-check) | One perspective sufficient |
+| Standard feature, known patterns | Single-pass review (plan-check) | One perspective sufficient |
 | Cross-cutting change, multiple tradeoffs | Structured deliberation (this pattern) | Multiple concerns need explicit balancing |
 | High-risk change (auth, data, public API) | Deliberate mode with pre-mortem | Stakes justify thorough analysis |
 
@@ -74,8 +74,8 @@ If review surfaces issues, iterate -- but cap it:
 
 ## Integration Points
 
-- **GSD plan-check:** Enhance the checker agent's prompt with PDOC framework. Instead of freeform review, the checker evaluates whether Principles, Drivers, Options, and Commitment are adequately addressed.
-- **GSD plan-phase:** Planners can use the PDOC structure when drafting plans with significant architectural choices.
+- **Plan-check:** Enhance the checker agent's prompt with PDOC framework. Instead of freeform review, the checker evaluates whether Principles, Drivers, Options, and Commitment are adequately addressed.
+- **Plan phase:** Planners can use the PDOC structure when drafting plans with significant architectural choices.
 - **Pre-execution gate:** Before major execution phases, verify the plan has been deliberately reviewed -- not just checked.
 
 ## When to Apply
@@ -87,5 +87,5 @@ If review surfaces issues, iterate -- but cap it:
 - NOT for routine implementation, bug fixes, or well-understood patterns
 
 ---
-*Sources: OMC `skills/ralplan/SKILL.md` (RALPLAN-DR structure, iteration bounds), OMC deep-interview (perspective challenge modes), GSD `plan-check` phase*
+*Sources: OMC `skills/ralplan/SKILL.md` (RALPLAN-DR structure, iteration bounds), OMC deep-interview (perspective challenge modes). Adapted from GSD `plan-check` phase.*
 *Last reviewed: 2026-03-07*

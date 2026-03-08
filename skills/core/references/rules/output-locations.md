@@ -29,7 +29,7 @@ Session-related files (checkpoints, session history) follow the project's
 planning structure:
 
 ```
-<project>/.planning/     # GSD planning artifacts
+<project>/.planning/     # Planning artifacts (phases, state, roadmap)
 <project>/.omc/          # OMC session artifacts (if using OMC)
 ```
 

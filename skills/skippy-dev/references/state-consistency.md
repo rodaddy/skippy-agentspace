@@ -1,6 +1,6 @@
 # State Consistency -- Cross-File Alignment
 
-GSD maintains state across multiple files. When they disagree, bad things happen -- agents work on the wrong phase, verifiers check the wrong criteria, progress reports lie. This checklist catches misalignment before it propagates.
+State is maintained across multiple files. When they disagree, bad things happen -- agents work on the wrong phase, verifiers check the wrong criteria, progress reports lie. This checklist catches misalignment before it propagates.
 
 ## When to Check
 
@@ -47,7 +47,7 @@ Expected consistency:
 ### 4. Roadmap Phase Count
 
 - Number of phases in ROADMAP.md should match number of phase directories (planned + completed)
-- Phase numbers should be sequential (no gaps unless phases were removed via `/gsd:remove-phase`)
+- Phase numbers should be sequential (no gaps unless phases were explicitly removed)
 
 ### 5. Git State
 

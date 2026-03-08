@@ -1,17 +1,17 @@
 # Model Routing -- Best-of-Breed Synthesis
 
-Match model capability to task complexity for cost-efficient agent delegation. Synthesized from OMC and GSD.
+Match model capability to task complexity for cost-efficient agent delegation. Synthesized from OMC and phased execution patterns.
 
 ## Source Upstreams
 
 | Upstream | Implementation | Strength | Weakness |
 |----------|---------------|----------|----------|
 | OMC | Agent tiers (Haiku/Sonnet/Opus) with per-task routing via `agent-tiers.md` decision guide | Granular per-task model selection, explicit complexity classification, cost-aware | Assumes multi-agent runtime with Task delegation API |
-| GSD | `model_profile` in config.json (quality/speed/cost) applied globally per phase | Simple, one setting covers entire execution | No per-task routing -- complex and trivial tasks get the same model |
+| Phased Execution | `model_profile` in config.json (quality/speed/cost) applied globally per phase | Simple, one setting covers entire execution | No per-task routing -- complex and trivial tasks get the same model |
 
 ## Why This Version
 
-GSD's global profile is too coarse -- a phase doing both simple file edits and complex refactoring wastes tokens (or quality) by treating them identically. OMC's tier system is the right granularity but assumes its own agent runtime. This synthesis extracts the DECISION HEURISTIC from OMC's tiers and applies it to GSD's agent spawning (explore agents, executor agents) without requiring OMC's infrastructure.
+The global profile approach is too coarse -- a phase doing both simple file edits and complex refactoring wastes tokens (or quality) by treating them identically. OMC's tier system is the right granularity but assumes its own agent runtime. This synthesis extracts the DECISION HEURISTIC from OMC's tiers and applies it to agent spawning (explore agents, executor agents) without requiring OMC's infrastructure.
 
 ## The Pattern
 
@@ -38,8 +38,8 @@ The tier spread matters: LOW is roughly 10-20x cheaper than HIGH per token. A ph
 
 ## Integration Points
 
-- **GSD executor agents:** When spawning explore or executor subagents, pass the appropriate model parameter based on task complexity classification.
-- **GSD plan-phase:** Planners can annotate tasks with expected complexity (LOW/MEDIUM/HIGH) to guide executor model selection.
+- **Executor agents:** When spawning explore or executor subagents, pass the appropriate model parameter based on task complexity classification.
+- **Plan phase:** Planners can annotate tasks with expected complexity (LOW/MEDIUM/HIGH) to guide executor model selection.
 - **Config.json model_profile:** Treat as a floor, not a ceiling. A "speed" profile means default to LOW unless complexity demands higher; a "quality" profile means default to MEDIUM with HIGH for complex work.
 
 ## When to Apply
@@ -50,5 +50,5 @@ The tier spread matters: LOW is roughly 10-20x cheaper than HIGH per token. A ph
 - NOT applicable to single-agent sessions where you are the only model running
 
 ---
-*Sources: OMC `skills/ultrawork/SKILL.md` + `docs/shared/agent-tiers.md`, GSD `config.json` model_profile*
+*Sources: OMC `skills/ultrawork/SKILL.md` + `docs/shared/agent-tiers.md`. Adapted from GSD `config.json` model_profile.*
 *Last reviewed: 2026-03-07*

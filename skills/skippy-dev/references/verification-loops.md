@@ -1,6 +1,6 @@
 # Verification Loops -- Best-of-Breed Synthesis
 
-Cycle verification with bounded iterations and early exit on repeated failures. Synthesized from OMC, PAUL, and GSD.
+Cycle verification with bounded iterations and early exit on repeated failures. Synthesized from OMC, PAUL, and phased execution patterns.
 
 ## Source Upstreams
 
@@ -8,11 +8,11 @@ Cycle verification with bounded iterations and early exit on repeated failures. 
 |----------|---------------|----------|----------|
 | OMC | UltraQA -- autonomous cycling (test-diagnose-fix-repeat, max 5 iterations) with architect diagnosis and same-failure detection (3x = early exit) | Automated cycling with hard caps, multi-perspective diagnosis, observability output per cycle | Heavy runtime dependency on OMC's agent infrastructure |
 | PAUL | Verification protocol with explicit pass/fail criteria per task (4-field task anatomy) | Clear success criteria defined upfront, testable outcomes | No automation -- relies on manual checking against criteria |
-| GSD | `gsd:verify-work` -- single-pass verification agent runs after each plan execution | Structured, tied to phase lifecycle, automatic trigger | Single pass only -- if verification fails, manual intervention needed |
+| Phased Execution | `verify-work` -- single-pass verification agent runs after each plan execution | Structured, tied to phase lifecycle, automatic trigger | Single pass only -- if verification fails, manual intervention needed |
 
 ## Why This Version
 
-Each upstream solves one piece: PAUL defines WHAT to verify (explicit criteria), GSD defines WHEN to verify (phase-tied), and OMC defines HOW to verify iteratively (cycling with bounds). No single source has the complete picture. This synthesis combines PAUL's upfront criteria with GSD's lifecycle trigger and OMC's cycling strategy -- producing a verification approach that knows what success looks like, runs at the right time, and retries intelligently.
+Each upstream solves one piece: PAUL defines WHAT to verify (explicit criteria), phased execution defines WHEN to verify (phase-tied), and OMC defines HOW to verify iteratively (cycling with bounds). No single source has the complete picture. This synthesis combines PAUL's upfront criteria with the phased execution lifecycle trigger and OMC's cycling strategy -- producing a verification approach that knows what success looks like, runs at the right time, and retries intelligently.
 
 ## The Pattern
 
@@ -75,8 +75,8 @@ Only CRITICAL and HIGH findings should trigger fix cycles. MEDIUM and LOW are lo
 
 ## Integration Points
 
-- **GSD task execution:** After each task, run the task's `verify` command. If it fails, enter a cycling loop (max 3 iterations for task-level, max 5 for plan-level).
-- **GSD plan verification:** The `gsd:verify-work` phase becomes the trigger for plan-level cycling.
+- **Task execution:** After each task, run the task's `verify` command. If it fails, enter a cycling loop (max 3 iterations for task-level, max 5 for plan-level).
+- **Plan verification:** The verify-work step becomes the trigger for plan-level cycling.
 - **Task anatomy:** The `verify` and `done` fields from `task-anatomy.md` provide the criteria this pattern cycles against.
 - **Context brackets:** In DEEP/CRITICAL brackets, reduce max iterations to 2 to conserve context.
 
@@ -88,5 +88,5 @@ Only CRITICAL and HIGH findings should trigger fix cycles. MEDIUM and LOW are lo
 - NOT for exploratory/research work with no clear pass/fail criteria
 
 ---
-*Sources: OMC `skills/ultraqa/SKILL.md`, PAUL verification protocol (via `task-anatomy.md`), GSD `verify-work` phase*
+*Sources: OMC `skills/ultraqa/SKILL.md`, PAUL verification protocol (via `task-anatomy.md`). Adapted from GSD `verify-work` phase.*
 *Last reviewed: 2026-03-07*

@@ -4,8 +4,8 @@ Adapted from PAUL's verification-protocol.md. Run after phase execution, before 
 
 ## When to Reconcile
 
-- After `/gsd:execute-phase` completes
-- Before `/gsd:verify-work` (reconcile first, then verify)
+- After phase execution completes
+- Before verification (reconcile first, then verify)
 - When `/skippy:reconcile` is invoked directly
 - After any significant implementation session
 
