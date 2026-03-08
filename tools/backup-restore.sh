@@ -31,10 +31,11 @@ backup() {
         mkdir -p "$dest/skills"
         for item in "$CLAUDE_DIR/skills"/*/; do
             item="${item%/}"
-            local basename="$(basename "$item")"
+            local basename
+            basename="$(basename "$item")"
             if [[ -L "$item" ]]; then
                 # Record symlink target
-                echo "$(readlink "$item")" > "$dest/skills/$basename.link"
+                readlink "$item" > "$dest/skills/$basename.link"
                 echo "  SYMLINK: $basename -> $(readlink "$item")"
             elif [[ -d "$item" ]]; then
                 # Copy real directories
@@ -49,9 +50,10 @@ backup() {
         mkdir -p "$dest/commands"
         for item in "$CLAUDE_DIR/commands"/*/; do
             item="${item%/}"
-            local basename="$(basename "$item")"
+            local basename
+            basename="$(basename "$item")"
             if [[ -L "$item" ]]; then
-                echo "$(readlink "$item")" > "$dest/commands/$basename.link"
+                readlink "$item" > "$dest/commands/$basename.link"
                 echo "  SYMLINK: $basename -> $(readlink "$item")"
             elif [[ -d "$item" ]]; then
                 cp -R "$item" "$dest/commands/$basename"
@@ -61,9 +63,10 @@ backup() {
         # Also backup .md command files
         for item in "$CLAUDE_DIR/commands"/*.md; do
             [[ -f "$item" ]] || continue
-            local basename="$(basename "$item")"
+            local basename
+            basename="$(basename "$item")"
             if [[ -L "$item" ]]; then
-                echo "$(readlink "$item")" > "$dest/commands/$basename.link"
+                readlink "$item" > "$dest/commands/$basename.link"
             else
                 cp "$item" "$dest/commands/$basename"
             fi
@@ -112,10 +115,12 @@ restore() {
     if [[ -d "$src/skills" ]]; then
         mkdir -p "$CLAUDE_DIR/skills"
         for item in "$src/skills"/*; do
-            local basename="$(basename "$item")"
+            local basename
+            basename="$(basename "$item")"
             if [[ "$basename" == *.link ]]; then
                 local skill_name="${basename%.link}"
-                local target="$(cat "$item")"
+                local target
+                target="$(cat "$item")"
                 if [[ -e "$CLAUDE_DIR/skills/$skill_name" ]]; then
                     echo "  SKIP (exists): $skill_name"
                 elif [[ -e "$target" ]]; then
@@ -139,10 +144,12 @@ restore() {
     if [[ -d "$src/commands" ]]; then
         mkdir -p "$CLAUDE_DIR/commands"
         for item in "$src/commands"/*; do
-            local basename="$(basename "$item")"
+            local basename
+            basename="$(basename "$item")"
             if [[ "$basename" == *.link ]]; then
                 local cmd_name="${basename%.link}"
-                local target="$(cat "$item")"
+                local target
+                target="$(cat "$item")"
                 if [[ -e "$CLAUDE_DIR/commands/$cmd_name" ]]; then
                     echo "  SKIP (exists): $cmd_name"
                 elif [[ -e "$target" ]]; then
@@ -181,15 +188,19 @@ list() {
     echo "=== Available snapshots ==="
     for snap in "$BACKUP_BASE"/*/; do
         snap="${snap%/}"
-        local name="$(basename "$snap")"
-        local skills="$(ls "$snap/skills/" 2>/dev/null | wc -l | tr -d ' ')"
-        local date="$(grep "Created:" "$snap/MANIFEST.md" 2>/dev/null | cut -d' ' -f2)"
+        local name
+        name="$(basename "$snap")"
+        local skills
+        skills="$(find "$snap/skills/" -maxdepth 1 -mindepth 1 2>/dev/null | wc -l | tr -d ' ')"
+        local date
+        date="$(grep "Created:" "$snap/MANIFEST.md" 2>/dev/null | cut -d' ' -f2)"
         echo "  $name  ($skills skills, $date)"
     done
 }
 
 diff_snapshot() {
-    local latest="$(ls -td "$BACKUP_BASE"/*/ 2>/dev/null | head -1)"
+    local latest
+    latest="$(ls -td "$BACKUP_BASE"/*/ 2>/dev/null | head -1)"
     latest="${latest%/}"
     if [[ -z "$latest" ]]; then
         echo "No snapshots to compare against."
@@ -199,7 +210,8 @@ diff_snapshot() {
     echo ""
     echo "--- Skills in snapshot but not current ---"
     for item in "$latest/skills"/*; do
-        local basename="$(basename "$item")"
+        local basename
+        basename="$(basename "$item")"
         basename="${basename%.link}"
         if [[ ! -e "$CLAUDE_DIR/skills/$basename" ]]; then
             echo "  MISSING: $basename"
@@ -209,7 +221,8 @@ diff_snapshot() {
     echo "--- Skills in current but not snapshot ---"
     for item in "$CLAUDE_DIR/skills"/*/; do
         item="${item%/}"
-        local basename="$(basename "$item")"
+        local basename
+        basename="$(basename "$item")"
         if [[ ! -e "$latest/skills/$basename.link" ]] && [[ ! -d "$latest/skills/$basename" ]]; then
             echo "  NEW: $basename"
         fi

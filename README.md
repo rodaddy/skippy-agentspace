@@ -83,7 +83,7 @@ Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`.
 |------|-------------|
 | `tools/install.sh` | Selective installer (`--core`, `--all`, positional args) |
 | `tools/uninstall.sh` | Selective uninstaller (scoped -- only removes its own symlinks) |
-| `tools/verify.sh` | brew-doctor-style health check (24 checks across 5 categories) |
+| `tools/verify.sh` | brew-doctor-style health check (25+ checks across 5 categories) |
 | `tools/prereqs.sh` | Cross-platform prerequisite checker with interactive install |
 | `tools/validate-hooks.sh` | Hook manifest validation (6 checks) |
 | `tools/index-sync.sh` | INDEX.md validation and regeneration |

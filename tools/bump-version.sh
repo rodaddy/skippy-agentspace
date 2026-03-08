@@ -137,7 +137,7 @@ if $DRY_RUN; then
     echo ""
     echo "Files that would change:"
     for f in "${FILES[@]}"; do
-        echo "  ${f#$REPO_ROOT/}"
+        echo "  ${f#"$REPO_ROOT"/}"
     done
     echo ""
     echo "No files modified (dry run)."

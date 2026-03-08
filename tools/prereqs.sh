@@ -113,6 +113,7 @@ prompt_install() {
         case "$response" in
             y|Y|yes|YES)
                 echo "    Running: $install_cmd"
+                # Safe: install_cmd always from get_install_cmd() hardcoded strings
                 if bash -c "$install_cmd"; then
                     echo "    Installed successfully."
                     return 0
