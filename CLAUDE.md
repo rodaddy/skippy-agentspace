@@ -9,9 +9,9 @@
 
 ## What This Is
 
-A skill marketplace repo containing **core** (PAI identity -- personas, LAWs, rules, templates) and **skippy-dev** (10 workflow enhancements and 3 utility commands cherry-picked from GSD, PAUL, and OMC). Installs as a Claude Code plugin or via manual symlinks.
+A skill marketplace repo containing **12 portable skills** across 4 categories: core identity, workflow automation, utility tools, and domain-specific deployment. Each skill has a slim SKILL.md (<150 lines) with deep references for detail. Installs as a Claude Code plugin or via manual symlinks.
 
-**Not a fork.** Both upstreams ride unchanged -- all enhancements are additive reference docs and utility commands.
+**Not a fork.** All upstreams ride unchanged -- enhancements are additive reference docs and utility commands.
 
 ## Why This Exists
 
@@ -48,23 +48,25 @@ Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, 
 
 ```
 .claude-plugin/
-  marketplace.json        # Plugin marketplace definition (strict: false)
-skills/core/
-  SKILL.md                # Entry point -- personas, LAWs, rules, templates
-  references/personas/    # 4 persona files (Skippy, Bob, Clarisa, April)
-  references/laws/        # 15 individual LAW files with enforcement metadata
-  references/rules/       # 4 opinionated default rules
-  references/templates/   # CLAUDE.md and user.md project starters
-skills/skippy-dev/
-  SKILL.md                # Entry point -- 3 commands, 10 enhancement refs
-  commands/               # /skippy:reconcile, /skippy:update, /skippy:cleanup
-  references/             # 10 best-of-breed enhancement docs (PAUL + OMC + cross-package)
-  scripts/                # skippy-cleanup.sh
+  marketplace.json          # Plugin marketplace (12 skills, strict: false)
+skills/
+  core/                     # [core] PAI identity -- personas, LAWs, rules, templates
+  skippy-dev/               # [workflow] Dev enhancements -- 4 commands, 10 reference docs
+  add-todo/                 # [workflow] Scope-aware todo/idea capture
+  check-todos/              # [workflow] Unified todo viewer with action routing
+  correct/                  # [workflow] Add correction rules to doc Gotchas sections
+  session-wrap/             # [workflow] End-of-session file/commit workflow
+  update-todo/              # [workflow] Progress, complete, defer, or drop todos
+  browser/                  # [utility] Browser automation via MCP and browse CLI
+  excalidraw/               # [utility] Mermaid-to-Excalidraw diagram generation
+  fabric/                   # [utility] AI content processing (228+ patterns)
+  vaultwarden/              # [utility] Fast credential lookup via MCP
+  deploy-service/           # [domain] LXC + nginx proxy + DNS deployment
 tools/
-  install.sh              # Dual-target installer (skills/ or commands/)
-  uninstall.sh            # Dual-target uninstaller
-  index-sync.sh           # Validate/regenerate INDEX.md
-INDEX.md                  # Auto-generated skill registry
+  install.sh                # Selective installer (--core, --all, positional args)
+  uninstall.sh              # Selective uninstaller
+  index-sync.sh             # Category-grouped INDEX.md generator
+INDEX.md                    # Auto-generated skill registry (4 category sections)
 ```
 
 ## Commands
@@ -74,6 +76,7 @@ INDEX.md                  # Auto-generated skill registry
 | `/skippy:reconcile` | Compare planned vs actual for the most recent GSD phase -- reports deviations, flags state drift |
 | `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
 | `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
+| `/skippy:migrate` | Migrate PAI skills to portable format -- scan, rank, dry-run, migrate, update integration |
 
 ## Installation
 
@@ -111,14 +114,17 @@ Monitor for upstream changes: `/skippy:update`
 
 ## Project Status
 
-All 4 phases complete. v1 requirements satisfied.
+v1 complete. v1.1 in progress -- 12 skills migrated, skill system operational.
 
 | Phase | Goal | Status |
 |-------|------|--------|
-| 1. Spec Compliance | Portable paths, Agent Skills frontmatter, `bin/` to `scripts/` | Complete |
-| 2. Plugin Packaging | `.claude-plugin/marketplace.json`, dual install targets | Complete |
-| 3. Command Validation | Reconcile, update, cleanup commands work end-to-end | Complete |
-| 4. Documentation | GSD dependency map, cold session CLAUDE.md | Complete |
+| 1-4 (v1) | Spec, packaging, commands, docs | Complete |
+| 5. Foundation | Conventions, upstream tracking | Complete |
+| 6. Skill Content | Core + skippy-dev content | Complete |
+| 7. Hooks | LAW enforcement hooks | Complete |
+| 8. Upstream Integration | OMC cherry-picks, reference docs | Complete |
+| 9. Skill System | Selective install, migrate, 12 skills | In Progress |
+| 10. Production Readiness | Final validation | Planned |
 
 ## Key Files
 
@@ -128,6 +134,7 @@ All 4 phases complete. v1 requirements satisfied.
 | Requirements (11 total, all mapped) | `.planning/REQUIREMENTS.md` |
 | Phase structure + success criteria | `.planning/ROADMAP.md` |
 | Current position + blockers | `.planning/STATE.md` |
-| The actual skill (dev workflow) | `skills/skippy-dev/SKILL.md` |
+| Skill index (all 12 skills by category) | `INDEX.md` |
+| Dev workflow skill | `skills/skippy-dev/SKILL.md` |
 | Core skill entry point | `skills/core/SKILL.md` |
 | Content conventions + upstream registry | `CONVENTIONS.md` |

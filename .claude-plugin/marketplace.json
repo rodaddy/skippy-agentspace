@@ -4,35 +4,117 @@
     "name": "Rico"
   },
   "metadata": {
-    "description": "Development workflow enhancements for Claude Code -- augments GSD with best ideas from PAUL",
+    "description": "Portable Claude Code skill repo -- core identity, workflow enhancements, and utility skills",
     "version": "0.1.0"
   },
   "plugins": [
-    {
-      "name": "skippy-dev",
-      "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
-      "source": "./",
-      "strict": false,
-      "version": "0.1.0",
-      "author": {
-        "name": "Rico"
-      },
-      "skills": [
-        "./skills/skippy-dev"
-      ]
-    },
     {
       "name": "core",
       "description": "PAI core infrastructure -- personas, LAWs, rules, and project templates",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
-      "author": {
-        "name": "Rico"
-      },
-      "skills": [
-        "./skills/core"
-      ]
+      "author": { "name": "Rico" },
+      "skills": ["./skills/core"]
+    },
+    {
+      "name": "skippy-dev",
+      "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/skippy-dev"]
+    },
+    {
+      "name": "add-todo",
+      "description": "Scope-aware todo/idea capture - routes to project or global store",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/add-todo"]
+    },
+    {
+      "name": "browser",
+      "description": "Browser automation via agent-browser MCP and browse CLI",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/browser"]
+    },
+    {
+      "name": "check-todos",
+      "description": "Unified todo checker - shows project todos and global ideas in a single list",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/check-todos"]
+    },
+    {
+      "name": "correct",
+      "description": "Add corrections to appropriate docs when Claude repeats mistakes",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/correct"]
+    },
+    {
+      "name": "deploy-service",
+      "description": "Deploy a new service to LXC with nginx proxy and DNS setup",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/deploy-service"]
+    },
+    {
+      "name": "excalidraw",
+      "description": "Generate Excalidraw diagrams from natural language using Mermaid pipeline",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/excalidraw"]
+    },
+    {
+      "name": "fabric",
+      "description": "Process content through Fabric AI patterns - YouTube, URLs, and text",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/fabric"]
+    },
+    {
+      "name": "session-wrap",
+      "description": "End-of-session workflow - session file, history, briefing update, commit",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/session-wrap"]
+    },
+    {
+      "name": "update-todo",
+      "description": "Update any todo or idea - progress notes, complete, defer, or drop",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/update-todo"]
+    },
+    {
+      "name": "vaultwarden",
+      "description": "Fast credential lookup via vaultwarden-secrets MCP",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/vaultwarden"]
     }
   ]
 }

@@ -14,7 +14,27 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 | Skill | Path | Commands |
 |-------|------|----------|
+| add-todo [installed] | `add-todo/SKILL.md` | (none) |
+| check-todos [installed] | `check-todos/SKILL.md` | (none) |
+| correct [installed] | `correct/SKILL.md` | (none) |
+| session-wrap [installed] | `session-wrap/SKILL.md` | (none) |
 | skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update |
+| update-todo [installed] | `update-todo/SKILL.md` | (none) |
+
+## Utility
+
+| Skill | Path | Commands |
+|-------|------|----------|
+| browser [installed] | `browser/SKILL.md` | (none) |
+| excalidraw [installed] | `excalidraw/SKILL.md` | (none) |
+| fabric [installed] | `fabric/SKILL.md` | (none) |
+| vaultwarden [installed] | `vaultwarden/SKILL.md` | (none) |
+
+## Domain
+
+| Skill | Path | Commands |
+|-------|------|----------|
+| deploy-service [installed] | `deploy-service/SKILL.md` | (none) |
 
 ## Plugin Distribution
 
