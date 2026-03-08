@@ -1,0 +1,20 @@
+name: Tests
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install bun
+        run: brew install oven-sh/bun/bun
+
+      - name: Run tests
+        run: ./tests/bats/bin/bats tests/
