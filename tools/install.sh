@@ -4,9 +4,11 @@ set -euo pipefail
 # install -- Install skills into Claude Code's discovery system
 #
 # Usage:
-#   install.sh <skill-name>              Install a single skill (auto-detect target)
-#   install.sh --all                     Install all skills
-#   install.sh <skill-name> --target=X   Override target (skills|commands|auto)
+#   install.sh                            Show status table of all skills
+#   install.sh <skill-name> [skill...]    Install one or more skills (auto-detect target)
+#   install.sh --core                     Install only the core skill
+#   install.sh --all                      Install all skills
+#   install.sh [options] --target=X       Override target (skills|commands|auto)
 #
 # Targets:
 #   skills   -> ~/.claude/skills/<name>/    (modern -- full skill with SKILL.md)
@@ -19,48 +21,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SKILLS_DIR="$REPO_ROOT/skills"
 TARGET="auto"
-SKILL_NAME=""
+SKILL_NAMES=()
 INSTALL_ALL=false
+INSTALL_CORE=false
 
-# --- Argument parsing ---
-
-for arg in "$@"; do
-    case "$arg" in
-        --target=*)
-            TARGET="${arg#--target=}"
-            if [[ "$TARGET" != "skills" && "$TARGET" != "commands" && "$TARGET" != "auto" ]]; then
-                echo "ERROR: --target must be 'skills', 'commands', or 'auto' (got '$TARGET')"
-                exit 1
-            fi
-            ;;
-        --all)
-            INSTALL_ALL=true
-            ;;
-        -h|--help)
-            echo "Usage: install.sh <skill-name> [--target=skills|commands|auto]"
-            echo "       install.sh --all [--target=skills|commands|auto]"
-            echo ""
-            echo "Targets:"
-            echo "  auto      Detect best target (default) -- prefers skills/ if it exists"
-            echo "  skills    Modern: symlink entire skill dir to ~/.claude/skills/<name>/"
-            echo "  commands  Legacy: symlink commands/ subdir to ~/.claude/commands/<name>"
-            echo ""
-            echo "Available skills:"
-            list_skills
-            exit 0
-            ;;
-        *)
-            if [[ -z "$SKILL_NAME" ]]; then
-                SKILL_NAME="$arg"
-            else
-                echo "ERROR: Unexpected argument '$arg'"
-                exit 1
-            fi
-            ;;
-    esac
-done
-
-# --- Functions ---
+# --- Functions (must be defined before argument parsing uses them) ---
 
 list_skills() {
     for skill_dir in "$SKILLS_DIR"/*/; do
@@ -70,6 +35,23 @@ list_skills() {
         local desc
         desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
         echo "  $name -- ${desc:-no description}"
+    done
+}
+
+show_status() {
+    printf "%-20s %-14s %s\n" "SKILL" "STATUS" "DESCRIPTION"
+    printf "%-20s %-14s %s\n" "-----" "------" "-----------"
+    for skill_dir in "$SKILLS_DIR"/*/; do
+        [[ -d "$skill_dir" ]] || continue
+        local name
+        name="$(basename "$skill_dir")"
+        local desc
+        desc="$(sed -n '/^description:/s/^description: *//p' "$skill_dir/SKILL.md" 2>/dev/null | head -1)"
+        local status="available"
+        if [[ -L "$HOME/.claude/skills/$name" ]] || [[ -L "$HOME/.claude/commands/$name" ]]; then
+            status="installed"
+        fi
+        printf "%-20s %-14s %s\n" "$name" "[$status]" "${desc:-no description}"
     done
 }
 
@@ -181,6 +163,53 @@ install_skill() {
     esac
 }
 
+# --- Argument parsing ---
+
+for arg in "$@"; do
+    case "$arg" in
+        --target=*)
+            TARGET="${arg#--target=}"
+            if [[ "$TARGET" != "skills" && "$TARGET" != "commands" && "$TARGET" != "auto" ]]; then
+                echo "ERROR: --target must be 'skills', 'commands', or 'auto' (got '$TARGET')"
+                exit 1
+            fi
+            ;;
+        --all)
+            INSTALL_ALL=true
+            ;;
+        --core)
+            INSTALL_CORE=true
+            ;;
+        -h|--help)
+            echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+            echo ""
+            echo "Modes:"
+            echo "  (no args)            Show status table of all skills"
+            echo "  <skill> [skill...]   Install one or more skills by name"
+            echo "  --core               Install only the core skill"
+            echo "  --all                Install all skills"
+            echo ""
+            echo "Options:"
+            echo "  --target=X           Override target (skills|commands|auto, default: auto)"
+            echo "                       auto prefers skills/ if ~/.claude/skills/ exists"
+            echo ""
+            echo "Examples:"
+            echo "  install.sh                          Show status of all skills"
+            echo "  install.sh --core                   Install core skill only"
+            echo "  install.sh skippy-dev               Install one skill"
+            echo "  install.sh skippy-dev excalidraw    Install multiple skills"
+            echo "  install.sh --all                    Install everything"
+            echo ""
+            echo "Available skills:"
+            list_skills
+            exit 0
+            ;;
+        *)
+            SKILL_NAMES+=("$arg")
+            ;;
+    esac
+done
+
 # --- Main ---
 
 if [[ "$INSTALL_ALL" == true ]]; then
@@ -190,13 +219,28 @@ if [[ "$INSTALL_ALL" == true ]]; then
         install_skill "$(basename "$skill_dir")"
     done
     echo "=== Done. Run /clear to refresh skill list. ==="
-elif [[ -n "$SKILL_NAME" ]]; then
-    install_skill "$SKILL_NAME"
+elif [[ "$INSTALL_CORE" == true ]]; then
+    echo "=== Installing core skill (target: $(detect_target)) ==="
+    install_skill "core"
     echo "Run /clear to refresh skill list."
+elif [[ ${#SKILL_NAMES[@]} -gt 0 ]]; then
+    echo "=== Installing ${#SKILL_NAMES[@]} skill(s) (target: $(detect_target)) ==="
+    failed=0
+    succeeded=0
+    for name in "${SKILL_NAMES[@]}"; do
+        if install_skill "$name"; then
+            succeeded=$((succeeded + 1))
+        else
+            failed=$((failed + 1))
+        fi
+    done
+    echo "=== Done: $succeeded installed, $failed failed. Run /clear to refresh skill list. ==="
+    if [[ "$failed" -gt 0 ]]; then
+        exit 1
+    fi
 else
-    echo "Usage: install.sh <skill-name> [--target=skills|commands|auto]"
-    echo "       install.sh --all [--target=skills|commands|auto]"
+    show_status
     echo ""
-    echo "Available skills:"
-    list_skills
+    echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+    echo "Run install.sh --help for more details."
 fi
