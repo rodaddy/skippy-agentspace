@@ -10,7 +10,7 @@ metadata:
 
 # skippy-dev -- Development Workflow Enhancements
 
-Additive rules and tools that sharpen GSD's planning and execution. No GSD files modified -- everything here is referenced guidance that agents and main context can load on demand.
+Additive rules and tools that sharpen planning and execution workflows. Everything here is referenced guidance that agents and main context can load on demand.
 
 ## Enhancements
 
@@ -20,7 +20,7 @@ Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 |---|-------------|-----------|-----------------|
 | 1 | Context Brackets | `references/context-brackets.md` | Every session -- self-monitor context usage |
 | 2 | Mandatory Reconciliation | `references/reconciliation.md` | After phase execution, before marking complete |
-| 3 | Task Anatomy | `references/task-anatomy.md` | During plan creation (plan-phase) |
+| 3 | Plan Structure | `references/plan-structure.md` | PLAN.md format spec, task structure, deviation rules, summary format |
 | 4 | Plan Boundaries | `references/plan-boundaries.md` | During plan creation -- define what NOT to touch |
 | 5 | State Consistency | `references/state-consistency.md` | Before/after phase execution -- cross-file alignment |
 | 6 | Model Routing | `references/model-routing.md` | Agent spawning -- match model to task complexity |
@@ -28,6 +28,9 @@ Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 | 8 | Session Persistence | `references/session-persistence.md` | Session start/end -- context transfer across sessions |
 | 9 | Structured Deliberation | `references/structured-deliberation.md` | Architecture decisions -- PDOC framework for options analysis |
 | 10 | Skill Extraction | `references/skill-extraction.md` | Pattern promotion -- correction to pattern to skill graduation |
+| 11 | Phased Execution | `references/phased-execution.md` | Phase execution with wave-based parallelism |
+| 12 | State Tracking | `references/state-tracking.md` | STATE.md lifecycle, progress tracking, size management |
+| 13 | Checkpoints | `references/checkpoints.md` | Human-in-the-loop verification during execution |
 
 ## Commands
 
@@ -106,10 +109,10 @@ No auto-migration -- presents findings and lets the user decide what to migrate.
 
 ## For Agents
 
-When spawning GSD agents (planner, executor, verifier), you can enhance their prompts:
+When spawning agents (planner, executor, verifier), you can enhance their prompts:
 
 ```
-Read ${CLAUDE_SKILL_DIR}/references/task-anatomy.md
+Read ${CLAUDE_SKILL_DIR}/references/plan-structure.md
 # Include when the agent is creating plans
 
 Read ${CLAUDE_SKILL_DIR}/references/plan-boundaries.md
@@ -117,6 +120,12 @@ Read ${CLAUDE_SKILL_DIR}/references/plan-boundaries.md
 
 Read ${CLAUDE_SKILL_DIR}/references/state-consistency.md
 # Include when the agent touches state files
+
+Read ${CLAUDE_SKILL_DIR}/references/phased-execution.md
+# Include when the agent orchestrates multi-plan execution
+
+Read ${CLAUDE_SKILL_DIR}/references/checkpoints.md
+# Include when the plan has human verification steps
 ```
 
 Don't load all references into every agent -- pick the relevant one.
@@ -125,5 +134,4 @@ Don't load all references into every agent -- pick the relevant one.
 
 | Reference | Purpose |
 |-----------|---------|
-| `references/gsd-dependency-map.md` | Every `.planning/` integration point with breakage risk -- check before GSD updates |
 | `../../docs/cross-package-analysis.md` | Cross-package pattern analysis across all upstreams -- re-review when `/skippy:update` flags significant changes |

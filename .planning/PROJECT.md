@@ -116,8 +116,8 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-de
 - **Portability**: Every skill must work with vanilla Claude Code (`~/.claude/commands/`). PAI enhancements are optional.
 - **Self-contained**: Each skill declares its own triggers, references, and commands. No cross-skill imports.
 - **Slim core**: SKILL.md is the entry point (~150 lines max). Detail lives in `references/`.
-- **No GSD modification**: All enhancements are additive references, never patches to GSD source.
-- **Stack**: Shell scripts (`#!/usr/bin/env bash`), markdown for rules/references. No TypeScript/Node dependencies.
+- **Standalone execution**: Skippy defines its own execution protocol via reference docs. GSD credited as source, not required as dependency.
+- **Stack**: Shell scripts (`#!/usr/bin/env bash`) for tools, markdown for rules/references. Bun/TypeScript for structured data operations (YAML parsing, state management).
 
 ## Key Decisions
 
