@@ -20,7 +20,7 @@ What skippy-dev reads from GSD's `.planning/` directory, what format it expects,
 | Command | GSD Dependency Level | Notes |
 |---------|---------------------|-------|
 | `/skippy:reconcile` | **Heavy** -- reads PLAN.md, SUMMARY.md, STATE.md, ROADMAP.md | Core function is comparing GSD artifacts |
-| `/skippy:update` | **None** -- only reads `.versions` and upstream repos | Independent of `.planning/` |
+| `/skippy:update` | **None** -- only reads `upstreams/*/upstream.json` and upstream repos | Independent of `.planning/` |
 | `/skippy:cleanup` | **None** -- operates on ephemeral files only | Independent of `.planning/` |
 | `state-consistency.md` (reference) | **Heavy** -- defines cross-file alignment checks | Referenced by reconcile |
 

@@ -60,7 +60,6 @@ skills/skippy-dev/
   commands/               # /skippy:reconcile, /skippy:update, /skippy:cleanup
   references/             # 5 PAUL enhancement docs
   scripts/                # skippy-update.sh, skippy-cleanup.sh
-  .versions               # Upstream version tracking (GSD + PAUL)
 tools/
   install.sh              # Dual-target installer (skills/ or commands/)
   uninstall.sh            # Dual-target uninstaller
