@@ -18,3 +18,14 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Private content safety net
+# Primary protection: private content lives at ~/.config/pai-private/
+# These patterns are a secondary defense against accidental inclusion
+.env
+.env.*
+*.secret
+*.credentials
+*.private
+credentials/
+secrets/
