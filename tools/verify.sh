@@ -206,7 +206,7 @@ skippy_section "Commands"
 skippy_dev_dir="$SKILLS_DIR/skippy-dev"
 if [ -d "$skippy_dev_dir" ]; then
     # Check each expected command file
-    for cmd_name in reconcile update cleanup migrate upgrade; do
+    for cmd_name in reconcile update cleanup migrate upgrade review; do
         cmd_file="$skippy_dev_dir/commands/${cmd_name}.md"
         if [ -f "$cmd_file" ]; then
             skippy_pass "command: /skippy:${cmd_name}"
