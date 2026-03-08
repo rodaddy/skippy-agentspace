@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
-status: completed
-stopped_at: Completed 13-03-PLAN.md
-last_updated: "2026-03-08T19:35:00Z"
-last_activity: "2026-03-08 -- Phase 13 Plan 03 complete (GSD language cleanup, SKILL.md update, file deletions)"
+status: in-progress
+stopped_at: Completed 12-01-PLAN.md
+last_updated: "2026-03-08T20:31:00Z"
+last_activity: 2026-03-08 -- Phase 12 Plan 01 complete (bats-core test infrastructure + common-lib tests)
 progress:
   total_phases: 16
   completed_phases: 12
-  total_plans: 30
-  completed_plans: 30
-  percent: 100
+  total_plans: 37
+  completed_plans: 31
+  percent: 84
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 13 GSD Pattern Absorption complete
+**Current focus:** v1.2 Standalone Skippy -- Phase 12 Testing in progress
 
 ## Current Position
 
-Phase: 13-gsd-pattern-absorption (complete)
-Plan: 3 of 3 complete
-Status: Phase 13 complete -- all GSD patterns absorbed, zero dependency language in skills/
-Last activity: 2026-03-08 -- Phase 13 Plan 03 complete (GSD language cleanup, SKILL.md update, file deletions)
+Phase: 12-testing (in progress)
+Plan: 1 of 3 complete
+Status: Plan 01 complete -- bats-core infrastructure + 10 common-lib tests passing
+Last activity: 2026-03-08 -- Phase 12 Plan 01 complete (bats-core test infrastructure + common-lib tests)
 
-Progress: [██████████] 100%
+Progress: [████████░░] 84%
 
-**Next step:** Plan Phase 14 or other v1.2 features
+**Next step:** Execute 12-02-PLAN.md (install/uninstall tests)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 30 (v1.0 + v1.1 + Phase 11 + Phase 13)
+- Total plans completed: 31 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 plan 01)
 - Average duration: --
 - Total execution time: --
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 |-------|-------|----------|-------|
 | 11. Foundation | 2/2 | 6min | 8 |
 | 13. GSD Absorption | 3/3 | 11min | 21 |
+| 12. Testing | 1/3 | 3min | 6 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -110,6 +111,8 @@ Recent decisions affecting current work:
 - [13-02]: Dual-mode skippy-state.ts (importable library + CLI with subcommands) via import.meta.main guard
 - [13-03]: Source attribution footers restructured to "Adapted from GSD" phrasing -- credit without dependency language
 - [13-03]: 3 additional skills/core/ files cleaned beyond planned 8 reference docs to satisfy full skills/ grep scan
+- [12-01]: Load paths in test helper use test_helper/ prefix -- bats resolves relative to .bats file, not the helper
+- [12-01]: 10 tests instead of planned 8 -- added SKIPPY_ROOT fallback and color-disable tests for completeness
 
 ### Pending Todos
 
@@ -121,6 +124,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T19:35:00Z
-Stopped at: Completed 13-03-PLAN.md
+Last session: 2026-03-08T20:31:00Z
+Stopped at: Completed 12-01-PLAN.md
 Resume file: None

@@ -69,8 +69,8 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 ### Testing
 
-- [ ] **TEST-01**: bats-core test suite with ~30 test cases covering install/uninstall/verify/index-sync
-- [ ] **TEST-02**: All tests run in sandboxed `HOME` (never touch real `~/.claude/`)
+- [x] **TEST-01**: bats-core test suite with ~30 test cases covering install/uninstall/verify/index-sync
+- [x] **TEST-02**: All tests run in sandboxed `HOME` (never touch real `~/.claude/`)
 - [ ] **TEST-03**: Test runner integrable with CI (TAP output, exit codes)
 
 ### GSD Absorption
@@ -179,8 +179,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-01 | Phase 11 | Complete |
 | FOUND-02 | Phase 11 | Complete |
 | FOUND-03 | Phase 16 | Pending |
-| TEST-01 | Phase 12 | Pending |
-| TEST-02 | Phase 12 | Pending |
+| TEST-01 | Phase 12 | Complete |
+| TEST-02 | Phase 12 | Complete |
 | TEST-03 | Phase 12 | Pending |
 | ABSORB-01 | Phase 13 | Complete |
 | ABSORB-02 | Phase 13 | Complete |
