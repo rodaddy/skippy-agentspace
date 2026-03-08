@@ -41,7 +41,7 @@ No pending todos or ideas found.
 
 Scanned:
 - Project todos: {CWD}/.planning/todos/pending/
-- Global ideas: <dev-root>/.claude_ideas/active/
+- Global ideas: <dev-root>/.claude_ideas/active/  (dev-root = parent of your projects dir)
 - Someday: <dev-root>/.claude_ideas/someday/
 
 Ready to create a new todo or idea?

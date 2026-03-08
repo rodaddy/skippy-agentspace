@@ -16,6 +16,8 @@ Main-context workflow. No subagent. No approval gates. Everything runs directly 
 
 Gather values with SEPARATE Bash calls (no chaining):
 
+> `<dev-root>` is the parent directory containing all your projects (e.g., `~/Development`). Detect it as the parent of `{CWD}` or use `$DEV_ROOT` if set.
+
 ```
 TODAY           = $(date +%Y-%m-%d)
 CURRENT_BRANCH  = git branch --show-current

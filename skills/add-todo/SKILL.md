@@ -52,6 +52,8 @@ If not already provided, collect:
 - Project todos: `{CWD}/.planning/todos/pending/<filename>.md`
 - Global ideas: `<dev-root>/.claude_ideas/active/<filename>.md`
 
+> `<dev-root>` is the parent directory containing all your projects (e.g., `~/Development`). Detect it as the parent of `{CWD}` or use `$DEV_ROOT` if set.
+
 Create the target directory if it doesn't exist.
 
 **File format:**

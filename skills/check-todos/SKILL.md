@@ -25,6 +25,8 @@ Gathers and displays all pending work across project todos, global ideas, and so
 
 Spawn a Sonnet explore agent to scan these locations:
 
+> `<dev-root>` is the parent directory containing all your projects (e.g., `~/Development`). Detect it as the parent of `{CWD}` or use `$DEV_ROOT` if set.
+
 **Project todos:**
 - Current project: `{CWD}/.planning/todos/pending/*.md`
 - All projects: `<dev-root>/*/.planning/todos/pending/*.md`

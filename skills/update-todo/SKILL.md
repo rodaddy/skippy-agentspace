@@ -31,6 +31,8 @@ If the user specifies which todo, read it directly. Otherwise, run `/check-todos
 - Global ideas: `<dev-root>/.claude_ideas/active/*.md`
 - Someday: `<dev-root>/.claude_ideas/someday/*.md`
 
+> `<dev-root>` is the parent directory containing all your projects (e.g., `~/Development`). Detect it as the parent of `{CWD}` or use `$DEV_ROOT` if set.
+
 ### Step 2: Determine the Action
 
 Use AskUserQuestion if not obvious from context:
