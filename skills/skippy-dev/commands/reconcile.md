@@ -1,6 +1,6 @@
 ---
 name: skippy:reconcile
-description: Compare planned vs actual work for a GSD phase -- tasks, acceptance criteria, file changes, state drift
+description: Compare planned vs actual work for a completed phase -- tasks, acceptance criteria, file changes, state drift
 ---
 <objective>
 Run plan-vs-actual reconciliation on the most recent completed phase (or a user-specified phase number).
@@ -12,6 +12,7 @@ Produces a reconciliation report showing DONE/MODIFIED/SKIPPED/ADDED tasks, AC p
 @../SKILL.md
 @../references/reconciliation.md
 @../references/state-consistency.md
+@../references/plan-structure.md
 </execution_context>
 
 <process>
@@ -40,24 +41,21 @@ Phases can have multiple plans. Do NOT assume a single PLAN.md.
 
 ## Step 3: Extract Tasks from Each Plan
 
-GSD plans define tasks in XML `<task>` blocks inside a `<tasks>` wrapper:
+Plans define tasks as markdown headings with structured fields (see `references/plan-structure.md` for the full spec):
 
-```xml
-<tasks>
-<task type="auto">
-  <name>Task 1: Description here</name>
-  <files>path/to/file.ts, path/to/other.ts</files>
-  <action>What the task does...</action>
-  <verify><automated>verification command</automated></verify>
-  <done>Observable completion criteria</done>
-</task>
-</tasks>
+```markdown
+## Task 1: Description here
+- files: `path/to/file.ts`, `path/to/other.ts`
+- action: What the task does...
+- verify: `verification command`
+- done: Observable completion criteria
 ```
 
 For each PLAN.md:
-- Extract all `<task>` blocks
-- Note the `<name>`, `<files>`, and `<done>` fields for each task
-- Also extract the `files_modified` list from the YAML frontmatter -- these are the files the plan expected to change
+- Use `bun run tools/lib/skippy-state.ts extract-tasks <plan-file>` for reliable structured parsing
+- Or manually extract `## Task N:` headings with their `- files:`, `- action:`, `- verify:`, `- done:` fields
+- Note the task name, files, and done criteria for each task
+- Also extract the `files_modified` list from YAML frontmatter (use `bun run tools/lib/skippy-state.ts parse-frontmatter <plan-file>`) -- these are the files the plan expected to change
 
 ## Step 4: Compare Plan vs Actual (Per Plan)
 
