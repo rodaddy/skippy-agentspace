@@ -87,8 +87,8 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 - [x] **SWARM-01**: `/skippy:review` command spawns 4 specialist review agents (security, code quality, architecture, consistency)
 - [x] **SWARM-02**: Shared findings board aggregates results with cross-references
-- [ ] **SWARM-03**: Fix agents address actionable findings with atomic commits
-- [ ] **SWARM-04**: Re-evaluation loop verifies fixes and finds regressions
+- [x] **SWARM-03**: Fix agents address actionable findings with atomic commits
+- [x] **SWARM-04**: Re-evaluation loop verifies fixes and finds regressions
 - [x] **SWARM-05**: All swarm testing runs in sandboxed HOME with backup-restore
 
 ### Hardening
@@ -191,8 +191,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | ABSORB-07 | Phase 13 | Complete |
 | SWARM-01 | Phase 14 | Complete |
 | SWARM-02 | Phase 14 | Complete |
-| SWARM-03 | Phase 14 | Pending |
-| SWARM-04 | Phase 14 | Pending |
+| SWARM-03 | Phase 14 | Complete |
+| SWARM-04 | Phase 14 | Complete |
 | SWARM-05 | Phase 14 | Complete |
 | HARD-01 | Phase 15 | Pending |
 | HARD-02 | Phase 15 | Pending |
