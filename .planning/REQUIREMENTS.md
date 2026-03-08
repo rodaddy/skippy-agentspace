@@ -201,7 +201,7 @@ Deferred to future release. Tracked but not in current roadmap.
 **Coverage:**
 - v1.0 requirements: 11 total (all validated)
 - v1.1 requirements: 28 total (all validated)
-- v1.2 requirements: 22 total (all pending)
+- v1.2 requirements: 22 total (all validated)
 - Mapped to phases: 61
 - Unmapped: 0
 

@@ -14,7 +14,7 @@ Additive rules and tools that sharpen planning and execution workflows. Everythi
 
 ## Enhancements
 
-Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
+Best-of-breed patterns adapted from PAUL, OMC, and cross-package analysis.
 
 | # | Enhancement | Reference | When It Applies |
 |---|-------------|-----------|-----------------|

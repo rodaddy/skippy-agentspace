@@ -181,7 +181,7 @@ else
 fi
 
 # Verify PAUL reference docs exist
-for ref in context-brackets reconciliation task-anatomy plan-boundaries state-consistency; do
+for ref in context-brackets reconciliation plan-structure plan-boundaries state-consistency; do
     if [[ -f "$REPO_DIR/skills/skippy-dev/references/$ref.md" ]]; then
         pass "PAUL ref: $ref.md"
     else
@@ -439,10 +439,10 @@ fi
 
 # Reference doc count
 REF_COUNT=$(ls skills/skippy-dev/references/*.md 2>/dev/null | wc -l | tr -d ' ')
-if [[ "$REF_COUNT" -eq 15 ]]; then
+if [[ "$REF_COUNT" -eq 18 ]]; then
     pass "Reference docs: $REF_COUNT"
 else
-    fail "Reference docs: $REF_COUNT (expected 15)"
+    fail "Reference docs: $REF_COUNT (expected 18)"
 fi
 
 # Stale content

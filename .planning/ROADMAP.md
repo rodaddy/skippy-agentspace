@@ -4,7 +4,7 @@
 
 - [x] **v1.0 Initial Release** - Phases 1-4 (shipped 2026-03-07)
 - [x] **v1.1 Portable PAI** - Phases 5-10 (shipped 2026-03-08)
-- [ ] **v1.2 Standalone Skippy** - Phases 11-16 (in progress)
+- [x] **v1.2 Standalone Skippy** - Phases 11-16 (shipped 2026-03-08)
 
 ## Phases
 
@@ -277,8 +277,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 16-01-PLAN.md -- CONTRIBUTING.md + CLAUDE.md/README.md standalone identity updates
-- [ ] 16-02-PLAN.md -- verify.sh review command fix + final verification pass
+- [x] 16-01-PLAN.md -- CONTRIBUTING.md + CLAUDE.md/README.md standalone identity updates
+- [x] 16-02-PLAN.md -- verify.sh review command fix + final verification pass
 
 ## Progress
 
@@ -309,4 +309,4 @@ Wave 3: [Phase 16]                          (needs all)
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 15. Hardening | v1.2 | 2/2 | Complete | 2026-03-08 |
-| 16. Integration & Polish | 2/2 | Complete    | 2026-03-08 | - |
+| 16. Integration & Polish | v1.2 | 2/2 | Complete | 2026-03-08 |

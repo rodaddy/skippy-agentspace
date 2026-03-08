@@ -116,10 +116,11 @@ skippy_validate_skill_name() {
         echo "Error: Skill name cannot be empty" >&2
         return 1
     fi
-    if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
-        echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
+    if ! [[ "$name" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        echo "Error: Invalid skill name '$name' -- must contain only alphanumerics, hyphens, and underscores" >&2
         return 1
     fi
+    return 0
 }
 
 # --- Install detection ---

@@ -85,7 +85,7 @@ _COMMON="$(cd "$(dirname "$0")" && cd lib && pwd)/common.sh"
 
 All shared functions use the `skippy_` prefix. Private variables use `_SKIPPY_` prefix (e.g., `_SKIPPY_RED`, `_SKIPPY_PASS`, `_SKIPPY_FAIL_COUNT`).
 
-Key functions: `skippy_pass`, `skippy_warn`, `skippy_fail`, `skippy_info`, `skippy_summary`, `skippy_repo_root`, `skippy_is_installed`, `validate_skill_name`.
+Key functions: `skippy_pass`, `skippy_warn`, `skippy_fail`, `skippy_summary`, `skippy_repo_root`, `skippy_is_installed`, `skippy_validate_skill_name`.
 
 ### Rules
 

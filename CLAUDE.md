@@ -120,7 +120,7 @@ Monitor for upstream changes: `/skippy:update`
 
 ## Project Status
 
-v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 in progress -- 12 skills, 18 reference docs, standalone framework.
+v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 complete -- 12 skills, 18 reference docs, standalone framework.
 
 | Phase | Goal | Status |
 |-------|------|--------|
@@ -136,7 +136,7 @@ v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2
 | 13. GSD Absorption | Standalone reference docs, state parser | Complete |
 | 14. Audit Swarm | /skippy:review multi-agent command | Complete |
 | 15. Hardening | deploy-service config, version bump | Complete |
-| 16. Integration & Polish | CONTRIBUTING.md, doc consistency | In Progress |
+| 16. Integration & Polish | CONTRIBUTING.md, doc consistency | Complete |
 
 ## Key Files
 

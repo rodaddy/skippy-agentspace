@@ -8,7 +8,7 @@
   "cherry_picks": [
     "context-brackets",
     "mandatory-reconciliation",
-    "task-anatomy",
+    "plan-structure",
     "plan-boundaries",
     "state-consistency"
   ],
