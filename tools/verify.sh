@@ -20,46 +20,58 @@ set -euo pipefail
 # Setup
 # ---------------------------------------------------------------------------
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Source shared library with graceful fallback
+_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs so script still works without common.sh
+    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
+    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
+    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { echo "    Fix: $1"; }
+    skippy_section() { echo ""; echo "=== $1 ==="; }
+    skippy_summary() {
+        echo ""; echo "  $SKIPPY_PASS passed, $SKIPPY_WARN warnings, $SKIPPY_FAIL failures"
+        [[ "$SKIPPY_FAIL" -gt 0 ]] && return 1; return 0
+    }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/$1" ]] || [[ -L "$HOME/.claude/commands/$1" ]]; }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$REPO_ROOT/skills"
-
-PASS_COUNT=0
-WARN_COUNT=0
-FAIL_COUNT=0
-
-pass() { echo "  PASS: $1"; PASS_COUNT=$((PASS_COUNT + 1)); }
-warn() { echo "  WARN: $1"; WARN_COUNT=$((WARN_COUNT + 1)); }
-fail() { echo "  FAIL: $1"; FAIL_COUNT=$((FAIL_COUNT + 1)); }
-suggest() { echo "    Fix: $1"; }
 
 # ---------------------------------------------------------------------------
 # Category 1: Prerequisites
 # ---------------------------------------------------------------------------
 
-echo "=== Prerequisites ==="
+skippy_section "Prerequisites"
 
 # bun
 if command -v bun >/dev/null 2>&1; then
-    pass "bun $(bun --version)"
+    skippy_pass "bun $(bun --version)"
 else
-    fail "bun not found"
-    suggest "macOS: brew install oven-sh/bun/bun | Linux: curl -fsSL https://bun.sh/install | bash"
+    skippy_fail "bun not found"
+    skippy_suggest "macOS: brew install oven-sh/bun/bun | Linux: curl -fsSL https://bun.sh/install | bash"
 fi
 
 # jq
 if command -v jq >/dev/null 2>&1; then
-    pass "jq $(jq --version)"
+    skippy_pass "jq $(jq --version)"
 else
-    fail "jq not found"
-    suggest "Install via your package manager (brew/apt/dnf/pacman)"
+    skippy_fail "jq not found"
+    skippy_suggest "Install via your package manager (brew/apt/dnf/pacman)"
 fi
 
 # git
 if command -v git >/dev/null 2>&1; then
-    pass "git $(git --version | cut -d' ' -f3)"
+    skippy_pass "git $(git --version | cut -d' ' -f3)"
 else
-    fail "git not found"
-    suggest "Install via your package manager (brew/apt/dnf/pacman)"
+    skippy_fail "git not found"
+    skippy_suggest "Install via your package manager (brew/apt/dnf/pacman)"
 fi
 
 # bash 4+ (check PATH bash, not running shell)
@@ -68,14 +80,14 @@ if [ -n "$bash_path" ]; then
     bash_version_str="$("$bash_path" -c 'echo $BASH_VERSION')"
     bash_major="$(echo "$bash_version_str" | cut -d. -f1)"
     if [ "$bash_major" -ge 4 ] 2>/dev/null; then
-        pass "bash $bash_version_str ($bash_path)"
+        skippy_pass "bash $bash_version_str ($bash_path)"
     else
-        warn "bash $bash_version_str is outdated (need 4+)"
-        suggest "macOS: brew install bash | Linux: install via package manager"
+        skippy_warn "bash $bash_version_str is outdated (need 4+)"
+        skippy_suggest "macOS: brew install bash | Linux: install via package manager"
     fi
 else
-    fail "bash not found in PATH"
-    suggest "Install bash via your package manager"
+    skippy_fail "bash not found in PATH"
+    skippy_suggest "Install bash via your package manager"
 fi
 
 echo ""
@@ -84,7 +96,7 @@ echo ""
 # Category 2: Skills
 # ---------------------------------------------------------------------------
 
-echo "=== Skills ==="
+skippy_section "Skills"
 
 for skill_dir in "$SKILLS_DIR"/*/; do
     [ -d "$skill_dir" ] || continue
@@ -104,19 +116,19 @@ for skill_dir in "$SKILLS_DIR"/*/; do
     if [ -n "$found_link" ]; then
         # Symlink exists -- verify target resolves
         if [ -e "$found_link" ]; then
-            pass "$name (installed at $found_link)"
+            skippy_pass "$name (installed at $found_link)"
         else
-            fail "$name symlink is dangling: $found_link"
-            suggest "Re-run tools/install.sh $name"
+            skippy_fail "$name symlink is dangling: $found_link"
+            skippy_suggest "Re-run tools/install.sh $name"
         fi
     else
         # Not installed
         if [ "$name" = "core" ]; then
-            fail "core skill not installed (core is essential)"
-            suggest "Run: tools/install.sh --core"
+            skippy_fail "core skill not installed (core is essential)"
+            skippy_suggest "Run: tools/install.sh --core"
         else
-            warn "$name not installed"
-            suggest "Run: tools/install.sh $name"
+            skippy_warn "$name not installed"
+            skippy_suggest "Run: tools/install.sh $name"
         fi
     fi
 done
@@ -127,19 +139,19 @@ echo ""
 # Category 3: Hooks
 # ---------------------------------------------------------------------------
 
-echo "=== Hooks ==="
+skippy_section "Hooks"
 
 # Delegate structural checks to validate-hooks.sh
 validate_script="$REPO_ROOT/tools/validate-hooks.sh"
 if [ -f "$validate_script" ]; then
     if bash "$validate_script" >/dev/null 2>&1; then
-        pass "hook structure validation (validate-hooks.sh)"
+        skippy_pass "hook structure validation (validate-hooks.sh)"
     else
-        fail "hook structure validation failed"
-        suggest "Run: bash tools/validate-hooks.sh for details"
+        skippy_fail "hook structure validation failed"
+        skippy_suggest "Run: bash tools/validate-hooks.sh for details"
     fi
 else
-    warn "validate-hooks.sh not found -- skipping structural checks"
+    skippy_warn "validate-hooks.sh not found -- skipping structural checks"
 fi
 
 # Check hook registrations in settings.json
@@ -152,7 +164,7 @@ if [ -f "$settings_file" ]; then
             expected_hooks="$(bun -e "const m = JSON.parse(require('fs').readFileSync('$manifest_file','utf-8')); console.log(m.hooks.length)" 2>/dev/null || echo "0")"
         else
             expected_hooks="0"
-            warn "hooks manifest not found at $manifest_file"
+            skippy_warn "hooks manifest not found at $manifest_file"
         fi
 
         pai_hook_count="$(bun -e "
@@ -170,20 +182,20 @@ if [ -f "$settings_file" ]; then
         " 2>/dev/null || echo "0")"
 
         if [ "$pai_hook_count" = "$expected_hooks" ] && [ "$expected_hooks" != "0" ]; then
-            pass "all $expected_hooks PAI hooks registered in settings.json"
+            skippy_pass "all $expected_hooks PAI hooks registered in settings.json"
         elif [ "$pai_hook_count" = "0" ]; then
-            warn "no PAI hooks found in settings.json"
-            suggest "Run: bash skills/core/hooks/install-hooks.sh"
+            skippy_warn "no PAI hooks found in settings.json"
+            skippy_suggest "Run: bash skills/core/hooks/install-hooks.sh"
         else
-            warn "partial PAI hook registration ($pai_hook_count/$expected_hooks)"
-            suggest "Re-run: bash skills/core/hooks/install-hooks.sh"
+            skippy_warn "partial PAI hook registration ($pai_hook_count/$expected_hooks)"
+            skippy_suggest "Re-run: bash skills/core/hooks/install-hooks.sh"
         fi
     else
-        warn "bun not available -- cannot check hook registrations"
+        skippy_warn "bun not available -- cannot check hook registrations"
     fi
 else
-    warn "$HOME/.claude/settings.json not found"
-    suggest "Run: bash skills/core/hooks/install-hooks.sh"
+    skippy_warn "$HOME/.claude/settings.json not found"
+    skippy_suggest "Run: bash skills/core/hooks/install-hooks.sh"
 fi
 
 echo ""
@@ -192,7 +204,7 @@ echo ""
 # Category 4: Commands
 # ---------------------------------------------------------------------------
 
-echo "=== Commands ==="
+skippy_section "Commands"
 
 # Check skippy-dev skill accessibility
 skippy_dev_dir="$SKILLS_DIR/skippy-dev"
@@ -201,21 +213,21 @@ if [ -d "$skippy_dev_dir" ]; then
     for cmd_name in reconcile update cleanup migrate upgrade; do
         cmd_file="$skippy_dev_dir/commands/${cmd_name}.md"
         if [ -f "$cmd_file" ]; then
-            pass "command: /skippy:${cmd_name}"
+            skippy_pass "command: /skippy:${cmd_name}"
         else
-            warn "command file missing: skippy-dev/commands/${cmd_name}.md"
+            skippy_warn "command file missing: skippy-dev/commands/${cmd_name}.md"
         fi
     done
 
     # Check if skippy-dev is installed (accessible via symlink)
     if [ -L "$HOME/.claude/skills/skippy-dev" ] || [ -L "$HOME/.claude/commands/skippy-dev" ]; then
-        pass "skippy-dev skill installed (commands accessible)"
+        skippy_pass "skippy-dev skill installed (commands accessible)"
     else
-        warn "skippy-dev skill not installed -- commands won't appear in Claude Code"
-        suggest "Run: tools/install.sh skippy-dev"
+        skippy_warn "skippy-dev skill not installed -- commands won't appear in Claude Code"
+        skippy_suggest "Run: tools/install.sh skippy-dev"
     fi
 else
-    warn "skippy-dev skill directory not found"
+    skippy_warn "skippy-dev skill directory not found"
 fi
 
 echo ""
@@ -224,18 +236,18 @@ echo ""
 # Additional check: INDEX.md consistency
 # ---------------------------------------------------------------------------
 
-echo "=== Index ==="
+skippy_section "Index"
 
 index_sync_script="$REPO_ROOT/tools/index-sync.sh"
 if [ -f "$index_sync_script" ]; then
     if bash "$index_sync_script" --check >/dev/null 2>&1; then
-        pass "INDEX.md is consistent with skills/"
+        skippy_pass "INDEX.md is consistent with skills/"
     else
-        warn "INDEX.md is out of sync"
-        suggest "Run: bash tools/index-sync.sh --generate"
+        skippy_warn "INDEX.md is out of sync"
+        skippy_suggest "Run: bash tools/index-sync.sh --generate"
     fi
 else
-    warn "index-sync.sh not found -- skipping index check"
+    skippy_warn "index-sync.sh not found -- skipping index check"
 fi
 
 echo ""
@@ -244,11 +256,5 @@ echo ""
 # Summary
 # ---------------------------------------------------------------------------
 
-echo "=== Summary ==="
-echo "  $PASS_COUNT passed, $WARN_COUNT warnings, $FAIL_COUNT failures"
-
-if [ "$FAIL_COUNT" -gt 0 ]; then
-    exit 1
-else
-    exit 0
-fi
+skippy_section "Summary"
+skippy_summary

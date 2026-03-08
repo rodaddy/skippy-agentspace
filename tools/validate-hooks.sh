@@ -24,30 +24,38 @@ set -euo pipefail
 # Setup
 # ---------------------------------------------------------------------------
 
+# Source shared library with graceful fallback
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+_COMMON_SH="$SCRIPT_DIR/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs so script still works without common.sh
+    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
+    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
+    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { echo "    Fix: $1"; }
+    skippy_section() { echo ""; echo "=== $1 ==="; }
+    skippy_summary() {
+        echo ""; echo "  $SKIPPY_PASS passed, $SKIPPY_WARN warnings, $SKIPPY_FAIL failures"
+        [[ "$SKIPPY_FAIL" -gt 0 ]] && return 1; return 0
+    }
+fi
+
+REPO_ROOT="$(skippy_repo_root)"
 HOOKS_DIR="$REPO_ROOT/skills/core/hooks"
 MANIFEST="$HOOKS_DIR/manifest.json"
 
 FULL_MODE=false
-PASS_COUNT=0
-FAIL_COUNT=0
 
 for arg in "$@"; do
   case "$arg" in
     --full) FULL_MODE=true ;;
   esac
 done
-
-pass() {
-  echo "  PASS: $1"
-  PASS_COUNT=$((PASS_COUNT + 1))
-}
-
-fail() {
-  echo "  FAIL: $1"
-  FAIL_COUNT=$((FAIL_COUNT + 1))
-}
 
 # ---------------------------------------------------------------------------
 # Check 1: Manifest completeness
@@ -56,13 +64,13 @@ fail() {
 echo "Check 1: Manifest completeness"
 
 if [ ! -f "$MANIFEST" ]; then
-  fail "manifest.json not found"
+  skippy_fail "manifest.json not found"
 else
   HOOK_COUNT=$(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); console.log(m.hooks.length)")
   if [ "$HOOK_COUNT" -gt 0 ] 2>/dev/null; then
-    pass "manifest has $HOOK_COUNT hooks"
+    skippy_pass "manifest has $HOOK_COUNT hooks"
   else
-    fail "manifest has 0 hooks"
+    skippy_fail "manifest has 0 hooks"
   fi
 
   # Check required fields
@@ -78,9 +86,9 @@ else
     console.log(missing);
   ")
   if [ "$FIELD_CHECK" = "0" ]; then
-    pass "all hooks have required fields (id, law, name, event, script, blocking)"
+    skippy_pass "all hooks have required fields (id, law, name, event, script, blocking)"
   else
-    fail "$FIELD_CHECK missing required fields"
+    skippy_fail "$FIELD_CHECK missing required fields"
   fi
 fi
 
@@ -93,13 +101,13 @@ echo "Check 2: Hook file existence"
 MISSING_FILES=0
 while IFS= read -r script; do
   if [ ! -f "$HOOKS_DIR/$script" ]; then
-    fail "missing script: $script"
+    skippy_fail "missing script: $script"
     MISSING_FILES=$((MISSING_FILES + 1))
   fi
 done < <(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); m.hooks.forEach(h => console.log(h.script))")
 
 if [ "$MISSING_FILES" = "0" ]; then
-  pass "all $HOOK_COUNT hook scripts exist"
+  skippy_pass "all $HOOK_COUNT hook scripts exist"
 fi
 
 # ---------------------------------------------------------------------------
@@ -114,31 +122,31 @@ for hookfile in "$HOOKS_DIR"/law-*.ts; do
 
   # Check shebang
   if ! head -1 "$hookfile" | grep -q '^#!/usr/bin/env bun'; then
-    fail "$name: missing #!/usr/bin/env bun shebang"
+    skippy_fail "$name: missing #!/usr/bin/env bun shebang"
     STRUCT_ISSUES=$((STRUCT_ISSUES + 1))
   fi
 
   # Check imports from lib
   if ! grep -q 'from "./lib/' "$hookfile"; then
-    fail "$name: no imports from ./lib/"
+    skippy_fail "$name: no imports from ./lib/"
     STRUCT_ISSUES=$((STRUCT_ISSUES + 1))
   fi
 
   # Check isSubagent usage
   if ! grep -q 'isSubagent' "$hookfile"; then
-    fail "$name: missing isSubagent check"
+    skippy_fail "$name: missing isSubagent check"
     STRUCT_ISSUES=$((STRUCT_ISSUES + 1))
   fi
 
   # Check fail-open (allowDecision in catch block)
   if ! grep -q 'allowDecision' "$hookfile"; then
-    fail "$name: missing allowDecision (fail-open)"
+    skippy_fail "$name: missing allowDecision (fail-open)"
     STRUCT_ISSUES=$((STRUCT_ISSUES + 1))
   fi
 done
 
 if [ "$STRUCT_ISSUES" = "0" ]; then
-  pass "all hooks: correct shebang, lib imports, isSubagent, fail-open"
+  skippy_pass "all hooks: correct shebang, lib imports, isSubagent, fail-open"
 fi
 
 # ---------------------------------------------------------------------------
@@ -149,9 +157,9 @@ echo "Check 4: No camelCase field access"
 
 CAMEL_FILES=$(grep -l 'input\.toolName\|input\.toolInput\|raw\.toolName\|raw\.toolInput' "$HOOKS_DIR"/law-*.ts 2>/dev/null || true)
 if [ -z "$CAMEL_FILES" ]; then
-  pass "no camelCase field access (toolName/toolInput) in hook scripts"
+  skippy_pass "no camelCase field access (toolName/toolInput) in hook scripts"
 else
-  fail "camelCase field access found in: $CAMEL_FILES"
+  skippy_fail "camelCase field access found in: $CAMEL_FILES"
 fi
 
 # ---------------------------------------------------------------------------
@@ -163,13 +171,13 @@ echo "Check 5: Shared lib completeness"
 LIB_ISSUES=0
 for libfile in types.ts context.ts feedback.ts merge.ts; do
   if [ ! -f "$HOOKS_DIR/lib/$libfile" ]; then
-    fail "missing lib/$libfile"
+    skippy_fail "missing lib/$libfile"
     LIB_ISSUES=$((LIB_ISSUES + 1))
   fi
 done
 
 if [ "$LIB_ISSUES" = "0" ]; then
-  pass "shared lib complete: types.ts, context.ts, feedback.ts, merge.ts"
+  skippy_pass "shared lib complete: types.ts, context.ts, feedback.ts, merge.ts"
 fi
 
 # ---------------------------------------------------------------------------
@@ -235,9 +243,9 @@ FIXTURE
     console.log(c);
   ")
 
-  if [ "$GSD_PRESERVED" = "yes" ]; then pass "GSD hooks preserved after install"; else fail "GSD hooks lost after install"; fi
-  if [ "$OMC_PRESERVED" = "yes" ]; then pass "OMC hooks preserved after install"; else fail "OMC hooks lost after install"; fi
-  if [ "$PAI_COUNT" = "$HOOK_COUNT" ]; then pass "$HOOK_COUNT PAI hooks installed"; else fail "expected $HOOK_COUNT PAI hooks, got $PAI_COUNT"; fi
+  if [ "$GSD_PRESERVED" = "yes" ]; then skippy_pass "GSD hooks preserved after install"; else skippy_fail "GSD hooks lost after install"; fi
+  if [ "$OMC_PRESERVED" = "yes" ]; then skippy_pass "OMC hooks preserved after install"; else skippy_fail "OMC hooks lost after install"; fi
+  if [ "$PAI_COUNT" = "$HOOK_COUNT" ]; then skippy_pass "$HOOK_COUNT PAI hooks installed"; else skippy_fail "expected $HOOK_COUNT PAI hooks, got $PAI_COUNT"; fi
 
   # -------------------------------------------------------------------------
   # Check 7: Uninstall safety (HOOK-03)
@@ -260,8 +268,8 @@ FIXTURE
     console.log(found ? 'yes' : 'no');
   ")
 
-  if [ "$PAI_AFTER" = "0" ]; then pass "all PAI hooks removed"; else fail "$PAI_AFTER PAI hooks remain after uninstall"; fi
-  if [ "$GSD_AFTER" = "yes" ]; then pass "GSD hooks preserved after uninstall"; else fail "GSD hooks lost after uninstall"; fi
+  if [ "$PAI_AFTER" = "0" ]; then skippy_pass "all PAI hooks removed"; else skippy_fail "$PAI_AFTER PAI hooks remain after uninstall"; fi
+  if [ "$GSD_AFTER" = "yes" ]; then skippy_pass "GSD hooks preserved after uninstall"; else skippy_fail "GSD hooks lost after uninstall"; fi
 
   # -------------------------------------------------------------------------
   # Check 8: Idempotency (HOOK-04)
@@ -282,9 +290,9 @@ FIXTURE2
   bash "$HOOKS_DIR/install-hooks.sh" --settings="$SETTINGS" >/dev/null
 
   if diff -q "$HOOK_TMPDIR/first-install.json" "$SETTINGS" >/dev/null 2>&1; then
-    pass "install is idempotent (identical after two runs)"
+    skippy_pass "install is idempotent (identical after two runs)"
   else
-    fail "install is NOT idempotent (diff detected)"
+    skippy_fail "install is NOT idempotent (diff detected)"
   fi
 
   # -------------------------------------------------------------------------
@@ -295,9 +303,9 @@ FIXTURE2
 
   BACKUP_COUNT=$(ls -1 "$HOOK_TMPDIR"/settings.json.backup-* 2>/dev/null | wc -l | tr -d ' ')
   if [ "$BACKUP_COUNT" -ge "1" ]; then
-    pass "backup files created ($BACKUP_COUNT found)"
+    skippy_pass "backup files created ($BACKUP_COUNT found)"
   else
-    fail "no backup files found"
+    skippy_fail "no backup files found"
   fi
 fi
 
@@ -306,12 +314,4 @@ fi
 # ---------------------------------------------------------------------------
 
 echo ""
-TOTAL=$((PASS_COUNT + FAIL_COUNT))
-echo "Results: $PASS_COUNT/$TOTAL passed, $FAIL_COUNT failed"
-
-if [ "$FAIL_COUNT" -gt 0 ]; then
-  exit 1
-else
-  echo "All checks passed."
-  exit 0
-fi
+skippy_summary

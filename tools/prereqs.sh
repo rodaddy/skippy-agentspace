@@ -11,26 +11,23 @@ set -euo pipefail
 # Supports: macOS (brew), Debian/Ubuntu (apt), Fedora/RHEL (dnf/yum), Arch (pacman), WSL2
 
 # ---------------------------------------------------------------------------
-# Output helpers
+# Source shared library with graceful fallback
 # ---------------------------------------------------------------------------
 
-ok_count=0
-missing_count=0
-
-report_ok() {
-    echo "  OK: $1"
-    ok_count=$((ok_count + 1))
-}
-
-report_missing() {
-    echo "  MISSING: $1"
-    missing_count=$((missing_count + 1))
-}
-
-report_outdated() {
-    echo "  OUTDATED: $1"
-    missing_count=$((missing_count + 1))
-}
+_COMMON_SH="$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
+if [[ -f "$_COMMON_SH" ]]; then
+    # shellcheck source=lib/common.sh
+    source "$_COMMON_SH"
+else
+    # Fallback: define minimal stubs so script still works without common.sh
+    # CRITICAL: Bash 3.2-compatible syntax only (no associative arrays, no ${var,,}, no |&, no mapfile)
+    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
+    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
+    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
+    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
+    skippy_suggest() { echo "    Fix: $1"; }
+    skippy_section() { echo ""; echo "=== $1 ==="; }
+fi
 
 # ---------------------------------------------------------------------------
 # OS detection
@@ -170,10 +167,10 @@ check_git() {
     if command -v git >/dev/null 2>&1; then
         local version
         version="$(git --version | cut -d' ' -f3)"
-        report_ok "git $version"
+        skippy_pass "git $version"
         return 0
     else
-        report_missing "git"
+        skippy_fail "git"
         prompt_install "git" "$(get_install_cmd git)" && check_git
         return 1
     fi
@@ -184,7 +181,7 @@ check_bash() {
     bash_path="$(command -v bash 2>/dev/null || true)"
 
     if [ -z "$bash_path" ]; then
-        report_missing "bash"
+        skippy_fail "bash"
         prompt_install "bash" "$(get_install_cmd bash)" && check_bash
         return 1
     fi
@@ -196,10 +193,10 @@ check_bash() {
     major="$(echo "$bash_version_str" | cut -d. -f1)"
 
     if [ "$major" -ge 4 ] 2>/dev/null; then
-        report_ok "bash $bash_version_str ($bash_path)"
+        skippy_pass "bash $bash_version_str ($bash_path)"
         return 0
     else
-        report_outdated "bash $bash_version_str (need 4+, path: $bash_path)"
+        skippy_warn "bash $bash_version_str (need 4+, path: $bash_path)"
         prompt_install "bash" "$(get_install_cmd bash)" && check_bash
         return 1
     fi
@@ -209,10 +206,10 @@ check_bun() {
     if command -v bun >/dev/null 2>&1; then
         local version
         version="$(bun --version)"
-        report_ok "bun $version"
+        skippy_pass "bun $version"
         return 0
     else
-        report_missing "bun"
+        skippy_fail "bun"
         prompt_install "bun" "$(get_install_cmd bun)" && check_bun
         return 1
     fi
@@ -222,10 +219,10 @@ check_jq() {
     if command -v jq >/dev/null 2>&1; then
         local version
         version="$(jq --version)"
-        report_ok "jq $version"
+        skippy_pass "jq $version"
         return 0
     else
-        report_missing "jq"
+        skippy_fail "jq"
         prompt_install "jq" "$(get_install_cmd jq)" && check_jq
         return 1
     fi
