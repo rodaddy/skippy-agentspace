@@ -25,24 +25,20 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 
 # Source shared library with graceful fallback
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-_COMMON_SH="$SCRIPT_DIR/lib/common.sh"
+_COMMON_SH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
 if [[ -f "$_COMMON_SH" ]]; then
     # shellcheck source=lib/common.sh
     source "$_COMMON_SH"
 else
-    # Fallback: define minimal stubs so script still works without common.sh
-    SKIPPY_PASS=0; SKIPPY_WARN=0; SKIPPY_FAIL=0
-    skippy_repo_root() { local r; r="$(cd "$(dirname "$0")/.." && pwd)"; echo "$r"; }
-    skippy_pass() { echo "  PASS: $1"; SKIPPY_PASS=$((SKIPPY_PASS + 1)); }
-    skippy_warn() { echo "  WARN: $1"; SKIPPY_WARN=$((SKIPPY_WARN + 1)); }
-    skippy_fail() { echo "  FAIL: $1"; SKIPPY_FAIL=$((SKIPPY_FAIL + 1)); }
-    skippy_suggest() { echo "    Fix: $1"; }
-    skippy_section() { echo ""; echo "=== $1 ==="; }
-    skippy_summary() {
-        echo ""; echo "  $SKIPPY_PASS passed, $SKIPPY_WARN warnings, $SKIPPY_FAIL failures"
-        [[ "$SKIPPY_FAIL" -gt 0 ]] && return 1; return 0
-    }
+    SKIPPY_PASS=${SKIPPY_PASS:-0}; SKIPPY_WARN=${SKIPPY_WARN:-0}; SKIPPY_FAIL=${SKIPPY_FAIL:-0}
+    skippy_repo_root() { local d; d="$(cd "$(dirname "${BASH_SOURCE[1]}")/.." && pwd)"; [[ -d "$d/skills" ]] && echo "$d" && return 0; [[ -n "${SKIPPY_ROOT:-}" && -d "$SKIPPY_ROOT/skills" ]] && echo "$SKIPPY_ROOT" && return 0; return 1; }
+    skippy_pass() { printf '  \033[32m✓\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_PASS++)) || true; }
+    skippy_warn() { printf '  \033[33m⚠\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_WARN++)) || true; }
+    skippy_fail() { printf '  \033[31m✗\033[0m %s\n' "${1:?requires message}"; ((SKIPPY_FAIL++)) || true; }
+    skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
+    skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
+    skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
+    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
 fi
 
 REPO_ROOT="$(skippy_repo_root)"
@@ -66,7 +62,7 @@ echo "Check 1: Manifest completeness"
 if [ ! -f "$MANIFEST" ]; then
   skippy_fail "manifest.json not found"
 else
-  HOOK_COUNT=$(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); console.log(m.hooks.length)")
+  HOOK_COUNT=$(MANIFEST_FILE="$MANIFEST" bun -e "const m = JSON.parse(require('fs').readFileSync(process.env.MANIFEST_FILE,'utf-8')); console.log(m.hooks.length)")
   if [ "$HOOK_COUNT" -gt 0 ] 2>/dev/null; then
     skippy_pass "manifest has $HOOK_COUNT hooks"
   else
@@ -74,8 +70,8 @@ else
   fi
 
   # Check required fields
-  FIELD_CHECK=$(bun -e "
-    const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8'));
+  FIELD_CHECK=$(MANIFEST_FILE="$MANIFEST" bun -e "
+    const m = JSON.parse(require('fs').readFileSync(process.env.MANIFEST_FILE,'utf-8'));
     const required = ['id','law','name','event','script','blocking'];
     let missing = 0;
     for (const h of m.hooks) {
@@ -104,7 +100,7 @@ while IFS= read -r script; do
     skippy_fail "missing script: $script"
     MISSING_FILES=$((MISSING_FILES + 1))
   fi
-done < <(bun -e "const m = JSON.parse(require('fs').readFileSync('$MANIFEST','utf-8')); m.hooks.forEach(h => console.log(h.script))")
+done < <(MANIFEST_FILE="$MANIFEST" bun -e "const m = JSON.parse(require('fs').readFileSync(process.env.MANIFEST_FILE,'utf-8')); m.hooks.forEach(h => console.log(h.script))")
 
 if [ "$MISSING_FILES" = "0" ]; then
   skippy_pass "all $HOOK_COUNT hook scripts exist"
@@ -224,20 +220,20 @@ FIXTURE
   echo "Check 6: Install safety (HOOK-02)"
   bash "$HOOKS_DIR/install-hooks.sh" --settings="$SETTINGS" >/dev/null
 
-  GSD_PRESERVED=$(bun -e "
-    const s = JSON.parse(require('fs').readFileSync('$SETTINGS','utf-8'));
+  GSD_PRESERVED=$(SETTINGS_FILE="$SETTINGS" bun -e "
+    const s = JSON.parse(require('fs').readFileSync(process.env.SETTINGS_FILE,'utf-8'));
     const found = s.hooks.PreToolUse?.some(g => g.hooks.some(h => h.command.includes('gsd-pre-bash')));
     console.log(found ? 'yes' : 'no');
   ")
 
-  OMC_PRESERVED=$(bun -e "
-    const s = JSON.parse(require('fs').readFileSync('$SETTINGS','utf-8'));
+  OMC_PRESERVED=$(SETTINGS_FILE="$SETTINGS" bun -e "
+    const s = JSON.parse(require('fs').readFileSync(process.env.SETTINGS_FILE,'utf-8'));
     const found = s.hooks.PostToolUse?.some(g => g.hooks.some(h => h.command.includes('omc')));
     console.log(found ? 'yes' : 'no');
   ")
 
-  PAI_COUNT=$(bun -e "
-    const s = JSON.parse(require('fs').readFileSync('$SETTINGS','utf-8'));
+  PAI_COUNT=$(SETTINGS_FILE="$SETTINGS" bun -e "
+    const s = JSON.parse(require('fs').readFileSync(process.env.SETTINGS_FILE,'utf-8'));
     let c = 0;
     for (const gs of Object.values(s.hooks || {})) { for (const g of gs) { for (const h of g.hooks) { if (h.command.includes('skills/core/hooks/')) c++; } } }
     console.log(c);
@@ -255,15 +251,15 @@ FIXTURE
   cp "$SETTINGS" "$HOOK_TMPDIR/pre-uninstall.json"
   bash "$HOOKS_DIR/uninstall-hooks.sh" --settings="$SETTINGS" >/dev/null
 
-  PAI_AFTER=$(bun -e "
-    const s = JSON.parse(require('fs').readFileSync('$SETTINGS','utf-8'));
+  PAI_AFTER=$(SETTINGS_FILE="$SETTINGS" bun -e "
+    const s = JSON.parse(require('fs').readFileSync(process.env.SETTINGS_FILE,'utf-8'));
     let c = 0;
     for (const gs of Object.values(s.hooks || {})) { for (const g of gs) { for (const h of g.hooks) { if (h.command.includes('skills/core/hooks/')) c++; } } }
     console.log(c);
   ")
 
-  GSD_AFTER=$(bun -e "
-    const s = JSON.parse(require('fs').readFileSync('$SETTINGS','utf-8'));
+  GSD_AFTER=$(SETTINGS_FILE="$SETTINGS" bun -e "
+    const s = JSON.parse(require('fs').readFileSync(process.env.SETTINGS_FILE,'utf-8'));
     const found = s.hooks?.PreToolUse?.some(g => g.hooks.some(h => h.command.includes('gsd-pre-bash')));
     console.log(found ? 'yes' : 'no');
   ")
