@@ -6,17 +6,29 @@ setup() {
     load 'test_helper/common'
     _common_setup
 
-    INDEX_SCRIPT="$REPO_ROOT/tools/index-sync.sh"
+    # Create a sandboxed repo structure so we never touch real INDEX.md.
+    # Copy the script INTO the sandbox so BASH_SOURCE resolves to sandbox root.
+    SANDBOX_REPO="$BATS_TEST_TMPDIR/repo"
+    mkdir -p "$SANDBOX_REPO/tools/lib"
+    mkdir -p "$SANDBOX_REPO/skills"
 
-    # Backup INDEX.md so --generate tests don't corrupt the real file
-    cp "$REPO_ROOT/INDEX.md" "$BATS_TEST_TMPDIR/INDEX.md.bak"
-}
+    # Copy tool scripts
+    cp "$REPO_ROOT/tools/index-sync.sh" "$SANDBOX_REPO/tools/"
+    cp "$REPO_ROOT/tools/lib/common.sh" "$SANDBOX_REPO/tools/lib/"
 
-teardown() {
-    # Restore original INDEX.md after every test
-    if [[ -f "$BATS_TEST_TMPDIR/INDEX.md.bak" ]]; then
-        cp "$BATS_TEST_TMPDIR/INDEX.md.bak" "$REPO_ROOT/INDEX.md"
-    fi
+    # Copy skills directory structure (dirs with SKILL.md for detection)
+    for skill_dir in "$REPO_ROOT"/skills/*/; do
+        skill_name="$(basename "$skill_dir")"
+        mkdir -p "$SANDBOX_REPO/skills/$skill_name"
+        if [[ -f "$skill_dir/SKILL.md" ]]; then
+            cp "$skill_dir/SKILL.md" "$SANDBOX_REPO/skills/$skill_name/"
+        fi
+    done
+
+    # Copy current INDEX.md as baseline
+    cp "$REPO_ROOT/INDEX.md" "$SANDBOX_REPO/INDEX.md"
+
+    INDEX_SCRIPT="$SANDBOX_REPO/tools/index-sync.sh"
 }
 
 # --- Check mode ---
@@ -28,7 +40,7 @@ teardown() {
 
 @test "index-sync --check detects missing skill in INDEX.md" {
     # Create an empty INDEX.md so no skills are found
-    echo "# Empty Index" > "$REPO_ROOT/INDEX.md"
+    echo "# Empty Index" > "$SANDBOX_REPO/INDEX.md"
     run bash "$INDEX_SCRIPT" --check
     assert_failure
 }
@@ -37,13 +49,13 @@ teardown() {
 
 @test "index-sync --generate creates INDEX.md with category sections" {
     # Remove INDEX.md, then regenerate
-    rm -f "$REPO_ROOT/INDEX.md"
+    rm -f "$SANDBOX_REPO/INDEX.md"
     run bash "$INDEX_SCRIPT" --generate
     assert_success
 
     # Verify file was recreated with category headers
-    [[ -f "$REPO_ROOT/INDEX.md" ]]
-    run cat "$REPO_ROOT/INDEX.md"
+    [[ -f "$SANDBOX_REPO/INDEX.md" ]]
+    run cat "$SANDBOX_REPO/INDEX.md"
     assert_output --partial "Core"
     assert_output --partial "Workflow"
 }
@@ -53,7 +65,7 @@ teardown() {
     assert_success
 
     # Check that generated INDEX.md mentions key skills
-    run cat "$REPO_ROOT/INDEX.md"
+    run cat "$SANDBOX_REPO/INDEX.md"
     assert_output --partial "core"
     assert_output --partial "skippy-dev"
     assert_output --partial "browser"

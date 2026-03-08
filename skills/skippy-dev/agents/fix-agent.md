@@ -25,6 +25,8 @@ export HOME=$(mktemp -d)
 
 NEVER operate against the real HOME directory. You have write access and worktree isolation -- use them responsibly.
 
+**MANDATORY:** The orchestrator MUST spawn this agent with `isolation: worktree`. If worktree isolation is unavailable, do NOT proceed -- report "INFRA_ERROR: worktree isolation required" and exit.
+
 ## Your Mission
 
 Apply specific fixes from the findings board. You receive individual findings with file paths, evidence, and remediation instructions. Your job is to:

@@ -53,8 +53,8 @@ Follow the verification-loops.md cycling protocol:
 
 ```bash
 # Run project tests if they exist
-if [[ -d "tests" ]]; then
-  bun test 2>&1
+if [[ -d "tests" && -x "tests/bats/bin/bats" ]]; then
+  ./tests/bats/bin/bats tests/ 2>&1
 fi
 
 # Shellcheck on modified shell scripts

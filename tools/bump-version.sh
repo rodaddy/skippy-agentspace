@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# bump-version.sh -- Atomically bump version across all 26 locations in the repo.
+# bump-version.sh -- Atomically bump version across all version locations in the repo.
 #
 # Usage:
 #   bash tools/bump-version.sh --patch|--minor|--major [--dry-run]
@@ -178,7 +178,7 @@ done
 REMAINING=$( (grep -rF "$CURRENT" "${GREP_TARGETS[@]}" 2>/dev/null || true) | wc -l | tr -d ' ')
 
 if [[ "$REMAINING" -eq 0 ]]; then
-    skippy_pass "All 26 locations updated: $CURRENT -> $NEW"
+    skippy_pass "All ${#FILES[@]} locations updated: $CURRENT -> $NEW"
 else
     skippy_fail "$REMAINING old version references remain"
     # Show what's left for debugging
