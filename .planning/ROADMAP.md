@@ -289,7 +289,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | v1.2 | 1/3 | In Progress | - |
+| 13. GSD Pattern Absorption | 2/3 | In Progress|  | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
 | 15. Hardening | v1.2 | 0/0 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
