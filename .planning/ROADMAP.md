@@ -36,7 +36,7 @@
 - [x] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation (completed 2026-03-08)
 - [x] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns (completed 2026-03-08)
 - [x] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command (completed 2026-03-08)
-- [ ] **Phase 15: Hardening** - deploy-service config mechanism and version management
+- [x] **Phase 15: Hardening** - deploy-service config mechanism and version management (completed 2026-03-08)
 - [ ] **Phase 16: Integration & Polish** - Final verification, doc consistency, CONTRIBUTING.md
 
 ## Phase Details
@@ -304,5 +304,5 @@ Wave 3: [Phase 16]                          (needs all)
 | 12. Testing | 3/3 | Complete    | 2026-03-08 | - |
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | 2/2 | Complete   | 2026-03-08 | - |
-| 15. Hardening | v1.2 | 1/2 | In Progress | - |
+| 15. Hardening | 2/2 | Complete   | 2026-03-08 | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
