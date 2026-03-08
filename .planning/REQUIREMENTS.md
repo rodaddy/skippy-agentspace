@@ -93,9 +93,9 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 ### Hardening
 
-- [ ] **HARD-01**: deploy-service uses shell-sourceable `config.env` with validation (replaces 9 hardcoded placeholders)
+- [x] **HARD-01**: deploy-service uses shell-sourceable `config.env` with validation (replaces 9 hardcoded placeholders)
 - [ ] **HARD-02**: Version bump script updates VERSION file + all 25 version locations across 13 files
-- [ ] **HARD-03**: `config.env.example` committed, `config.env` gitignored
+- [x] **HARD-03**: `config.env.example` committed, `config.env` gitignored
 
 ## v2 Requirements
 
@@ -194,9 +194,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | SWARM-03 | Phase 14 | Complete |
 | SWARM-04 | Phase 14 | Complete |
 | SWARM-05 | Phase 14 | Complete |
-| HARD-01 | Phase 15 | Pending |
+| HARD-01 | Phase 15 | Complete |
 | HARD-02 | Phase 15 | Pending |
-| HARD-03 | Phase 15 | Pending |
+| HARD-03 | Phase 15 | Complete |
 
 **Coverage:**
 - v1.0 requirements: 11 total (all validated)

@@ -261,7 +261,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 15-01-PLAN.md -- deploy-service config.env mechanism (HARD-01, HARD-03)
+- [x] 15-01-PLAN.md -- deploy-service config.env mechanism (HARD-01, HARD-03) (completed 2026-03-08)
 - [ ] 15-02-PLAN.md -- bump-version.sh version automation (HARD-02)
 
 ### Phase 16: Integration & Polish
@@ -304,5 +304,5 @@ Wave 3: [Phase 16]                          (needs all)
 | 12. Testing | 3/3 | Complete    | 2026-03-08 | - |
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | 2/2 | Complete   | 2026-03-08 | - |
-| 15. Hardening | v1.2 | 0/2 | Planned | - |
+| 15. Hardening | v1.2 | 1/2 | In Progress | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
