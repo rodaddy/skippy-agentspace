@@ -8,15 +8,25 @@ PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think 
 
 ## Quick Start
 
+**In Claude Code:**
+```
+/plugin marketplace add rodaddy/skippy-agentspace
+/plugin install core@skippy-agentspace
+/plugin install skippy-dev@skippy-agentspace
+```
+
+Install individual skills: `/plugin install <skill-name>@skippy-agentspace`
+
+**Manual install (alternative):**
 ```bash
 git clone https://github.com/rodaddy/skippy-agentspace.git
 cd skippy-agentspace
 bash tools/prereqs.sh
-bash tools/install.sh --all
+bash tools/install.sh --all    # or: install.sh --core, install.sh <skill-name>
 bash tools/verify.sh
 ```
 
-Run `/clear` in Claude Code to pick up the new skills.
+Run `/clear` in Claude Code to pick up new skills.
 
 ## Try It
 
