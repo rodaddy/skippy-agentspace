@@ -51,11 +51,11 @@ Requirements for Portable PAI milestone. Each maps to roadmap phases 5-10.
 
 ### Bootstrap & Docs
 
-- [ ] **BOOT-01**: prereqs.sh validates required tools (bun, jq, bash 4+, git)
+- [x] **BOOT-01**: prereqs.sh validates required tools (bun, jq, bash 4+, git)
 - [ ] **BOOT-02**: SETUP.md provides step-by-step first-time setup instructions
 - [ ] **BOOT-03**: INSTALL.md provides instructions for adding skills/components
 - [ ] **BOOT-04**: UPGRADE.md provides instructions for updating from previous version
-- [ ] **BOOT-05**: Verification script confirms everything is wired correctly after setup
+- [x] **BOOT-05**: Verification script confirms everything is wired correctly after setup
 
 ## v2 Requirements
 
@@ -129,11 +129,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | SKIL-02 | Phase 9 | Complete |
 | SKIL-03 | Phase 9 | Complete |
 | SKIL-04 | Phase 9 | Complete |
-| BOOT-01 | Phase 10 | Pending |
+| BOOT-01 | Phase 10 | Complete |
 | BOOT-02 | Phase 10 | Pending |
 | BOOT-03 | Phase 10 | Pending |
 | BOOT-04 | Phase 10 | Pending |
-| BOOT-05 | Phase 10 | Pending |
+| BOOT-05 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.0 requirements: 11 total (all complete)
