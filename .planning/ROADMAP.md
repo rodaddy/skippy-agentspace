@@ -274,7 +274,11 @@ Plans:
   3. `tools/verify.sh` passes with zero failures after all v1.2 changes
   4. `INDEX.md` regenerated with `/skippy:review` in skippy-dev's command list
   5. README.md updated with test instructions (`bats tests/`) and standalone framing
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 16-01-PLAN.md -- CONTRIBUTING.md + CLAUDE.md/README.md standalone identity updates
+- [ ] 16-02-PLAN.md -- verify.sh review command fix + final verification pass
 
 ## Progress
 
@@ -305,4 +309,4 @@ Wave 3: [Phase 16]                          (needs all)
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 14. Audit Swarm | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 15. Hardening | v1.2 | 2/2 | Complete | 2026-03-08 |
-| 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
+| 16. Integration & Polish | v1.2 | 0/2 | In Progress | - |
