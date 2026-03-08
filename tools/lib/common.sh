@@ -92,6 +92,7 @@ skippy_suggest() {
 
 # --- Section header ---
 skippy_section() {
+    : "${1:?skippy_section requires a section name}"
     echo -e "\n${_SKIPPY_BOLD}=== $1 ===${_SKIPPY_RESET}"
 }
 
