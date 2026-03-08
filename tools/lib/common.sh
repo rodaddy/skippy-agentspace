@@ -20,9 +20,10 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 # --- Counter initialization ---
-SKIPPY_PASS=0
-SKIPPY_WARN=0
-SKIPPY_FAIL=0
+# Use :- so re-sourcing in bats test harnesses doesn't reset counters mid-test.
+SKIPPY_PASS=${SKIPPY_PASS:-0}
+SKIPPY_WARN=${SKIPPY_WARN:-0}
+SKIPPY_FAIL=${SKIPPY_FAIL:-0}
 
 # --- ANSI colors ---
 _SKIPPY_GREEN='\033[0;32m'
@@ -67,21 +68,25 @@ skippy_repo_root() {
 
 # --- Output helpers ---
 skippy_pass() {
+    : "${1:?skippy_pass requires a message argument}"
     echo -e "  ${_SKIPPY_GREEN}PASS:${_SKIPPY_RESET} $1"
     SKIPPY_PASS=$((SKIPPY_PASS + 1))
 }
 
 skippy_warn() {
+    : "${1:?skippy_warn requires a message argument}"
     echo -e "  ${_SKIPPY_YELLOW}WARN:${_SKIPPY_RESET} $1"
     SKIPPY_WARN=$((SKIPPY_WARN + 1))
 }
 
 skippy_fail() {
+    : "${1:?skippy_fail requires a message argument}"
     echo -e "  ${_SKIPPY_RED}FAIL:${_SKIPPY_RESET} $1"
     SKIPPY_FAIL=$((SKIPPY_FAIL + 1))
 }
 
 skippy_suggest() {
+    : "${1:?skippy_suggest requires a message argument}"
     echo -e "    ${_SKIPPY_CYAN}Fix:${_SKIPPY_RESET} $1"
 }
 
