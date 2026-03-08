@@ -14,7 +14,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:reconcile, /skippy:update |
+| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update |
 
 ## Plugin Distribution
 
