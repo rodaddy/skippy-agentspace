@@ -190,7 +190,11 @@ Plans:
   3. No skill scripts (`skills/*/scripts/*.sh`) source `common.sh` -- they remain standalone per portability constraint
   4. `.gitattributes` marks `.planning/` and other dev-only paths as `export-ignore`
   5. `bats tests/common-lib.bats` passes (if tests exist from Phase 12; otherwise manual verification)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 11-01-PLAN.md -- Create tools/lib/common.sh shared library + .gitattributes
+- [ ] 11-02-PLAN.md -- Migrate all 6 tools/ scripts to source common.sh
 
 ### Phase 12: Testing
 **Goal**: Establish a bats-core test suite with ~30 test cases covering all tool scripts, running in sandboxed HOME isolation
@@ -276,7 +280,7 @@ Wave 3: [Phase 16]                          (needs all)
 | 8. Upstream Analysis | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
-| 11. Foundation | v1.2 | 0/0 | Planned | - |
+| 11. Foundation | v1.2 | 0/2 | Planned | - |
 | 12. Testing | v1.2 | 0/0 | Planned | - |
 | 13. GSD Pattern Absorption | v1.2 | 0/0 | Planned | - |
 | 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
