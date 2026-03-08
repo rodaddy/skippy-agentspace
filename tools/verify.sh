@@ -146,6 +146,15 @@ fi
 settings_file="$HOME/.claude/settings.json"
 if [ -f "$settings_file" ]; then
     if command -v bun >/dev/null 2>&1; then
+        # Derive expected hook count from manifest instead of hardcoding
+        manifest_file="$REPO_ROOT/skills/core/hooks/manifest.json"
+        if [ -f "$manifest_file" ]; then
+            expected_hooks="$(bun -e "const m = JSON.parse(require('fs').readFileSync('$manifest_file','utf-8')); console.log(m.hooks.length)" 2>/dev/null || echo "0")"
+        else
+            expected_hooks="0"
+            warn "hooks manifest not found at $manifest_file"
+        fi
+
         pai_hook_count="$(bun -e "
             const fs = require('fs');
             const s = JSON.parse(fs.readFileSync('$settings_file', 'utf-8'));
@@ -160,13 +169,13 @@ if [ -f "$settings_file" ]; then
             console.log(c);
         " 2>/dev/null || echo "0")"
 
-        if [ "$pai_hook_count" = "15" ]; then
-            pass "all 15 PAI hooks registered in settings.json"
+        if [ "$pai_hook_count" = "$expected_hooks" ] && [ "$expected_hooks" != "0" ]; then
+            pass "all $expected_hooks PAI hooks registered in settings.json"
         elif [ "$pai_hook_count" = "0" ]; then
             warn "no PAI hooks found in settings.json"
             suggest "Run: bash skills/core/hooks/install-hooks.sh"
         else
-            warn "partial PAI hook registration ($pai_hook_count/15)"
+            warn "partial PAI hook registration ($pai_hook_count/$expected_hooks)"
             suggest "Re-run: bash skills/core/hooks/install-hooks.sh"
         fi
     else
@@ -189,7 +198,7 @@ echo "=== Commands ==="
 skippy_dev_dir="$SKILLS_DIR/skippy-dev"
 if [ -d "$skippy_dev_dir" ]; then
     # Check each expected command file
-    for cmd_name in reconcile update cleanup migrate; do
+    for cmd_name in reconcile update cleanup migrate upgrade; do
         cmd_file="$skippy_dev_dir/commands/${cmd_name}.md"
         if [ -f "$cmd_file" ]; then
             pass "command: /skippy:${cmd_name}"

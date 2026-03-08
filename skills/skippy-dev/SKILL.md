@@ -74,6 +74,20 @@ Manage ephemeral files (debug logs, telemetry, session history).
 2. Default is `--quarantine` (moves to a configurable quarantine directory)
 3. Reports space freed
 
+### `/skippy:upgrade`
+
+Upgrade skippy-agentspace to latest version preserving customizations.
+
+**Workflow:**
+
+1. Snapshot current state (installed skills, hook count, HEAD commit)
+2. Pull latest from origin
+3. Re-install all skills and hooks (`tools/install.sh --all`, `skills/core/hooks/install-hooks.sh`)
+4. Run `tools/verify.sh` and compare against pre-upgrade snapshot
+5. Report changes, new/removed skills, and any customization conflicts
+
+No auto-resolve -- presents options and lets the user decide.
+
 ## For Agents
 
 When spawning GSD agents (planner, executor, verifier), you can enhance their prompts:
