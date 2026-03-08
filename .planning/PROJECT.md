@@ -94,11 +94,11 @@ Three approaches were considered:
 
 | Approach | Pros | Cons |
 |----------|------|------|
-| **PAI Skill + Hooks** (chosen) | No forks, modular, zero upstream maintenance | Parasitic on GSD |
+| **PAI Skill + Hooks** (chosen) | No forks, modular, zero upstream maintenance | Derived from GSD patterns |
 | Full Skippy Framework | Full control, unified commands | Massive maintenance, diverges from both upstreams |
 | Just Patch GSD | 30 minutes of work | No update mechanism, per-project, coupled to GSD internals |
 
-We chose the parasitic approach: keep GSD unchanged, inject PAUL's ideas as reference docs that GSD agents can load on demand, and add utility commands for reconciliation, upstream monitoring, and cleanup.
+We chose the portable skill repo approach: standalone execution with source attribution to GSD and PAUL, plus utility commands for reconciliation, upstream monitoring, and cleanup.
 
 ### Relationship to PAI
 
@@ -123,7 +123,7 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-de
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Parasitic skill over fork | Zero maintenance, modular, upgradeable | -- Pending |
+| Portable skill repo over fork | Zero maintenance, modular, upgradeable | -- Pending |
 | Reference docs over hooks | Hooks can't detect context usage; rules are self-enforced | -- Pending |
 | Shell scripts for tooling | No build step, no dependencies, portable | -- Pending |
 | Quarantine before delete for cleanup | Safer -- verify nothing breaks before nuking | -- Pending |

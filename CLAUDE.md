@@ -23,7 +23,7 @@ On 2026-03-06, we analyzed the [PAUL framework](https://github.com/ChristopherKa
 |---|-------------|-------------|-----------|
 | 1 | Context Brackets | Self-monitor context window usage (FRESH/MODERATE/DEEP/CRITICAL) and adapt behavior | `references/context-brackets.md` |
 | 2 | Mandatory Reconciliation | Plan-vs-actual comparison after every phase -- what deviated and why | `references/reconciliation.md` |
-| 3 | Task Anatomy | 4 required fields per task: files, action, verify, done | `references/task-anatomy.md` |
+| 3 | Plan Structure | Plan format with task fields: files, action, verify, done | `references/plan-structure.md` |
 | 4 | Plan Boundaries | Explicit DO NOT CHANGE and SCOPE LIMITS in every plan | `references/plan-boundaries.md` |
 | 5 | State Consistency | Cross-file alignment verification at phase transitions | `references/state-consistency.md` |
 
@@ -36,7 +36,7 @@ On 2026-03-06, we analyzed the [PAUL framework](https://github.com/ChristopherKa
 
 ## Architecture
 
-Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, inject PAUL's ideas as reference docs.
+Three approaches evaluated. We chose **portable skill repo** -- standalone execution with source attribution to GSD and PAUL.
 
 | Approach | Why Chosen / Rejected |
 |----------|----------------------|
@@ -75,7 +75,7 @@ INDEX.md                    # Auto-generated skill registry (4 category sections
 
 | Command | What It Does |
 |---------|-------------|
-| `/skippy:reconcile` | Compare planned vs actual for the most recent GSD phase -- reports deviations, flags state drift |
+| `/skippy:reconcile` | Compare planned vs actual for the most recent phase -- reports deviations, flags state drift |
 | `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
 | `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
 | `/skippy:migrate` | Migrate PAI skills to portable format -- scan, rank, dry-run, migrate, update integration |
@@ -102,7 +102,7 @@ cd skippy-agentspace
 
 | Repo | What It Is | What We Take |
 |------|-----------|-------------|
-| [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | Phased execution framework for Claude Code | Base infrastructure -- we augment, never modify |
+| [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | Phased execution framework for Claude Code | Historical source of phased execution patterns |
 | [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | Plan-Apply-Unify Loop framework | 5 enhancement ideas (see table above) |
 | [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | Claude Code plugin framework (hooks, state, modes) | Plugin infrastructure, hooks system, state management |
 
@@ -113,7 +113,7 @@ Monitor for upstream changes: `/skippy:update`
 - **Portability**: Every skill works with vanilla Claude Code. PAI enhancements optional.
 - **Self-contained**: No cross-skill imports. Each skill is a standalone directory.
 - **No build step**: Shell scripts + markdown only. No TypeScript/Node dependencies.
-- **No GSD modification**: All enhancements are additive references, never patches.
+- **No GSD dependency**: Standalone execution with historical source attribution.
 - **Stack**: `#!/usr/bin/env bash` for scripts. Markdown for rules/references.
 
 ## Project Status
