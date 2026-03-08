@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
 status: completed
-stopped_at: Phase 11 complete, audit fixes applied (PR #7)
-last_updated: "2026-03-08T21:00:00.000Z"
-last_activity: 2026-03-08 -- Phase 11 complete + 3-round audit (23 agents, 17 findings fixed)
+stopped_at: Completed 15-02-PLAN.md (Phase 15 complete)
+last_updated: "2026-03-08T21:50:11.422Z"
+last_activity: 2026-03-08 -- Phase 15 Plan 02 complete (bump-version.sh version automation)
 progress:
   total_phases: 16
-  completed_phases: 11
-  total_plans: 27
-  completed_plans: 27
+  completed_phases: 15
+  total_plans: 37
+  completed_plans: 37
   percent: 100
 ---
 
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 11 complete, Phase 12 next
+**Current focus:** v1.2 Standalone Skippy -- Phase 15 Hardening complete (all phases done)
 
 ## Current Position
 
-Phase: 11-foundation (complete, audited)
-Plan: 2 of 2
-Status: Phase 11 complete -- 3-round audit with 23 agents, 17 findings, all fixed
-Last activity: 2026-03-08 -- Phase 11 audit fixes applied (PR #7)
+Phase: 15-hardening (complete)
+Plan: 2 of 2 complete
+Status: Phase 15 complete -- all hardening plans done
+Last activity: 2026-03-08 -- Phase 15 Plan 02 complete (bump-version.sh version automation)
 
 Progress: [██████████] 100%
 
-**Next step:** Begin Phase 12 planning
+**Next step:** v1.2 milestone wrap-up
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 27 (v1.0 + v1.1 + Phase 11)
+- Total plans completed: 37 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 + Phase 14 + Phase 15)
 - Average duration: --
 - Total execution time: --
 
@@ -57,10 +57,16 @@ Progress: [██████████] 100%
 | Phase | Plans | Duration | Files |
 |-------|-------|----------|-------|
 | 11. Foundation | 2/2 | 6min | 8 |
+| 13. GSD Absorption | 3/3 | 11min | 21 |
+| 12. Testing | 3/3 | 7min | 12 |
+| 14. Audit Swarm | 2/2 | 4min | 11 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
 - v1.1 completed all 16 plans across 6 phases
+| Phase 14 P02 | 2min | 2 tasks | 4 files |
+| Phase 15 P01 | 4min | 2 tasks | 7 files |
+| Phase 15 P02 | 4min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -103,6 +109,30 @@ Recent decisions affecting current work:
 - [11-02]: prereqs.sh keeps own exit-code logic -- skippy_summary not used due to interactive install-prompt flow
 - [11-02]: Minimal vs full fallback stubs -- heavy scripts get all functions, light scripts get only what they need
 - [11-02]: Fallback stubs use $0 for path derivation -- BASH_SOURCE context differs in inline fallback
+- [13-01]: Deviation rules in plan-structure.md (execution context), cross-ref from checkpoints.md for Rule 1
+- [13-01]: Markdown+YAML task format as skippy's canonical spec, superseding XML task blocks and task-anatomy.md
+- [13-02]: Manual YAML parsing over gray-matter dependency -- simple structures don't justify external deps
+- [13-02]: Dual-mode skippy-state.ts (importable library + CLI with subcommands) via import.meta.main guard
+- [13-03]: Source attribution footers restructured to "Adapted from GSD" phrasing -- credit without dependency language
+- [13-03]: 3 additional skills/core/ files cleaned beyond planned 8 reference docs to satisfy full skills/ grep scan
+- [12-01]: Load paths in test helper use test_helper/ prefix -- bats resolves relative to .bats file, not the helper
+- [12-01]: 10 tests instead of planned 8 -- added SKIPPY_ROOT fallback and color-disable tests for completeness
+- [12-02]: Used skippy-dev instead of core for --target=commands test -- core has no commands/ subdirectory
+- [12-03]: Teardown restore pattern for index-sync tests -- backup/restore INDEX.md to avoid corrupting real file
+- [12-03]: Skip validate-hooks --full mode tests -- complex hook install/uninstall already tested by the script itself
+- [12-03]: brew install bun in CI -- ensures hook validation tests that need bun actually run
+- [14-01]: Reviewers + eval use permissionMode: plan (read-only); fix agent uses bypassPermissions with worktree isolation
+- [14-01]: Architecture reviewer gets opus model (HIGH complexity); all others use sonnet (MEDIUM)
+- [14-01]: 3-layer sandbox protocol: HOME override, worktree isolation, tool restrictions as defense-in-depth
+- [14-01]: Sequential reviewer spawning over parallel to prevent context overflow and findings board write conflicts
+- [14-02]: Command follows established reconcile.md pattern (YAML frontmatter + objective + execution_context + process)
+- [14-02]: 8-step process mirrors audit-swarm.md orchestration flow exactly -- no divergence between reference doc and command
+- [15-01]: config.env.example with empty defaults -- users copy to config.env (gitignored) and fill in values
+- [15-01]: SCRIPT_DIR-relative path to config.env for portability; :? parameter expansion for required variable validation
+- [14-02]: INDEX.md regenerated via index-sync.sh rather than manual edit for consistency
+- [Phase 15]: Portable _sed_inplace helper detects GNU vs BSD sed at runtime
+- [Phase 15]: grep -F (fixed string) for post-bump verification to avoid regex false positives
+- [Phase 15]: Subshell grep with || true for pipefail-safe zero-match counting
 
 ### Pending Todos
 
@@ -114,6 +144,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T21:00:00Z
-Stopped at: Phase 11 complete + audit fixes (PR #7)
-Resume file: Begin Phase 12 planning (bats-core test suite)
+Last session: 2026-03-08T21:20:39.323Z
+Stopped at: Completed 15-02-PLAN.md
+Resume file: None

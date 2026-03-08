@@ -108,6 +108,20 @@ skippy_summary() {
     return 0
 }
 
+# --- Input validation ---
+# Validates a skill name: must be non-empty, no path separators, no leading dot.
+skippy_validate_skill_name() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Error: Skill name cannot be empty" >&2
+        return 1
+    fi
+    if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
+        echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
+        return 1
+    fi
+}
+
 # --- Install detection ---
 # Returns 0 if skill is installed (symlink exists), 1 otherwise.
 skippy_is_installed() {

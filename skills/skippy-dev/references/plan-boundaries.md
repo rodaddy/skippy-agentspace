@@ -1,10 +1,10 @@
 # Plan Boundaries -- Scope Protection
 
-Adapted from PAUL's scope management. Every GSD plan should declare what it will NOT touch. Boundaries are hard constraints, not suggestions.
+Adapted from PAUL's scope management. Every plan should declare what it will NOT touch. Boundaries are hard constraints, not suggestions.
 
 ## Template
 
-Add a `## Boundaries` section to every PLAN.md:
+Add a `## Boundaries` section to every PLAN.md (see `plan-structure.md` for the full plan format):
 
 ```markdown
 ## Boundaries
@@ -57,17 +57,21 @@ Boundaries are self-enforced by agents reading the plan. No hooks required. The 
 
 ## Integration Prompt
 
-When spawning a gsd-planner agent, add:
+When spawning a planner agent, add:
 
 ```
 Include a ## Boundaries section in the plan with DO NOT CHANGE (protected files)
 and SCOPE LIMITS (what's explicitly out of scope for this phase).
 ```
 
-When spawning a gsd-executor agent, add:
+When spawning an executor agent, add:
 
 ```
 Before modifying any file, check the plan's ## Boundaries section. If the file
 is listed under DO NOT CHANGE, stop and report the conflict. If the work crosses
 a SCOPE LIMIT, note it as future work and skip it.
 ```
+
+---
+*Source: Adapted from PAUL scope management*
+*Last reviewed: 2026-03-08*

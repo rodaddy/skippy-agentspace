@@ -1,23 +1,23 @@
 # Session Persistence -- Best-of-Breed Synthesis
 
-Tiered state persistence matching urgency to storage strategy. Synthesized from OMC and GSD.
+Tiered state persistence matching urgency to storage strategy. Synthesized from OMC and phased execution patterns.
 
 ## Source Upstreams
 
 | Upstream | Implementation | Strength | Weakness |
 |----------|---------------|----------|----------|
 | OMC | `.omc/notepad.md` with three tiers: Priority Context (always loaded, 500 char limit), Working Memory (timestamped, auto-pruned after 7 days), Manual (never pruned) | Tiered urgency with automatic lifecycle management, compaction-resilient | Requires MCP tools (`state_write`, `notepad_write`), OMC-specific file paths |
-| GSD | `.planning/STATE.md` -- git-tracked markdown with position, decisions, blockers, metrics | Persistent across sessions, version-controlled, human-readable, portable | Flat structure -- no urgency tiers, no auto-pruning, grows unbounded |
+| Phased Execution | `.planning/STATE.md` -- git-tracked markdown with position, decisions, blockers, metrics | Persistent across sessions, version-controlled, human-readable, portable | Flat structure -- no urgency tiers, no auto-pruning, grows unbounded |
 
 ## Why This Version
 
-GSD's STATE.md is the right persistence MECHANISM -- git-tracked, portable, no MCP dependency, works with vanilla Claude Code. But it treats all state as equally important, which wastes context when loading it. OMC's contribution is the CONCEPT of tiered urgency: not all state deserves equal attention at session start. This synthesis applies OMC's three-tier mental model to GSD's existing artifact structure, without adding new files or tools.
+STATE.md is the right persistence MECHANISM -- git-tracked, portable, no MCP dependency, works with vanilla Claude Code. But it treats all state as equally important, which wastes context when loading it. OMC's contribution is the CONCEPT of tiered urgency: not all state deserves equal attention at session start. This synthesis applies OMC's three-tier mental model to the existing artifact structure, without adding new files or tools.
 
 ## The Pattern
 
 ### Three Tiers of Persistence
 
-| Tier | Purpose | GSD Artifact | Load When | Lifecycle |
+| Tier | Purpose | Artifact | Load When | Lifecycle |
 |------|---------|-------------|-----------|-----------|
 | **Priority** | Critical facts needed every session | STATE.md "Current Position" section | Always -- first thing loaded | Updated each session, never pruned |
 | **Working** | Active investigation context, recent decisions | STATE.md "Accumulated Context" + SUMMARY.md files | When resuming work on that phase | Pruned when phase completes or becomes stale |
@@ -63,9 +63,9 @@ Adapt loading behavior based on context depth (see `context-brackets.md`):
 
 ## Integration Points
 
-- **GSD session start:** Load STATE.md Priority tier (Current Position section) immediately. Load Working tier if resuming active work.
-- **GSD session end:** Update STATE.md Priority tier with final position. Prune stale Working entries.
-- **GSD phase transitions:** Graduate Working context to Reference (captured in SUMMARY.md). Reset Working tier for new phase.
+- **Session start:** Load STATE.md Priority tier (Current Position section) immediately. Load Working tier if resuming active work.
+- **Session end:** Update STATE.md Priority tier with final position. Prune stale Working entries.
+- **Phase transitions:** Graduate Working context to Reference (captured in SUMMARY.md). Reset Working tier for new phase.
 - **Context brackets:** Tier loading adapts based on current bracket depth.
 
 ## When to Apply
@@ -77,5 +77,5 @@ Adapt loading behavior based on context depth (see `context-brackets.md`):
 - NOT a replacement for STATE.md -- this is a mental model for HOW to use STATE.md effectively
 
 ---
-*Sources: OMC `skills/note/SKILL.md`, GSD `.planning/STATE.md` conventions*
+*Sources: OMC `skills/note/SKILL.md`. Adapted from GSD `.planning/STATE.md` conventions.*
 *Last reviewed: 2026-03-07*

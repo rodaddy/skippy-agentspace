@@ -69,33 +69,33 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 
 ### Testing
 
-- [ ] **TEST-01**: bats-core test suite with ~30 test cases covering install/uninstall/verify/index-sync
-- [ ] **TEST-02**: All tests run in sandboxed `HOME` (never touch real `~/.claude/`)
-- [ ] **TEST-03**: Test runner integrable with CI (TAP output, exit codes)
+- [x] **TEST-01**: bats-core test suite with ~30 test cases covering install/uninstall/verify/index-sync
+- [x] **TEST-02**: All tests run in sandboxed `HOME` (never touch real `~/.claude/`)
+- [x] **TEST-03**: Test runner integrable with CI (TAP output, exit codes)
 
 ### GSD Absorption
 
-- [ ] **ABSORB-01**: Reference docs absorb GSD phased execution pattern (plan -> execute -> verify cycle)
-- [ ] **ABSORB-02**: Reference docs absorb GSD state tracking pattern (STATE.md, progress, position)
-- [ ] **ABSORB-03**: Reference docs absorb GSD plan structure (frontmatter, tasks, verification criteria)
-- [ ] **ABSORB-04**: Reference docs absorb GSD wave-based parallel execution and checkpoint handling
-- [ ] **ABSORB-05**: Reference docs absorb GSD verification loops (VERIFICATION.md, must_haves, gap closure)
-- [ ] **ABSORB-06**: All "requires GSD" mentions removed from docs and commands
-- [ ] **ABSORB-07**: `/skippy:reconcile` works against any `.planning/` structure, not just GSD's
+- [x] **ABSORB-01**: Reference docs absorb GSD phased execution pattern (plan -> execute -> verify cycle)
+- [x] **ABSORB-02**: Reference docs absorb GSD state tracking pattern (STATE.md, progress, position)
+- [x] **ABSORB-03**: Reference docs absorb GSD plan structure (frontmatter, tasks, verification criteria)
+- [x] **ABSORB-04**: Reference docs absorb GSD wave-based parallel execution and checkpoint handling
+- [x] **ABSORB-05**: Reference docs absorb GSD verification loops (VERIFICATION.md, must_haves, gap closure)
+- [x] **ABSORB-06**: All "requires GSD" mentions removed from docs and commands
+- [x] **ABSORB-07**: `/skippy:reconcile` works against any `.planning/` structure, not just GSD's
 
 ### Audit Swarm
 
-- [ ] **SWARM-01**: `/skippy:review` command spawns 4 specialist review agents (security, code quality, architecture, consistency)
-- [ ] **SWARM-02**: Shared findings board aggregates results with cross-references
-- [ ] **SWARM-03**: Fix agents address actionable findings with atomic commits
-- [ ] **SWARM-04**: Re-evaluation loop verifies fixes and finds regressions
-- [ ] **SWARM-05**: All swarm testing runs in sandboxed HOME with backup-restore
+- [x] **SWARM-01**: `/skippy:review` command spawns 4 specialist review agents (security, code quality, architecture, consistency)
+- [x] **SWARM-02**: Shared findings board aggregates results with cross-references
+- [x] **SWARM-03**: Fix agents address actionable findings with atomic commits
+- [x] **SWARM-04**: Re-evaluation loop verifies fixes and finds regressions
+- [x] **SWARM-05**: All swarm testing runs in sandboxed HOME with backup-restore
 
 ### Hardening
 
-- [ ] **HARD-01**: deploy-service uses shell-sourceable `config.env` with validation (replaces 9 hardcoded placeholders)
-- [ ] **HARD-02**: Version bump script updates VERSION file + all 25 version locations across 13 files
-- [ ] **HARD-03**: `config.env.example` committed, `config.env` gitignored
+- [x] **HARD-01**: deploy-service uses shell-sourceable `config.env` with validation (replaces 9 hardcoded placeholders)
+- [x] **HARD-02**: Version bump script updates VERSION file + all 25 version locations across 13 files
+- [x] **HARD-03**: `config.env.example` committed, `config.env` gitignored
 
 ## v2 Requirements
 
@@ -179,24 +179,24 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-01 | Phase 11 | Complete |
 | FOUND-02 | Phase 11 | Complete |
 | FOUND-03 | Phase 16 | Pending |
-| TEST-01 | Phase 12 | Pending |
-| TEST-02 | Phase 12 | Pending |
-| TEST-03 | Phase 12 | Pending |
-| ABSORB-01 | Phase 13 | Pending |
-| ABSORB-02 | Phase 13 | Pending |
-| ABSORB-03 | Phase 13 | Pending |
-| ABSORB-04 | Phase 13 | Pending |
-| ABSORB-05 | Phase 13 | Pending |
-| ABSORB-06 | Phase 13 | Pending |
-| ABSORB-07 | Phase 13 | Pending |
-| SWARM-01 | Phase 14 | Pending |
-| SWARM-02 | Phase 14 | Pending |
-| SWARM-03 | Phase 14 | Pending |
-| SWARM-04 | Phase 14 | Pending |
-| SWARM-05 | Phase 14 | Pending |
-| HARD-01 | Phase 15 | Pending |
-| HARD-02 | Phase 15 | Pending |
-| HARD-03 | Phase 15 | Pending |
+| TEST-01 | Phase 12 | Complete |
+| TEST-02 | Phase 12 | Complete |
+| TEST-03 | Phase 12 | Complete |
+| ABSORB-01 | Phase 13 | Complete |
+| ABSORB-02 | Phase 13 | Complete |
+| ABSORB-03 | Phase 13 | Complete |
+| ABSORB-04 | Phase 13 | Complete |
+| ABSORB-05 | Phase 13 | Complete |
+| ABSORB-06 | Phase 13 | Complete |
+| ABSORB-07 | Phase 13 | Complete |
+| SWARM-01 | Phase 14 | Complete |
+| SWARM-02 | Phase 14 | Complete |
+| SWARM-03 | Phase 14 | Complete |
+| SWARM-04 | Phase 14 | Complete |
+| SWARM-05 | Phase 14 | Complete |
+| HARD-01 | Phase 15 | Complete |
+| HARD-02 | Phase 15 | Complete |
+| HARD-03 | Phase 15 | Complete |
 
 **Coverage:**
 - v1.0 requirements: 11 total (all validated)

@@ -22,7 +22,7 @@ How each upstream ensures work is correct after execution.
 | PAUL | Verification protocol with explicit pass/fail criteria per task | Clear success criteria defined upfront, testable | No automation -- relies on manual checking against criteria |
 | OMC | UltraQA -- autonomous cycling (test-diagnose-fix-repeat, max 5 iterations) with architect diagnosis and same-failure detection | Automated cycling with early exit on repeated failures, multi-agent diagnosis (qa-tester + architect + executor) | Heavy runtime dependency on OMC's agent infrastructure |
 
-**Recommendation:** Synthesize all three. Use PAUL's explicit criteria (already captured in `task-anatomy.md`) to define what "pass" means, GSD's phase-tied execution as the trigger point, and OMC's cycling concept (bounded iterations, same-failure early exit) as the verification loop strategy. The key insight from OMC: verification should CYCLE rather than single-pass, with a hard cap (5 iterations) and duplicate-failure detection to avoid infinite loops.
+**Recommendation:** Synthesize all three. Use PAUL's explicit criteria (already captured in `plan-structure.md`) to define what "pass" means, GSD's phase-tied execution as the trigger point, and OMC's cycling concept (bounded iterations, same-failure early exit) as the verification loop strategy. The key insight from OMC: verification should CYCLE rather than single-pass, with a hard cap (5 iterations) and duplicate-failure detection to avoid infinite loops.
 
 **Reference doc:** `verification-loops.md` (Plan 02, HIGH priority)
 
@@ -54,7 +54,7 @@ How each upstream ensures plan quality before execution begins.
 | PAUL | Plan format with explicit fields (scope, boundaries, DO NOT CHANGE sections) | Structured requirements prevent scope creep, clear boundaries | No multi-agent review, no iteration on feedback |
 | OMC | Ralplan -- Planner + Architect + Critic consensus (max 5 iterations) with RALPLAN-DR structured deliberation (Principles, Decision Drivers, Viable Options, ADR output) | Multi-perspective review, bounded iteration, structured output with ADR, deliberate mode for high-risk work | Heavy -- overkill for small tasks, requires OMC agent infrastructure |
 
-**Recommendation:** Synthesize PAUL's structured fields (already in `task-anatomy.md` and `plan-boundaries.md`) with OMC's multi-perspective deliberation concept. The key insight from OMC is not the 3-agent runtime (we don't need that) but the RALPLAN-DR structure: defining Principles, Decision Drivers, and Viable Options before committing to a plan. This can enhance GSD's plan-check by giving the checker agent a structured deliberation framework to evaluate against, rather than freeform review.
+**Recommendation:** Synthesize PAUL's structured fields (already in `plan-structure.md` and `plan-boundaries.md`) with OMC's multi-perspective deliberation concept. The key insight from OMC is not the 3-agent runtime (we don't need that) but the RALPLAN-DR structure: defining Principles, Decision Drivers, and Viable Options before committing to a plan. This can enhance GSD's plan-check by giving the checker agent a structured deliberation framework to evaluate against, rather than freeform review.
 
 **Reference doc:** `structured-deliberation.md` (Plan 02, MEDIUM priority)
 

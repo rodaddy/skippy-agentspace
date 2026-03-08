@@ -65,7 +65,7 @@ Each upstream is a directory under `upstreams/` containing an `upstream.json` fi
   "last_checked_sha": "none",
   "last_check": "never",
   "cherry_picks": [],
-  "notes": "Base infrastructure -- we augment, never modify"
+  "notes": "Historical source of phased execution patterns"
 }
 ```
 

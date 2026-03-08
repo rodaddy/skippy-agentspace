@@ -33,10 +33,10 @@
 ### v1.2 Standalone Skippy
 
 - [x] **Phase 11: Foundation** - Shared shell library and repo hygiene (.gitattributes) (completed 2026-03-08)
-- [ ] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation
-- [ ] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns
-- [ ] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command
-- [ ] **Phase 15: Hardening** - deploy-service config mechanism and version management
+- [x] **Phase 12: Testing** - bats-core test suite with sandboxed HOME isolation (completed 2026-03-08)
+- [x] **Phase 13: GSD Pattern Absorption** - Reference docs for standalone execution patterns (completed 2026-03-08)
+- [x] **Phase 14: Audit Swarm** - `/skippy:review` multi-agent review command (completed 2026-03-08)
+- [x] **Phase 15: Hardening** - deploy-service config mechanism and version management (completed 2026-03-08)
 - [ ] **Phase 16: Integration & Polish** - Final verification, doc consistency, CONTRIBUTING.md
 
 ## Phase Details
@@ -206,19 +206,31 @@ Plans:
   3. Test helper at `tests/test_helper/common.bash` loads bats-support and bats-assert
   4. CI workflow at `.github/workflows/test.yml` runs tests on macOS runner
   5. All tests pass on a clean clone (no pre-existing installation required)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [x] 12-01-PLAN.md -- bats submodules + test helper + common-lib.bats tests (completed 2026-03-08)
+- [x] 12-02-PLAN.md -- install.bats + uninstall.bats tests (safety-critical scripts) (completed 2026-03-08)
+- [x] 12-03-PLAN.md -- verify.bats + index-sync.bats + validate-hooks.bats + CI workflow (completed 2026-03-08)
 
 ### Phase 13: GSD Pattern Absorption
-**Goal**: Absorb GSD's core execution patterns as standalone skippy reference docs, removing all runtime dependency on GSD
+**Goal**: Absorb GSD's core execution patterns as 4 standalone skippy reference docs, update reconcile to parse skippy's own format, and remove all GSD dependency language from distributed content
 **Depends on**: Phase 10 (v1.1 complete -- no dependency on Phases 11-12)
 **Requirements**: ABSORB-01, ABSORB-02, ABSORB-03, ABSORB-04, ABSORB-05, ABSORB-06, ABSORB-07
 **Success Criteria** (what must be TRUE):
-  1. Five new reference docs exist under `skills/skippy-dev/references/`: `phased-execution.md`, `state-tracking.md`, `plan-structure.md`, `wave-parallelism.md`, `checkpoints.md`
-  2. Each reference doc is a standalone skippy specification -- no "requires GSD" language, no references to `gsd-tools.cjs`
-  3. `grep -r "requires GSD\|gsd-tools" skills/ tools/` returns zero matches (excluding gsd-dependency-map.md historical notes)
-  4. `/skippy:reconcile` works against any `.planning/` directory following skippy's own format specification
-  5. `gsd-dependency-map.md` updated with header noting format absorption -- risks reframed as "format drift" not "GSD dependency"
-**Plans**: TBD
+  1. Four new reference docs exist under `skills/skippy-dev/references/`: `phased-execution.md`, `state-tracking.md`, `plan-structure.md`, `checkpoints.md` (wave-parallelism folded into phased-execution.md per user decision)
+  2. Each reference doc is a standalone skippy specification -- no "requires GSD" language, source credit footers only
+  3. `grep -rn "requires GSD\|gsd-tools\|gsd-executor\|gsd-verifier\|gsd-planner" skills/ --include="*.md"` returns zero matches
+  4. `/skippy:reconcile` parses skippy's markdown+YAML task format (not XML)
+  5. `task-anatomy.md` deleted (content absorbed into `plan-structure.md`)
+  6. `gsd-dependency-map.md` deleted (content absorbed into 4 new reference docs)
+  7. PROJECT.md constraint updated to allow bun/TypeScript for structured data operations
+**Plans**: 3 plans
+
+Plans:
+- [x] 13-01-PLAN.md -- Create 4 standalone reference docs (phased-execution, state-tracking, plan-structure, checkpoints) (completed 2026-03-08)
+- [x] 13-02-PLAN.md -- Create skippy-state.ts parser + update reconcile.md for markdown task format (completed 2026-03-08)
+- [x] 13-03-PLAN.md -- GSD language cleanup across 8 reference docs, SKILL.md update, PROJECT.md update, delete superseded files (completed 2026-03-08)
 
 ### Phase 14: Audit Swarm
 **Goal**: Implement `/skippy:review` as a multi-agent audit command that spawns specialist review agents with sandboxed execution
@@ -230,7 +242,11 @@ Plans:
   3. A shared findings board (markdown file) aggregates results with severity ratings and cross-references
   4. Fix agents apply changes via atomic commits, and an evaluator agent verifies fixes and checks for regressions
   5. All agent execution overrides `$HOME` to a temp directory -- no agent touches real `~/.claude/` (learned from 71-skill nuke incident)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [x] 14-01-PLAN.md -- Agent definitions (6 subagents) + audit-swarm.md reference doc (completed 2026-03-08)
+- [x] 14-02-PLAN.md -- /skippy:review command + SKILL.md, INDEX.md, CLAUDE.md integration (completed 2026-03-08)
 
 ### Phase 15: Hardening
 **Goal**: Replace hardcoded placeholders in deploy-service with a config mechanism, and add version bump automation
@@ -242,7 +258,11 @@ Plans:
   3. `tools/bump-version.sh` reads current version from `marketplace.json`, accepts `--patch`/`--minor`/`--major`/`--dry-run`, and updates all 25 version locations across 13 files
   4. Running `bump-version.sh --dry-run --patch` shows all files that would change without modifying anything
   5. After a real bump, `grep -r "old-version" .claude-plugin/ skills/*/SKILL.md` returns zero matches
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [x] 15-01-PLAN.md -- deploy-service config.env mechanism (HARD-01, HARD-03) (completed 2026-03-08)
+- [x] 15-02-PLAN.md -- bump-version.sh version automation (HARD-02) (completed 2026-03-08)
 
 ### Phase 16: Integration & Polish
 **Goal**: Final verification pass, documentation consistency, and README updates reflecting "Skippy IS the framework"
@@ -281,8 +301,8 @@ Wave 3: [Phase 16]                          (needs all)
 | 9. Skill System | v1.1 | 3/3 | Complete | 2026-03-08 |
 | 10. Bootstrap & Docs | v1.1 | 2/2 | Complete | 2026-03-08 |
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
-| 12. Testing | v1.2 | 0/0 | Planned | - |
-| 13. GSD Pattern Absorption | v1.2 | 0/0 | Planned | - |
-| 14. Audit Swarm | v1.2 | 0/0 | Planned | - |
-| 15. Hardening | v1.2 | 0/0 | Planned | - |
+| 12. Testing | v1.2 | 3/3 | Complete | 2026-03-08 |
+| 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
+| 14. Audit Swarm | v1.2 | 2/2 | Complete | 2026-03-08 |
+| 15. Hardening | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |

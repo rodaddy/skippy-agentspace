@@ -83,7 +83,7 @@ The uninstaller removes only hooks matching BOTH:
 1. Command path contains `skills/core/hooks/` (identifier)
 2. Script name matches an entry in `manifest.json` (cross-reference)
 
-This double-check strategy ensures GSD, OMC, and other hooks are never touched.
+This double-check strategy ensures existing hooks from other frameworks are never touched.
 
 ## Verify Installation
 

@@ -33,7 +33,7 @@ Run `/clear` in Claude Code to pick up new skills.
 After install, try these in any project with Claude Code:
 - `/check-todos` -- see project and global todos
 - `/add-todo fix the login bug` -- capture an idea
-- `/skippy:reconcile` -- compare planned vs actual work (requires GSD)
+- `/skippy:reconcile` -- compare planned vs actual work
 
 ## What's Inside
 
