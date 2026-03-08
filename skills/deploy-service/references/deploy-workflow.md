@@ -1,5 +1,7 @@
 # Deploy Service Workflow
 
+**Prerequisites:** Source `config.env` before executing these commands. See `config.env.example` for setup.
+
 ## Input Parameters (extract from natural language)
 
 - `SERVICE_NAME` - Service name (becomes subdomain)
@@ -15,31 +17,31 @@
 
 ```bash
 NEXT_IP=$(bash scripts/find-next-ip.sh)
-IP_NET1="<your-network-1>.${NEXT_IP}"
-IP_NET2="<your-network-2>.${NEXT_IP}"
+IP_NET1="${DEPLOY_NET1}.${NEXT_IP}"
+IP_NET2="${DEPLOY_NET2}.${NEXT_IP}"
 VMID=$((200 + NEXT_IP))
 ```
 
 ### 2. Create LXC
 
 ```bash
-ssh root@<your-server-ip> "pct create ${VMID} local:vztmpl/debian-12-standard_12.12-1_amd64.tar.zst \
+ssh root@${DEPLOY_SERVER_IP} "pct create ${VMID} local:vztmpl/debian-12-standard_12.12-1_amd64.tar.zst \
   --hostname ${SERVICE_NAME} \
   --memory ${RAM:-512} \
   --swap 512 \
-  --net0 name=eth0,bridge=vmbr0,ip=${IP_NET1}/24,gw=<your-gateway>,type=veth \
+  --net0 name=eth0,bridge=vmbr0,ip=${IP_NET1}/24,gw=${DEPLOY_GATEWAY},type=veth \
   --net1 name=eth1,bridge=vmbr0,ip=${IP_NET2}/24,tag=20,type=veth \
   --rootfs local-lvm:${DISK:-2} \
   --unprivileged 1 \
   --features nesting=1 \
-  --nameserver '<your-dns-servers>' \
+  --nameserver '${DEPLOY_DNS_VMIDS}' \
   --start 1"
 ```
 
 ### 3. Install Base Stack
 
 ```bash
-ssh root@<your-server-ip> "pct push ${VMID} scripts/install-base-stack.sh /tmp/install.sh && \
+ssh root@${DEPLOY_SERVER_IP} "pct push ${VMID} scripts/install-base-stack.sh /tmp/install.sh && \
   pct exec ${VMID} -- bash /tmp/install.sh"
 ```
 
@@ -47,8 +49,8 @@ ssh root@<your-server-ip> "pct push ${VMID} scripts/install-base-stack.sh /tmp/i
 
 ```bash
 if [[ -n "$TARBALL" ]]; then
-  scp "$TARBALL" root@<your-server-ip>:/tmp/service.tar.gz
-  ssh root@<your-server-ip> "pct push ${VMID} /tmp/service.tar.gz /root/service.tar.gz && \
+  scp "$TARBALL" root@${DEPLOY_SERVER_IP}:/tmp/service.tar.gz
+  ssh root@${DEPLOY_SERVER_IP} "pct push ${VMID} /tmp/service.tar.gz /root/service.tar.gz && \
     pct exec ${VMID} -- tar xzf /root/service.tar.gz -C /root/"
 fi
 ```
@@ -69,11 +71,11 @@ cat references/nginx-proxy.conf | \
   sed "s/{{PORT}}/${PORT}/g" > /tmp/${SERVICE_NAME}.conf
 
 # Deploy to proxy host
-scp /tmp/${SERVICE_NAME}.conf root@<your-server-ip>:/tmp/
-ssh root@<your-server-ip> "pct push <your-proxy-vmid> /tmp/${SERVICE_NAME}.conf /etc/nginx/sites-available/${SERVICE_NAME}.conf && \
-  pct exec <your-proxy-vmid> -- ln -sf /etc/nginx/sites-available/${SERVICE_NAME}.conf /etc/nginx/sites-enabled/ && \
-  pct exec <your-proxy-vmid> -- nginx -t && \
-  pct exec <your-proxy-vmid> -- systemctl reload nginx"
+scp /tmp/${SERVICE_NAME}.conf root@${DEPLOY_SERVER_IP}:/tmp/
+ssh root@${DEPLOY_SERVER_IP} "pct push ${DEPLOY_PROXY_VMID} /tmp/${SERVICE_NAME}.conf /etc/nginx/sites-available/${SERVICE_NAME}.conf && \
+  pct exec ${DEPLOY_PROXY_VMID} -- ln -sf /etc/nginx/sites-available/${SERVICE_NAME}.conf /etc/nginx/sites-enabled/ && \
+  pct exec ${DEPLOY_PROXY_VMID} -- nginx -t && \
+  pct exec ${DEPLOY_PROXY_VMID} -- systemctl reload nginx"
 ```
 
 ### 7. Add DNS to All DNS Servers
@@ -82,10 +84,10 @@ Auto-discover DNS servers and add entry:
 
 ```bash
 # Find all DNS servers (e.g., pihole instances)
-DNS_SERVERS=$(ssh root@<your-server-ip> "pct list" | grep -i pihole | awk '{print $1}')
+DNS_SERVERS=$(ssh root@${DEPLOY_SERVER_IP} "pct list" | grep -i pihole | awk '{print $1}')
 
 for SERVER in $DNS_SERVERS; do
-  ssh root@<your-server-ip> "pct exec ${SERVER} -- bash -c 'echo \"<your-proxy-ip> ${SERVICE_NAME}.<your-domain>\" >> /etc/pihole/custom.list' && \
+  ssh root@${DEPLOY_SERVER_IP} "pct exec ${SERVER} -- bash -c 'echo \"${DEPLOY_PROXY_IP} ${SERVICE_NAME}.${DEPLOY_DOMAIN}\" >> /etc/pihole/custom.list' && \
     pct exec ${SERVER} -- pihole reloaddns"
 done
 ```
@@ -95,9 +97,9 @@ done
 ```bash
 echo "Testing deployment..."
 sleep 5
-dig +short ${SERVICE_NAME}.<your-domain>
-curl -s https://${SERVICE_NAME}.<your-domain>/health || \
-  curl -I https://${SERVICE_NAME}.<your-domain>
+dig +short ${SERVICE_NAME}.${DEPLOY_DOMAIN}
+curl -s https://${SERVICE_NAME}.${DEPLOY_DOMAIN}/health || \
+  curl -I https://${SERVICE_NAME}.${DEPLOY_DOMAIN}
 ```
 
 ## Output
@@ -107,11 +109,11 @@ Service deployed successfully!
 
 LXC: ${VMID} (${SERVICE_NAME})
 IPs: ${IP_NET1} / ${IP_NET2}
-URL: https://${SERVICE_NAME}.<your-domain>
+URL: https://${SERVICE_NAME}.${DEPLOY_DOMAIN}
 Backend: ${IP_NET2}:${PORT}
 
 Next steps:
 1. Configure service in LXC ${VMID}
 2. Set up authentication
-3. Test endpoint: curl https://${SERVICE_NAME}.<your-domain>
+3. Test endpoint: curl https://${SERVICE_NAME}.${DEPLOY_DOMAIN}
 ```

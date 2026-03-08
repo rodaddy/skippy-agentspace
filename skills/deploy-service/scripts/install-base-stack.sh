@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CONFIG="$SCRIPT_DIR/../config.env"
+
+if [[ ! -f "$CONFIG" ]]; then
+    echo "ERROR: config.env not found at $CONFIG" >&2
+    echo "  Copy config.env.example to config.env and fill in your values." >&2
+    exit 1
+fi
+
+# shellcheck source=/dev/null
+source "$CONFIG"
+
+: "${DEPLOY_VAULTWARDEN_URL:?DEPLOY_VAULTWARDEN_URL not set in config.env}"
+
 echo "Installing base packages..."
 apt-get update
 apt-get install -y curl wget unzip ca-certificates
@@ -16,8 +30,7 @@ mv bw /usr/local/bin/
 chmod +x /usr/local/bin/bw
 
 echo "Configuring bitwarden CLI..."
-# Configure for your vaultwarden instance:
-/usr/local/bin/bw config server 'https://<your-vaultwarden-url>'
+/usr/local/bin/bw config server "https://${DEPLOY_VAULTWARDEN_URL}"
 
 echo "Base stack installed successfully!"
 echo "Installed:"

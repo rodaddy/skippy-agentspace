@@ -40,7 +40,7 @@ deploy service bigapp on port 9000 with 2GB ram and 10GB disk
 
 ## Parameters (extracted from natural language)
 
-- **Service name** - Becomes subdomain (e.g., "vault" -> vault.<your-domain>)
+- **Service name** - Becomes subdomain (e.g., "vault" -> vault.${DEPLOY_DOMAIN})
 - **Port** - Backend port the service listens on
 - **Tarball** (optional) - Path to service tarball
 - **RAM** (optional) - Default: 512MB
@@ -50,19 +50,20 @@ deploy service bigapp on port 9000 with 2GB ram and 10GB disk
 ## What You Get
 
 - LXC created and running
-- Service accessible at `https://<name>.<your-domain>`
+- Service accessible at `https://<name>.${DEPLOY_DOMAIN}`
 - DNS resolving from all DNS servers
 - nginx reverse proxy with SSL configured
 - systemd service (if configured)
 
 ## Configuration Required
 
-Before using this skill, configure these values for your environment:
-- `<your-server-ip>` -- Proxmox host IP
-- `<your-domain>` -- Your wildcard SSL domain
-- `<your-proxy-host>` -- LXC running nginx reverse proxy
-- `<your-dns-servers>` -- DNS server IPs for custom DNS entries
-- Network ranges for dual-NIC setup
+Before using this skill, set up your environment config:
+
+1. Copy `config.env.example` to `config.env`
+2. Fill in all `DEPLOY_*` variables with your infrastructure values
+3. `config.env` is gitignored -- your real values stay local
+
+See `config.env.example` for the full variable list with descriptions.
 
 ## References
 
@@ -72,4 +73,4 @@ Before using this skill, configure these values for your environment:
 - `scripts/find-next-ip.sh` -- IP discovery helper script
 - `scripts/install-base-stack.sh` -- Base packages installer script
 
-> **PAI enhancements available:** In PAI installations, all placeholders are pre-filled with actual infrastructure values.
+> **PAI enhancements available:** In PAI installations, config.env is pre-populated with actual infrastructure values.
