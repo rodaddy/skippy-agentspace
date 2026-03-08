@@ -17,7 +17,7 @@ chmod +x /usr/local/bin/bw
 
 echo "Configuring bitwarden CLI..."
 # Configure for your vaultwarden instance:
-/usr/local/bin/bw config server https://<your-vaultwarden-url>
+/usr/local/bin/bw config server 'https://<your-vaultwarden-url>'
 
 echo "Base stack installed successfully!"
 echo "Installed:"

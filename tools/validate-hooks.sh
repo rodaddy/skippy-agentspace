@@ -178,9 +178,9 @@ fi
 
 if [ "$FULL_MODE" = true ]; then
 
-  TMPDIR=$(mktemp -d)
-  SETTINGS="$TMPDIR/settings.json"
-  trap 'rm -rf "$TMPDIR"' EXIT
+  HOOK_TMPDIR=$(mktemp -d)
+  SETTINGS="$HOOK_TMPDIR/settings.json"
+  trap 'rm -rf "$HOOK_TMPDIR"' EXIT
 
   # Create test fixture with GSD/OMC hooks
   cat > "$SETTINGS" << 'FIXTURE'
@@ -244,7 +244,7 @@ FIXTURE
   # -------------------------------------------------------------------------
 
   echo "Check 7: Uninstall safety (HOOK-03)"
-  cp "$SETTINGS" "$TMPDIR/pre-uninstall.json"
+  cp "$SETTINGS" "$HOOK_TMPDIR/pre-uninstall.json"
   bash "$HOOKS_DIR/uninstall-hooks.sh" --settings="$SETTINGS" >/dev/null
 
   PAI_AFTER=$(bun -e "
@@ -278,10 +278,10 @@ FIXTURE
 FIXTURE2
 
   bash "$HOOKS_DIR/install-hooks.sh" --settings="$SETTINGS" >/dev/null
-  cp "$SETTINGS" "$TMPDIR/first-install.json"
+  cp "$SETTINGS" "$HOOK_TMPDIR/first-install.json"
   bash "$HOOKS_DIR/install-hooks.sh" --settings="$SETTINGS" >/dev/null
 
-  if diff -q "$TMPDIR/first-install.json" "$SETTINGS" >/dev/null 2>&1; then
+  if diff -q "$HOOK_TMPDIR/first-install.json" "$SETTINGS" >/dev/null 2>&1; then
     pass "install is idempotent (identical after two runs)"
   else
     fail "install is NOT idempotent (diff detected)"
@@ -293,7 +293,7 @@ FIXTURE2
 
   echo "Check 9: Backup creation (HOOK-05)"
 
-  BACKUP_COUNT=$(ls -1 "$TMPDIR"/settings.json.backup-* 2>/dev/null | wc -l | tr -d ' ')
+  BACKUP_COUNT=$(ls -1 "$HOOK_TMPDIR"/settings.json.backup-* 2>/dev/null | wc -l | tr -d ' ')
   if [ "$BACKUP_COUNT" -ge "1" ]; then
     pass "backup files created ($BACKUP_COUNT found)"
   else

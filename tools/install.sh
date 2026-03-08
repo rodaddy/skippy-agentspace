@@ -62,8 +62,12 @@ detect_target() {
         auto)
             if [[ -d "$HOME/.claude/skills" ]]; then
                 echo "skills"
-            else
+            elif [[ -d "$HOME/.claude/commands" ]]; then
                 echo "commands"
+            else
+                # Fresh machine: prefer modern skills/ target
+                mkdir -p "$HOME/.claude/skills"
+                echo "skills"
             fi
             ;;
     esac
