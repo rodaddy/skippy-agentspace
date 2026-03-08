@@ -210,5 +210,5 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 8. Upstream Analysis | 3/3 | Complete   | 2026-03-08 | - |
-| 9. Skill System | 1/3 | In Progress|  | - |
+| 9. Skill System | 2/3 | In Progress|  | - |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |

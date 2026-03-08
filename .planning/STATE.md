@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
 status: in-progress
-stopped_at: Completed 09-01 selective install/uninstall
-last_updated: "2026-03-08T02:05:00.000Z"
-last_activity: 2026-03-08 -- Completed 09-01 selective install/uninstall
+stopped_at: Completed 09-02 category index + migrate command
+last_updated: "2026-03-08T02:09:04.000Z"
+last_activity: 2026-03-08 -- Completed 09-02 category index + migrate command
 progress:
   total_phases: 10
   completed_phases: 8
   total_plans: 23
-  completed_plans: 21
-  percent: 91
+  completed_plans: 22
+  percent: 96
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 ## Current Position
 
 Phase: 9 of 10 (Skill System)
-Plan: 1 of 2 complete
+Plan: 2 of 2 complete
 Status: In Progress
-Last activity: 2026-03-08 -- Completed 09-01 selective install/uninstall
+Last activity: 2026-03-08 -- Completed 09-02 category index + migrate command
 
-Progress: [█████████░] 91%
+Progress: [██████████] 96%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [█████████░] 91%
 | Phase 08 P02 | 9min | 2 tasks | 5 files |
 | Phase 08 P03 | 3min | 2 tasks | 7 files |
 | Phase 09 P01 | 3min | 2 tasks | 2 files |
+| Phase 09 P02 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,9 @@ Recent decisions affecting current work:
 - [09-01]: Continue-on-error for batch install/uninstall -- report failures at end rather than aborting mid-batch
 - [09-01]: show_status() with printf column formatting and [installed]/[available] badges for no-arg display
 - [09-01]: Functions moved before argument parsing in install.sh to allow --help to call list_skills
+- [09-02]: Extract commands from commands/*.md name: field instead of nonexistent triggers: frontmatter
+- [09-02]: Symlink detection checks both ~/.claude/skills/ and ~/.claude/commands/ for install badges
+- [09-02]: Category order: core, workflow, utility, domain -- uncategorized as fallback
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:05:00Z
-Stopped at: Completed 09-01 selective install/uninstall
-Resume file: .planning/phases/09-skill-system/09-01-SUMMARY.md
+Last session: 2026-03-08T02:09:04Z
+Stopped at: Completed 09-02 category index + migrate command
+Resume file: .planning/phases/09-skill-system/09-02-SUMMARY.md
