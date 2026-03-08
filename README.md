@@ -1,10 +1,10 @@
 # skippy-agentspace
 
-Portable Claude Code skill repo. Cherry-picks the best workflow ideas from [GSD](https://github.com/gsd-build/get-shit-done), [PAUL](https://github.com/ChristopherKahler/paul), and [OMC](https://github.com/anthropics/oh-my-claudecode) into standalone, installable skills.
+Standalone Claude Code skill framework with patterns adapted from [GSD](https://github.com/gsd-build/get-shit-done), [PAUL](https://github.com/ChristopherKahler/paul), and [OMC](https://github.com/anthropics/oh-my-claudecode).
 
 PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think dotfiles for AI assistants. This repo packages PAI's best skills as portable, installable modules.
 
-12 skills across 4 categories. 15 reference docs distilling workflow patterns from 3 upstream frameworks. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
+12 skills across 4 categories. 18 reference docs distilling workflow patterns from 3 upstream frameworks. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
 
 ## Quick Start
 
@@ -48,26 +48,32 @@ After install, try these in any project with Claude Code:
 
 See [INDEX.md](INDEX.md) for the full catalog with portability badges.
 
-### Cherry-Picked Reference Docs (15)
+### Reference Docs (18)
 
-Best ideas stolen from 3 frameworks, distilled into actionable reference docs in `skills/skippy-dev/references/`:
+Workflow patterns adapted from 3 frameworks, distilled into standalone reference docs in `skills/skippy-dev/references/`:
 
 **From PAUL (5)** -- planning discipline:
-- Context brackets, reconciliation, task anatomy, plan boundaries, state consistency
+- Context brackets, reconciliation, plan structure (task format), plan boundaries, state consistency
 
 **From OMC (4)** -- execution readiness:
-- Pre-execution gate, ambiguity scoring, compaction resilience, parallel file ownership
+- Ambiguity scoring, compaction resilience, parallel file ownership, pre-execution gate
 
-**From GSD + PAI (6)** -- workflow patterns:
-- Model routing, verification loops, skill extraction, structured deliberation, session persistence, GSD dependency map
+**From GSD (5)** -- execution patterns:
+- Phased execution, state tracking, checkpoints, plan structure (plan format), verification loops
+
+**Cross-source (3)** -- synthesized patterns:
+- Model routing, structured deliberation, session persistence
+
+**Original (1)** -- from v1.1 audit process:
+- Audit swarm
 
 ### Upstream Tracking
 
 Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`. Run `/skippy:update` to check for changes.
 
-| Upstream | What We Take | Cherry-Picks |
-|----------|-------------|-------------|
-| [GSD](https://github.com/gsd-build/get-shit-done) | Phased execution framework (used as-is) | 0 (dependency) |
+| Upstream | What We Take | Patterns Adapted |
+|----------|-------------|-----------------|
+| [GSD](https://github.com/gsd-build/get-shit-done) | Historical source of phased execution patterns | 5 |
 | [PAUL](https://github.com/ChristopherKahler/paul) | 5 planning discipline ideas | 5 |
 | [OMC](https://github.com/anthropics/oh-my-claudecode) | 4 execution readiness patterns | 4 |
 
@@ -77,12 +83,13 @@ Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`.
 |------|-------------|
 | `tools/install.sh` | Selective installer (`--core`, `--all`, positional args) |
 | `tools/uninstall.sh` | Selective uninstaller (scoped -- only removes its own symlinks) |
-| `tools/verify.sh` | brew-doctor-style health check (24 checks across 5 categories) |
+| `tools/verify.sh` | brew-doctor-style health check (25+ checks across 5 categories) |
 | `tools/prereqs.sh` | Cross-platform prerequisite checker with interactive install |
 | `tools/validate-hooks.sh` | Hook manifest validation (6 checks) |
 | `tools/index-sync.sh` | INDEX.md validation and regeneration |
 | `tools/integration-test.sh` | 36 automated tests, fully sandboxed |
 | `tools/backup-restore.sh` | Snapshot/restore ~/.claude/ before testing |
+| `tools/bump-version.sh` | Version bump across all 25 version locations |
 
 ## Documentation
 
@@ -104,9 +111,16 @@ Run `bash tools/prereqs.sh` to check and install missing tools.
 ## Testing
 
 ```bash
-bash tools/integration-test.sh          # Full test suite (36 tests, clones upstreams)
-bash tools/integration-test.sh --quick  # Skip upstream clones
-bash tools/integration-test.sh --verbose # Show full output
+# Unit tests (bats-core, sandboxed HOME)
+./tests/bats/bin/bats tests/
+
+# Health check
+bash tools/verify.sh
+
+# Full integration suite
+bash tools/integration-test.sh
+bash tools/integration-test.sh --quick    # Skip upstream clones
+bash tools/integration-test.sh --verbose  # Show full output
 ```
 
 All tests run in sandboxed `$HOME` -- never touches your real `~/.claude/`.

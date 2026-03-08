@@ -1,6 +1,6 @@
 # skippy-agentspace
 
-> Portable Claude Code skill repo. Cherry-picks the best workflow ideas from GSD and PAUL into standalone, installable skills.
+> Standalone Claude Code skill framework with patterns adapted from GSD, PAUL, and OMC.
 > All LAWs from `~/.claude/CLAUDE.md` apply. `bun` for Node.js, `uv` for Python, never npm/yarn/pip.
 
 
@@ -11,7 +11,7 @@
 
 A skill marketplace repo containing **12 portable skills** across 4 categories: core identity, workflow automation, utility tools, and domain-specific deployment. Each skill has a slim SKILL.md (<150 lines) with deep references for detail. Installs as a Claude Code plugin or via manual symlinks.
 
-**Not a fork.** All upstreams ride unchanged -- enhancements are additive reference docs and utility commands.
+**Standalone skill framework.** Upstream repos (GSD, PAUL, OMC) are historical sources of adapted patterns, not runtime dependencies.
 
 ## Why This Exists
 
@@ -51,7 +51,7 @@ Three approaches evaluated. We chose **portable skill repo** -- standalone execu
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 15 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 18 reference docs
     agents/                 # Subagent definitions for /skippy:review audit swarm
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
@@ -115,12 +115,12 @@ Monitor for upstream changes: `/skippy:update`
 - **Portability**: Every skill works with vanilla Claude Code. PAI enhancements optional.
 - **Self-contained**: No cross-skill imports. Each skill is a standalone directory.
 - **No build step**: Shell scripts + markdown only. No TypeScript/Node dependencies.
-- **No GSD dependency**: Standalone execution with historical source attribution.
+- **Standalone**: No runtime dependency on GSD, PAUL, or OMC. Historical source attribution only.
 - **Stack**: `#!/usr/bin/env bash` for scripts. Markdown for rules/references.
 
 ## Project Status
 
-v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 Phase 11 complete -- shared shell library and repo hygiene.
+v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 complete -- 12 skills, 18 reference docs, standalone framework.
 
 | Phase | Goal | Status |
 |-------|------|--------|
@@ -132,6 +132,11 @@ v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2
 | 9. Skill System | Selective install, migrate, 12 skills | Complete |
 | 10. Bootstrap & Docs | Final validation | Complete |
 | 11. Foundation | Shared shell library (common.sh), .gitattributes | Complete |
+| 12. Testing | bats-core test suite, CI workflow | Complete |
+| 13. GSD Absorption | Standalone reference docs, state parser | Complete |
+| 14. Audit Swarm | /skippy:review multi-agent command | Complete |
+| 15. Hardening | deploy-service config, version bump | Complete |
+| 16. Integration & Polish | CONTRIBUTING.md, doc consistency | Complete |
 
 ## Key Files
 

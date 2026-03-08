@@ -45,6 +45,9 @@ setup_sandbox() {
     echo "Sandbox: $SANDBOX"
 }
 
+# Ensure sandbox cleanup on unexpected exit (set -e, signals)
+trap 'export HOME="$REAL_HOME"; rm -rf "$SANDBOX" 2>/dev/null' EXIT
+
 teardown_sandbox() {
     export HOME="$REAL_HOME"
     rm -rf "$SANDBOX" 2>/dev/null || true
@@ -65,14 +68,6 @@ fail() {
 warn() {
     WARN=$((WARN + 1))
     echo "  WARN: $1"
-}
-
-run_cmd() {
-    if $VERBOSE; then
-        "$@" 2>&1
-    else
-        "$@" >/dev/null 2>&1
-    fi
 }
 
 section() {
@@ -181,7 +176,7 @@ else
 fi
 
 # Verify PAUL reference docs exist
-for ref in context-brackets reconciliation task-anatomy plan-boundaries state-consistency; do
+for ref in context-brackets reconciliation plan-structure plan-boundaries state-consistency; do
     if [[ -f "$REPO_DIR/skills/skippy-dev/references/$ref.md" ]]; then
         pass "PAUL ref: $ref.md"
     else
@@ -285,7 +280,6 @@ bash tools/install.sh --all >/dev/null 2>&1
 ln -s /tmp "$HOME/.claude/skills/foreign-project"
 ln -s /tmp "$HOME/.claude/skills/another-foreign"
 
-BEFORE=$(ls "$HOME/.claude/skills/" | wc -l | tr -d ' ')
 bash tools/uninstall.sh --all < <(echo "n") >/dev/null 2>&1
 AFTER=$(ls "$HOME/.claude/skills/" | wc -l | tr -d ' ')
 
@@ -404,8 +398,6 @@ fi
 # Uninstall only removes skippy
 bash tools/uninstall.sh --all < <(echo "n") >/dev/null 2>&1
 AFTER_UNINSTALL=$(ls "$HOME/.claude/skills/" 2>/dev/null | wc -l | tr -d ' ')
-EXPECTED=$((BEFORE_UPGRADE > 0 ? BEFORE_UPGRADE : AFTER_UNINSTALL))
-
 # Just verify PAI survived
 PAI_POST=0
 for s in n8n proxmox litellm homeassistant Git Research; do
@@ -429,7 +421,7 @@ cd "$REPO_DIR"
 
 # Skill counts
 FS_SKILLS=$(ls -d skills/*/ | wc -l | tr -d ' ')
-MKT_SKILLS=$(bun -e "console.log(require('./.claude-plugin/marketplace.json').plugins.length)" 2>/dev/null || echo "0")
+MKT_SKILLS=$(MARKETPLACE="$REPO_DIR/.claude-plugin/marketplace.json" bun -e "console.log(require(process.env.MARKETPLACE).plugins.length)" 2>/dev/null || echo "0")
 
 if [[ "$FS_SKILLS" -eq 12 ]] && [[ "$MKT_SKILLS" -eq 12 ]]; then
     pass "Skill count: $FS_SKILLS filesystem, $MKT_SKILLS marketplace"
@@ -439,10 +431,10 @@ fi
 
 # Reference doc count
 REF_COUNT=$(ls skills/skippy-dev/references/*.md 2>/dev/null | wc -l | tr -d ' ')
-if [[ "$REF_COUNT" -eq 15 ]]; then
+if [[ "$REF_COUNT" -eq 18 ]]; then
     pass "Reference docs: $REF_COUNT"
 else
-    fail "Reference docs: $REF_COUNT (expected 15)"
+    fail "Reference docs: $REF_COUNT (expected 18)"
 fi
 
 # Stale content

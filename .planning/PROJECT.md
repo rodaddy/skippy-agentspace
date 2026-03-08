@@ -53,20 +53,10 @@ Every skill works standalone with vanilla Claude Code -- no PAI dependency requi
 
 ### Out of Scope
 
-<!-- Updated for v1.1 -->
-
-- Forking GSD, PAUL, or OMC -- we ride upstream, never fork
-- Auto-merging upstream changes -- report, human decides
-- Publishing to npm or any package registry -- private repo, manual install
-- BDD Given/When/Then ceremony -- too much overhead for solo dev
-
-### Out of Scope
-
-- Forking GSD or PAUL -- we ride upstream, never fork
+- Forking GSD or PAUL -- historical source attribution only
 - Auto-merging upstream changes -- `/skippy:update` reports, human decides
-- Hooks in `~/.claude/settings.json` -- enhancements are rule-based (reference docs), not hook-enforced
 - BDD Given/When/Then ceremony for acceptance criteria -- too much overhead for solo dev
-- PAUL's "no subagents for execution" philosophy -- GSD's parallel execution is correct at scale
+- PAUL's "no subagents for execution" philosophy -- parallel execution is correct at scale
 - Publishing to npm or any package registry -- private repo, manual install
 
 ## Context

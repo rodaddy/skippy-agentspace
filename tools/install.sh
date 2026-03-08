@@ -33,7 +33,7 @@ else
     skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
     skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
     skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
-    skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; { [[ "$n" =~ [/\\] ]] || [[ "$n" == .* ]]; } && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
+    skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; ! [[ "$n" =~ ^[a-zA-Z0-9_-]+$ ]] && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
 fi
 
 # validate_skill_name delegates to common.sh skippy_validate_skill_name
@@ -118,15 +118,13 @@ install_skill_modern() {
 
     mkdir -p "$HOME/.claude/skills"
 
-    if [[ -L "$dest" ]]; then
-        echo "  UPDATE: Removing existing symlink at $dest"
-        unlink "$dest"
-    elif [[ -e "$dest" ]]; then
+    if [[ -e "$dest" ]] && [[ ! -L "$dest" ]]; then
         echo "  ERROR: $dest exists and is not a symlink -- remove manually"
         return 1
     fi
 
-    ln -s "$src" "$dest"
+    # Atomic symlink create/replace (no TOCTOU race)
+    ln -sfn "$src" "$dest"
     echo "  INSTALLED (skills): $name -> $dest"
     echo "    Skill entry: $src/SKILL.md"
     if [[ -d "$src/commands" ]]; then
