@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Standalone Skippy
-status: completed
-stopped_at: Completed 12-03-PLAN.md
-last_updated: "2026-03-08T20:55:20.404Z"
-last_activity: 2026-03-08 -- Phase 12 Plan 03 complete (verify/index-sync/validate-hooks tests + CI)
+status: in-progress
+stopped_at: Completed 14-01-PLAN.md
+last_updated: "2026-03-08T21:01:00Z"
+last_activity: 2026-03-08 -- Phase 14 Plan 01 complete (6 agent definitions + audit-swarm.md reference doc)
 progress:
   total_phases: 16
   completed_phases: 13
   total_plans: 37
-  completed_plans: 33
-  percent: 89
+  completed_plans: 34
+  percent: 92
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- Phase 12 Testing complete
+**Current focus:** v1.2 Standalone Skippy -- Phase 14 Audit Swarm in progress
 
 ## Current Position
 
-Phase: 12-testing (complete)
-Plan: 3 of 3 complete
-Status: Phase 12 complete -- 37 tests passing across 7 test files, CI workflow ready
-Last activity: 2026-03-08 -- Phase 12 Plan 03 complete (verify/index-sync/validate-hooks tests + CI)
+Phase: 14-audit-swarm (in progress)
+Plan: 1 of 2 complete
+Status: Plan 01 complete -- 6 agent definitions + audit-swarm.md reference doc created
+Last activity: 2026-03-08 -- Phase 14 Plan 01 complete (6 agent definitions + audit-swarm.md reference doc)
 
-Progress: [█████████░] 89%
+Progress: [█████████░] 92%
 
-**Next step:** Next phase in v1.2 roadmap
+**Next step:** Plan 02 -- /skippy:review command definition
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 33 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12)
+- Total plans completed: 34 (v1.0 + v1.1 + Phase 11 + Phase 13 + Phase 12 + Phase 14)
 - Average duration: --
 - Total execution time: --
 
@@ -59,6 +59,7 @@ Progress: [█████████░] 89%
 | 11. Foundation | 2/2 | 6min | 8 |
 | 13. GSD Absorption | 3/3 | 11min | 21 |
 | 12. Testing | 3/3 | 7min | 12 |
+| 14. Audit Swarm | 1/2 | 2min | 7 |
 
 **Recent Trend:**
 - v1.0 completed all 9 plans in one day
@@ -117,6 +118,10 @@ Recent decisions affecting current work:
 - [12-03]: Teardown restore pattern for index-sync tests -- backup/restore INDEX.md to avoid corrupting real file
 - [12-03]: Skip validate-hooks --full mode tests -- complex hook install/uninstall already tested by the script itself
 - [12-03]: brew install bun in CI -- ensures hook validation tests that need bun actually run
+- [14-01]: Reviewers + eval use permissionMode: plan (read-only); fix agent uses bypassPermissions with worktree isolation
+- [14-01]: Architecture reviewer gets opus model (HIGH complexity); all others use sonnet (MEDIUM)
+- [14-01]: 3-layer sandbox protocol: HOME override, worktree isolation, tool restrictions as defense-in-depth
+- [14-01]: Sequential reviewer spawning over parallel to prevent context overflow and findings board write conflicts
 
 ### Pending Todos
 
@@ -128,6 +133,6 @@ None at milestone start.
 
 ## Session Continuity
 
-Last session: 2026-03-08T20:48:26Z
-Stopped at: Completed 12-03-PLAN.md
+Last session: 2026-03-08T20:58:19Z
+Stopped at: Completed 14-01-PLAN.md
 Resume file: None

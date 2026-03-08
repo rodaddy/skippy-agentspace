@@ -303,6 +303,6 @@ Wave 3: [Phase 16]                          (needs all)
 | 11. Foundation | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 12. Testing | 3/3 | Complete    | 2026-03-08 | - |
 | 13. GSD Pattern Absorption | v1.2 | 3/3 | Complete | 2026-03-08 |
-| 14. Audit Swarm | v1.2 | 0/2 | Planned | - |
+| 14. Audit Swarm | 1/2 | In Progress|  | - |
 | 15. Hardening | v1.2 | 0/2 | Planned | - |
 | 16. Integration & Polish | v1.2 | 0/0 | Planned | - |
