@@ -111,15 +111,22 @@ done
 # --- Main ---
 
 if [[ "$UNINSTALL_ALL" == true ]]; then
-    echo "=== Uninstalling all symlinked skills ==="
+    echo "=== Uninstalling all skippy-agentspace skills ==="
     found_any=0
+
+    # CRITICAL: Only remove symlinks that point INTO this repo's skills/ directory.
+    # Never touch symlinks belonging to other projects (PAI, n8n, etc.)
+    REPO_SKILLS_DIR="$(cd "$(dirname "$0")/.." && pwd)/skills"
 
     if [[ -d "$SKILLS_DIR" ]]; then
         for link in "$SKILLS_DIR"/*/; do
             link="${link%/}"
             if [[ -L "$link" ]]; then
-                found_any=1
-                uninstall_skill "$(basename "$link")"
+                link_target="$(readlink "$link")"
+                if [[ "$link_target" == "$REPO_SKILLS_DIR"/* ]]; then
+                    found_any=1
+                    uninstall_skill "$(basename "$link")"
+                fi
             fi
         done
     fi
@@ -128,8 +135,11 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
         for link in "$COMMANDS_DIR"/*/; do
             link="${link%/}"
             if [[ -L "$link" ]]; then
-                found_any=1
-                uninstall_skill "$(basename "$link")"
+                link_target="$(readlink "$link")"
+                if [[ "$link_target" == "$REPO_SKILLS_DIR"/* ]]; then
+                    found_any=1
+                    uninstall_skill "$(basename "$link")"
+                fi
             fi
         done
     fi
