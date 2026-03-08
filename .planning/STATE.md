@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Portable PAI
-status: completed
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-08T00:20:33.133Z"
-last_activity: 2026-03-07 -- Completed 07-03 hook installer, uninstaller, and validation
+status: executing
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-08T00:52:45.429Z"
+last_activity: 2026-03-08 -- Completed 08-01 upstream registration and cross-package analysis
 progress:
   total_phases: 10
   completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
+  total_plans: 20
+  completed_plans: 18
+  percent: 90
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** Phase 7 -- Hook Installation (manifest, shared lib, hook scripts, installer)
+**Current focus:** Phase 8 -- Upstream Analysis (OMC registration, cross-package analysis, reference docs, generic updater)
 
 ## Current Position
 
-Phase: 7 of 10 (Hook Installation)
-Plan: 3 of 3 complete
-Status: Phase Complete
-Last activity: 2026-03-07 -- Completed 07-03 hook installer, uninstaller, and validation
+Phase: 8 of 10 (Upstream Analysis)
+Plan: 1 of 3 complete
+Status: In Progress
+Last activity: 2026-03-08 -- Completed 08-01 upstream registration and cross-package analysis
 
-Progress: [██████████] 100%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 07 P01 | 2min | 2 tasks | 4 files |
 | Phase 07 P02 | 10min | 2 tasks | 15 files |
 | Phase 07 P03 | 4min | 2 tasks | 6 files |
+| Phase 08 P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,10 @@ Recent decisions affecting current work:
 - [07-03]: Bun-only JSON backend -- bun already a hard dependency, python3/jq fallbacks deferred
 - [07-03]: Shell orchestrator + TypeScript backend split -- bash for flow, bun for JSON operations
 - [07-03]: Check 4 grep targets input.toolName not bare toolName -- avoids false positives from local vars
+- [08-01]: All 37 OMC skills categorized with zero deferred -- every skill either cherry-picked (8) or rejected (29)
+- [08-01]: Cherry-picks grouped into 7 reference doc targets: 3 HIGH, 3 MEDIUM, 1 LOW priority
+- [08-01]: deep-interview merged into structured-deliberation doc rather than standalone
+- [08-01]: docs/ chosen over .planning/ for cross-package analysis -- project artifact, not planning artifact
 
 ### Pending Todos
 
@@ -111,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T00:20:33.130Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-upstream-analysis/08-CONTEXT.md
+Last session: 2026-03-08T00:52:45.426Z
+Stopped at: Completed 08-01-PLAN.md
+Resume file: None
