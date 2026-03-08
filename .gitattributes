@@ -1,0 +1,17 @@
+# Distribution: exclude dev-only paths from git archive
+.planning export-ignore
+.planning/** export-ignore
+.reports export-ignore
+.reports/** export-ignore
+docs export-ignore
+docs/** export-ignore
+tests export-ignore
+tests/** export-ignore
+.github export-ignore
+.github/** export-ignore
+upstreams export-ignore
+upstreams/** export-ignore
+
+# Exclude git metadata from archive
+.gitattributes export-ignore
+.gitignore export-ignore
