@@ -171,11 +171,12 @@ Plans:
   2. `migrate-skill.sh` takes a skill directory from `~/.config/pai/Skills/` and produces a portable version with slim SKILL.md + deep references under `skills/`
   3. At least 10 essential skills are migrated and installable, each with a SKILL.md under 150 lines
   4. INDEX.md lists all available skills with categories (core, workflow, utility, domain) and current install status
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 09-01: TBD
-- [ ] 09-02: TBD
+- [ ] 09-01-PLAN.md -- Selective install/uninstall (install.sh + uninstall.sh enhancement)
+- [ ] 09-02-PLAN.md -- INDEX.md categories + /skippy:migrate AI command
+- [ ] 09-03-PLAN.md -- Migrate ~10 essential skills + integration files
 
 ### Phase 10: Bootstrap & Docs
 **Goal**: A user on a fresh machine can clone this repo and reach a working PAI setup by following documented steps, with automated verification confirming everything is wired correctly
@@ -209,5 +210,5 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Core Infrastructure | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 7. Hook Installation | v1.1 | 3/3 | Complete | 2026-03-07 |
 | 8. Upstream Analysis | 3/3 | Complete   | 2026-03-08 | - |
-| 9. Skill System | v1.1 | 0/? | Not started | - |
+| 9. Skill System | v1.1 | 0/3 | Not started | - |
 | 10. Bootstrap & Docs | v1.1 | 0/? | Not started | - |
