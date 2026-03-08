@@ -28,6 +28,10 @@ Best-of-breed patterns cherry-picked from PAUL, OMC, and cross-package analysis.
 | 8 | Session Persistence | `references/session-persistence.md` | Session start/end -- context transfer across sessions |
 | 9 | Structured Deliberation | `references/structured-deliberation.md` | Architecture decisions -- PDOC framework for options analysis |
 | 10 | Skill Extraction | `references/skill-extraction.md` | Pattern promotion -- correction to pattern to skill graduation |
+| 11 | Pre-Execution Gate | `references/pre-execution-gate.md` | Before execution -- intercept vague requests, redirect to planning |
+| 12 | Ambiguity Scoring | `references/ambiguity-scoring.md` | Before planning -- quantitative requirements clarity gate |
+| 13 | Compaction Resilience | `references/compaction-resilience.md` | Mid-session -- checkpoint state before context compaction |
+| 14 | Parallel File Ownership | `references/parallel-file-ownership.md` | Parallel execution -- non-overlapping file ownership for concurrent agents |
 
 ## Commands
 

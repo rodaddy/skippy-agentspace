@@ -51,7 +51,7 @@ Three approaches evaluated. We chose **parasitic skill** -- ride GSD unchanged, 
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 11 reference docs
+  skippy-dev/               # [workflow] Dev enhancements -- 5 commands, 15 reference docs
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections

@@ -5,6 +5,35 @@
   "branch": "main",
   "last_checked_sha": "96a5d3725586b18492fb4b8019ec37ba6ffd7b14",
   "last_check": "2026-03-08T04:30:17Z",
-  "cherry_picks": [],
+  "cherry_picks": [
+    {
+      "id": "pre-execution-gate",
+      "source": "skills/ralplan/SKILL.md",
+      "target": "skills/skippy-dev/references/pre-execution-gate.md",
+      "description": "Vague prompt interception with concrete signal detection",
+      "date": "2026-03-07"
+    },
+    {
+      "id": "ambiguity-scoring",
+      "source": "skills/deep-interview/SKILL.md",
+      "target": "skills/skippy-dev/references/ambiguity-scoring.md",
+      "description": "Weighted clarity dimensions with challenge agent modes",
+      "date": "2026-03-07"
+    },
+    {
+      "id": "compaction-resilience",
+      "source": "src/hooks/pre-compact/index.ts",
+      "target": "skills/skippy-dev/references/compaction-resilience.md",
+      "description": "Checkpoint structure for mid-session compaction survival",
+      "date": "2026-03-07"
+    },
+    {
+      "id": "parallel-file-ownership",
+      "source": "src/features/task-decomposer/index.ts",
+      "target": "skills/skippy-dev/references/parallel-file-ownership.md",
+      "description": "File ownership patterns for parallel execution safety",
+      "date": "2026-03-07"
+    }
+  ],
   "notes": "Cherry-pick ideas only -- no runtime dependency on OMC's Node.js infrastructure"
 }
