@@ -63,6 +63,7 @@ list_installed() {
 
 uninstall_skill() {
     local name="$1"
+    validate_skill_name "$name" || return 1
     local removed=0
 
     # Check modern target: ~/.claude/skills/<name>
@@ -97,6 +98,10 @@ uninstall_skill() {
 
 validate_skill_name() {
     local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Error: Skill name cannot be empty" >&2
+        return 1
+    fi
     if [[ "$name" =~ [/\\] ]] || [[ "$name" == .* ]]; then
         echo "Error: Invalid skill name '$name' -- must not contain path separators or start with dot" >&2
         return 1
