@@ -4,7 +4,7 @@ Adapted from PAUL's scope management. Every plan should declare what it will NOT
 
 ## Template
 
-Add a `## Boundaries` section to every PLAN.md:
+Add a `## Boundaries` section to every PLAN.md (see `plan-structure.md` for the full plan format):
 
 ```markdown
 ## Boundaries
@@ -71,3 +71,7 @@ Before modifying any file, check the plan's ## Boundaries section. If the file
 is listed under DO NOT CHANGE, stop and report the conflict. If the work crosses
 a SCOPE LIMIT, note it as future work and skip it.
 ```
+
+---
+*Source: Adapted from PAUL scope management*
+*Last reviewed: 2026-03-08*

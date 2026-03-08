@@ -71,7 +71,7 @@ After ROADMAP.md is created during project initialization:
 ### Pruning (At Phase Transitions)
 - Keep only 3-5 most recent decisions in summary (full log in PROJECT.md)
 - Remove resolved blockers
-- Archive stale Working-tier context (see session-persistence.md for tier model)
+- Archive stale Working-tier context (Priority/Working/Reference tiers -- see session-persistence.md for full model)
 
 ## Size Constraint
 

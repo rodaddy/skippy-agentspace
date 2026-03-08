@@ -78,6 +78,8 @@ Only CRITICAL and HIGH findings should trigger fix cycles. MEDIUM and LOW are lo
 - **Task execution:** After each task, run the task's `verify` command. If it fails, enter a cycling loop (max 3 iterations for task-level, max 5 for plan-level).
 - **Plan verification:** The verify-work step becomes the trigger for plan-level cycling.
 - **Task anatomy:** The `verify` and `done` fields from `plan-structure.md` provide the criteria this pattern cycles against.
+- **Phased execution:** See `phased-execution.md` for how verification cycling is invoked after wave execution.
+- **Checkpoints:** See `checkpoints.md` for checkpoint types that trigger verification (human-verify, decision, human-action).
 - **Context brackets:** In DEEP/CRITICAL brackets, reduce max iterations to 2 to conserve context.
 
 ## When to Apply

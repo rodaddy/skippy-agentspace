@@ -80,3 +80,11 @@ Run mentally or have an agent check:
 - **Status mismatch:** HIGH -- verifiers may skip checks or re-verify done work
 - **PROJECT.md drift:** LOW -- informational, fix when convenient
 - **Git state issues:** BLOCKING -- resolve before any execution
+
+## Related
+
+- `state-tracking.md` -- the STATE.md format specification this checklist validates against
+
+---
+*Source: Adapted from PAUL state verification*
+*Last reviewed: 2026-03-08*

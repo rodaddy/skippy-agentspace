@@ -13,7 +13,7 @@ Adapted from PAUL's verification-protocol.md. Run after phase execution, before 
 
 ### Step 1: Gather Planned State
 
-Read the phase's `PLAN.md` and extract:
+Read the phase's `PLAN.md` (see `plan-structure.md` for expected format) and extract:
 - Task list with acceptance criteria
 - Files expected to be modified
 - Boundaries / scope limits (if defined)
@@ -97,3 +97,13 @@ For each planned AC:
 - **MINOR_DRIFT** -- small deviations, all ACs pass. Note and proceed.
 - **MAJOR_DRIFT** -- significant unplanned changes or failed ACs. Review before next phase.
 - **BLOCKED** -- critical ACs failed or state is inconsistent. Fix before proceeding.
+
+## Related
+
+- `phased-execution.md` -- where reconciliation fits in the execution cycle (runs after phase execution, before phase transition)
+- `plan-structure.md` -- the plan format that reconciliation compares against
+- `state-consistency.md` -- cross-file alignment checks referenced in Step 4
+
+---
+*Source: Adapted from PAUL verification-protocol.md*
+*Last reviewed: 2026-03-08*

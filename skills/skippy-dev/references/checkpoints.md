@@ -147,5 +147,5 @@ When auto-mode is active (user preference or chain flag):
 - NOT for file operations or command execution (Claude handles those)
 
 ---
-*Source: Adapted from GSD execute-plan.md checkpoint protocol and checkpoints.md reference*
+*Source: Adapted from GSD execute-plan.md checkpoint protocol and GSD checkpoints reference*
 *Last reviewed: 2026-03-08*
