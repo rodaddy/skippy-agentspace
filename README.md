@@ -1,5 +1,7 @@
 # skippy-agentspace
 
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/rodaddy)
+
 Standalone Claude Code skill framework with patterns adapted from [GSD](https://github.com/gsd-build/get-shit-done), [PAUL](https://github.com/ChristopherKahler/paul), and [OMC](https://github.com/anthropics/oh-my-claudecode).
 
 PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think dotfiles for AI assistants. This repo packages PAI's best skills as portable, installable modules.
