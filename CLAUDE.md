@@ -146,6 +146,7 @@ v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2
 | Requirements (11 total, all mapped) | `.planning/REQUIREMENTS.md` |
 | Phase structure + success criteria | `.planning/ROADMAP.md` |
 | Current position + blockers | `.planning/STATE.md` |
+| Skill composition + workflow patterns | `ORCHESTRATION.md` |
 | Skill index (all 12 skills by category) | `INDEX.md` |
 | Dev workflow skill | `skills/skippy-dev/SKILL.md` |
 | Core skill entry point | `skills/core/SKILL.md` |

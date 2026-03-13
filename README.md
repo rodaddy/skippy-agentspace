@@ -4,7 +4,7 @@ Standalone Claude Code skill framework with patterns adapted from [GSD](https://
 
 PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think dotfiles for AI assistants. This repo packages PAI's best skills as portable, installable modules.
 
-12 skills across 4 categories. 18 reference docs distilling workflow patterns from 3 upstream frameworks. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
+12 skills across 4 categories. 18 reference docs distilling workflow patterns from 3 upstream frameworks. 5 orchestration patterns for composing skills into pipelines. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
 
 ## Quick Start
 
@@ -98,6 +98,7 @@ Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`.
 | [SETUP.md](SETUP.md) | First-time setup (clone to working PAI in 7 steps) |
 | [INSTALL.md](INSTALL.md) | Adding or removing individual skills |
 | [UPGRADE.md](UPGRADE.md) | Updating to newer versions |
+| [ORCHESTRATION.md](ORCHESTRATION.md) | Skill composition -- 5 patterns for combining skills, personas, and agents |
 | [INDEX.md](INDEX.md) | Full skill catalog with portability badges |
 | [CLAUDE.md](CLAUDE.md) | AI agent context and project architecture |
 | [CONVENTIONS.md](CONVENTIONS.md) | Content classification and upstream registry |
