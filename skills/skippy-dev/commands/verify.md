@@ -21,8 +21,8 @@ When issues are found: diagnose root cause, create fix PLAN.md, ready for `/skip
 Phase: $ARGUMENTS (optional -- auto-detects most recent completed phase if omitted)
 
 **Reference docs:**
-- Verification patterns: `~/.config/pai/Skills/skippy-dev/references/verification-loops.md`
-- State tracking: `~/.config/pai/Skills/skippy-dev/references/state-tracking.md`
+- Verification patterns: `references/verification-loops.md`
+- State tracking: `references/state-tracking.md`
 </context>
 
 <process>

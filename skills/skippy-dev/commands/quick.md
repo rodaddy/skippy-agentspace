@@ -25,8 +25,8 @@ Same engine, shorter path. Quick tasks live in `.planning/quick/` separate from 
 Task: $ARGUMENTS
 
 **Reference docs (load as needed):**
-- Plan format: `~/.config/pai/Skills/skippy-dev/references/plan-structure.md`
-- Scope protection: `~/.config/pai/Skills/skippy-dev/references/plan-boundaries.md`
+- Plan format: `references/plan-structure.md`
+- Scope protection: `references/plan-boundaries.md`
 </context>
 
 <process>

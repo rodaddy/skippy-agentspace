@@ -28,10 +28,10 @@ Phase number: $ARGUMENTS (auto-detects next unplanned phase if omitted)
 - `--skip-verify` -- Skip adversarial review loop
 
 **Reference docs (load as needed, not all at once):**
-- Plan format: `~/.config/pai/Skills/skippy-dev/references/plan-structure.md`
-- Scope protection: `~/.config/pai/Skills/skippy-dev/references/plan-boundaries.md`
-- State tracking: `~/.config/pai/Skills/skippy-dev/references/state-tracking.md`
-- Execution patterns: `~/.config/pai/Skills/skippy-dev/references/phased-execution.md`
+- Plan format: `references/plan-structure.md`
+- Scope protection: `references/plan-boundaries.md`
+- State tracking: `references/state-tracking.md`
+- Execution patterns: `references/phased-execution.md`
 </context>
 
 <process>
@@ -47,8 +47,8 @@ Phase number: $ARGUMENTS (auto-detects next unplanned phase if omitted)
 
 6. **Plan** -- Spawn a planner agent with these instructions:
    - Read: ROADMAP.md (phase goals + success criteria), RESEARCH.md (if exists), CONTEXT.md (if exists), PROJECT.md (constraints)
-   - Read: `~/.config/pai/Skills/skippy-dev/references/plan-structure.md` for format spec
-   - Read: `~/.config/pai/Skills/skippy-dev/references/plan-boundaries.md` for scope protection
+   - Read: `references/plan-structure.md` for format spec
+   - Read: `references/plan-boundaries.md` for scope protection
    - Write PLAN.md files to `.planning/phases/{phase}/`
    - Each plan: task breakdown with files, action, verify fields
    - Include DO NOT CHANGE and SCOPE LIMITS sections

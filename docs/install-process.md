@@ -1,150 +1,143 @@
 # skippy-agentspace Install Process
 
-You are installing skippy-agentspace -- a skill curation engine for Claude Code. This document is your complete instruction set. Follow it end-to-end.
+First-time installation. For updates, see `update-process.md`.
 
-## What You're About To Do
+**Shared procedures (backup, logging, diff, smoke test, etc.) are in `process.md`. Read it first.**
 
-1. Discover which marketplaces/plugins this repo consumes
-2. Backup the user's entire current Claude Code setup with a restore script
-3. Run the consume -> coalesce pipeline to produce skippy abilities
-4. Remove the old marketplace commands that skippy replaces
-5. Install skippy skills and abilities
-6. Test the installation with Karpathy-style eval loops
-7. Generate a handoff prompt for the user to verify in a fresh session
+**If any step fails: run `$BACKUP_DIR/restore.sh --force` to roll back. See process.md Failure Protocol.**
 
-## Step 1: Discover Consumed Sources
+## Step 1: Read Shared Process
 
-Read `upstreams/*/upstream.json` to find which marketplaces are consumed. Each file lists:
-- `repo` -- the GitHub repo URL
-- `what_we_take` -- patterns absorbed from this source
-- `what_we_reject` -- patterns explicitly rejected
+Read `docs/process.md` -- it defines backup, logging, diff, inventory, collision check, reference doc completeness, eval baseline, hook audit, smoke test, change manifest, and failure protocol. All of those apply here.
 
-Also read `.planning/audits/` for completed audit data. The audit tells you exactly which commands from each source are ESSENTIAL, USEFUL, CEREMONY, or CUT.
+## Step 2: Backup
 
-Key files:
-- `.planning/audits/marketplace-audit-2026-03-13.md` -- full audit of GSD, OMC, Open Brain, PAUL
-- `CLAUDE.md` "Consumed Sources" table -- summary of what was kept/cut per source
+Follow process.md "Backup" section. Backup goes to `~/Desktop/skippy-backup-{timestamp}/`.
 
-## Step 2: Full Backup With Restore Script
+Start the install log: `$BACKUP_DIR/install-log.md`.
 
-Before touching ANYTHING, snapshot the user's current setup:
+## Step 3: Discover Consumed Sources
 
-```bash
-BACKUP_DIR="$HOME/.cache/skippy-backups/pre-install-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$BACKUP_DIR"
+Read `upstreams/*/upstream.json` for marketplace definitions. Read `.planning/audits/` for audit data. Read `CLAUDE.md` "Consumed Sources" table for the summary.
 
-# Backup everything that will be modified
-rsync -a "$HOME/.claude/" "$BACKUP_DIR/dot-claude/"
-rsync -a "$HOME/.config/pai/" "$BACKUP_DIR/config-pai/" 2>/dev/null || true
-```
+This tells you what skippy replaces and what it keeps from each source.
 
-Then create a restore script:
+## Step 4: Pre-Install Diff
 
-```bash
-cat > "$BACKUP_DIR/restore.sh" << 'RESTORE'
-#!/usr/bin/env bash
-set -euo pipefail
-BACKUP_DIR="$(cd "$(dirname "$0")" && pwd)"
-echo "=== Restoring from $BACKUP_DIR ==="
-echo "This will overwrite ~/.claude/ and ~/.config/pai/ with the backup."
-read -p "Continue? [y/N] " confirm
-[[ "$confirm" =~ ^[Yy]$ ]] || exit 0
-rsync -a --delete "$BACKUP_DIR/dot-claude/" "$HOME/.claude/"
-rsync -a --delete "$BACKUP_DIR/config-pai/" "$HOME/.config/pai/" 2>/dev/null || true
-echo "=== Restored. Start a new Claude Code session to pick up changes. ==="
-RESTORE
-chmod +x "$BACKUP_DIR/restore.sh"
-```
+Follow process.md "Pre-Install/Update Diff" section. Compare repo skills vs installed skills. Report to user. Get approval before overwriting anything newer.
 
-Report the backup location and confirm it completed before proceeding.
+## Step 5: Before Inventory
 
-## Step 3: Ensure Symlink Architecture
+Follow process.md "Before/After Inventory" -- capture the "before" snapshot.
+
+## Step 6: Ensure Symlink Architecture
 
 Check if `~/.claude/skills` is a single symlink to `~/.config/pai/Skills`:
 
 ```bash
-readlink "$HOME/.claude/skills"
+target=$(readlink "$HOME/.claude/skills" 2>/dev/null || echo "NOT_A_SYMLINK")
 ```
 
-- If it returns `~/.config/pai/Skills` or `/Users/*/config/pai/Skills`: good, skip ahead
-- If `~/.claude/skills` is a directory (not a symlink): migrate it
-  - Move any non-symlink skill dirs into `~/.config/pai/Skills/`
-  - Remove individual symlinks (they all point to PAI already)
-  - Remove the directory (handle .DS_Store by moving to /tmp)
-  - Create single symlink: `ln -s "$HOME/.config/pai/Skills" "$HOME/.claude/skills"`
+- If `$target` ends with `.config/pai/Skills`: good, skip ahead
+- If it's a directory of individual symlinks: migrate
+  - Move non-symlink (real dir) skills into `~/.config/pai/Skills/`
+  - Remove individual symlinks
+  - Handle .DS_Store by moving to /tmp (not rm)
+  - Create: `ln -s "$HOME/.config/pai/Skills" "$HOME/.claude/skills"`
 - If it doesn't exist: `mkdir -p "$HOME/.config/pai/Skills" && ln -s "$HOME/.config/pai/Skills" "$HOME/.claude/skills"`
 
-## Step 4: Install Skippy Skills
+## Step 7: Command Collision Check
 
-For each skill directory in this repo's `skills/*/`:
+Follow process.md "Command Collision Check" section. Report overlaps before removing anything.
+
+## Step 8: Remove Old Marketplace Commands
+
+Only remove what exists. Move to /tmp, never rm.
 
 ```bash
-REPO_SKILLS="$(pwd)/skills"
+if [[ -d "$HOME/.claude/commands/gsd" ]]; then
+    mv "$HOME/.claude/commands/gsd" "/tmp/gsd-commands-backup-$$"
+    echo "REMOVED: ~/.claude/commands/gsd"
+fi
+if [[ -d "$HOME/.claude/get-shit-done" ]]; then
+    mv "$HOME/.claude/get-shit-done" "/tmp/gsd-core-backup-$$"
+    echo "REMOVED: ~/.claude/get-shit-done"
+fi
+```
+
+If neither exists: "No GSD installation found -- skipping."
+
+**OMC (oh-my-claudecode):** Only relevant if the user has it installed.
+
+```bash
+if [[ -d "$HOME/.claude/plugins/cache/omc" ]]; then
+    echo "OMC plugin detected."
+    echo "  KEEP: OMC hooks (skill-injector adds keyword triggers, session-start loads state)"
+    echo "  KEEP: OMC commands (different names from skippy -- they coexist)"
+    echo "  CHECK: hooks.json for known bad hooks (see process.md OMC Hook Audit)"
+else
+    echo "No OMC installation found -- skipping."
+fi
+```
+
+**No OMC required.** Claude Code discovers skills natively from `~/.claude/skills/*/SKILL.md`. Skippy works without any marketplace installed. OMC hooks are a nice-to-have, not a dependency.
+
+## Step 9: Copy Skippy Skills
+
+```bash
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_SKILLS="$REPO_ROOT/skills"
 PAI_SKILLS="$HOME/.config/pai/Skills"
 
 for skill_dir in "$REPO_SKILLS"/*/; do
     name="$(basename "$skill_dir")"
-    # Use rsync for clean copy (avoids nested dir issues from cp -R)
-    rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
+    if command -v rsync >/dev/null 2>&1; then
+        rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
+    else
+        [[ -d "$PAI_SKILLS/$name" ]] && mv "$PAI_SKILLS/$name" "/tmp/skippy-replaced-$name-$$"
+        cp -R "$skill_dir" "$PAI_SKILLS/$name"
+    fi
     echo "INSTALLED: $name"
 done
 ```
 
-Report how many skills installed and list the commands each provides.
+## Step 10: Reference Doc Completeness
 
-## Step 5: Remove Old Marketplace Commands
+Follow process.md "Reference Doc Completeness Check". Any MISSING reference is a blocker.
 
-The audit data (Step 1) tells you exactly what skippy replaces. Remove the consumed sources:
+## Step 11: After Inventory + Eval Baseline
 
-**GSD commands** (replaced by skippy:plan, skippy:execute, skippy:verify, skippy:quick, skippy:progress):
-```bash
-# Move to /tmp for safety (not rm)
-mv "$HOME/.claude/commands/gsd" "/tmp/gsd-commands-backup-$$" 2>/dev/null || true
-mv "$HOME/.claude/get-shit-done" "/tmp/gsd-core-backup-$$" 2>/dev/null || true
-```
+Follow process.md "Before/After Inventory" (capture "after") and "Eval Baseline" sections.
 
-**OMC commands that skippy replaces** (keep OMC hooks -- they provide skill injection):
-Do NOT uninstall the OMC plugin entirely. Only the commands that overlap with skippy abilities are superseded. The OMC hooks (skill-injector, session-start, pre-tool-enforcer) still provide value. Leave the plugin installed but note that `skippy:plan` replaces `gsd:plan-phase`, etc.
+## Step 12: OMC Hook Audit
 
-Report what was removed and what was kept.
+Follow process.md "OMC Hook Audit" section.
 
-## Step 6: Test With Eval Loops
+## Step 13: Post-Install Smoke Test
 
-For each installed skill that has an `evals/` directory:
+Follow process.md "Post-Install Smoke Test" section.
 
-1. Read `evals/evals.json` for assertions
-2. Run the eval prompt (dry-run execution of the skill's test_prompt)
-3. Score against all assertions (PASS/FAIL)
-4. If any FAIL: make ONE targeted fix to the skill, re-eval
-5. Loop until perfect or max 20 iterations
-6. Write results to `evals/results.md`
+## Step 14: Change Manifest
 
-If a skill has no `evals/` directory, skip testing for now and report it as untested.
+Follow process.md "Change Manifest" section. Write to `$BACKUP_DIR/changes.md`.
 
-Check existing eval results:
-```bash
-find "$HOME/.config/pai/Skills" -name "results.md" -path "*/evals/*"
-```
+## Step 15: Generate Handoff Prompt
 
-## Step 7: Generate Handoff Prompt
+Create a prompt the user pastes into a NEW CC session to verify the install. Base it on what was ACTUALLY installed (not hardcoded):
 
-Create a prompt the user can paste into a NEW Claude Code session to verify the install:
+- Skill count and command list (from successful installs)
+- What was removed (only if it was actually removed)
+- Backup location
+- Specific test: "Try `/skippy:progress` in any project with `.planning/`"
+- For e2e: "Run `/skippy:plan` on a real phase"
 
-The handoff should include:
-- What was installed (skill count, command list)
-- What was removed (GSD commands, etc.)
-- Where the backup lives (for rollback)
-- A specific test to run: "Try `/skippy:progress` in any project with a `.planning/` directory"
-- Instructions to run `/skippy:plan` on a real phase to verify end-to-end
-
-Write this handoff to the terminal AND save it to `$BACKUP_DIR/verify-prompt.md`.
+Write to terminal AND save to `$BACKUP_DIR/verify-prompt.md`.
 
 ## Done
 
 Tell the user:
-1. Where the backup + restore script lives
-2. How many skills installed, how many commands available
-3. What was removed
-4. Paste the handoff prompt into a new session to verify
-
-The user should NOT need to do anything else manually.
+1. Backup + restore script location (Desktop)
+2. Install log location
+3. Skills installed, commands available
+4. What was removed
+5. Paste the handoff prompt into a new session to verify

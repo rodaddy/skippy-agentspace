@@ -23,10 +23,10 @@ Context budget: ~15% orchestrator, 100% fresh per agent.
 Phase: $ARGUMENTS
 
 **Reference docs (load as needed):**
-- Execution patterns: `~/.config/pai/Skills/skippy-dev/references/phased-execution.md`
-- State tracking: `~/.config/pai/Skills/skippy-dev/references/state-tracking.md`
-- Checkpoints: `~/.config/pai/Skills/skippy-dev/references/checkpoints.md`
-- Model routing: `~/.config/pai/Skills/skippy-dev/references/model-routing.md`
+- Execution patterns: `references/phased-execution.md`
+- State tracking: `references/state-tracking.md`
+- Checkpoints: `references/checkpoints.md`
+- Model routing: `references/model-routing.md`
 </context>
 
 <process>
@@ -52,7 +52,7 @@ Phase: $ARGUMENTS
    - Report failure to user with diagnosis before proceeding
 
 6. **Reconcile** -- After all waves complete:
-   - Read `~/.config/pai/Skills/skippy-dev/references/state-tracking.md`
+   - Read `references/state-tracking.md`
    - Update STATE.md with completed plans, phase status
    - Compare planned vs actual (which tasks completed, which were skipped/added)
 

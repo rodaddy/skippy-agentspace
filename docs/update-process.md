@@ -1,130 +1,111 @@
 # skippy-agentspace Update Process
 
-You are updating an existing skippy-agentspace installation. This document is your complete instruction set. Follow it end-to-end.
+Incremental update of an existing installation. For first-time install, see `install-process.md`.
 
-**Prerequisite:** skippy-agentspace was previously installed via `docs/install-process.md`. If this is a first-time install, read that file instead.
+**Shared procedures (backup, logging, diff, smoke test, etc.) are in `process.md`. Read it first.**
 
-## What You're About To Do
+**If any step fails: run `$BACKUP_DIR/restore.sh --force` to roll back. See process.md Failure Protocol.**
 
-1. Snapshot current state for comparison
-2. Pull latest changes from the repo
-3. Backup existing skills with restore script
-4. Copy updated skills into PAI
-5. Run eval loops on changed skills
-6. Report what changed
+## Step 1: Read Shared Process
 
-## Step 1: Pre-Update Snapshot
+Read `docs/process.md` for shared SOPs. All apply here.
 
-Capture current state for comparison after update:
+## Step 2: Backup
 
-```bash
-# Record installed skills and their command counts
-echo "=== Pre-update snapshot ===" > /tmp/skippy-pre-update.txt
-for skill_dir in "$HOME/.config/pai/Skills"/*/; do
-    name="$(basename "$skill_dir")"
-    cmd_count=$(ls "$skill_dir/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
-    echo "$name ($cmd_count commands)" >> /tmp/skippy-pre-update.txt
-done
-cat /tmp/skippy-pre-update.txt
-```
+Follow process.md "Backup" section. Backup goes to `~/Desktop/skippy-backup-{timestamp}/`.
 
-Record the current HEAD commit:
-```bash
-git rev-parse HEAD
-```
+Start the install log: `$BACKUP_DIR/update-log.md`.
 
-## Step 2: Pull Latest
+## Step 3: Before Inventory + Eval Baseline
+
+Follow process.md "Before/After Inventory" (capture "before") and "Eval Baseline" sections.
+
+## Step 4: Pull Latest
 
 From the repo root:
 
 ```bash
+OLD_HEAD=$(git rev-parse HEAD)
 git pull origin main
 ```
 
-- Report new commits: `git log --oneline <old-HEAD>..HEAD`
+- Report new commits: `git log --oneline $OLD_HEAD..HEAD`
 - If pull fails due to local changes: `git stash`, pull, then `git stash pop`
 - If merge conflicts: report conflicting files and STOP -- do not force-resolve
 
-## Step 3: Backup Changed Skills
+If no new commits: "Already up to date. Nothing to update." -- stop here.
 
-Only backup skills that will be overwritten (not the full system -- that was done at install time):
+## Step 5: Identify Changed Skills
 
 ```bash
-BACKUP_DIR="$HOME/.cache/skippy-backups/pre-update-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$BACKUP_DIR"
-REPO_SKILLS="$(pwd)/skills"
+git diff --name-only $OLD_HEAD..HEAD -- skills/
+```
+
+Group by skill name. Only these skills need updating -- skip unchanged skills.
+
+## Step 6: Pre-Update Diff
+
+Follow process.md "Pre-Install/Update Diff" section, but ONLY for changed skills (from Step 5).
+
+Warn if installed version has files the repo doesn't (e.g., evals/results.md). Get user approval before overwriting.
+
+## Step 7: Copy Changed Skills Only
+
+```bash
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 PAI_SKILLS="$HOME/.config/pai/Skills"
 
-for skill_dir in "$REPO_SKILLS"/*/; do
-    name="$(basename "$skill_dir")"
-    if [[ -d "$PAI_SKILLS/$name" ]]; then
-        cp -R "$PAI_SKILLS/$name" "$BACKUP_DIR/$name"
-        echo "BACKUP: $name"
+for name in <changed-skills-from-step-5>; do
+    skill_dir="$REPO_ROOT/skills/$name"
+    if command -v rsync >/dev/null 2>&1; then
+        rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
+    else
+        [[ -d "$PAI_SKILLS/$name" ]] && mv "$PAI_SKILLS/$name" "/tmp/skippy-replaced-$name-$$"
+        cp -R "$skill_dir" "$PAI_SKILLS/$name"
     fi
-done
-```
-
-Create a restore script:
-```bash
-cat > "$BACKUP_DIR/restore.sh" << 'RESTORE'
-#!/usr/bin/env bash
-set -euo pipefail
-BACKUP_DIR="$(cd "$(dirname "$0")" && pwd)"
-PAI_SKILLS="$HOME/.config/pai/Skills"
-echo "=== Restoring skills from $BACKUP_DIR ==="
-for skill_dir in "$BACKUP_DIR"/*/; do
-    [[ -d "$skill_dir" ]] || continue
-    name="$(basename "$skill_dir")"
-    rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
-    echo "RESTORED: $name"
-done
-echo "=== Done. Start a new Claude Code session to pick up changes. ==="
-RESTORE
-chmod +x "$BACKUP_DIR/restore.sh"
-```
-
-## Step 4: Copy Updated Skills
-
-```bash
-REPO_SKILLS="$(pwd)/skills"
-PAI_SKILLS="$HOME/.config/pai/Skills"
-
-for skill_dir in "$REPO_SKILLS"/*/; do
-    name="$(basename "$skill_dir")"
-    rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
     echo "UPDATED: $name"
 done
 ```
 
-## Step 5: Run Evals On Changed Skills
+## Step 8: Reference Doc Completeness
 
-Check which skills changed in the pull:
+Follow process.md "Reference Doc Completeness Check". Only check changed skills.
 
-```bash
-git diff --name-only <old-HEAD>..HEAD -- skills/
-```
+## Step 9: Run Evals On Changed Skills
 
 For each changed skill that has `evals/evals.json`:
+
 1. Read the assertions
 2. Dry-run the test_prompt using only the skill files as instructions
 3. Score PASS/FAIL against all assertions
 4. If any FAIL: make ONE targeted fix, re-eval, loop (max 20 iterations)
 5. Write results to `evals/results.md`
 
-If no evals exist for a changed skill, report it as untested.
+Compare scores to eval baseline (from Step 3). Score dropped? Flag it to user.
 
-## Step 6: Report
+Skills without `evals/` -- report as untested.
 
-Compare pre-update snapshot to current state:
+## Step 10: After Inventory
 
-- List new skills (in repo but not in pre-update snapshot)
-- List removed skills (in snapshot but not in repo)
-- List updated skills (existed before, changed in this pull)
-- List new/changed commands per skill
-- Report eval results for changed skills
+Follow process.md "Before/After Inventory" (capture "after"). Report delta.
+
+## Step 11: OMC Hook Audit
+
+Follow process.md "OMC Hook Audit" section.
+
+## Step 12: Post-Update Smoke Test
+
+Follow process.md "Post-Install Smoke Test" section.
+
+## Step 13: Change Manifest
+
+Follow process.md "Change Manifest" section. Write to `$BACKUP_DIR/changes.md`.
+
+## Done
 
 Tell the user:
-1. What changed (skills, commands, reference docs)
-2. Where the backup lives
-3. Whether evals passed
-4. Suggest: "Start a new session and run `/skippy:progress` to verify"
+1. Backup location (Desktop)
+2. Update log location
+3. What changed (skills updated, commands added/removed)
+4. Eval results (scores held, dropped, or untested)
+5. Suggest: "Start a new session and run `/skippy:progress` to verify"
