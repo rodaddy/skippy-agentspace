@@ -12,7 +12,7 @@ Read `docs/process.md` for shared SOPs. All apply here.
 
 ## Step 2: Backup
 
-Follow process.md "Backup" section. Backup goes to `~/Desktop/skippy-backup-{timestamp}/`.
+Follow process.md "Backup" section. Backup location is determined by process.md (Desktop if it exists, otherwise ~/.cache/).
 
 Start the install log: `$BACKUP_DIR/update-log.md`.
 

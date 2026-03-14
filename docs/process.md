@@ -4,9 +4,19 @@ Standard operating procedures shared between install and update. Both `install-p
 
 ## Backup (MANDATORY -- always first)
 
-**Location:** `~/Desktop/skippy-backup-{YYYYMMDD-HHMMSS}/`
+**Default location:** User's Desktop if it exists, otherwise `~/.cache/skippy-backups/`.
 
-Desktop, not ~/.cache. The user must be able to see it.
+The backup should be somewhere visible and obvious -- not buried in a hidden directory.
+
+```bash
+if [[ -d "$HOME/Desktop" ]]; then
+    BACKUP_DIR="$HOME/Desktop/skippy-backup-$(date +%Y%m%d-%H%M%S)"
+else
+    BACKUP_DIR="$HOME/.cache/skippy-backups/pre-install-$(date +%Y%m%d-%H%M%S)"
+fi
+```
+
+Ask the user: "Backup will go to `$BACKUP_DIR`. Change location?" before proceeding.
 
 ### Discover the user's setup
 
