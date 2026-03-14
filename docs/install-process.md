@@ -34,11 +34,30 @@ In all modes, EVERY step is logged to `$BACKUP_DIR/install-log.md`. The log capt
 
 ---
 
-## Step 1: Read Shared Process
+## Step 1: Present Overview and Ask Install Mode
 
-Read `docs/process.md` -- it defines the shared SOPs referenced throughout this install.
+**DO NOT run any bash commands or system discovery yet.** First, present the user a table summarizing all install steps:
 
-**Show the user:** "I've read the shared process docs. Here's what the install will do:" followed by a numbered summary of all steps. Ask: "Shall I proceed?"
+| Step | Action |
+|------|--------|
+| 2 | Backup ~/.claude/, ~/.config/pai/ (+ pai-private if exists) with restore script |
+| 3 | Discover consumed sources (GSD, OMC, PAUL, Open Brain) |
+| 4 | Pre-install diff -- compare repo skills vs installed versions |
+| 5 | Capture current skill/command counts |
+| 6 | Ensure symlink architecture |
+| 7 | Command collision check |
+| 8 | Remove old marketplace commands (moved to /tmp) |
+| 9 | Copy skippy skills |
+| 10 | Reference doc completeness check |
+| 11 | After inventory + eval baseline |
+| 12 | OMC hook audit |
+| 13 | Post-install smoke test |
+| 14 | Change manifest |
+| 15 | Generate handoff/verification prompt |
+
+Then immediately use AskUserQuestion to ask the install mode. Do NOT start reading system state until the user has chosen a mode.
+
+Then read `docs/process.md` silently -- do not show its contents to the user. It's internal reference for you.
 
 ## Step 2: Backup
 
