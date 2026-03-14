@@ -61,12 +61,15 @@ fi
 Follow process.md "Backup" section. Backup location determined by process.md (Desktop if exists, ~/.cache/ fallback).
 
 Write state file:
+Read `/tmp/skippy-install-state.txt` with the Read tool to load SKILLS_TARGET from previous install. Then write the updated state:
+
 ```bash
 STATE_FILE="/tmp/skippy-install-state.txt"
-source "$STATE_FILE" 2>/dev/null || true  # load existing SKILLS_TARGET if set
 echo "BACKUP_DIR=$BACKUP_DIR" > "$STATE_FILE"
 echo "SKILLS_TARGET=${SKILLS_TARGET:-$HOME/.config/pai/Skills}" >> "$STATE_FILE"
 ```
+
+**Do NOT use `source` in bash -- security hooks block it. Use the Read tool instead.**
 
 Start update log: `$BACKUP_DIR/update-log.md`.
 
@@ -120,8 +123,9 @@ For skills with installed-only files at risk:
 
 ## Step 7: Copy Changed Skills Only
 
+Read `/tmp/skippy-install-state.txt` with the Read tool to get SKILLS_TARGET, then:
+
 ```bash
-source /tmp/skippy-install-state.txt
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
 

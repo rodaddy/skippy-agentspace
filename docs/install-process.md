@@ -183,11 +183,12 @@ fi
 **Ask (AskUserQuestion):** "Ready to install skills." -- options: Proceed / Show skill list / Skip
 
 **Execute:**
+Read `/tmp/skippy-install-state.txt` with the Read tool to get SKILLS_TARGET, then:
+
 ```bash
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 REPO_SKILLS="$REPO_ROOT/skills"
-# Use discovered skills target -- NOT hardcoded
-source /tmp/skippy-install-state.txt
+# Use discovered skills target from state file (read via Read tool, not source)
 PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
 
 for skill_dir in "$REPO_SKILLS"/*/; do
