@@ -186,7 +186,9 @@ fi
 ```bash
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 REPO_SKILLS="$REPO_ROOT/skills"
-PAI_SKILLS="$HOME/.config/pai/Skills"
+# Use discovered skills target -- NOT hardcoded
+source /tmp/skippy-install-state.txt
+PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
 
 for skill_dir in "$REPO_SKILLS"/*/; do
     name="$(basename "$skill_dir")"

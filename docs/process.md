@@ -195,11 +195,19 @@ User selected: Guided
 ### Log rules
 
 1. **Timestamps** on every step header
-2. **File counts and sizes** for backup/copy operations
-3. **Full paths** for everything (not abbreviated)
-4. **User choices** recorded verbatim (which AskUserQuestion option they picked)
-5. **Diffs summarized** (not full file diffs -- just "N files differ")
-6. **Errors include the actual error message** from bash, not just "it failed"
+2. **Exact commands** -- log the full bash command BEFORE running it, then log the result AFTER
+3. **File counts and sizes** for backup/copy operations
+4. **Full paths** for everything (not abbreviated)
+5. **User choices** recorded verbatim (which AskUserQuestion option they picked)
+6. **Diffs summarized** (not full file diffs -- just "N files differ")
+7. **Errors include the actual error message** from bash, not just "it failed"
+8. **One action per bash call** -- run one command, log it, then run the next. Do not batch.
+
+Example log entry with command:
+```markdown
+- [CMD] `rsync -a /Volumes/.../skills/skippy-dev/ /Users/rico/.config/pai/Skills/skippy-dev/`
+- [PASS] skippy-dev installed (8 commands: plan, execute, verify, quick, progress, cleanup, reconcile, update)
+```
 
 ## Pre-Install/Update Diff (MANDATORY)
 
@@ -359,6 +367,53 @@ Write `$BACKUP_DIR/changes.md` summarizing what changed:
 ## Unchanged
 - 63 skills not touched
 ```
+
+## State Persistence
+
+Variables set during early steps ($BACKUP_DIR, $SKILLS_TARGET, install mode) must survive the full install. Write them to a state file:
+
+```bash
+STATE_FILE="/tmp/skippy-install-state.txt"
+echo "BACKUP_DIR=$BACKUP_DIR" > "$STATE_FILE"
+echo "SKILLS_TARGET=$SKILLS_TARGET" >> "$STATE_FILE"
+echo "INSTALL_MODE=guided" >> "$STATE_FILE"
+```
+
+If you lose track of a variable (compaction, long session), read it back:
+```bash
+source /tmp/skippy-install-state.txt
+```
+
+## AI Judgment (Why .md Not .sh)
+
+The install process is a markdown instruction set, not a bash script, because CC can use judgment that scripts can't:
+
+- If an installed-only file is `evals/results.md` with 24/24 passing, recommend "merge -- this skill has proven eval scores"
+- If an installed-only file is a `.bak` backup file, recommend "safe to replace -- this is a leftover"
+- If the diff shows the repo version has MORE commands than installed, flag "upgrade -- repo adds new capabilities"
+- If the diff shows the installed version has custom references the repo doesn't, flag "custom content -- preserve"
+
+**Read installed-only files when they have meaningful names (evals, configs, references). Use your judgment to recommend merge vs replace vs skip. Don't just list files mechanically.**
+
+## Skip-Backup Warning
+
+If the user skips the backup step, set a flag:
+
+```bash
+echo "BACKUP_SKIPPED=true" >> "$STATE_FILE"
+```
+
+For EVERY subsequent step that modifies the system, include in the AskUserQuestion options: "(no rollback available -- backup was skipped)"
+
+## Stale File Detection
+
+After additive rsync, check for files that exist in the installed skill but NOT in the repo AND are not user-custom content:
+
+- Files with `.bak`, `.backup`, `.old` extensions -- likely stale
+- Files that existed in a previous repo version but were removed -- likely stale
+- Files in `evals/`, custom references, user configs -- likely intentional
+
+Log stale files separately from preserved custom files so the user can clean up later.
 
 ## Failure Protocol
 
