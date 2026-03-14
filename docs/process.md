@@ -178,6 +178,8 @@ LOG_FILE="$BACKUP_DIR/install-log.md"
 
 **Important:** The log file is created during the backup step, but discovery and other commands ran before it existed. After creating the log file, **retroactively write all commands and results from earlier steps** (environment discovery, size calculations, user choices) so the log is complete from the start of the session.
 
+**CRITICAL LOGGING RULE: After EVERY step, BEFORE presenting results to the user, append that step's entries to the log file using the Write or Edit tool. Do NOT batch log writes. Do NOT skip logging because you're about to show the user. The log is the audit trail -- if it's not in the log, it didn't happen. If you find yourself showing results without having written to the log first, STOP and write the log NOW.**
+
 ### What to log for EVERY step
 
 | Category | What to log | Example |
