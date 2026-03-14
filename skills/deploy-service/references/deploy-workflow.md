@@ -80,15 +80,66 @@ ssh root@${DEPLOY_SERVER_IP} "pct push ${DEPLOY_PROXY_VMID} /tmp/${SERVICE_NAME}
 
 ### 7. Add DNS to All DNS Servers
 
-Auto-discover DNS servers and add entry:
+Add the DNS entry to all Pi-hole instances listed in `DEPLOY_DNS_VMIDS`.
+
+**IMPORTANT GOTCHAS:**
+- Pi-hole instances may be on **different Proxmox nodes** -- `DEPLOY_SERVER_IP` only discovers
+  containers on one node. Use `DEPLOY_DNS_VMIDS` from config.env and search all nodes.
+- **Pi-hole v6** uses `pihole.toml` (`dns.hosts` array), NOT `custom.list`. Entries added to
+  `custom.list` alone will NOT resolve. You must edit `/etc/pihole/pihole.toml`.
+- The `pihole` binary is at `/usr/local/bin/pihole` -- not in default PATH for `pct exec`.
+- After editing `pihole.toml`, you must **restart pihole-FTL** (`systemctl restart pihole-FTL`),
+  not just `pihole reloaddns`. The TOML config is read on FTL startup.
+- When editing `pihole.toml` via sed through SSH+pct layers, quoting is unreliable. Push a
+  script file to the container and execute it instead.
 
 ```bash
-# Find all DNS servers (e.g., pihole instances)
-DNS_SERVERS=$(ssh root@${DEPLOY_SERVER_IP} "pct list" | grep -i pihole | awk '{print $1}')
+# Proxmox nodes to search for DNS server containers
+PROXMOX_NODES=("10.71.1.5" "10.71.1.6" "10.71.1.8")
 
-for SERVER in $DNS_SERVERS; do
-  ssh root@${DEPLOY_SERVER_IP} "pct exec ${SERVER} -- bash -c 'echo \"${DEPLOY_PROXY_IP} ${SERVICE_NAME}.${DEPLOY_DOMAIN}\" >> /etc/pihole/custom.list' && \
-    pct exec ${SERVER} -- pihole reloaddns"
+for VMID in ${DEPLOY_DNS_VMIDS}; do
+  # Find which Proxmox node hosts this VMID
+  NODE_IP=""
+  for NODE in "${PROXMOX_NODES[@]}"; do
+    if ssh root@${NODE} "pct status ${VMID}" &>/dev/null; then
+      NODE_IP="${NODE}"
+      break
+    fi
+  done
+
+  if [[ -z "$NODE_IP" ]]; then
+    echo "WARNING: Could not find VMID ${VMID} on any Proxmox node"
+    continue
+  fi
+
+  echo "Adding DNS to VMID ${VMID} on ${NODE_IP}..."
+
+  # Find the last entry line in dns.hosts array and insert after it
+  # Push a script to avoid SSH+pct quoting issues
+  cat > /tmp/add_dns_${VMID}.sh << 'INNERSCRIPT'
+#!/usr/bin/env bash
+ENTRY="PLACEHOLDER_ENTRY"
+# Check if entry already exists in pihole.toml
+if grep -q "$ENTRY" /etc/pihole/pihole.toml; then
+  echo "Entry already exists, skipping"
+  exit 0
+fi
+# Find the line with ] ### CHANGED in the dns.hosts section and insert before it
+# Add comma to current last entry, then add new entry
+LAST_LINE=$(grep -n '^\s*"10\.' /etc/pihole/pihole.toml | tail -1 | cut -d: -f1)
+sed -i "${LAST_LINE}s/\"$/\",/" /etc/pihole/pihole.toml
+sed -i "${LAST_LINE}a\\    \"${ENTRY}\"" /etc/pihole/pihole.toml
+INNERSCRIPT
+
+  # Replace placeholder with actual entry
+  sed -i "s|PLACEHOLDER_ENTRY|${DEPLOY_PROXY_IP} ${SERVICE_NAME}.${DEPLOY_DOMAIN}|" /tmp/add_dns_${VMID}.sh
+
+  scp /tmp/add_dns_${VMID}.sh root@${NODE_IP}:/tmp/
+  ssh root@${NODE_IP} "pct push ${VMID} /tmp/add_dns_${VMID}.sh /tmp/add_dns.sh && \
+    pct exec ${VMID} -- bash /tmp/add_dns.sh && \
+    pct exec ${VMID} -- systemctl restart pihole-FTL"
+
+  echo "DNS added to VMID ${VMID}"
 done
 ```
 

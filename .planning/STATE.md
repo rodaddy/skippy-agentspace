@@ -1,38 +1,45 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Standalone Skippy
-status: completed
-stopped_at: Completed 16-02-PLAN.md (v1.2 milestone complete)
-last_updated: "2026-03-08T23:49:38.503Z"
-last_activity: 2026-03-08 -- Phase 16 Plan 02 complete (verify.sh fix + final verification pass)
+milestone: v2.0
+milestone_name: Curation Engine
+status: planning
+stopped_at: v2.0 vision defined, audit complete, PROJECT.md updated
+last_updated: "2026-03-13T20:45:00.000Z"
+last_activity: 2026-03-13 -- Marketplace audits (GSD/OMC/Open Brain), 11 abilities defined, v2.0 vision locked
 progress:
-  total_phases: 16
-  completed_phases: 16
-  total_plans: 39
-  completed_plans: 39
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-08)
+See: .planning/PROJECT.md (updated 2026-03-13)
 
-**Core value:** Portable skills that work standalone with vanilla Claude Code, enhanced by PAI when present
-**Current focus:** v1.2 Standalone Skippy -- COMPLETE
+**Core value:** Skill curation engine -- consume any marketplace, coalesce patterns, verify with eval loops
+**Current focus:** v2.0 Curation Engine -- PLANNING
 
 ## Current Position
 
-Phase: 16-integration-polish (complete)
-Plan: 2 of 2 complete
-Status: v1.2 milestone complete -- all 16 phases, 39 plans executed
-Last activity: 2026-03-08 -- Phase 16 Plan 02 complete (verify.sh fix + final verification pass)
+Phase: Pre-planning (audit complete, vision locked)
+Status: Marketplace audits done (93 commands audited across GSD/OMC/Open Brain), 11 abilities defined, pipeline architecture designed
+Last activity: 2026-03-13 -- Full audit, v2.0 vision, lessons-from-first-run captured
 
-Progress: [██████████] 100%
+Progress: [----------] 0% (phases not yet created)
 
-**Next step:** Merge to main, tag v1.2 release
+**Next step:** Create v2.0 phases and roadmap. Core commands: consume, coalesce, eval, status.
+
+## What's Done for v2.0
+
+- Marketplace audit of GSD (32 cmds), OMC (38 cmds), Open Brain (18 patterns) -- see `.planning/audits/marketplace-audit-2026-03-13.md`
+- 11 abilities defined: Bootstrap, Plan, Execute, Verify, Persist, Loop, Interview, Review, Debug, Cleanup, Remember
+- Pipeline architecture: consume -> coalesce -> eval -> iterate -> ship
+- Lessons from manual run captured as pipeline features (8 failure-to-feature items)
+- Install infrastructure working: `~/.claude/skills/` is single symlink to `~/.config/pai/Skills/`
 
 ## Performance Metrics
 
