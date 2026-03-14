@@ -176,6 +176,8 @@ LOG_FILE="$BACKUP_DIR/install-log.md"
 
 **Write to the log AS you go, not at the end.** If the process crashes mid-way, the log shows exactly where it stopped.
 
+**Important:** The log file is created during the backup step, but discovery and other commands ran before it existed. After creating the log file, **retroactively write all commands and results from earlier steps** (environment discovery, size calculations, user choices) so the log is complete from the start of the session.
+
 ### What to log for EVERY step
 
 | Category | What to log | Example |
