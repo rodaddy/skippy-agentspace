@@ -206,13 +206,66 @@ done
 
 **Show:** each skill installed with its commands listed.
 
-## Step 10: Reference Doc Completeness
+## Step 9.5: Command Routing Setup
+
+Skills are discovered from `~/.claude/skills/<name>/SKILL.md`, but commands route as `/<skill-dir-name>:<command>`. If the command frontmatter specifies a DIFFERENT prefix than the skill directory name (e.g., skill dir is `skippy-dev` but frontmatter says `name: skippy:plan`), the commands won't be reachable under the intended prefix.
+
+**Check each skill's commands for prefix mismatch:**
+```bash
+for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
+    declared_name=$(grep '^name:' "$cmd_file" | head -1 | sed 's/name: *//')
+    prefix=$(echo "$declared_name" | cut -d: -f1)
+    skill_dir=$(basename "$(dirname "$(dirname "$cmd_file")")")
+    if [[ "$prefix" != "$skill_dir" ]]; then
+        echo "MISMATCH: $cmd_file declares $declared_name but lives in $skill_dir/"
+    fi
+done
+```
+
+**For each mismatch, create command symlinks:**
+```bash
+mkdir -p "$HOME/.claude/commands/$prefix"
+for cmd_file in "$PAI_SKILLS/$skill_dir/commands"/*.md; do
+    ln -sfn "$cmd_file" "$HOME/.claude/commands/$prefix/$(basename "$cmd_file")"
+done
+```
+
+This makes `/skippy:plan` work even though the skill dir is `skippy-dev`.
+
+**Show the user:** which prefixes were set up, how many commands routed.
+
+**Ask (AskUserQuestion):** "Command routing set up." -- options: Continue / Show command list / Skip
+
+## Step 10: Reference Doc and Path Portability Check
 
 Follow process.md "Reference Doc Completeness Check".
 
-**Show the user:** OK/MISSING table for every referenced doc.
+**Additionally, check for non-portable paths in command files:**
+```bash
+for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
+    # Check for repo-relative paths (skills/skippy-dev/agents/ etc.)
+    if grep -q 'skills/skippy-dev/' "$cmd_file" 2>/dev/null; then
+        echo "NON-PORTABLE: $cmd_file references repo-relative path 'skills/skippy-dev/'"
+    fi
+    # Check for hardcoded absolute paths
+    if grep -q '/Volumes/' "$cmd_file" 2>/dev/null; then
+        echo "HARDCODED: $cmd_file contains absolute /Volumes/ path"
+    fi
+done
+```
 
-**Ask** (only if MISSING found): "These references are missing -- this will cause commands to fail. Investigate?"
+Non-portable paths should use relative references (e.g., `references/` not `~/.config/pai/Skills/skippy-dev/references/`) or `${CLAUDE_SKILL_DIR}` variables.
+
+**Show the user:** OK/MISSING table for referenced docs + any non-portable path warnings.
+
+**Also check for stale/orphaned files** -- files that exist in the installed skill but are NOT referenced by any command or SKILL.md:
+- `bin/` directories alongside `scripts/` (likely pre-migration artifacts)
+- `.bak` or `.backup` files
+- Files in both `bin/` and `scripts/` with the same name (duplicates with different logic)
+
+Log stale files separately. Don't delete -- just report for user awareness.
+
+**Ask (AskUserQuestion, only if issues found):** "Path issues found." -- options: Investigate / Continue anyway / Rollback
 
 Any MISSING reference is a blocker -- do not proceed until resolved.
 
