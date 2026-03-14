@@ -34,7 +34,7 @@ Build a scan results table:
 |------|-------|-------|---------|--------|
 | n8n | 12 | 1450 | Workflows/, Tools/ | new |
 | deploy-service | 8 | 920 | helpers/, templates/ | new |
-| skippy-dev | 6 | 540 | commands/, references/ | already migrated |
+| skippy | 6 | 540 | commands/, references/ | already migrated |
 
 ## 2. Rank and Present Candidates
 

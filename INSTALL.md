@@ -1,89 +1,29 @@
-# Installing Skills & Components
+# Install skippy-agentspace
 
-Adding individual skills or components to an existing skippy-agentspace setup. For first-time installation, see [SETUP.md](SETUP.md).
+Clone this repo. Open a Claude Code session in it. Say:
 
-## Plugin Install (Preferred)
+> Read `docs/install-process.md` and install skippy-agentspace on this machine.
 
-If your Claude Code version supports plugins:
+That's it. The process handles everything: marketplace discovery, backup with restore script, skill installation, old command removal, eval testing, and a handoff prompt for verification in a fresh session.
 
-```
-/plugin marketplace add rodaddy/skippy-agentspace
-/plugin install skippy-dev@skippy-agentspace
-```
+For updates after initial install:
 
-Available plugins are listed in `.claude-plugin/marketplace.json`. The marketplace uses `strict: false` -- no plugin.json files are needed in individual skills.
+> Read `docs/update-process.md` and update skippy-agentspace.
 
-## Manual Install
+## What Happens
 
-Install a single skill:
+1. Discovers which marketplaces this repo consumes (from `upstreams/` and `.planning/audits/`)
+2. Backs up your entire `~/.claude/` and `~/.config/pai/` with a one-command restore script
+3. Sets up single-symlink architecture (`~/.claude/skills/` -> `~/.config/pai/Skills/`)
+4. Copies skippy skills into `~/.config/pai/Skills/`
+5. Removes old GSD/OMC commands that skippy replaces
+6. Runs Karpathy-style eval loops on skills that have assertions
+7. Generates a handoff prompt to verify the install in a fresh session
 
-```bash
-bash tools/install.sh skippy-dev
-```
-
-Install multiple skills at once:
-
-```bash
-bash tools/install.sh skippy-dev fabric excalidraw
-```
-
-Install core only (minimum viable PAI):
+## Manual Install (if you prefer)
 
 ```bash
-bash tools/install.sh --core
+bash tools/install.sh --all --copy
 ```
 
-Install everything:
-
-```bash
-bash tools/install.sh --all
-```
-
-The installer auto-detects whether to use `~/.claude/skills/` (modern) or `~/.claude/commands/` (legacy). Override with `--target=skills` or `--target=commands` if needed.
-
-## Checking Status
-
-Run the installer with no arguments to see what's installed:
-
-```bash
-bash tools/install.sh
-```
-
-This prints a status table showing each skill with `[installed]` or `[available]` badges and a brief description.
-
-## Available Skills
-
-12 skills across 4 categories. See [INDEX.md](INDEX.md) for the full catalog.
-
-| Category | Skills |
-|----------|--------|
-| Core | core (personas, LAWs, rules, hooks, templates) |
-| Workflow | add-todo, check-todos, correct, session-wrap, skippy-dev, update-todo |
-| Utility | browser, excalidraw, fabric, vaultwarden |
-| Domain | deploy-service |
-
-## Uninstalling
-
-Remove a single skill:
-
-```bash
-bash tools/uninstall.sh skippy-dev
-```
-
-Remove everything:
-
-```bash
-bash tools/uninstall.sh --all
-```
-
-Uninstall removes symlinks from both `~/.claude/skills/` and `~/.claude/commands/`. The skill source files in the repo are not affected.
-
-## Verifying
-
-After installing or uninstalling, confirm the setup is healthy:
-
-```bash
-bash tools/verify.sh
-```
-
-Run `/clear` in Claude Code to pick up changes to available skills and commands.
+See `docs/install-process.md` for the full process with backup, removal, and testing.

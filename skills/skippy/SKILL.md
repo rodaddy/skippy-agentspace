@@ -1,5 +1,5 @@
 ---
-name: skippy-dev
+name: skippy
 description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
 metadata:
   version: 0.1.0
@@ -8,7 +8,7 @@ metadata:
   category: workflow
 ---
 
-# skippy-dev -- Development Workflow Enhancements
+# skippy -- Development Workflow Enhancements
 
 Additive rules and tools that sharpen planning and execution workflows. Everything here is referenced guidance that agents and main context can load on demand.
 
