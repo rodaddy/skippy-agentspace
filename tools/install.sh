@@ -45,6 +45,9 @@ TARGET="auto"
 SKILL_NAMES=()
 INSTALL_ALL=false
 INSTALL_CORE=false
+COPY_MODE=false
+PAI_SKILLS_DIR="${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}"
+BACKUP_DIR="${SKIPPY_BACKUP_DIR:-$HOME/.cache/skippy-backups}"
 
 # --- Functions (must be defined before argument parsing uses them) ---
 
@@ -92,6 +95,54 @@ detect_target() {
             fi
             ;;
     esac
+}
+
+backup_skill() {
+    local name="$1"
+    local target_dir="$2"
+    local backup_name="pre-install-$(date +%Y%m%d-%H%M%S)"
+    local backup_dest="$BACKUP_DIR/$backup_name/skills"
+
+    if [[ -d "$target_dir/$name" ]]; then
+        mkdir -p "$backup_dest"
+        cp -R "$target_dir/$name" "$backup_dest/$name"
+        echo "  BACKUP: $name -> $backup_dest/$name"
+    fi
+}
+
+install_skill_copy() {
+    local name="$1"
+    local src="$SKILLS_DIR/$name"
+    local dest="$PAI_SKILLS_DIR/$name"
+
+    mkdir -p "$PAI_SKILLS_DIR"
+
+    # Backup existing before overwrite
+    backup_skill "$name" "$PAI_SKILLS_DIR"
+
+    # Use rsync for clean copy (no nested dir issues)
+    if command -v rsync >/dev/null 2>&1; then
+        rsync -a --delete "$src/" "$dest/"
+    else
+        # Fallback: remove existing, then copy
+        if [[ -d "$dest" ]]; then
+            mv "$dest" "/tmp/skippy-replaced-$name-$$"
+        fi
+        cp -R "$src" "$dest"
+    fi
+
+    echo "  INSTALLED (copy): $name -> $dest"
+    echo "    Skill entry: $dest/SKILL.md"
+    if [[ -d "$dest/commands" ]]; then
+        local cmd_list=""
+        for cmd_file in "$dest/commands/"*.md; do
+            [[ -f "$cmd_file" ]] || continue
+            local cmd_name
+            cmd_name="$(basename "$cmd_file" .md)"
+            cmd_list="${cmd_list:+$cmd_list, }$cmd_name"
+        done
+        echo "    Commands: $cmd_list"
+    fi
 }
 
 warn_plugin_conflict() {
@@ -191,14 +242,18 @@ install_skill() {
     # Warn about potential plugin conflicts
     warn_plugin_conflict "$name"
 
-    case "$resolved_target" in
-        skills)
-            install_skill_modern "$name"
-            ;;
-        commands)
-            install_skill_legacy "$name"
-            ;;
-    esac
+    if [[ "$COPY_MODE" == true ]]; then
+        install_skill_copy "$name"
+    else
+        case "$resolved_target" in
+            skills)
+                install_skill_modern "$name"
+                ;;
+            commands)
+                install_skill_legacy "$name"
+                ;;
+        esac
+    fi
 }
 
 # --- Argument parsing ---
@@ -215,11 +270,14 @@ for arg in "$@"; do
         --all)
             INSTALL_ALL=true
             ;;
+        --copy)
+            COPY_MODE=true
+            ;;
         --core)
             INSTALL_CORE=true
             ;;
         -h|--help)
-            echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+            echo "Usage: install.sh [skill-name...] [--core] [--all] [--copy] [--target=skills|commands|auto]"
             echo ""
             echo "Modes:"
             echo "  (no args)            Show status table of all skills"
@@ -228,6 +286,8 @@ for arg in "$@"; do
             echo "  --all                Install all skills"
             echo ""
             echo "Options:"
+            echo "  --copy               Copy skills into ~/.config/pai/Skills/ (decoupled from repo)"
+            echo "                       Backs up existing skills before overwriting."
             echo "  --target=X           Override target (skills|commands|auto, default: auto)"
             echo "                       auto prefers skills/ if ~/.claude/skills/ exists"
             echo ""
