@@ -95,13 +95,30 @@ Follow process.md "Pre-Install/Update Diff" section.
 - For DIFFERS: which side is newer, what files differ
 - Warning if installed version has extra files (evals, custom config) that would be lost
 
-For skills with NO installed-only files at risk:
-**Ask (AskUserQuestion):** "Approve skill changes?" -- options: Approve all / Review individual skills / Skip
+**For EVERY skill that DIFFERS (not just ones with installed-only files), diff the SKILL.md content and assess:**
+- Is the repo version an upgrade (more content, new commands, new references)?
+- Is the installed version richer (production customizations, inline content the repo skeleton lacks)?
+- Are they roughly equivalent (just metadata differences)?
+
+Show the assessment per skill. This determines whether each skill gets: repo overwrites installed, installed stays and repo adds new files, or skip entirely.
+
+For skills where repo is clearly an upgrade:
+**Ask (AskUserQuestion):** "These N skills would be upgraded by the repo version." -- options: Approve all / Review individual / Skip
+
+For skills where installed is richer:
+**Ask (AskUserQuestion):** "These N skills have richer installed versions." -- options: Add repo-only files (keep installed) / Review individual / Skip
 
 For skills WITH installed-only files (core, deploy-service, etc.):
-**Ask (AskUserQuestion) per skill:** "Skill X has Y installed-only files that repo doesn't have." -- options: Merge (additive -- keep installed files, add repo files) / Clean replace (delete installed-only files) / Skip this skill
 
-**Default is Merge (additive). NEVER clean-replace without explicit per-skill approval.**
+First, use AI judgment: compare the repo SKILL.md vs installed SKILL.md. If the installed version is richer/more current than the repo version, recommend SKIP (the repo would be a downgrade). If the repo adds new commands or references the installed doesn't have, recommend MERGE.
+
+**Ask (AskUserQuestion) per skill:** "Skill X: [your assessment]" -- options:
+- Skip (keep installed as-is -- recommended when installed is richer)
+- Merge additive (add repo files, keep installed files, overwrite shared files)
+- Merge selective (show file-by-file, choose which to take)
+- Clean replace (delete installed-only files -- NOT recommended)
+
+**Default depends on assessment. NEVER clean-replace without explicit approval.**
 
 ## Step 5: Before Inventory
 
@@ -173,6 +190,33 @@ fi
 **OMC:** If installed, report what's kept and why. If not installed, skip. **No OMC required** -- Claude Code discovers skills natively.
 
 **Show:** what was removed, what was kept.
+
+## Step 8.5: Migrate skippy-dev to skippy (if needed)
+
+The skill directory was renamed from `skippy-dev` to `skippy`. If the installed system has the old name, migrate it:
+
+```bash
+PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
+if [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ ! -d "$PAI_SKILLS/skippy" ]]; then
+    mv "$PAI_SKILLS/skippy-dev" "$PAI_SKILLS/skippy"
+    echo "MIGRATED: skippy-dev -> skippy"
+elif [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ -d "$PAI_SKILLS/skippy" ]]; then
+    # Both exist -- merge skippy-dev into skippy, then remove old
+    rsync -a "$PAI_SKILLS/skippy-dev/" "$PAI_SKILLS/skippy/"
+    mv "$PAI_SKILLS/skippy-dev" "/tmp/skippy-dev-migrated-$$"
+    echo "MERGED: skippy-dev into skippy (old moved to /tmp)"
+fi
+```
+
+Also clean up old command routing if it exists:
+```bash
+if [[ -d "$HOME/.claude/commands/skippy-dev" ]]; then
+    mv "$HOME/.claude/commands/skippy-dev" "/tmp/skippy-dev-commands-$$"
+    echo "CLEANED: old ~/.claude/commands/skippy-dev"
+fi
+```
+
+**Log all migration actions. Show the user what was migrated.**
 
 ## Step 9: Copy Skippy Skills
 

@@ -75,13 +75,13 @@ For each reviewer in order:
 3. **architecture-reviewer** -- checks portability, conventions, dependencies, SoC (uses opus model)
 4. **consistency-reviewer** -- verifies cross-file alignment (SKILL.md, INDEX.md, state files)
 
-For each reviewer, read its agent definition file (`skills/skippy-dev/agents/{agent-name}.md`) and extract YAML frontmatter fields to pass as Agent tool parameters:
+For each reviewer, read its agent definition file (`skills/skippy/agents/{agent-name}.md`) and extract YAML frontmatter fields to pass as Agent tool parameters:
 - `model` → Agent tool `model` parameter (e.g., "opus" for architecture-reviewer)
 - `permissionMode` → Agent tool `mode` parameter (e.g., "plan" for reviewers)
 - `isolation` → Agent tool `isolation` parameter (e.g., "worktree" for fix-agent)
 
 Spawn the Agent tool with:
-- **Prompt:** Include the scope to review, the findings board file path, and the instruction: "Read `skills/skippy-dev/agents/{agent-name}.md` for your full instructions. Write your findings to the `## {Section Name} Review` section of the findings board at {path}. Return a summary count only (e.g., 'Found 2 CRITICAL, 3 HIGH, 1 MEDIUM issues')."
+- **Prompt:** Include the scope to review, the findings board file path, and the instruction: "Read `skills/skippy/agents/{agent-name}.md` for your full instructions. Write your findings to the `## {Section Name} Review` section of the findings board at {path}. Return a summary count only (e.g., 'Found 2 CRITICAL, 3 HIGH, 1 MEDIUM issues')."
 - **mode:** `plan` (from agent frontmatter -- ensures reviewers are read-only)
 - Wait for completion before spawning the next reviewer
 - Record the summary count returned by each reviewer
@@ -119,7 +119,7 @@ For each CRITICAL or HIGH finding (or group of findings on the same file):
 1. Spawn the fix-agent using the Agent tool with a prompt containing:
    - The specific finding(s) to fix (copy from findings board)
    - The file path(s) to modify
-   - Instruction: "Read `skills/skippy-dev/agents/fix-agent.md` for your full instructions. Apply the fix. Make one atomic commit per finding with message prefixed `fix(review):`. Report the commit hash and what was changed."
+   - Instruction: "Read `skills/skippy/agents/fix-agent.md` for your full instructions. Apply the fix. Make one atomic commit per finding with message prefixed `fix(review):`. Report the commit hash and what was changed."
 2. Wait for completion
 3. Record commit hash and fix description in the Fix Log section of the findings board
 
@@ -130,7 +130,7 @@ If no CRITICAL or HIGH findings exist, skip this step and report "No critical fi
 Spawn the eval-agent with a prompt containing:
 - The findings board path (to see what was fixed)
 - The list of commit hashes from Step 5
-- Instruction: "Read `skills/skippy-dev/agents/eval-agent.md` for your full instructions. Verify each fix was applied correctly. Check that fixes didn't introduce regressions. Write results to the `## Evaluation` section of the findings board. Return PASS or FAIL with details."
+- Instruction: "Read `skills/skippy/agents/eval-agent.md` for your full instructions. Verify each fix was applied correctly. Check that fixes didn't introduce regressions. Write results to the `## Evaluation` section of the findings board. Return PASS or FAIL with details."
 
 If eval returns FAIL:
 1. Check if the failure matches a previous failure signature (same-failure detection from verification-loops.md)

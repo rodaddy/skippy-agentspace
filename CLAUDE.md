@@ -44,7 +44,7 @@ Three layers:
   marketplace.json          # Plugin marketplace (12 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
-  skippy-dev/               # [workflow] Dev enhancements -- 6 commands, 18 reference docs
+  skippy/                   # [workflow] Dev enhancements -- 12 commands, 18 reference docs
     agents/                 # Subagent definitions for /skippy:review audit swarm
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   check-todos/              # [workflow] Unified todo viewer with action routing
@@ -90,7 +90,7 @@ INDEX.md                    # Auto-generated skill registry (4 category sections
 **Plugin install** (preferred):
 ```
 /plugin marketplace add rodaddy/skippy-agentspace
-/plugin install skippy-dev@skippy-agentspace
+/plugin install skippy@skippy-agentspace
 ```
 
 **Manual install:**
@@ -142,6 +142,6 @@ v1.0-v1.2 shipped (16 phases, 39 plans). v2.0 in planning -- curation engine.
 | Current position + blockers | `.planning/STATE.md` |
 | Skill composition + workflow patterns | `ORCHESTRATION.md` |
 | Skill index (all 12 skills by category) | `INDEX.md` |
-| Dev workflow skill | `skills/skippy-dev/SKILL.md` |
+| Dev workflow skill | `skills/skippy/SKILL.md` |
 | Core skill entry point | `skills/core/SKILL.md` |
 | Content conventions + upstream registry | `CONVENTIONS.md` |
