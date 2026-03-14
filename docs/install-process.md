@@ -95,9 +95,13 @@ Follow process.md "Pre-Install/Update Diff" section.
 - For DIFFERS: which side is newer, what files differ
 - Warning if installed version has extra files (evals, custom config) that would be lost
 
-**Ask (AskUserQuestion):** "Approve skill changes?" -- options: Approve all / Review individual skills / Skip diff
+For skills with NO installed-only files at risk:
+**Ask (AskUserQuestion):** "Approve skill changes?" -- options: Approve all / Review individual skills / Skip
 
-**NEVER overwrite without approval on DIFFERS skills.**
+For skills WITH installed-only files (core, deploy-service, etc.):
+**Ask (AskUserQuestion) per skill:** "Skill X has Y installed-only files that repo doesn't have." -- options: Merge (additive -- keep installed files, add repo files) / Clean replace (delete installed-only files) / Skip this skill
+
+**Default is Merge (additive). NEVER clean-replace without explicit per-skill approval.**
 
 ## Step 5: Before Inventory
 
@@ -187,14 +191,16 @@ PAI_SKILLS="$HOME/.config/pai/Skills"
 for skill_dir in "$REPO_SKILLS"/*/; do
     name="$(basename "$skill_dir")"
     if command -v rsync >/dev/null 2>&1; then
-        rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
+        # ADDITIVE: copies repo files in, preserves installed-only files
+        rsync -a "$skill_dir" "$PAI_SKILLS/$name/"
     else
-        [[ -d "$PAI_SKILLS/$name" ]] && mv "$PAI_SKILLS/$name" "/tmp/skippy-replaced-$name-$$"
-        cp -R "$skill_dir" "$PAI_SKILLS/$name"
+        cp -R "$skill_dir" "$PAI_SKILLS/$name/"
     fi
     echo "INSTALLED: $name"
 done
 ```
+
+**Default is additive** (rsync without --delete). Installed-only files (evals/, custom configs, extra references) are preserved. If the user chose "clean replace" for a specific skill during Step 4 diff, use `rsync -a --delete` for that skill only.
 
 **Show:** each skill installed with its commands listed.
 

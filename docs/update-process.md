@@ -58,7 +58,8 @@ PAI_SKILLS="$HOME/.config/pai/Skills"
 for name in <changed-skills-from-step-5>; do
     skill_dir="$REPO_ROOT/skills/$name"
     if command -v rsync >/dev/null 2>&1; then
-        rsync -a --delete "$skill_dir" "$PAI_SKILLS/$name/"
+        # ADDITIVE: copies repo files in, preserves installed-only files
+        rsync -a "$skill_dir" "$PAI_SKILLS/$name/"
     else
         [[ -d "$PAI_SKILLS/$name" ]] && mv "$PAI_SKILLS/$name" "/tmp/skippy-replaced-$name-$$"
         cp -R "$skill_dir" "$PAI_SKILLS/$name"

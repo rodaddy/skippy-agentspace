@@ -150,7 +150,7 @@ LOG_FILE="$BACKUP_DIR/install-log.md"
 |----------|------------|---------|
 | **Discovery** | Everything found during system scan | "Skills dir: symlink to /Users/rico/.config/pai/Skills (75 skills)" |
 | **User choice** | Which option the user selected | "Install mode: Guided" |
-| **Action** | What was executed | "rsync -a --delete skills/skippy-dev/ ~/.config/pai/Skills/skippy-dev/" |
+| **Action** | What was executed | "rsync -a skills/skippy-dev/ ~/.config/pai/Skills/skippy-dev/" |
 | **Result** | Outcome of each action | "[PASS] skippy-dev installed (8 commands)" |
 | **Skip** | Steps skipped and why | "[SKIP] OMC removal -- not installed" |
 | **Warning** | Non-blocking issues | "[WARN] Installed humanizer has evals/results.md not in repo -- preserved" |
