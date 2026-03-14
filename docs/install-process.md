@@ -11,21 +11,24 @@ First-time installation. For updates, see `update-process.md`.
 This is an **interactive, step-by-step** install. You do NOT run all steps automatically. For each step:
 
 1. **Explain** -- tell the user what this step does and why
-2. **Ask** -- "Proceed with defaults, customize, or skip?"
+2. **Ask** -- use the `AskUserQuestion` tool with structured choices (checkboxes/radio). NEVER ask free-text questions. The user should click, not type.
 3. **Execute** -- run the step
 4. **Show** -- display the log output / results
-5. **Confirm** -- "Looks good? Ready for next step?"
+5. **Confirm** -- use `AskUserQuestion` with "Looks good / Investigate / Rollback" choices
+
+**CRITICAL: Every question MUST use the `AskUserQuestion` tool with predefined options. No free-text prompts. No "type 1, 2, or 3." Click-only interaction.**
 
 ### Step 0: Install Mode
 
-Before anything else, ask the user:
+Before anything else, use AskUserQuestion:
 
-> **How would you like to install?**
-> 1. **Follow defaults** -- standard paths, standard backup, recommended settings. I'll still show you each step but won't ask unless something looks wrong.
-> 2. **Guided** -- walk me through every step with explanations. I approve each one before it runs. (recommended for first install)
-> 3. **Discover** -- scan my system first, show me what you find, then we decide together what to do.
+**Question:** "How would you like to install?"
+**Options:**
+- Follow defaults -- standard paths, recommended settings. Shows each step but only asks if something looks wrong.
+- Guided -- walk through every step. You approve each one before it runs. (recommended)
+- Discover -- scan your system first, show what's found, then decide together.
 
-Default: Guided (option 2).
+Default: Guided.
 
 In all modes, EVERY step is logged to `$BACKUP_DIR/install-log.md`. The log captures what was done even if the user chose defaults.
 
@@ -47,7 +50,7 @@ Follow process.md "Backup" section. Backup location is determined by process.md 
 - Backup location
 - Restore command: `bash $BACKUP_DIR/restore.sh`
 
-**Ask:** "Proceed with backup?"
+**Ask (AskUserQuestion):** "Proceed with backup?" -- options: Proceed / Change location / Skip (not recommended)
 
 **After:** Show backup results -- files copied, sizes, restore.sh location. Confirm rollback smoke test passed.
 
@@ -62,7 +65,7 @@ Read `upstreams/*/upstream.json` for marketplace definitions. Read `.planning/au
 - What skippy takes from each
 - What skippy replaces
 
-**Ask:** "These are the sources skippy consumes. Any questions before we continue?"
+**Ask (AskUserQuestion):** "Sources reviewed." -- options: Continue / Tell me more about a source / Skip
 
 ## Step 4: Pre-Install Diff
 
@@ -73,7 +76,7 @@ Follow process.md "Pre-Install/Update Diff" section.
 - For DIFFERS: which side is newer, what files differ
 - Warning if installed version has extra files (evals, custom config) that would be lost
 
-**Ask:** "Approve overwriting these skills? (any you want to keep as-is?)"
+**Ask (AskUserQuestion):** "Approve skill changes?" -- options: Approve all / Review individual skills / Skip diff
 
 **NEVER overwrite without approval on DIFFERS skills.**
 
@@ -86,7 +89,7 @@ Follow process.md "Before/After Inventory" -- capture the "before" snapshot.
 - Current command count
 - Where skills live (symlink target or direct directory)
 
-**Ask:** "This is your current setup. Ready to proceed with changes?"
+**Ask (AskUserQuestion):** "Current setup captured." -- options: Continue / Show details / Stop
 
 ## Step 6: Ensure Symlink Architecture
 
@@ -101,7 +104,7 @@ target=$(readlink "$HOME/.claude/skills" 2>/dev/null || echo "NOT_A_SYMLINK")
 - "Found N individual symlinks -- need to migrate to single symlink" OR
 - "No skills directory found -- will create from scratch"
 
-**Ask:** "Proceed with symlink setup?" (only if changes are needed)
+**Ask (AskUserQuestion, only if changes needed):** "Symlink migration needed." -- options: Proceed / Show what will change / Skip
 
 **Execute:**
 - If already correct: skip
@@ -118,7 +121,7 @@ Follow process.md "Command Collision Check" section.
 - Table of any collisions found
 - Which commands coexist safely (different names) vs actual conflicts (same name)
 
-**Ask:** "Any collisions you want to resolve before we remove old commands?"
+**Ask (AskUserQuestion):** "Collision check complete." -- options: Continue / Resolve a collision / Skip
 
 ## Step 8: Remove Old Marketplace Commands
 
@@ -132,7 +135,7 @@ OMC: keeping (hooks provide value, commands coexist)
 ```
 Or: "No GSD/OMC found -- nothing to remove."
 
-**Ask:** "Proceed with removal? (moved to /tmp, not deleted -- recoverable)"
+**Ask (AskUserQuestion):** "Ready to remove old commands." -- options: Proceed (moved to /tmp) / Show what will be removed / Skip
 
 **Execute:**
 ```bash
@@ -154,7 +157,7 @@ fi
 - List of skills to install with command counts
 - Install target directory (`$SKILLS_TARGET` from discovery)
 
-**Ask:** "Proceed with skill installation?"
+**Ask (AskUserQuestion):** "Ready to install skills." -- options: Proceed / Show skill list / Skip
 
 **Execute:**
 ```bash
@@ -202,7 +205,7 @@ Eval baseline:
   (etc -- only if evals exist)
 ```
 
-**Ask:** "Inventory looks correct?"
+**Ask (AskUserQuestion):** "Inventory captured." -- options: Looks good / Show details / Investigate
 
 ## Step 12: OMC Hook Audit
 
@@ -224,9 +227,9 @@ Follow process.md "Post-Install Smoke Test" section.
 - GSD removed: PASS/FAIL
 - Broken symlinks: PASS/FAIL
 
-**Ask:** "All checks passed. Ready for change manifest and handoff?"
+**Ask (AskUserQuestion):** "Smoke test results shown." -- options: Continue to handoff / Investigate failures / Rollback
 
-If any FAIL: "X checks failed. Investigate or rollback?"
+If any FAIL: options become: Investigate / Rollback / Continue anyway (not recommended)
 
 ## Step 14: Change Manifest
 
@@ -246,7 +249,7 @@ Create a prompt the user pastes into a NEW CC session to verify the install. Bas
 
 **Show the user** the handoff prompt AND save it to `$BACKUP_DIR/verify-prompt.md`.
 
-**Ask:** "Install complete. Ready to start a fresh session and verify?"
+**Ask (AskUserQuestion):** "Install complete." -- options: Copy handoff prompt / Show summary again / Rollback
 
 ## Done
 
