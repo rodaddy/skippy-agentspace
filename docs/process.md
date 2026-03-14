@@ -18,6 +18,29 @@ fi
 
 Ask the user: "Backup will go to `$BACKUP_DIR`. Change location?" before proceeding.
 
+### Targeted vs Full Backup
+
+Calculate the size of what will be backed up. If total is **under 50MB**, back up everything without asking -- it's trivial.
+
+If total is **over 50MB**, use AskUserQuestion:
+
+**Question:** "Backup would be X GB (Y files). How should we proceed?"
+**Options:**
+- Targeted -- only back up directories the install will modify (~50MB: skills, commands, get-shit-done)
+- Full -- back up everything (~X GB: all of ~/.claude/ + ~/.config/pai/)
+- Skip backup (not recommended -- no rollback)
+
+**Targeted backup** only captures:
+```bash
+# Only what the install touches
+rsync -al "$HOME/.config/pai/Skills/" "$BACKUP_DIR/config-pai-Skills/"
+[[ -d "$HOME/.claude/commands/gsd" ]] && rsync -al "$HOME/.claude/commands/gsd/" "$BACKUP_DIR/commands-gsd/"
+[[ -d "$HOME/.claude/get-shit-done" ]] && rsync -al "$HOME/.claude/get-shit-done/" "$BACKUP_DIR/get-shit-done/"
+[[ -d "$HOME/.config/pai-private" ]] && rsync -al "$HOME/.config/pai-private/" "$BACKUP_DIR/config-pai-private/"
+```
+
+**Full backup** captures everything (the default from the "How" section above).
+
 ### Discover the user's setup
 
 Before backing up, map what exists:
@@ -112,10 +135,19 @@ if [[ -f "$BACKUP_DIR/skills-symlink-target.txt" ]]; then
     echo "RESTORED: ~/.claude/skills symlink"
 fi
 
-# Restore each backed-up directory
-[[ -d "$BACKUP_DIR/dot-claude" ]] && rsync -al --delete "$BACKUP_DIR/dot-claude/" "$HOME/.claude/" && echo "RESTORED: ~/.claude/"
-[[ -d "$BACKUP_DIR/config-pai" ]] && rsync -al --delete "$BACKUP_DIR/config-pai/" "$HOME/.config/pai/" && echo "RESTORED: ~/.config/pai/"
-[[ -d "$BACKUP_DIR/config-pai-private" ]] && rsync -al --delete "$BACKUP_DIR/config-pai-private/" "$HOME/.config/pai-private/" && echo "RESTORED: ~/.config/pai-private/"
+# Detect backup type (full vs targeted) and restore accordingly
+if [[ -d "$BACKUP_DIR/dot-claude" ]]; then
+    # Full backup
+    rsync -al --delete "$BACKUP_DIR/dot-claude/" "$HOME/.claude/" && echo "RESTORED: ~/.claude/"
+    [[ -d "$BACKUP_DIR/config-pai" ]] && rsync -al --delete "$BACKUP_DIR/config-pai/" "$HOME/.config/pai/" && echo "RESTORED: ~/.config/pai/"
+    [[ -d "$BACKUP_DIR/config-pai-private" ]] && rsync -al --delete "$BACKUP_DIR/config-pai-private/" "$HOME/.config/pai-private/" && echo "RESTORED: ~/.config/pai-private/"
+else
+    # Targeted backup -- restore only what was backed up
+    [[ -d "$BACKUP_DIR/config-pai-Skills" ]] && rsync -al --delete "$BACKUP_DIR/config-pai-Skills/" "$HOME/.config/pai/Skills/" && echo "RESTORED: ~/.config/pai/Skills/"
+    [[ -d "$BACKUP_DIR/commands-gsd" ]] && rsync -al "$BACKUP_DIR/commands-gsd/" "$HOME/.claude/commands/gsd/" && echo "RESTORED: ~/.claude/commands/gsd/"
+    [[ -d "$BACKUP_DIR/get-shit-done" ]] && rsync -al "$BACKUP_DIR/get-shit-done/" "$HOME/.claude/get-shit-done/" && echo "RESTORED: ~/.claude/get-shit-done/"
+    [[ -d "$BACKUP_DIR/config-pai-private" ]] && rsync -al --delete "$BACKUP_DIR/config-pai-private/" "$HOME/.config/pai-private/" && echo "RESTORED: ~/.config/pai-private/"
+fi
 
 echo "=== Restored. Start a new Claude Code session to pick up changes. ==="
 RESTORE
