@@ -170,6 +170,8 @@ Only remove what exists. Move to /tmp, never rm.
 **Show the user** what will be removed:
 ```
 GSD: ~/.claude/commands/gsd (32 commands) -> /tmp/gsd-commands-backup-XXXX
+GSD: ~/.claude/agents/gsd-*.md (agent definitions) -> /tmp/gsd-agents-backup-XXXX
+GSD: ~/.claude/gsd-local-patches/ (if exists) -> /tmp/gsd-patches-backup-XXXX
 GSD: ~/.claude/get-shit-done (core) -> /tmp/gsd-core-backup-XXXX
 OMC: keeping (hooks provide value, commands coexist)
 ```
@@ -179,11 +181,28 @@ Or: "No GSD/OMC found -- nothing to remove."
 
 **Execute:**
 ```bash
+# GSD commands
 if [[ -d "$HOME/.claude/commands/gsd" ]]; then
     mv "$HOME/.claude/commands/gsd" "/tmp/gsd-commands-backup-$$"
+    echo "REMOVED: ~/.claude/commands/gsd"
 fi
+# GSD core (workflows, templates, references)
 if [[ -d "$HOME/.claude/get-shit-done" ]]; then
     mv "$HOME/.claude/get-shit-done" "/tmp/gsd-core-backup-$$"
+    echo "REMOVED: ~/.claude/get-shit-done"
+fi
+# GSD agent definitions (show up as subagent types in Claude Code)
+for agent in gsd-executor gsd-planner gsd-verifier gsd-plan-checker gsd-phase-researcher; do
+    if [[ -f "$HOME/.claude/agents/$agent.md" ]]; then
+        mkdir -p "/tmp/gsd-agents-backup-$$"
+        mv "$HOME/.claude/agents/$agent.md" "/tmp/gsd-agents-backup-$$/"
+        echo "REMOVED: ~/.claude/agents/$agent.md"
+    fi
+done
+# GSD local patches (leftover from GSD update system)
+if [[ -d "$HOME/.claude/gsd-local-patches" ]]; then
+    mv "$HOME/.claude/gsd-local-patches" "/tmp/gsd-patches-backup-$$"
+    echo "REMOVED: ~/.claude/gsd-local-patches"
 fi
 ```
 
