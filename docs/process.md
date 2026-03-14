@@ -370,7 +370,11 @@ Write `$BACKUP_DIR/changes.md` summarizing what changed:
 
 ## State Persistence
 
-Variables set during early steps ($BACKUP_DIR, $SKILLS_TARGET, install mode) must survive the full install. Write them to a state file:
+Two state files: temporary (current session) and permanent (survives across sessions).
+
+### Session state (temporary)
+
+For the current install/update session. Lives in /tmp, lost on reboot -- that's fine.
 
 ```bash
 STATE_FILE="/tmp/skippy-install-state.txt"
@@ -382,6 +386,44 @@ echo "INSTALL_MODE=guided" >> "$STATE_FILE"
 If you lose track of a variable (compaction, long session), read it back:
 ```bash
 source /tmp/skippy-install-state.txt
+```
+
+### Install config (permanent)
+
+Saved during install, read during updates. Lives alongside the skills so it persists.
+
+```bash
+SKIPPY_CONFIG="${SKILLS_TARGET:-$HOME/.config/pai/Skills}/.skippy-config"
+```
+
+Written at the END of a successful install:
+```bash
+cat > "$SKIPPY_CONFIG" << CONFIG
+# skippy-agentspace install config
+# Written by install on $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+# Read by update-process.md for defaults
+
+SKILLS_TARGET=$SKILLS_TARGET
+INSTALL_MODE=$INSTALL_MODE
+BACKUP_LOCATION=$BACKUP_DIR
+LAST_INSTALL=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+LAST_REPO_COMMIT=$(git rev-parse HEAD)
+REPO_URL=$(git remote get-url origin 2>/dev/null || echo "local")
+CONFIG
+```
+
+Updates read this first to get defaults:
+```bash
+SKIPPY_CONFIG="${HOME}/.config/pai/Skills/.skippy-config"
+if [[ -f "$SKIPPY_CONFIG" ]]; then
+    source "$SKIPPY_CONFIG"
+    echo "Loaded install config from $SKIPPY_CONFIG"
+    echo "  Skills target: $SKILLS_TARGET"
+    echo "  Last install: $LAST_INSTALL"
+    echo "  Last commit: $LAST_REPO_COMMIT"
+else
+    echo "No previous install config found -- using defaults"
+fi
 ```
 
 ## AI Judgment (Why .md Not .sh)

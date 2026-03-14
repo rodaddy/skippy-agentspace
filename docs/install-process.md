@@ -278,12 +278,17 @@ Create a prompt the user pastes into a NEW CC session to verify the install. Bas
 
 **Ask (AskUserQuestion):** "Install complete." -- options: Copy handoff prompt / Show summary again / Rollback
 
+## Step 16: Save Install Config
+
+Write permanent config so future updates have defaults. Follow process.md "Install config (permanent)" section.
+
 ## Done
 
 Tell the user:
 1. Backup + restore script: `$BACKUP_DIR/` (location shown during Step 2)
 2. Install log: `$BACKUP_DIR/install-log.md`
 3. Change manifest: `$BACKUP_DIR/changes.md`
-4. Skills installed, commands available
-5. What was removed
-6. "Paste the handoff prompt into a new session to verify"
+4. Install config: `$SKIPPY_CONFIG` (used by future updates)
+5. Skills installed, commands available
+6. What was removed
+7. "Paste the handoff prompt into a new session to verify"

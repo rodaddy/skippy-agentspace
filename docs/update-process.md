@@ -41,6 +41,21 @@ All steps logged to `$BACKUP_DIR/update-log.md` with exact commands and results.
 
 Then read `docs/process.md` silently.
 
+## Step 1.5: Load Install Config
+
+Read the permanent config from the previous install:
+
+```bash
+SKIPPY_CONFIG="${HOME}/.config/pai/Skills/.skippy-config"
+if [[ -f "$SKIPPY_CONFIG" ]]; then
+    source "$SKIPPY_CONFIG"
+fi
+```
+
+**Show the user:** loaded defaults (skills target, last install date, last commit). These become the defaults for this update -- the user doesn't need to re-enter them.
+
+**Ask (AskUserQuestion):** "Previous install config loaded." -- options: Use these defaults / Change settings / Fresh discovery
+
 ## Step 2: Backup
 
 Follow process.md "Backup" section. Backup location determined by process.md (Desktop if exists, ~/.cache/ fallback).
