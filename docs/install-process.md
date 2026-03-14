@@ -324,9 +324,14 @@ Create a prompt the user pastes into a NEW CC session to verify the install. Bas
 
 - Skill count and command list (from successful installs)
 - What was removed (only if actually removed)
-- Backup location
-- Specific test: "Try `/skippy:progress` in any project with `.planning/`"
-- For e2e: "Run `/skippy:plan` on a real phase"
+- Backup location and restore command
+- Verification tests to run:
+  1. "Run `/skippy:progress` in any project with `.planning/`"
+  2. "Run `/skippy:plan --skip-research --skip-verify` on a test phase to verify the plan command works"
+  3. "Confirm no `gsd:*` commands appear in the skill list"
+- After verification passes:
+  - "To consume additional marketplace sources, run `/skippy:consume <github-repo-url>` for each source you want to audit and absorb."
+  - List the default consumed sources (GSD, OMC, PAUL, Open Brain) and note they're already included.
 
 **Show the user** the handoff prompt AND save it to `$BACKUP_DIR/verify-prompt.md`.
 
