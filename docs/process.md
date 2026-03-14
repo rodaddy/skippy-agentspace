@@ -136,25 +136,70 @@ Do NOT proceed with install/update if rollback isn't verified.
 
 ## Install Log (MANDATORY)
 
-CC must write a step-by-step log during install/update. Every action, every skip, every failure.
+CC must write a step-by-step log during install/update. The log is the audit trail -- it captures everything so the user (or a future session) can understand exactly what happened.
 
 ```bash
 LOG_FILE="$BACKUP_DIR/install-log.md"
 ```
 
-Log format:
+**Write to the log AS you go, not at the end.** If the process crashes mid-way, the log shows exactly where it stopped.
+
+### What to log for EVERY step
+
+| Category | What to log | Example |
+|----------|------------|---------|
+| **Discovery** | Everything found during system scan | "Skills dir: symlink to /Users/rico/.config/pai/Skills (75 skills)" |
+| **User choice** | Which option the user selected | "Install mode: Guided" |
+| **Action** | What was executed | "rsync -a --delete skills/skippy-dev/ ~/.config/pai/Skills/skippy-dev/" |
+| **Result** | Outcome of each action | "[PASS] skippy-dev installed (8 commands)" |
+| **Skip** | Steps skipped and why | "[SKIP] OMC removal -- not installed" |
+| **Warning** | Non-blocking issues | "[WARN] Installed humanizer has evals/results.md not in repo -- preserved" |
+| **Failure** | Anything that failed | "[FAIL] Reference doc verification-loops.md missing" |
+| **Diff** | Before/after comparisons | "Before: 75 skills, 42 commands. After: 75 skills, 47 commands. Delta: +5 commands" |
+
+### Log format
+
 ```markdown
-# Install Log -- YYYY-MM-DD HH:MM
+# Install Log -- YYYY-MM-DD HH:MM:SS
 
-## Step 1: Backup
-- [PASS] ~/.claude/ backed up (X files)
-- [PASS] ~/.config/pai/ backed up (Y files)
+## Environment
+- OS: macOS / Linux / WSL2
+- Shell: zsh / bash
+- Claude Code: vX.Y.Z
+- Repo: rodaddy/skippy-agentspace @ commit XXXXXXX
+- Branch: feat/orchestration-protocol
+
+## Install Mode
+User selected: Guided
+
+## Step 2: Backup
+- [PASS] ~/.claude/ backed up (1.2G, 312 files)
+- [PASS] ~/.config/pai/ backed up (800M, 198 files)
+- [PASS] ~/.config/pai-private/ backed up (45M, 23 files)
 - [PASS] restore.sh created and verified
+- [INFO] Backup location: ~/Desktop/skippy-backup-20260314-130500/
 
-## Step 2: ...
+## Step 3: Discover Consumed Sources
+- [INFO] Found 4 upstream definitions: gsd, omc, paul, open-brain
+- [INFO] Audit data: .planning/audits/marketplace-audit-2026-03-13.md (93 commands)
+
+## Step 4: Pre-Install Diff
+- [IDENTICAL] core
+- [DIFFERS] skippy-dev (repo has 5 new commands, installed has evals/)
+- [NEW] (not installed yet -- will be added)
+- User choice: Approve all
+
+...etc for every step
 ```
 
-Write to the log AS you go, not at the end. If the process crashes mid-way, the log shows exactly where it stopped.
+### Log rules
+
+1. **Timestamps** on every step header
+2. **File counts and sizes** for backup/copy operations
+3. **Full paths** for everything (not abbreviated)
+4. **User choices** recorded verbatim (which AskUserQuestion option they picked)
+5. **Diffs summarized** (not full file diffs -- just "N files differ")
+6. **Errors include the actual error message** from bash, not just "it failed"
 
 ## Pre-Install/Update Diff (MANDATORY)
 
