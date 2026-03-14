@@ -253,31 +253,22 @@ done
 
 ## Step 9.5: Command Routing Setup
 
-Skills are discovered from `~/.claude/skills/<name>/SKILL.md`, but commands route as `/<skill-dir-name>:<command>`. If the command frontmatter specifies a DIFFERENT prefix than the skill directory name (e.g., skill dir is `skippy-dev` but frontmatter says `name: skippy:plan`), the commands won't be reachable under the intended prefix.
+Claude Code discovers slash commands from `~/.claude/commands/<prefix>/`. Skills installed via `~/.claude/skills/` have their commands in the skill directory, but they also need to be linked into `~/.claude/commands/` for slash command routing.
 
-**Check each skill's commands for prefix mismatch:**
+**For each skill that has a `commands/` directory, symlink the whole directory:**
 ```bash
-for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
-    declared_name=$(grep '^name:' "$cmd_file" | head -1 | sed 's/name: *//')
-    prefix=$(echo "$declared_name" | cut -d: -f1)
-    skill_dir=$(basename "$(dirname "$(dirname "$cmd_file")")")
-    if [[ "$prefix" != "$skill_dir" ]]; then
-        echo "MISMATCH: $cmd_file declares $declared_name but lives in $skill_dir/"
+for skill_dir in "$PAI_SKILLS"/*/; do
+    name="$(basename "$skill_dir")"
+    if [[ -d "$skill_dir/commands" ]]; then
+        ln -sfn "$skill_dir/commands" "$HOME/.claude/commands/$name"
+        echo "ROUTED: /$name:* ($(ls "$skill_dir/commands/"*.md 2>/dev/null | wc -l | tr -d ' ') commands)"
     fi
 done
 ```
 
-**For each mismatch, create command symlinks:**
-```bash
-mkdir -p "$HOME/.claude/commands/$prefix"
-for cmd_file in "$PAI_SKILLS/$skill_dir/commands"/*.md; do
-    ln -sfn "$cmd_file" "$HOME/.claude/commands/$prefix/$(basename "$cmd_file")"
-done
-```
+One symlink per skill, not per command. All commands in the skill are automatically available.
 
-This makes `/skippy:plan` work even though the skill dir is `skippy-dev`.
-
-**Show the user:** which prefixes were set up, how many commands routed.
+**Show the user:** which skills have routed commands.
 
 **Ask (AskUserQuestion):** "Command routing set up." -- options: Continue / Show command list / Skip
 
