@@ -9,40 +9,33 @@
 
 ## What This Is
 
-A skill marketplace repo containing **12 portable skills** across 4 categories: core identity, workflow automation, utility tools, and domain-specific deployment. Each skill has a slim SKILL.md (<150 lines) with deep references for detail. Installs as a Claude Code plugin or via manual symlinks.
+A **skill curation engine** for Claude Code. Pull in any number of marketplaces/plugins. Skippy audits each one, extracts valuable patterns, coalesces them into deduplicated abilities, and verifies every ability with Karpathy-style binary assertion eval loops.
 
-**Standalone skill framework.** Upstream repos (GSD, PAUL, OMC) are historical sources of adapted patterns, not runtime dependencies.
+**Pipeline:** Consume -> Coalesce -> Eval -> Iterate -> Ship
+
+Not "here's some skills, trust us." Instead: "here's skills with assertions proving they work, and the machine that built them."
 
 ## Why This Exists
 
-On 2026-03-06, we analyzed the [PAUL framework](https://github.com/ChristopherKahler/paul) after watching a YouTube comparison of GSD vs PAUL. After cloning PAUL's repo and reviewing every file, we identified **5 ideas worth stealing** and rejected the rest.
+Claude Code has a growing ecosystem of marketplaces and plugins (GSD, OMC, PAUL, superpowers, etc.). Each ships 30-40+ commands. Most are ceremony, overlap, or marketing. The actual value in any marketplace is 5-7 core patterns buried under wrapper commands.
 
-### What We Stole from PAUL
+Skippy is the machine that extracts those patterns. On 2026-03-13, we ran the first manual audit:
+- **93 commands** audited across GSD (32), OMC (38), Open Brain (18 patterns), PAUL (5)
+- **85% cut** -- 60 commands were ceremony, duplicates, or self-referential tooling
+- **11 abilities** emerged from the remaining 15% after cross-source deduplication
+- **8 process failures** from the manual run became pipeline features
 
-| # | Enhancement | What It Does | Reference |
-|---|-------------|-------------|-----------|
-| 1 | Context Brackets | Self-monitor context window usage (FRESH/MODERATE/DEEP/CRITICAL) and adapt behavior | `references/context-brackets.md` |
-| 2 | Mandatory Reconciliation | Plan-vs-actual comparison after every phase -- what deviated and why | `references/reconciliation.md` |
-| 3 | Plan Structure | Plan format with task fields: files, action, verify, done | `references/plan-structure.md` |
-| 4 | Plan Boundaries | Explicit DO NOT CHANGE and SCOPE LIMITS in every plan | `references/plan-boundaries.md` |
-| 5 | State Consistency | Cross-file alignment verification at phase transitions | `references/state-consistency.md` |
-
-### What We Rejected from PAUL
-
-- **No subagents for execution** -- works for tiny projects, dies at scale. GSD's parallel execution is correct.
-- **BDD Given/When/Then for every AC** -- ceremony for ceremony's sake on solo projects.
-- **"Plans are prompts" framing** -- clever marketing for "write specific plans," not novel.
-- **"70% context loss" claim about GSD** -- GSD writes structured artifacts for context transfer.
+See `.planning/audits/marketplace-audit-2026-03-13.md` for full audit data.
 
 ## Architecture
 
-Three approaches evaluated. We chose **portable skill repo** -- standalone execution with source attribution to GSD and PAUL.
+Three layers:
 
-| Approach | Why Chosen / Rejected |
-|----------|----------------------|
-| **PAI Skill + Hooks** (chosen) | No forks, modular, zero upstream maintenance. Injects PAUL ideas as reference docs. |
-| Full Skippy Framework | Rejected -- massive maintenance burden, diverges from both upstreams |
-| Just Patch GSD | Rejected -- no update mechanism, per-project only, coupled to GSD internals |
+| Layer | What | Ships As |
+|-------|------|----------|
+| **Engine** | Consume, coalesce, eval pipeline | `/skippy:consume`, `/skippy:coalesce`, `/skippy:eval`, `/skippy:status` |
+| **Knowledge** | Pattern taxonomy, classification heuristics, eval framework | 18 reference docs + `evals/` per ability |
+| **Defaults** | Pre-consumed sources + their coalesced output | 11 abilities from GSD+OMC+PAUL+Open Brain |
 
 ## What's Built
 
@@ -74,14 +67,23 @@ INDEX.md                    # Auto-generated skill registry (4 category sections
 
 ## Commands
 
+### Pipeline (v2.0 -- in development)
+
+| Command | What It Does |
+|---------|-------------|
+| `/skippy:consume <source>` | Audit a marketplace/plugin -- classify commands, extract patterns, persist results |
+| `/skippy:coalesce` | Merge all consumed patterns into abilities, deduplicate, resolve overlaps |
+| `/skippy:eval` | Run Karpathy-style binary assertion loops per ability, auto-fix failures |
+| `/skippy:status` | Show consumed sources, abilities, scores, overlap map |
+
+### Existing (v1.x)
+
 | Command | What It Does |
 |---------|-------------|
 | `/skippy:reconcile` | Compare planned vs actual for the most recent phase -- reports deviations, flags state drift |
 | `/skippy:review` | Multi-agent audit swarm -- spawns specialist reviewers, aggregates findings, applies fixes |
-| `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks. Generic -- iterates upstreams/*/upstream.json |
-| `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history). Reports space freed |
-| `/skippy:migrate` | Migrate PAI skills to portable format -- scan, rank, dry-run, migrate, update integration |
-| `/skippy:upgrade` | Pull latest, re-install skills and hooks, verify, report changes and customization conflicts |
+| `/skippy:update` | Check all tracked upstreams for changes and suggest cherry-picks |
+| `/skippy:cleanup` | Quarantine or nuke ephemeral files (debug logs, telemetry, session history) |
 
 ## Installation
 
@@ -100,15 +102,16 @@ cd skippy-agentspace
 
 **Uninstall:** `./tools/uninstall.sh` (removes symlinks from both targets)
 
-## Upstream Sources
+## Consumed Sources (defaults)
 
-| Repo | What It Is | What We Take |
-|------|-----------|-------------|
-| [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | Phased execution framework for Claude Code | Historical source of phased execution patterns |
-| [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | Plan-Apply-Unify Loop framework | 5 enhancement ideas (see table above) |
-| [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | Claude Code plugin framework (hooks, state, modes) | Plugin infrastructure, hooks system, state management |
+| Source | Commands Audited | Kept | Cut | Key Abilities |
+|--------|-----------------|------|-----|---------------|
+| [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | 32 | 10 | 22 | Bootstrap, Plan, Execute, Verify, Persist, Debug |
+| [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | 38 | 13 | 25 | Loop, Interview, Review, Plan (adversarial) |
+| [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | 5 | 5 | 0 | Context brackets, reconciliation, plan boundaries |
+| Open Brain (local) | 18 patterns | 6 | 12 | Remember |
 
-Monitor for upstream changes: `/skippy:update`
+Full audit: `.planning/audits/marketplace-audit-2026-03-13.md`
 
 ## Constraints
 
@@ -120,23 +123,14 @@ Monitor for upstream changes: `/skippy:update`
 
 ## Project Status
 
-v1 complete. v1.1 complete -- 12 skills migrated, skill system operational. v1.2 complete -- 12 skills, 18 reference docs, standalone framework.
+v1.0-v1.2 shipped (16 phases, 39 plans). v2.0 in planning -- curation engine.
 
-| Phase | Goal | Status |
-|-------|------|--------|
-| 1-4 (v1) | Spec, packaging, commands, docs | Complete |
-| 5. Foundation | Conventions, upstream tracking | Complete |
-| 6. Skill Content | Core + skippy-dev content | Complete |
-| 7. Hooks | LAW enforcement hooks | Complete |
-| 8. Upstream Integration | OMC cherry-picks, reference docs | Complete |
-| 9. Skill System | Selective install, migrate, 12 skills | Complete |
-| 10. Bootstrap & Docs | Final validation | Complete |
-| 11. Foundation | Shared shell library (common.sh), .gitattributes | Complete |
-| 12. Testing | bats-core test suite, CI workflow | Complete |
-| 13. GSD Absorption | Standalone reference docs, state parser | Complete |
-| 14. Audit Swarm | /skippy:review multi-agent command | Complete |
-| 15. Hardening | deploy-service config, version bump | Complete |
-| 16. Integration & Polish | CONTRIBUTING.md, doc consistency | Complete |
+| Milestone | What | Status |
+|-----------|------|--------|
+| v1.0 | Initial release -- spec, packaging, commands, docs | Shipped 2026-03-07 |
+| v1.1 | Portable PAI -- 12 skills, upstream tracking, bootstrap | Shipped 2026-03-08 |
+| v1.2 | Standalone Skippy -- GSD absorption, audit swarm, testing | Shipped 2026-03-08 |
+| **v2.0** | **Curation Engine -- consume/coalesce/eval pipeline** | **Planning** |
 
 ## Key Files
 

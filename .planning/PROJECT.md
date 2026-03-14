@@ -2,13 +2,69 @@
 
 ## What This Is
 
-A portable PAI infrastructure package for Claude Code. Core system (personas, LAWs, hooks, commands) plus add-on skills -- all bootstrappable on a new machine from a single repo. Cherry-picks the best ideas from GSD, PAUL, and OMC as upstream sources. Every skill follows the slim-core pattern: small SKILL.md entry point with deep reference docs in folders, so everything is available without eating context.
+A skill curation engine for Claude Code. Users pull in any number of Claude Code marketplaces/plugins. Skippy audits each one, extracts the valuable patterns, coalesces them across sources into deduplicated abilities, and verifies every ability with Karpathy-style binary assertion eval loops. The output is a clean, personalized skill set -- quality-gated and self-improving.
 
 ## Core Value
 
-Every skill works standalone with vanilla Claude Code -- no PAI dependency required. Skills are self-contained, installable, and enhanced (not broken) by PAI infrastructure when present.
+**Consume -> Coalesce -> Eval -> Iterate -> Ship**
+
+1. **Consume** -- audit any marketplace/plugin, classify every command as ESSENTIAL/USEFUL/CEREMONY/CUT, extract core patterns
+2. **Coalesce** -- merge patterns across all consumed sources, deduplicate overlapping capabilities, produce minimal ability set
+3. **Eval** -- run binary assertion loops (`evals/evals.json`) against each ability, score pass/fail
+4. **Iterate** -- failed assertions trigger ONE targeted fix per iteration, re-eval, loop until perfect or max iterations
+5. **Ship** -- verified abilities install into the user's Claude Code setup; when abilities improve, push updates back to repo
+
+No other skill framework does steps 3-5. They all stop at "here's the skill, trust us." Skippy says "here's the skill, here's the assertions proving it works, and here's the score."
+
+## How It Works For Any User
+
+1. Install skippy-agentspace
+2. `skippy:consume <marketplace-url>` -- audits the source, extracts patterns
+3. `skippy:consume <another-marketplace>` -- repeat for N sources
+4. `skippy:coalesce` -- merges all consumed patterns into abilities
+5. `skippy:eval` -- runs assertion loops, auto-fixes failures
+6. Result: personalized, quality-verified ability set
+
+The 11 default abilities (Bootstrap, Plan, Execute, Verify, Persist, Loop, Interview, Review, Debug, Cleanup, Remember) are what falls out when the inputs are GSD+OMC+PAUL+Open Brain. Different sources produce different abilities.
+
+## Lessons From First Manual Run (2026-03-13)
+
+The v2.0 pipeline was first run manually this session. These failures become features:
+
+| What Went Wrong | Pipeline Feature It Becomes |
+|----------------|---------------------------|
+| Install nearly regressed 11 PAI skills with older repo snapshots (`cp -R` created nested dirs) | **Pre-consume diff** -- before absorbing, compare source vs installed versions. Never overwrite newer with older. |
+| Backup only covered `~/.claude/`, missed `~/.config/pai/` | **Full-scope backup** -- consume step snapshots ALL affected directories before any modification |
+| 75 individual symlinks maintained by hand when 1 directory symlink works | **Architecture audit** -- consume step should detect and flag structural inefficiencies like symlink sprawl |
+| No conflict detection between sources | **Cross-source overlap detection** -- coalesce step must identify when two sources provide the same capability and pick the better one, not install both |
+| Security hooks blocked destructive operations (rm), had to use mv | **Non-destructive operations only** -- pipeline uses mv-to-tmp, never rm. Hooks are allies, not obstacles |
+| Eval prompts discovered by accident on Desktop | **Eval-first discovery** -- consume step should scan for existing evals/assertions in both source AND target, merge them |
+| Audit agents worked great but results weren't captured | **Audit persistence** -- every consume produces a structured audit doc in `.planning/audits/` automatically |
+| Manual classification (ESSENTIAL/USEFUL/CEREMONY/CUT) was time-consuming | **Classification heuristics** -- pattern-match common ceremony indicators (help commands, setup wizards, self-referential tooling, deprecated wrappers) for pre-classification |
 
 ## Milestones
+
+### v2.0 Curation Engine (next)
+
+The consume -> coalesce -> eval -> iterate pipeline. Turns skippy-agentspace from "12 portable skills" into a skill curation framework for any Claude Code user.
+
+**What ships:**
+- `skippy:consume <source>` -- audit a marketplace/plugin, extract patterns, classify, persist results
+- `skippy:coalesce` -- merge all consumed patterns into abilities, deduplicate, cut overlap
+- `skippy:eval` -- Karpathy-style binary assertion loop per ability, auto-fix, iterate to perfect
+- `skippy:status` -- show consumed sources, abilities, scores, overlap
+- Pre-consume diff (never regress installed skills)
+- Full-scope backup before any modification
+- Cross-source overlap detection and resolution
+- Audit persistence (`.planning/audits/`)
+- 11 default abilities from GSD+OMC+PAUL+Open Brain pre-consumed
+
+**Architecture:**
+- Each consumed source gets an entry in `upstreams/` with audit results
+- Each ability is a skill dir with SKILL.md + commands/ + references/ + evals/
+- `evals/evals.json` defines binary assertions per ability
+- `evals/results.md` tracks scores and iteration history
+- The 18 existing reference docs become the knowledge base for pattern classification
 
 ### v1.2 Standalone Skippy (shipped 2026-03-08)
 

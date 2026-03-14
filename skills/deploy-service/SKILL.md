@@ -65,6 +65,31 @@ Before using this skill, set up your environment config:
 
 See `config.env.example` for the full variable list with descriptions.
 
+## Gotchas
+
+### Pi-hole v6 DNS entries
+
+Pi-hole v6 uses `/etc/pihole/pihole.toml` (the `dns.hosts` array) for local DNS records, NOT
+`/etc/pihole/custom.list`. Adding entries to `custom.list` alone will silently fail to resolve.
+After editing `pihole.toml`, restart FTL: `systemctl restart pihole-FTL` (not `pihole reloaddns`).
+
+### Pi-hole command path
+
+The `pihole` binary lives at `/usr/local/bin/pihole` and is NOT in the default PATH when using
+`pct exec`. Always use the full path: `pct exec <VMID> -- /usr/local/bin/pihole <command>`.
+
+### Multi-node Proxmox DNS servers
+
+Pi-hole instances may be on **different Proxmox nodes**. The workflow's `DEPLOY_SERVER_IP` only
+sees containers on one node. The `DEPLOY_DNS_VMIDS` config lists all pihole VMIDs, but the
+workflow must search all Proxmox nodes to find each VMID. See step 7 in deploy-workflow.md.
+
+### SSH+pct quoting for sed
+
+Running `sed` with regex through SSH -> `pct exec` -> bash loses special characters (`$`, `"`,
+etc.) across quoting layers. Workaround: push a script file to the container via `pct push` and
+execute it, rather than inlining sed commands.
+
 ## References
 
 - `references/deploy-workflow.md` -- Full step-by-step deployment workflow
