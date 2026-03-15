@@ -41,7 +41,7 @@ When absorbing GSD patterns (phased execution, wave-based parallelism, state tra
 **Why it happens:**
 GSD's execute-phase.md alone is 460 lines of precise orchestration logic. execute-plan.md is another 450 lines. These workflows encode dozens of edge cases: the `classifyHandoffIfNeeded` bug workaround, the auto-advance chain flag vs user preference distinction, decimal phase handling for gap closure, segment execution patterns (A/B/C routing), and 4-rule deviation classification. Absorption typically starts as "copy the key ideas" and accidentally omits 30-40% of edge case handling that separates a working framework from a demo.
 
-The GSD dependency map (already documented in `skills/skippy-dev/references/gsd-dependency-map.md`) identifies 4 HIGH-risk integration points and 2 MEDIUM-risk ones. Absorbing these patterns means taking ownership of maintaining all of them.
+The GSD dependency map (already documented in `skills/skippy/references/gsd-dependency-map.md`) identifies 4 HIGH-risk integration points and 2 MEDIUM-risk ones. Absorbing these patterns means taking ownership of maintaining all of them.
 
 **How to avoid:**
 1. Absorb by reference, not by rewrite. Start with markdown reference docs that document the patterns, not reimplemented shell scripts
@@ -267,7 +267,7 @@ The `/skippy:review` command phase. Model routing should be configurable from th
 - [Claude Code sandbox security analysis](https://smartscope.blog/en/generative-ai/claude/claude-code-sandbox-security-2025/) -- subagent inheritance, permission bypass risks
 - [Check Point Research -- CVE-2025-59536](https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/) -- hook-based RCE vectors
 - Codebase analysis: `tools/install.sh`, `tools/uninstall.sh`, `tools/verify.sh`, `skills/core/hooks/install-hooks.sh` -- duplicated patterns identified
-- Codebase analysis: `skills/skippy-dev/references/gsd-dependency-map.md` -- 4 HIGH, 2 MEDIUM risk GSD dependencies
+- Codebase analysis: `skills/skippy/references/gsd-dependency-map.md` -- 4 HIGH, 2 MEDIUM risk GSD dependencies
 - GSD workflow analysis: `execute-phase.md` (460 lines), `execute-plan.md` (450 lines), `checkpoints.md` (777 lines) -- complexity of patterns being absorbed
 - Real incident: prior session where red team agent ran `uninstall --all` against real HOME, removing 71 installed skills
 

@@ -21,7 +21,7 @@ tech-stack:
 
 key-files:
   created:
-    - skills/skippy-dev/references/gsd-dependency-map.md
+    - skills/skippy/references/gsd-dependency-map.md
   modified: []
 
 key-decisions:
@@ -63,7 +63,7 @@ Each task was committed atomically:
 1. **Task 1: Create GSD dependency map** - `8c57ac4` (feat)
 
 ## Files Created/Modified
-- `skills/skippy-dev/references/gsd-dependency-map.md` - Comprehensive dependency map with integration points table, per-file structure docs, breakage risk annotations, and upstream monitoring guide
+- `skills/skippy/references/gsd-dependency-map.md` - Comprehensive dependency map with integration points table, per-file structure docs, breakage risk annotations, and upstream monitoring guide
 
 ## Decisions Made
 - Documented YAML frontmatter and XML task block dependencies separately because they have different risk profiles (XML task format change is highest risk, YAML field additions are safe)

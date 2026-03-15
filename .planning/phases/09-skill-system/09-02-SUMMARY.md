@@ -21,11 +21,11 @@ tech-stack:
 
 key-files:
   created:
-    - skills/skippy-dev/commands/migrate.md
+    - skills/skippy/commands/migrate.md
   modified:
     - tools/index-sync.sh
     - skills/core/SKILL.md
-    - skills/skippy-dev/SKILL.md
+    - skills/skippy/SKILL.md
     - INDEX.md
 
 key-decisions:
@@ -70,9 +70,9 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 - `skills/core/SKILL.md` - Added category: core to metadata
-- `skills/skippy-dev/SKILL.md` - Added category: workflow to metadata
+- `skills/skippy/SKILL.md` - Added category: workflow to metadata
 - `tools/index-sync.sh` - Rewritten --generate for category-grouped output with install badges; --check validates category field
-- `skills/skippy-dev/commands/migrate.md` - New AI command for PAI skill migration
+- `skills/skippy/commands/migrate.md` - New AI command for PAI skill migration
 - `INDEX.md` - Regenerated with category sections and install badges
 
 ## Decisions Made
@@ -86,10 +86,10 @@ Each task was committed atomically:
 
 **1. [Rule 1 - Bug] Fixed command extraction from nonexistent triggers: field**
 - **Found during:** Task 1 (index-sync.sh rewrite)
-- **Issue:** Plan specified `sed -n '/^triggers:/...'` extraction but no SKILL.md has a triggers: field. Commands were showing as "(none)" for skippy-dev
+- **Issue:** Plan specified `sed -n '/^triggers:/...'` extraction but no SKILL.md has a triggers: field. Commands were showing as "(none)" for skippy
 - **Fix:** Changed extraction to scan `commands/*.md` files and read the `name:` frontmatter field from each
 - **Files modified:** tools/index-sync.sh
-- **Verification:** INDEX.md now shows /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update for skippy-dev
+- **Verification:** INDEX.md now shows /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:update for skippy
 - **Committed in:** fbf0d08 (Task 1 commit)
 
 ---

@@ -8,18 +8,18 @@
 
 Phase 14 formalizes the multi-agent audit loop proven during the v1.1 milestone (7 rounds, 20+ agents, 17 findings) into a repeatable `/skippy:review` command. The core mechanism is Claude Code's subagent system -- markdown files with YAML frontmatter that define specialized agents, each spawned via the Task/Agent tool with their own fresh context window, tool restrictions, and system prompts.
 
-The command itself follows the established skippy-dev command pattern (YAML frontmatter + `<objective>` + `<execution_context>` + `<process>` sections in a `.md` file). The orchestration logic lives entirely in the command's markdown instructions -- no shell scripts needed for agent spawning. The command instructs the main Claude instance to act as orchestrator, spawning 4 specialist subagents sequentially (security, code quality, architecture, consistency), aggregating findings into a shared board, then spawning fix agents and an evaluator.
+The command itself follows the established skippy command pattern (YAML frontmatter + `<objective>` + `<execution_context>` + `<process>` sections in a `.md` file). The orchestration logic lives entirely in the command's markdown instructions -- no shell scripts needed for agent spawning. The command instructs the main Claude instance to act as orchestrator, spawning 4 specialist subagents sequentially (security, code quality, architecture, consistency), aggregating findings into a shared board, then spawning fix agents and an evaluator.
 
 **Critical constraint:** Subagents cannot spawn other subagents (Claude Code limitation). This means the orchestrator (main conversation) must handle all agent spawning -- no hierarchical delegation. The fix/eval cycle must also be orchestrated from the main conversation, not delegated to a meta-agent.
 
-**Primary recommendation:** Implement `/skippy:review` as a command markdown file that orchestrates 4 reviewer subagent definitions (stored under `skills/skippy-dev/agents/`) plus fix and eval agent definitions. The command instructions guide the main conversation through: scope detection, reviewer spawning, findings aggregation, fix agent spawning, and eval cycling. All subagent definitions include `permissionMode: bypassPermissions` and `isolation: worktree` where destructive operations are possible, plus HOME override instructions in system prompts.
+**Primary recommendation:** Implement `/skippy:review` as a command markdown file that orchestrates 4 reviewer subagent definitions (stored under `skills/skippy/agents/`) plus fix and eval agent definitions. The command instructions guide the main conversation through: scope detection, reviewer spawning, findings aggregation, fix agent spawning, and eval cycling. All subagent definitions include `permissionMode: bypassPermissions` and `isolation: worktree` where destructive operations are possible, plus HOME override instructions in system prompts.
 
 <phase_requirements>
 ## Phase Requirements
 
 | ID | Description | Research Support |
 |----|-------------|-----------------|
-| SWARM-01 | `/skippy:review` spawns 4 specialist review agents (security, code quality, architecture, consistency) | Claude Code subagent system supports defining agents as markdown files in `skills/skippy-dev/agents/`. The command markdown instructs the orchestrator to spawn each via the Agent tool. Each agent gets its own context window, tool restrictions, and focused system prompt. |
+| SWARM-01 | `/skippy:review` spawns 4 specialist review agents (security, code quality, architecture, consistency) | Claude Code subagent system supports defining agents as markdown files in `skills/skippy/agents/`. The command markdown instructs the orchestrator to spawn each via the Agent tool. Each agent gets its own context window, tool restrictions, and focused system prompt. |
 | SWARM-02 | Shared findings board aggregates results with cross-references | A markdown file at a known path (e.g., `.reports/skippy-review/findings.md`) serves as the aggregation point. Each reviewer appends findings. The orchestrator synthesizes after all reviewers complete. Proven pattern from v1.1 audit (`/tmp/skippy-audit-board.md`). |
 | SWARM-03 | Fix agents address actionable findings with atomic commits | Fix agents are subagents spawned by the orchestrator after findings are prioritized. Each fix agent receives specific findings and makes atomic commits. Model routing: sonnet for standard fixes, opus for complex ones. |
 | SWARM-04 | Re-evaluation loop verifies fixes and finds regressions | An evaluator subagent runs after fix agents complete. Uses the verification-loops.md cycling protocol (max 3 iterations, same-failure detection). If regressions found, spawns targeted fix agents. |
@@ -34,7 +34,7 @@ The command itself follows the established skippy-dev command pattern (YAML fron
 |-----------|------|---------|--------------|
 | Claude Code subagents | Built-in | Agent spawning and isolation | Native Claude Code feature -- markdown files with YAML frontmatter define agents with tool restrictions, model selection, and system prompts |
 | Agent tool (formerly Task) | Built-in | Spawning subagents from orchestrator | The only way to programmatically spawn subagents from within a conversation |
-| Markdown command files | Convention | Command definition | Established skippy-dev pattern -- YAML frontmatter + objective + process sections |
+| Markdown command files | Convention | Command definition | Established skippy pattern -- YAML frontmatter + objective + process sections |
 | Shared findings board | Pattern | Cross-agent communication | Proven in v1.1 audit -- markdown file at known path, each agent appends findings |
 
 ### Supporting
@@ -61,7 +61,7 @@ The command itself follows the established skippy-dev command pattern (YAML fron
 ### Recommended Project Structure
 
 ```
-skills/skippy-dev/
+skills/skippy/
   commands/
     review.md                  # The /skippy:review command definition
   agents/
@@ -137,7 +137,7 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 permissionMode: plan
 skills:
-  - skippy-dev
+  - skippy
 ---
 
 You are a security reviewer for the skippy-agentspace project.
@@ -293,7 +293,7 @@ Severity levels: CRITICAL, HIGH, MEDIUM, LOW
 
 ### Pitfall 6: Stale Agent Definitions
 
-**What goes wrong:** Subagent `.md` files under `skills/skippy-dev/agents/` are not loaded until session start. Creating them mid-session requires `/agents` reload or session restart.
+**What goes wrong:** Subagent `.md` files under `skills/skippy/agents/` are not loaded until session start. Creating them mid-session requires `/agents` reload or session restart.
 **Why it happens:** Claude Code loads subagent definitions at session start, not dynamically.
 **How to avoid:** Agent definitions must exist before the session where `/skippy:review` is invoked. After initial creation (this phase), they're always available. If the command creates agents dynamically, it must use the `--agents` CLI flag pattern instead.
 **Warning signs:** "Agent not found" errors when the command tries to delegate to a reviewer.
@@ -325,11 +325,11 @@ You are a security reviewer. [system prompt content]
 | `tools` | `Read, Grep, Glob, Bash` | Read-only plus bash for grep/find operations |
 | `model` | `sonnet` | Good balance of capability and cost for review |
 | `permissionMode` | `plan` | Read-only mode prevents accidental writes |
-| `skills` | `skippy-dev` | Preloads skippy-dev SKILL.md context |
+| `skills` | `skippy` | Preloads skippy SKILL.md context |
 
 ### Command Definition (Established Project Pattern)
 
-Source: Existing `skills/skippy-dev/commands/reconcile.md`
+Source: Existing `skills/skippy/commands/reconcile.md`
 
 ```markdown
 ---
@@ -411,10 +411,10 @@ Source: v1.1 audit process (proven pattern from `/tmp/skippy-audit-board.md`)
 
 ## Open Questions
 
-1. **Agent file location -- `.claude/agents/` vs `skills/skippy-dev/agents/`**
+1. **Agent file location -- `.claude/agents/` vs `skills/skippy/agents/`**
    - What we know: Claude Code loads agents from `.claude/agents/` (project) or `~/.claude/agents/` (user). Plugin agents come from the plugin's `agents/` directory.
-   - What's unclear: Whether agents under `skills/skippy-dev/agents/` are automatically discovered via the plugin system, or whether they need to be in `.claude/agents/` or installed there via symlink.
-   - Recommendation: Store agent definitions in `skills/skippy-dev/agents/` as source of truth for version control. The install process should symlink them to `.claude/agents/` (or the plugin system should handle this via `marketplace.json`). Verify by checking if the plugin `agents/` directory pattern applies here. If not, create `.claude/agents/` symlinks during `install.sh`.
+   - What's unclear: Whether agents under `skills/skippy/agents/` are automatically discovered via the plugin system, or whether they need to be in `.claude/agents/` or installed there via symlink.
+   - Recommendation: Store agent definitions in `skills/skippy/agents/` as source of truth for version control. The install process should symlink them to `.claude/agents/` (or the plugin system should handle this via `marketplace.json`). Verify by checking if the plugin `agents/` directory pattern applies here. If not, create `.claude/agents/` symlinks during `install.sh`.
 
 2. **backup-restore.sh existence**
    - What we know: MEMORY.md mentions `bash tools/backup-restore.sh backup` as a testing protocol, but the file does not exist in the current repo.
@@ -455,7 +455,7 @@ Source: v1.1 audit process (proven pattern from `/tmp/skippy-audit-board.md`)
 
 ### Wave 0 Gaps
 
-- [ ] Agent definitions directory (`skills/skippy-dev/agents/`) does not exist yet
+- [ ] Agent definitions directory (`skills/skippy/agents/`) does not exist yet
 - [ ] `.reports/` directory convention not yet established
 - [ ] `audit-swarm.md` reference doc does not exist yet
 - [ ] Agent installation path (symlinks to `.claude/agents/` or plugin discovery) needs verification
@@ -466,7 +466,7 @@ Source: v1.1 audit process (proven pattern from `/tmp/skippy-audit-board.md`)
 ### Primary (HIGH confidence)
 
 - [Claude Code Subagent Documentation](https://code.claude.com/docs/en/sub-agents) -- Complete subagent system documentation including YAML frontmatter fields, tool restrictions, permission modes, isolation, hooks, memory, and best practices. Fetched and verified 2026-03-08.
-- Existing project files -- All 5 existing commands in `skills/skippy-dev/commands/` examined for pattern consistency. All 13 reference docs examined for integration points.
+- Existing project files -- All 5 existing commands in `skills/skippy/commands/` examined for pattern consistency. All 13 reference docs examined for integration points.
 - Project MEMORY.md -- v1.1 audit process details (7 rounds, 20+ agents, 17 findings, 71-skill nuke incident, sandboxing protocol).
 
 ### Secondary (MEDIUM confidence)

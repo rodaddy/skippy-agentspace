@@ -78,10 +78,10 @@ Absorb GSD's core execution patterns as standalone skippy reference docs and upd
 
 ### Reusable Assets
 - `tools/lib/common.sh`: Shared shell library (skippy_pass, skippy_warn, skippy_fail, skippy_summary) -- use for any new shell scripts
-- `skills/skippy-dev/references/`: 11 existing reference docs, established format (50-100 lines, structured sections)
-- `skills/skippy-dev/commands/reconcile.md`: Current reconcile command -- needs update to parse new format
-- `skills/skippy-dev/references/verification-loops.md`: Already covers post-implementation verification -- don't duplicate
-- `skills/skippy-dev/references/state-consistency.md`: Already covers cross-file alignment -- complement, don't overlap
+- `skills/skippy/references/`: 11 existing reference docs, established format (50-100 lines, structured sections)
+- `skills/skippy/commands/reconcile.md`: Current reconcile command -- needs update to parse new format
+- `skills/skippy/references/verification-loops.md`: Already covers post-implementation verification -- don't duplicate
+- `skills/skippy/references/state-consistency.md`: Already covers cross-file alignment -- complement, don't overlap
 
 ### Established Patterns
 - Reference doc format: Header with purpose + source, When/Where section, Core protocol, Integration points
@@ -89,7 +89,7 @@ Absorb GSD's core execution patterns as standalone skippy reference docs and upd
 - Commands are markdown (AI-driven), not shell scripts -- except where structured data parsing needs bun
 
 ### Integration Points
-- `skills/skippy-dev/SKILL.md` -- may need updates to reference new docs
+- `skills/skippy/SKILL.md` -- may need updates to reference new docs
 - `CONVENTIONS.md` -- upstream registry tracks GSD as source
 - `PROJECT.md` -- stack constraint needs updating (shell + bun)
 - `prereqs.sh` -- already checks for bun (no change needed)

@@ -33,8 +33,8 @@ There are 68 skills in `~/.config/pai/Skills/`. Source SKILL.md files range from
 **Install UX:**
 - Flag style: positional args for skill names, --core and --all as special flags
   - `install.sh --core` installs core only
-  - `install.sh skippy-dev` installs one skill
-  - `install.sh skippy-dev homeassistant` installs multiple skills
+  - `install.sh skippy` installs one skill
+  - `install.sh skippy homeassistant` installs multiple skills
   - `install.sh --all` installs everything
 - No-arg behavior: show installed/available status table + usage help
 - All skills are standalone -- no core dependency required. Maximum portability.
@@ -234,7 +234,7 @@ The AI migration command will present ranked candidates and let the user approve
 | Category | Skills |
 |----------|--------|
 | **core** | core (already exists) |
-| **workflow** | skippy-dev, session-wrap, add-todo, check-todos, update-todo, correct |
+| **workflow** | skippy, session-wrap, add-todo, check-todos, update-todo, correct |
 | **utility** | vaultwarden, browser, excalidraw, Fabric, prd |
 | **domain** | deploy-service, homeassistant, proxmox, litellm |
 
@@ -265,9 +265,9 @@ The AI migration command will present ranked candidates and let the user approve
 **Warning signs:** grep -r for IP patterns in skills/ after migration.
 
 ### Pitfall 3: Breaking Existing install.sh Behavior
-**What goes wrong:** Adding --core and multi-positional args changes how `install.sh skippy-dev` works.
+**What goes wrong:** Adding --core and multi-positional args changes how `install.sh skippy` works.
 **Why it happens:** Argument parsing redesign accidentally breaks the existing single-skill install path.
-**How to avoid:** Test existing behavior explicitly after changes: `install.sh skippy-dev`, `install.sh --all`, `install.sh --help` must all work identically to before.
+**How to avoid:** Test existing behavior explicitly after changes: `install.sh skippy`, `install.sh --all`, `install.sh --help` must all work identically to before.
 **Warning signs:** The `SKILL_NAME` variable logic at line 53 conflicts with multi-positional args.
 
 ### Pitfall 4: INDEX.md Sync Drift
@@ -336,7 +336,7 @@ Auto-generated. Run `tools/index-sync.sh --generate` to rebuild.
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| skippy-dev [installed] | `skippy-dev/SKILL.md` | /skippy:reconcile, /skippy:update, /skippy:cleanup |
+| skippy [installed] | `skippy/SKILL.md` | /skippy:reconcile, /skippy:update, /skippy:cleanup |
 | session-wrap | `session-wrap/SKILL.md` | /skippy:session-wrap |
 | add-todo | `add-todo/SKILL.md` | /skippy:add-todo |
 
@@ -414,14 +414,14 @@ and migrate approved skills to portable format under skills/.
    - Recommendation: Add `category:` to SKILL.md frontmatter under `metadata:`. This keeps each skill self-describing and index-sync.sh can extract it with sed, same as description.
 
 2. **marketplace.json scaling**
-   - What we know: Currently has 2 plugin entries (core, skippy-dev). Each migrated skill needs an entry.
+   - What we know: Currently has 2 plugin entries (core, skippy). Each migrated skill needs an entry.
    - What's unclear: Should each skill be a separate plugin entry, or should they be grouped?
    - Recommendation: One plugin entry per skill. The `strict: false` flag means no plugin.json needed per skill -- the marketplace.json entry is sufficient. index-sync.sh or the migration command can append entries.
 
 3. **Namespace collision with existing PAI skills**
    - What we know: Some source skills have uppercase names (CORE, Art, CreateSkill, Debug, Fabric, Git, etc.)
    - What's unclear: Should portable skill names preserve case or normalize to lowercase?
-   - Recommendation: Normalize to lowercase-kebab (e.g., `Art` -> `art`, `CreateSkill` -> `create-skill`). This matches the existing `core` and `skippy-dev` naming convention.
+   - Recommendation: Normalize to lowercase-kebab (e.g., `Art` -> `art`, `CreateSkill` -> `create-skill`). This matches the existing `core` and `skippy` naming convention.
 
 ## Validation Architecture
 
@@ -452,15 +452,15 @@ and migrate approved skills to portable format under skills/.
 
 ### Wave 0 Gaps
 - [ ] Extend index-sync.sh with category detection and install badge logic
-- [ ] Add `category:` field to existing core and skippy-dev SKILL.md frontmatter
+- [ ] Add `category:` field to existing core and skippy SKILL.md frontmatter
 - [ ] No formal test harness -- validation is shell commands checking expected state
 
 ## Sources
 
 ### Primary (HIGH confidence)
 - Existing codebase: `tools/install.sh` (203 lines), `tools/uninstall.sh` (114 lines), `tools/index-sync.sh` (109 lines)
-- Existing skills: `skills/core/SKILL.md` (116 lines), `skills/skippy-dev/SKILL.md` (98 lines)
-- Phase 8 command pattern: `skills/skippy-dev/commands/update.md` (77 lines)
+- Existing skills: `skills/core/SKILL.md` (116 lines), `skills/skippy/SKILL.md` (98 lines)
+- Phase 8 command pattern: `skills/skippy/commands/update.md` (77 lines)
 - Source skill catalog: 68 skills in `~/.config/pai/Skills/` with full directory structure analysis
 
 ### Secondary (MEDIUM confidence)
@@ -474,7 +474,7 @@ and migrate approved skills to portable format under skills/.
 
 **Confidence breakdown:**
 - Standard stack: HIGH -- extending existing tools, no new dependencies
-- Architecture: HIGH -- patterns established by core and skippy-dev skills
+- Architecture: HIGH -- patterns established by core and skippy skills
 - Pitfalls: HIGH -- derived from direct analysis of 68 source skills
 - Skill candidates: HIGH -- based on complete catalog analysis with line counts and structure
 

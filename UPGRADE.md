@@ -1,6 +1,6 @@
 # Upgrading
 
-Two upgrade paths: manual (works with any AI tool) and AI-assisted (Claude Code with skippy-dev installed).
+Two upgrade paths: manual (works with any AI tool) and AI-assisted (Claude Code with skippy installed).
 
 ## Manual Upgrade
 
@@ -45,7 +45,7 @@ Run `/clear` or restart your Claude Code session to pick up changes.
 
 ## AI-Assisted Upgrade
 
-Requires Claude Code with the skippy-dev skill installed.
+Requires Claude Code with the skippy skill installed.
 
 ```
 /skippy:upgrade
@@ -60,7 +60,7 @@ This handles the full upgrade workflow:
 5. Compares post-upgrade state to pre-upgrade snapshot
 6. Reports any conflicts if tracked files were locally modified
 
-See `skills/skippy-dev/commands/upgrade.md` for the full command specification.
+See `skills/skippy/commands/upgrade.md` for the full command specification.
 
 ## What Gets Preserved
 

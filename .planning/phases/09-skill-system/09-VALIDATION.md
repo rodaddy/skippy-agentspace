@@ -39,7 +39,7 @@ created: 2026-03-07
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 09-01-01 | 01 | 1 | SKIL-01 | smoke | `bash tools/install.sh --core && ls -la ~/.claude/skills/core` | Wave 0 | pending |
-| 09-01-02 | 01 | 1 | SKIL-01 | smoke | `bash tools/install.sh skippy-dev && ls -la ~/.claude/skills/skippy-dev` | Wave 0 | pending |
+| 09-01-02 | 01 | 1 | SKIL-01 | smoke | `bash tools/install.sh skippy && ls -la ~/.claude/skills/skippy` | Wave 0 | pending |
 | 09-01-03 | 01 | 1 | SKIL-01 | smoke | `bash tools/install.sh` (visual check for status table) | Wave 0 | pending |
 | 09-02-01 | 02 | 1 | SKIL-02 | manual-only | Run /skippy:migrate in Claude session, verify output | Manual | pending |
 | 09-03-01 | 03 | 2 | SKIL-03 | unit | `wc -l skills/*/SKILL.md \| awk '$1 > 150'` (should return empty) | Wave 0 | pending |
@@ -54,7 +54,7 @@ created: 2026-03-07
 ## Wave 0 Requirements
 
 - [ ] Extend index-sync.sh with category detection and install badge logic
-- [ ] Add `category:` field to existing core and skippy-dev SKILL.md frontmatter
+- [ ] Add `category:` field to existing core and skippy SKILL.md frontmatter
 - [ ] No formal test harness -- validation is shell commands checking expected state
 
 ---

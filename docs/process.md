@@ -188,8 +188,8 @@ LOG_FILE="$BACKUP_DIR/install-log.md"
 |----------|------------|---------|
 | **Discovery** | Everything found during system scan | "Skills dir: symlink to /Users/rico/.config/pai/Skills (75 skills)" |
 | **User choice** | Which option the user selected | "Install mode: Guided" |
-| **Action** | What was executed | "rsync -a skills/skippy-dev/ ~/.config/pai/Skills/skippy-dev/" |
-| **Result** | Outcome of each action | "[PASS] skippy-dev installed (8 commands)" |
+| **Action** | What was executed | "rsync -a skills/skippy/ ~/.config/pai/Skills/skippy/" |
+| **Result** | Outcome of each action | "[PASS] skippy installed (8 commands)" |
 | **Skip** | Steps skipped and why | "[SKIP] OMC removal -- not installed" |
 | **Warning** | Non-blocking issues | "[WARN] Installed humanizer has evals/results.md not in repo -- preserved" |
 | **Failure** | Anything that failed | "[FAIL] Reference doc verification-loops.md missing" |
@@ -223,7 +223,7 @@ User selected: Guided
 
 ## Step 4: Pre-Install Diff
 - [IDENTICAL] core
-- [DIFFERS] skippy-dev (repo has 5 new commands, installed has evals/)
+- [DIFFERS] skippy (repo has 5 new commands, installed has evals/)
 - [NEW] (not installed yet -- will be added)
 - User choice: Approve all
 
@@ -243,8 +243,8 @@ User selected: Guided
 
 Example log entry with command:
 ```markdown
-- [CMD] `rsync -a /Volumes/.../skills/skippy-dev/ /Users/rico/.config/pai/Skills/skippy-dev/`
-- [PASS] skippy-dev installed (8 commands: plan, execute, verify, quick, progress, cleanup, reconcile, update)
+- [CMD] `rsync -a /Volumes/.../skills/skippy/ /Users/rico/.config/pai/Skills/skippy/`
+- [PASS] skippy installed (8 commands: plan, execute, verify, quick, progress, cleanup, reconcile, update)
 ```
 
 ## Pre-Install/Update Diff (MANDATORY)
@@ -321,9 +321,9 @@ Collisions with different names (like plan vs plan-phase) are fine -- they coexi
 After install, verify every file referenced by a command actually exists:
 
 ```bash
-for cmd_file in "$HOME/.config/pai/Skills/skippy-dev/commands"/*.md; do
+for cmd_file in "$HOME/.config/pai/Skills/skippy/commands"/*.md; do
     grep -o 'references/[a-z-]*.md' "$cmd_file" 2>/dev/null | while read ref; do
-        full_path="$HOME/.config/pai/Skills/skippy-dev/$ref"
+        full_path="$HOME/.config/pai/Skills/skippy/$ref"
         if [[ -f "$full_path" ]]; then
             echo "  OK: $ref"
         else
@@ -379,7 +379,7 @@ After everything is installed, run ONE real command to verify:
 3. Report PASS or FAIL
 
 If no project with `.planning/` exists, verify at minimum:
-- `ls ~/.claude/skills/skippy-dev/commands/` returns the expected commands
+- `ls ~/.claude/skills/skippy/commands/` returns the expected commands
 - Each command .md file is readable and has valid frontmatter
 
 ## Change Manifest
@@ -390,12 +390,12 @@ Write `$BACKUP_DIR/changes.md` summarizing what changed:
 # Changes -- YYYY-MM-DD
 
 ## Added
-- skippy-dev/commands/plan.md
-- skippy-dev/commands/execute.md
+- skippy/commands/plan.md
+- skippy/commands/execute.md
 - ...
 
 ## Updated
-- skippy-dev/references/plan-structure.md (3 lines changed)
+- skippy/references/plan-structure.md (3 lines changed)
 - ...
 
 ## Removed

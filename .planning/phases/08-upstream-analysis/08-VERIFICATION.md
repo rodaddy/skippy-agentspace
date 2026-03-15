@@ -23,7 +23,7 @@ gaps: []
 | 1 | upstreams/omc/ exists with valid upstream.json matching the established schema | VERIFIED | `upstreams/omc/upstream.json` exists with all 8 schema fields (name, description, repo, branch, last_checked_sha, last_check, cherry_picks, notes). Schema matches gsd and paul entries exactly. `jq .` validates. |
 | 2 | A cross-package analysis document identifies patterns across 2+ upstreams with recommendations | VERIFIED | `docs/cross-package-analysis.md` (203 lines) covers 5 shared patterns (Task Verification, Context/State Management, Planning Quality Gates, Model/Agent Routing, Structured Research), each with side-by-side comparison table and explicit Recommendation. All 37 OMC skills categorized: 8 cherry-picked, 29 rejected with reasons, 0 deferred. |
 | 3 | At least 3 best-of-breed reference docs synthesize strongest patterns across upstreams | VERIFIED | 5 new reference docs created: model-routing.md (54 lines), verification-loops.md (92 lines), session-persistence.md (81 lines), structured-deliberation.md (91 lines), skill-extraction.md (96 lines). All follow evolved format: Source Upstreams table, Why This Version, The Pattern, Integration Points, When to Apply, Sources footer. Total reference docs: 11 (6 existing + 5 new). |
-| 4 | /skippy:update uses generic upstream checker iterating upstreams/*/upstream.json | VERIFIED | `skills/skippy-dev/commands/update.md` (77 lines) is AI-driven command with 5-step process. Step 1 reads `upstreams/*/upstream.json` generically. No hardcoded repo URLs (no GSD_REPO, PAUL_REPO). Explicit instruction: "Never hardcode repo URLs." `skippy-update.sh` is deleted. |
+| 4 | /skippy:update uses generic upstream checker iterating upstreams/*/upstream.json | VERIFIED | `skills/skippy/commands/update.md` (77 lines) is AI-driven command with 5-step process. Step 1 reads `upstreams/*/upstream.json` generically. No hardcoded repo URLs (no GSD_REPO, PAUL_REPO). Explicit instruction: "Never hardcode repo URLs." `skippy-update.sh` is deleted. |
 
 **Score:** 4/4 truths verified
 
@@ -33,27 +33,27 @@ gaps: []
 |----------|----------|--------|---------|
 | `upstreams/omc/upstream.json` | OMC upstream registry entry | VERIFIED | Valid JSON, correct repo URL, SHA pinned to 96a5d372, schema-consistent with gsd/paul entries |
 | `docs/cross-package-analysis.md` | Cross-package pattern analysis (min 200 lines) | VERIFIED | 203 lines, 5 pattern comparisons, 37-skill inventory, cherry-pick summary table |
-| `skills/skippy-dev/references/model-routing.md` | Model tier selection (min 40 lines) | VERIFIED | 54 lines, Source Upstreams table, actionable tier decision guide |
-| `skills/skippy-dev/references/verification-loops.md` | Cycling verification (min 40 lines) | VERIFIED | 92 lines, Source Upstreams table, cycling protocol with exit conditions |
-| `skills/skippy-dev/references/session-persistence.md` | Tiered persistence (min 40 lines) | VERIFIED | 81 lines, Source Upstreams table, three-tier model mapped to GSD artifacts |
-| `skills/skippy-dev/references/structured-deliberation.md` | PDOC deliberation framework (min 40 lines) | VERIFIED | 91 lines, Source Upstreams table, 4-element PDOC framework |
-| `skills/skippy-dev/references/skill-extraction.md` | Knowledge capture with quality gates (min 40 lines) | VERIFIED | 96 lines, Source Upstreams table, 4-gate quality filter, graduation path |
-| `skills/skippy-dev/commands/update.md` | AI-driven generic upstream checker (min 40 lines) | VERIFIED | 77 lines, contains "upstreams/*/upstream.json", no hardcoded repos |
-| `skills/skippy-dev/SKILL.md` | Updated with new references (under 150 lines) | VERIFIED | 98 lines, lists all 10 enhancements, updated /skippy:update description |
-| `skills/skippy-dev/scripts/skippy-update.sh` | Must NOT exist (deleted) | VERIFIED | File does not exist |
+| `skills/skippy/references/model-routing.md` | Model tier selection (min 40 lines) | VERIFIED | 54 lines, Source Upstreams table, actionable tier decision guide |
+| `skills/skippy/references/verification-loops.md` | Cycling verification (min 40 lines) | VERIFIED | 92 lines, Source Upstreams table, cycling protocol with exit conditions |
+| `skills/skippy/references/session-persistence.md` | Tiered persistence (min 40 lines) | VERIFIED | 81 lines, Source Upstreams table, three-tier model mapped to GSD artifacts |
+| `skills/skippy/references/structured-deliberation.md` | PDOC deliberation framework (min 40 lines) | VERIFIED | 91 lines, Source Upstreams table, 4-element PDOC framework |
+| `skills/skippy/references/skill-extraction.md` | Knowledge capture with quality gates (min 40 lines) | VERIFIED | 96 lines, Source Upstreams table, 4-gate quality filter, graduation path |
+| `skills/skippy/commands/update.md` | AI-driven generic upstream checker (min 40 lines) | VERIFIED | 77 lines, contains "upstreams/*/upstream.json", no hardcoded repos |
+| `skills/skippy/SKILL.md` | Updated with new references (under 150 lines) | VERIFIED | 98 lines, lists all 10 enhancements, updated /skippy:update description |
+| `skills/skippy/scripts/skippy-update.sh` | Must NOT exist (deleted) | VERIFIED | File does not exist |
 
 ### Key Link Verification
 
 | From | To | Via | Status | Details |
 |------|----|-----|--------|---------|
 | `upstreams/omc/upstream.json` | `upstreams/gsd/upstream.json` | Same schema fields | WIRED | Both files have identical field set: name, description, repo, branch, last_checked_sha, last_check, cherry_picks, notes |
-| `docs/cross-package-analysis.md` | `skills/skippy-dev/references/` | Reference doc column links | WIRED | Cherry-pick summary table references model-routing.md, verification-loops.md, session-persistence.md, structured-deliberation.md, skill-extraction.md, structured-research.md |
-| `skills/skippy-dev/commands/update.md` | `upstreams/*/upstream.json` | Generic directory iteration | WIRED | Step 1 explicitly reads "all upstreams/*/upstream.json files from the skippy-agentspace repo root" |
-| `skills/skippy-dev/commands/update.md` | `docs/cross-package-analysis.md` | Cross-package analysis flag | WIRED | Step 5 checks for cross-package-analysis.md and flags for re-review on significant changes |
-| `skills/skippy-dev/SKILL.md` | `skills/skippy-dev/references/` | Reference table entries | WIRED | Enhancements table rows 6-10 reference model-routing.md, verification-loops.md, session-persistence.md, structured-deliberation.md, skill-extraction.md |
-| `skills/skippy-dev/references/model-routing.md` | `docs/cross-package-analysis.md` | Source Upstreams section | WIRED | Contains "Source Upstreams" table comparing OMC and GSD implementations |
-| `skills/skippy-dev/references/verification-loops.md` | `docs/cross-package-analysis.md` | Source Upstreams section | WIRED | Contains "Source Upstreams" table comparing OMC, PAUL, and GSD implementations |
-| `INDEX.md` | `skills/skippy-dev/references/` | References column | WIRED | Lists all 10 reference docs including model-routing.md, session-persistence.md, etc. |
+| `docs/cross-package-analysis.md` | `skills/skippy/references/` | Reference doc column links | WIRED | Cherry-pick summary table references model-routing.md, verification-loops.md, session-persistence.md, structured-deliberation.md, skill-extraction.md, structured-research.md |
+| `skills/skippy/commands/update.md` | `upstreams/*/upstream.json` | Generic directory iteration | WIRED | Step 1 explicitly reads "all upstreams/*/upstream.json files from the skippy-agentspace repo root" |
+| `skills/skippy/commands/update.md` | `docs/cross-package-analysis.md` | Cross-package analysis flag | WIRED | Step 5 checks for cross-package-analysis.md and flags for re-review on significant changes |
+| `skills/skippy/SKILL.md` | `skills/skippy/references/` | Reference table entries | WIRED | Enhancements table rows 6-10 reference model-routing.md, verification-loops.md, session-persistence.md, structured-deliberation.md, skill-extraction.md |
+| `skills/skippy/references/model-routing.md` | `docs/cross-package-analysis.md` | Source Upstreams section | WIRED | Contains "Source Upstreams" table comparing OMC and GSD implementations |
+| `skills/skippy/references/verification-loops.md` | `docs/cross-package-analysis.md` | Source Upstreams section | WIRED | Contains "Source Upstreams" table comparing OMC, PAUL, and GSD implementations |
+| `INDEX.md` | `skills/skippy/references/` | References column | WIRED | Lists all 10 reference docs including model-routing.md, session-persistence.md, etc. |
 
 ### Requirements Coverage
 
@@ -61,7 +61,7 @@ gaps: []
 |-------------|------------|-------------|--------|----------|
 | UPST-01 | 08-01 | OMC added as third upstream source in registry | SATISFIED | `upstreams/omc/upstream.json` exists with valid schema. `ls upstreams/` shows gsd, omc, paul. |
 | UPST-02 | 08-01 | Cross-package analysis identifies patterns common across GSD, PAUL, and OMC | SATISFIED | `docs/cross-package-analysis.md` has 5 shared pattern comparison tables, each with side-by-side matrix and explicit recommendation. |
-| UPST-03 | 08-02 | Best-of-breed skippy versions created for common patterns | SATISFIED | 5 best-of-breed reference docs in `skills/skippy-dev/references/` with evolved format (Source Upstreams, Why This Version, The Pattern, Integration Points, When to Apply). |
+| UPST-03 | 08-02 | Best-of-breed skippy versions created for common patterns | SATISFIED | 5 best-of-breed reference docs in `skills/skippy/references/` with evolved format (Source Upstreams, Why This Version, The Pattern, Integration Points, When to Apply). |
 | UPST-04 | 08-03 | /skippy:update uses generic upstream checker instead of hardcoded repos | SATISFIED | `commands/update.md` iterates `upstreams/*/upstream.json` generically. `skippy-update.sh` deleted. No hardcoded GSD_REPO or PAUL_REPO variables. |
 
 No orphaned requirements found. All 4 UPST-* requirements mapped to Phase 8 in REQUIREMENTS.md are accounted for.
@@ -70,7 +70,7 @@ No orphaned requirements found. All 4 UPST-* requirements mapped to Phase 8 in R
 
 | File | Line | Pattern | Severity | Impact |
 |------|------|---------|----------|--------|
-| `skills/skippy-dev/references/session-persistence.md` | 9 | OMC-specific tools (.omc/notepad.md, state_write, notepad_write) in Source Upstreams table | Info | Correct usage -- OMC tools appear only in comparison table describing upstream's weakness, never in actionable Pattern section. Per plan design. |
+| `skills/skippy/references/session-persistence.md` | 9 | OMC-specific tools (.omc/notepad.md, state_write, notepad_write) in Source Upstreams table | Info | Correct usage -- OMC tools appear only in comparison table describing upstream's weakness, never in actionable Pattern section. Per plan design. |
 
 No TODO, FIXME, PLACEHOLDER, or HACK markers found in any Phase 8 artifacts.
 No stale `.versions` references in active files (CLAUDE.md, SKILL.md, INDEX.md, CONVENTIONS.md -- all clean).

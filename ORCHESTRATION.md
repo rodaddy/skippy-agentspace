@@ -32,12 +32,12 @@ Switch personas as work moves through phases. Each persona brings different judg
 ```
 Phase 1: Architecture (Bob)
   "persona bob"
-  Load: skippy-dev/references/plan-structure.md
+  Load: skippy/references/plan-structure.md
   Output: Architecture decision, plan with boundaries
 
 Phase 2: Implementation (Skippy)
   "persona skippy"
-  Load: skippy-dev/references/phased-execution.md
+  Load: skippy/references/phased-execution.md
   Output: Working code, tests passing
 
 Phase 3: Documentation (Clarisa)
@@ -80,29 +80,29 @@ Load multiple reference docs simultaneously for deep work in a single domain. Sk
 
 ```
 Load simultaneously:
-  skippy-dev/references/plan-structure.md      -- task format, deviation rules
-  skippy-dev/references/plan-boundaries.md     -- scope protection, DO NOT CHANGE
-  skippy-dev/references/ambiguity-scoring.md   -- requirements clarity gate
-  skippy-dev/references/pre-execution-gate.md  -- intercept vague requests
+  skippy/references/plan-structure.md      -- task format, deviation rules
+  skippy/references/plan-boundaries.md     -- scope protection, DO NOT CHANGE
+  skippy/references/ambiguity-scoring.md   -- requirements clarity gate
+  skippy/references/pre-execution-gate.md  -- intercept vague requests
 ```
 
 **Example: Hardened Execution**
 
 ```
 Load simultaneously:
-  skippy-dev/references/phased-execution.md        -- wave-based parallelism
-  skippy-dev/references/parallel-file-ownership.md  -- non-overlapping agent scopes
-  skippy-dev/references/state-tracking.md           -- STATE.md lifecycle
-  skippy-dev/references/checkpoints.md              -- human verification gates
+  skippy/references/phased-execution.md        -- wave-based parallelism
+  skippy/references/parallel-file-ownership.md  -- non-overlapping agent scopes
+  skippy/references/state-tracking.md           -- STATE.md lifecycle
+  skippy/references/checkpoints.md              -- human verification gates
 ```
 
 **Example: Session Resilience**
 
 ```
 Load simultaneously:
-  skippy-dev/references/session-persistence.md     -- context transfer
-  skippy-dev/references/compaction-resilience.md   -- checkpoint before compaction
-  skippy-dev/references/context-brackets.md        -- monitor context usage
+  skippy/references/session-persistence.md     -- context transfer
+  skippy/references/compaction-resilience.md   -- checkpoint before compaction
+  skippy/references/context-brackets.md        -- monitor context usage
 ```
 
 **Common stacks:**

@@ -25,7 +25,7 @@ key-files:
   modified: []
 
 key-decisions:
-  - "Used skippy-dev instead of core for --target=commands test -- core has no commands/ subdirectory"
+  - "Used skippy instead of core for --target=commands test -- core has no commands/ subdirectory"
 
 patterns-established:
   - "Pipe stdin for interactive prompts: echo 'n' | bash script.sh for uninstall --all hook prompt"
@@ -68,7 +68,7 @@ Each task was committed atomically:
 - `tests/uninstall.bats` (92 lines) - 6 tests for uninstall.sh: usage, single removal, --all cleanup, non-skippy preservation, not-installed, path traversal
 
 ## Decisions Made
-- Used skippy-dev for --target=commands test because core skill has no commands/ subdirectory (only hooks/ and references/)
+- Used skippy for --target=commands test because core skill has no commands/ subdirectory (only hooks/ and references/)
 
 ## Deviations from Plan
 
@@ -77,7 +77,7 @@ Each task was committed atomically:
 **1. [Rule 1 - Bug] Fixed legacy target test using wrong skill**
 - **Found during:** Task 1 (install.bats)
 - **Issue:** Plan specified `--core --target=commands` but core skill has no commands/ directory -- install_skill_legacy() returns success with "SKIP" but creates no symlink
-- **Fix:** Changed test to use `skippy-dev --target=commands` since skippy-dev is the only skill with a commands/ subdirectory
+- **Fix:** Changed test to use `skippy --target=commands` since skippy is the only skill with a commands/ subdirectory
 - **Files modified:** tests/install.bats
 - **Verification:** All 8 tests pass
 - **Committed in:** fc714ec (Task 1 commit)

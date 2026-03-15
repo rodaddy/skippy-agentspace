@@ -29,8 +29,8 @@ Users can selectively install individual skills or the full suite, and ~10 essen
 ### Install UX
 - Flag style: positional args for skill names, --core and --all as special flags
   - `install.sh --core` installs core only
-  - `install.sh skippy-dev` installs one skill
-  - `install.sh skippy-dev homeassistant` installs multiple skills
+  - `install.sh skippy` installs one skill
+  - `install.sh skippy homeassistant` installs multiple skills
   - `install.sh --all` installs everything
 - No-arg behavior: show installed/available status table + usage help
 - All skills are standalone -- no core dependency required. Maximum portability.
@@ -56,7 +56,7 @@ Users can selectively install individual skills or the full suite, and ~10 essen
 - `tools/uninstall.sh`: Clean symlink removal. Extend with selective uninstall.
 - `tools/index-sync.sh`: Validates/regenerates INDEX.md from SKILL.md frontmatter. Extend with category grouping and install badge detection.
 - `.claude-plugin/marketplace.json`: Plugin schema supports unlimited plugins (strict: false). Extend for newly migrated skills.
-- `skills/core/SKILL.md` (116 lines) and `skills/skippy-dev/SKILL.md` (98 lines): Proven slim SKILL.md pattern under 150-line limit.
+- `skills/core/SKILL.md` (116 lines) and `skills/skippy/SKILL.md` (98 lines): Proven slim SKILL.md pattern under 150-line limit.
 
 ### Established Patterns
 - Directory-per-skill under skills/ with mandatory SKILL.md + optional subdirectories

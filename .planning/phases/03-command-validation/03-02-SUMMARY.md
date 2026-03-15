@@ -21,8 +21,8 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/scripts/skippy-update.sh
-    - skills/skippy-dev/commands/update.md
+    - skills/skippy/scripts/skippy-update.sh
+    - skills/skippy/commands/update.md
 
 key-decisions:
   - "Used while IFS='=' read instead of source for .versions parsing -- eliminates arbitrary code execution risk"
@@ -66,8 +66,8 @@ Each task was committed atomically:
 2. **Task 2: Fix stale path in update.md** - `6a5b9ab` (fix)
 
 ## Files Created/Modified
-- `skills/skippy-dev/scripts/skippy-update.sh` - Hardened update script with safe parsing, full SHAs, error isolation
-- `skills/skippy-dev/commands/update.md` - Fixed stale /tmp/ cache path to ~/.cache/skippy-upstream/
+- `skills/skippy/scripts/skippy-update.sh` - Hardened update script with safe parsing, full SHAs, error isolation
+- `skills/skippy/commands/update.md` - Fixed stale /tmp/ cache path to ~/.cache/skippy-upstream/
 
 ## Decisions Made
 - Used `while IFS='=' read` instead of `source` for .versions parsing -- eliminates arbitrary code execution risk from a user-writable file
@@ -92,8 +92,8 @@ None - no external service configuration required.
 
 ## Self-Check: PASSED
 
-- [x] skills/skippy-dev/scripts/skippy-update.sh -- FOUND
-- [x] skills/skippy-dev/commands/update.md -- FOUND
+- [x] skills/skippy/scripts/skippy-update.sh -- FOUND
+- [x] skills/skippy/commands/update.md -- FOUND
 - [x] Commit 4d961e8 -- FOUND
 - [x] Commit 6a5b9ab -- FOUND
 

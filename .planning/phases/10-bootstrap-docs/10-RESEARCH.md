@@ -8,7 +8,7 @@
 
 Phase 10 is the final phase -- everything it documents and verifies already exists. The phase produces 4 markdown docs (README.md, SETUP.md, INSTALL.md, UPGRADE.md), 2 shell scripts (prereqs.sh, verify.sh), and 1 AI command (/skippy:upgrade). The technical challenge is low -- this is bash scripting and technical writing. The design challenge is moderate -- producing clear, cross-platform documentation that works for macOS, Linux, and WSL2 audiences without becoming a maintenance burden.
 
-The existing codebase provides strong foundations: `tools/install.sh` (246 lines, battle-tested), `tools/validate-hooks.sh` (317 lines, the output formatting model for verify.sh), `tools/index-sync.sh` (206 lines, `--check` mode reusable), and the Phase 8 AI command pattern (`skills/skippy-dev/commands/update.md`) as the template for `/skippy:upgrade`.
+The existing codebase provides strong foundations: `tools/install.sh` (246 lines, battle-tested), `tools/validate-hooks.sh` (317 lines, the output formatting model for verify.sh), `tools/index-sync.sh` (206 lines, `--check` mode reusable), and the Phase 8 AI command pattern (`skills/skippy/commands/update.md`) as the template for `/skippy:upgrade`.
 
 **Primary recommendation:** Build prereqs.sh and verify.sh as the backbone, then write docs that reference them directly. prereqs.sh is step 1 of SETUP.md; verify.sh is the final step. UPGRADE.md documents both manual (git pull + reinstall) and AI-assisted (/skippy:upgrade) paths. README.md is a thin routing layer to the detail docs.
 
@@ -85,7 +85,7 @@ tools/
   index-sync.sh         # (exists) INDEX.md validator/generator
   validate-hooks.sh     # (exists) hook validation
 skills/
-  skippy-dev/
+  skippy/
     commands/
       upgrade.md        # /skippy:upgrade AI command (Phase 8 pattern)
 README.md               # Top-level entry point (new, replaces nothing)
@@ -375,7 +375,7 @@ fi
 # Category: Commands
 echo ""
 echo "=== Commands ==="
-# Check that skippy-dev commands are accessible
+# Check that skippy commands are accessible
 ```
 
 ### /skippy:upgrade AI Command Structure
@@ -477,13 +477,13 @@ hook configurations). Report what changed and verify the upgrade.
 - [ ] `SETUP.md` -- covers BOOT-02
 - [ ] `INSTALL.md` -- covers BOOT-03
 - [ ] `UPGRADE.md` -- covers BOOT-04
-- [ ] `skills/skippy-dev/commands/upgrade.md` -- AI command for BOOT-04
+- [ ] `skills/skippy/commands/upgrade.md` -- AI command for BOOT-04
 
 ## Sources
 
 ### Primary (HIGH confidence)
 - Existing codebase analysis -- `tools/install.sh`, `tools/uninstall.sh`, `tools/index-sync.sh`, `tools/validate-hooks.sh`, `skills/core/hooks/install-hooks.sh`, `skills/core/hooks/INSTALL.md`
-- Phase 8 AI command pattern -- `skills/skippy-dev/commands/update.md`
+- Phase 8 AI command pattern -- `skills/skippy/commands/update.md`
 - CONTEXT.md locked decisions -- all design choices verified against existing code
 
 ### Secondary (MEDIUM confidence)

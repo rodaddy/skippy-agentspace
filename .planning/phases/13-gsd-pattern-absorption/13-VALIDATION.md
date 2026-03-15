@@ -38,13 +38,13 @@ created: 2026-03-08
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 13-01-01 | 01 | 1 | ABSORB-01 | smoke | `test -f skills/skippy-dev/references/phased-execution.md && wc -l < skills/skippy-dev/references/phased-execution.md` | Wave 0 | pending |
-| 13-01-02 | 01 | 1 | ABSORB-02 | smoke | `test -f skills/skippy-dev/references/state-tracking.md && wc -l < skills/skippy-dev/references/state-tracking.md` | Wave 0 | pending |
-| 13-01-03 | 01 | 1 | ABSORB-03 | smoke | `test -f skills/skippy-dev/references/plan-structure.md && grep -q "## Task" skills/skippy-dev/references/plan-structure.md` | Wave 0 | pending |
-| 13-01-04 | 01 | 1 | ABSORB-04 | smoke | `test -f skills/skippy-dev/references/checkpoints.md && grep -q "human-verify" skills/skippy-dev/references/checkpoints.md` | Wave 0 | pending |
-| 13-02-01 | 02 | 2 | ABSORB-05 | grep | `! grep -q "gsd-executor\|gsd:verify-work" skills/skippy-dev/references/verification-loops.md` | Existing | pending |
+| 13-01-01 | 01 | 1 | ABSORB-01 | smoke | `test -f skills/skippy/references/phased-execution.md && wc -l < skills/skippy/references/phased-execution.md` | Wave 0 | pending |
+| 13-01-02 | 01 | 1 | ABSORB-02 | smoke | `test -f skills/skippy/references/state-tracking.md && wc -l < skills/skippy/references/state-tracking.md` | Wave 0 | pending |
+| 13-01-03 | 01 | 1 | ABSORB-03 | smoke | `test -f skills/skippy/references/plan-structure.md && grep -q "## Task" skills/skippy/references/plan-structure.md` | Wave 0 | pending |
+| 13-01-04 | 01 | 1 | ABSORB-04 | smoke | `test -f skills/skippy/references/checkpoints.md && grep -q "human-verify" skills/skippy/references/checkpoints.md` | Wave 0 | pending |
+| 13-02-01 | 02 | 2 | ABSORB-05 | grep | `! grep -q "gsd-executor\|gsd:verify-work" skills/skippy/references/verification-loops.md` | Existing | pending |
 | 13-02-02 | 02 | 2 | ABSORB-06 | grep | `! grep -rn "requires GSD\|gsd-tools\|gsd-executor\|gsd-verifier\|gsd-planner" skills/ --include="*.md"` | N/A | pending |
-| 13-02-03 | 02 | 2 | ABSORB-07 | smoke | `grep -q "## Task" skills/skippy-dev/commands/reconcile.md && ! grep -q "<task" skills/skippy-dev/commands/reconcile.md` | Existing | pending |
+| 13-02-03 | 02 | 2 | ABSORB-07 | smoke | `grep -q "## Task" skills/skippy/commands/reconcile.md && ! grep -q "<task" skills/skippy/commands/reconcile.md` | Existing | pending |
 
 *Status: pending / green / red / flaky*
 

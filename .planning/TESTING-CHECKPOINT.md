@@ -86,10 +86,10 @@ export HOME="$SANDBOX" && mkdir -p "$HOME/.claude/skills"
 cd /Volumes/ThunderBolt/Development/skippy-agentspace
 bash tools/install.sh --core  # just core
 echo "Core only: $(ls $HOME/.claude/skills/)"  # expect: core
-bash tools/install.sh skippy-dev add-todo  # positional args
-echo "Added: $(ls $HOME/.claude/skills/)"  # expect: core, skippy-dev, add-todo
+bash tools/install.sh skippy add-todo  # positional args
+echo "Added: $(ls $HOME/.claude/skills/)"  # expect: core, skippy, add-todo
 bash tools/uninstall.sh add-todo  # individual uninstall
-echo "Removed: $(ls $HOME/.claude/skills/)"  # expect: core, skippy-dev
+echo "Removed: $(ls $HOME/.claude/skills/)"  # expect: core, skippy
 export HOME="$REAL_HOME"
 rm -rf "$SANDBOX"
 ```

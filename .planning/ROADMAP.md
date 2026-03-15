@@ -62,7 +62,7 @@ Plans:
 - [x] 01-01: Fix paths, align frontmatter, rename bin/ to scripts/, verify structure
 
 ### Phase 2: Plugin Packaging
-**Goal**: Users can install skippy-dev via `/plugin marketplace add` with a single command
+**Goal**: Users can install skippy via `/plugin marketplace add` with a single command
 **Depends on**: Phase 1
 **Requirements**: SPEC-04, STRU-03
 **Success Criteria** (what must be TRUE):

@@ -27,12 +27,12 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/SKILL.md
-    - skills/skippy-dev/commands/reconcile.md
-    - skills/skippy-dev/commands/update.md
-    - skills/skippy-dev/commands/cleanup.md
-    - skills/skippy-dev/scripts/skippy-update.sh
-    - skills/skippy-dev/scripts/skippy-cleanup.sh
+    - skills/skippy/SKILL.md
+    - skills/skippy/commands/reconcile.md
+    - skills/skippy/commands/update.md
+    - skills/skippy/commands/cleanup.md
+    - skills/skippy/scripts/skippy-update.sh
+    - skills/skippy/scripts/skippy-cleanup.sh
     - CLAUDE.md
     - INDEX.md
 
@@ -81,12 +81,12 @@ Each task was committed atomically:
 3. **Task 3: Verify progressive disclosure and run full validation** - no commit (verification only, no file changes)
 
 ## Files Created/Modified
-- `skills/skippy-dev/SKILL.md` - Replaced frontmatter (removed triggers, added metadata), fixed 5 body paths
-- `skills/skippy-dev/commands/reconcile.md` - Fixed 3 absolute @-reference paths to relative
-- `skills/skippy-dev/commands/update.md` - Fixed @-reference path and script execution path
-- `skills/skippy-dev/commands/cleanup.md` - Fixed @-reference path, quarantine path, script path, objective text
-- `skills/skippy-dev/scripts/skippy-update.sh` - Renamed from bin/, portable VERSIONS_FILE and UPSTREAM_DIR paths
-- `skills/skippy-dev/scripts/skippy-cleanup.sh` - Renamed from bin/, configurable QUARANTINE_DIR via env var
+- `skills/skippy/SKILL.md` - Replaced frontmatter (removed triggers, added metadata), fixed 5 body paths
+- `skills/skippy/commands/reconcile.md` - Fixed 3 absolute @-reference paths to relative
+- `skills/skippy/commands/update.md` - Fixed @-reference path and script execution path
+- `skills/skippy/commands/cleanup.md` - Fixed @-reference path, quarantine path, script path, objective text
+- `skills/skippy/scripts/skippy-update.sh` - Renamed from bin/, portable VERSIONS_FILE and UPSTREAM_DIR paths
+- `skills/skippy/scripts/skippy-cleanup.sh` - Renamed from bin/, configurable QUARANTINE_DIR via env var
 - `CLAUDE.md` - Updated file tree (bin/ to scripts/), removed resolved known issues section
 - `INDEX.md` - Updated skill description to match trimmed SKILL.md
 
@@ -102,9 +102,9 @@ Each task was committed atomically:
 
 **1. [Rule 1 - Bug] Fixed hardcoded paths in shell scripts**
 - **Found during:** Task 1 (Fix hardcoded paths)
-- **Issue:** Plan listed path fixes for .md files but skippy-cleanup.sh and skippy-update.sh also contained hardcoded absolute paths (/Volumes/ThunderBolt/_tmp/, ~/.config/pai/Skills/skippy-dev/.versions)
+- **Issue:** Plan listed path fixes for .md files but skippy-cleanup.sh and skippy-update.sh also contained hardcoded absolute paths (/Volumes/ThunderBolt/_tmp/, ~/.config/pai/Skills/skippy/.versions)
 - **Fix:** Replaced with env var overrides (SKIPPY_QUARANTINE_DIR, SKIPPY_CACHE_DIR) with portable defaults. Added SKILL_DIR resolution for .versions file path.
-- **Files modified:** skills/skippy-dev/bin/skippy-cleanup.sh, skills/skippy-dev/bin/skippy-update.sh
+- **Files modified:** skills/skippy/bin/skippy-cleanup.sh, skills/skippy/bin/skippy-update.sh
 - **Verification:** grep -rn confirms zero hardcoded paths in skills/
 - **Committed in:** ac4e576 (Task 1 commit)
 

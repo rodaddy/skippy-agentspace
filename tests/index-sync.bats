@@ -67,7 +67,7 @@ setup() {
     # Check that generated INDEX.md mentions key skills
     run cat "$SANDBOX_REPO/INDEX.md"
     assert_output --partial "core"
-    assert_output --partial "skippy-dev"
+    assert_output --partial "skippy"
     assert_output --partial "browser"
 }
 

@@ -41,7 +41,7 @@ re_verification: false
 | `INSTALL.md` | Adding skills/components guide with plugin and manual paths | VERIFIED | 89 lines, plugin and manual install, status checking, uninstalling |
 | `UPGRADE.md` | Update guide with manual and AI-assisted paths | VERIFIED | 70 lines, manual 5-step and /skippy:upgrade AI-assisted paths |
 | `README.md` | Project overview + quick start + links to detail docs | VERIFIED | 52 lines, thin routing layer, 5-command quick start, doc table |
-| `skills/skippy-dev/commands/upgrade.md` | /skippy:upgrade AI command | VERIFIED | 80 lines, frontmatter + objective + 5-step process, matches Phase 8 command pattern |
+| `skills/skippy/commands/upgrade.md` | /skippy:upgrade AI command | VERIFIED | 80 lines, frontmatter + objective + 5-step process, matches Phase 8 command pattern |
 
 ### Key Link Verification
 
@@ -56,7 +56,7 @@ re_verification: false
 | `SETUP.md` | `tools/prereqs.sh` | step reference | WIRED | Lines 17, 29: `bash tools/prereqs.sh` in Step 2 |
 | `SETUP.md` | `tools/install.sh` | step reference | WIRED | Lines 39, 56, 62, 63, 69: multiple install.sh references in Steps 3-4 |
 | `SETUP.md` | `tools/verify.sh` | step reference | WIRED | Lines 87, 99: `bash tools/verify.sh` in Step 6 |
-| `UPGRADE.md` | `skills/skippy-dev/commands/upgrade.md` | references /skippy:upgrade command | WIRED | Line 51: `/skippy:upgrade` command reference |
+| `UPGRADE.md` | `skills/skippy/commands/upgrade.md` | references /skippy:upgrade command | WIRED | Line 51: `/skippy:upgrade` command reference |
 
 ### Requirements Coverage
 
@@ -82,7 +82,7 @@ Zero TODOs, FIXMEs, placeholders, or stub implementations found across all 7 art
 
 | File | Line | Observation | Severity | Impact |
 |------|------|------------|----------|--------|
-| `tools/verify.sh` | 192 | verify.sh checks 4 commands (reconcile, update, cleanup, migrate) but not the new `upgrade` command added in this phase | Info | Non-blocking -- the upgrade command is discoverable via the skippy-dev skill symlink which IS checked |
+| `tools/verify.sh` | 192 | verify.sh checks 4 commands (reconcile, update, cleanup, migrate) but not the new `upgrade` command added in this phase | Info | Non-blocking -- the upgrade command is discoverable via the skippy skill symlink which IS checked |
 
 ### Human Verification Required
 
@@ -100,7 +100,7 @@ Zero TODOs, FIXMEs, placeholders, or stub implementations found across all 7 art
 
 ### 3. /skippy:upgrade Command
 
-**Test:** In a Claude Code session with skippy-dev installed, run `/skippy:upgrade`
+**Test:** In a Claude Code session with skippy installed, run `/skippy:upgrade`
 **Expected:** Claude executes the 5-step upgrade process (snapshot, pull, reinstall, verify, customization check)
 **Why human:** AI command execution requires a live Claude Code session
 

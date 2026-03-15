@@ -73,7 +73,7 @@ setup() {
 
     # Skippy symlinks should be gone
     [ ! -L "$HOME/.claude/skills/core" ]
-    [ ! -L "$HOME/.claude/skills/skippy-dev" ]
+    [ ! -L "$HOME/.claude/skills/skippy" ]
 }
 
 # --- Error: not-installed skill ---

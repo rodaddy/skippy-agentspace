@@ -6,7 +6,7 @@ Status: Analysis only -- no cherry-picks taken yet
 
 ## Context
 
-Phase 8 cherry-picked 5 ideas from PAUL into reference docs under `skills/skippy-dev/references/`. It was supposed to do the same for OMC, but `upstreams/omc/upstream.json` has `cherry_picks: []`. This analysis identifies what OMC offers and what's worth taking.
+Phase 8 cherry-picked 5 ideas from PAUL into reference docs under `skills/skippy/references/`. It was supposed to do the same for OMC, but `upstreams/omc/upstream.json` has `cherry_picks: []`. This analysis identifies what OMC offers and what's worth taking.
 
 ### What We Already Took (via cross-package synthesis)
 
@@ -248,28 +248,28 @@ When cherry-picks are implemented, update `upstreams/omc/upstream.json`:
     {
       "id": "pre-execution-gate",
       "source": "skills/ralplan/SKILL.md",
-      "target": "skills/skippy-dev/references/pre-execution-gate.md",
+      "target": "skills/skippy/references/pre-execution-gate.md",
       "description": "Vague prompt interception with concrete signal detection",
       "date": "<date>"
     },
     {
       "id": "ambiguity-scoring",
       "source": "skills/deep-interview/SKILL.md",
-      "target": "skills/skippy-dev/references/ambiguity-scoring.md",
+      "target": "skills/skippy/references/ambiguity-scoring.md",
       "description": "Weighted clarity dimensions with challenge agent modes",
       "date": "<date>"
     },
     {
       "id": "compaction-resilience",
       "source": "src/hooks/pre-compact/index.ts",
-      "target": "skills/skippy-dev/references/compaction-resilience.md",
+      "target": "skills/skippy/references/compaction-resilience.md",
       "description": "Checkpoint structure for mid-session compaction survival",
       "date": "<date>"
     },
     {
       "id": "task-decomposition",
       "source": "src/features/task-decomposer/index.ts",
-      "target": "skills/skippy-dev/references/task-decomposition.md",
+      "target": "skills/skippy/references/task-decomposition.md",
       "description": "File ownership patterns for parallel execution safety",
       "date": "<date>"
     }

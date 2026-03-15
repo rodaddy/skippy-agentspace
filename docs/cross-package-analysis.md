@@ -196,7 +196,7 @@ The cherry-pick approach is consistent across all three upstreams: extract the P
 
 ### Relationship to Plan 02
 
-The Cherry-Pick Summary table (Section 3) directly drives Plan 02's deliverables. Each HIGH priority pattern becomes a reference doc in `skills/skippy-dev/references/`. The reference docs follow an evolved format with Source Upstreams, Why This Version, and Integration Points sections -- building on the established format from the 5 existing PAUL reference docs.
+The Cherry-Pick Summary table (Section 3) directly drives Plan 02's deliverables. Each HIGH priority pattern becomes a reference doc in `skills/skippy/references/`. The reference docs follow an evolved format with Source Upstreams, Why This Version, and Integration Points sections -- building on the established format from the 5 existing PAUL reference docs.
 
 ### Relationship to Plan 03
 

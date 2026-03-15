@@ -10,7 +10,7 @@
 ```
 skippy-agentspace/
   skills/
-    skippy-dev/
+    skippy/
       commands/
         reconcile.md               # EXISTING -- remove GSD dependency
         update.md                  # EXISTING -- unchanged
@@ -81,7 +81,7 @@ skippy-agentspace/
 
 ### What Gets Absorbed
 
-GSD's core intellectual property is 6 patterns. The existing skippy-dev references already capture 5 PAUL-sourced ideas and 5 cross-package syntheses. The GSD patterns need their own reference docs so skippy can operate the phased execution lifecycle without requiring GSD at runtime.
+GSD's core intellectual property is 6 patterns. The existing skippy references already capture 5 PAUL-sourced ideas and 5 cross-package syntheses. The GSD patterns need their own reference docs so skippy can operate the phased execution lifecycle without requiring GSD at runtime.
 
 | GSD Pattern | Source Files in GSD | New Reference Doc | Priority |
 |-------------|--------------------|--------------------|----------|
@@ -96,7 +96,7 @@ GSD's core intellectual property is 6 patterns. The existing skippy-dev referenc
 
 ### Where New Reference Docs Live
 
-All new docs go in `skills/skippy-dev/references/`. This follows the established pattern -- every reference doc in the existing skill is a standalone markdown file under `references/`. No new directories needed.
+All new docs go in `skills/skippy/references/`. This follows the established pattern -- every reference doc in the existing skill is a standalone markdown file under `references/`. No new directories needed.
 
 ### How Standalone Commands Work Without GSD
 
@@ -116,8 +116,8 @@ All new docs go in `skills/skippy-dev/references/`. This follows the established
 
 | Integration | Type | Details |
 |-------------|------|---------|
-| `skippy-dev/SKILL.md` | MODIFY | Add 5 new rows to the Enhancements table pointing to new reference docs |
-| `skippy-dev/references/gsd-dependency-map.md` | MODIFY | Add header noting format absorption; risks become "format drift" not "GSD dependency" |
+| `skippy/SKILL.md` | MODIFY | Add 5 new rows to the Enhancements table pointing to new reference docs |
+| `skippy/references/gsd-dependency-map.md` | MODIFY | Add header noting format absorption; risks become "format drift" not "GSD dependency" |
 | `CLAUDE.md` | MODIFY | Remove "No GSD modification" constraint, replace with "Skippy IS the framework" |
 
 ### What NOT to Absorb
@@ -130,7 +130,7 @@ Do NOT replicate GSD's 32 slash commands. Skippy has its own command set. The re
 
 ### Command Architecture
 
-`/skippy:review` is a new command at `skills/skippy-dev/commands/review.md`. It follows the established command pattern: YAML frontmatter (name, description) + objective + execution_context + process.
+`/skippy:review` is a new command at `skills/skippy/commands/review.md`. It follows the established command pattern: YAML frontmatter (name, description) + objective + execution_context + process.
 
 ### Agent Topology
 
@@ -154,7 +154,7 @@ Main Context                      -- presents results
 
 ### How It Fits the Skill System
 
-**Command file:** `skills/skippy-dev/commands/review.md`
+**Command file:** `skills/skippy/commands/review.md`
 
 Standard command structure:
 ```yaml
@@ -164,7 +164,7 @@ description: Multi-agent audit swarm -- reviewer finds issues, fixer resolves, e
 ---
 ```
 
-**No new skill directory needed.** The review command is part of skippy-dev, not a separate skill. It's a command like reconcile, update, cleanup, migrate, and upgrade.
+**No new skill directory needed.** The review command is part of skippy, not a separate skill. It's a command like reconcile, update, cleanup, migrate, and upgrade.
 
 **Reference doc dependency:** The command's `<execution_context>` should reference `references/verification-loops.md` (for severity-rated review) and `references/model-routing.md` (for agent model selection).
 
@@ -182,10 +182,10 @@ The command markdown defines these constraints as agent prompts, not enforced sa
 
 | Integration | Type | Details |
 |-------------|------|---------|
-| `skippy-dev/commands/review.md` | NEW | ~120 lines following command pattern |
-| `skippy-dev/SKILL.md` | MODIFY | Add `/skippy:review` to Commands section |
-| `.claude-plugin/marketplace.json` | NO CHANGE | skippy-dev plugin already includes all commands in `skills/skippy-dev` |
-| `INDEX.md` | MODIFY | Add /skippy:review to skippy-dev's Commands column |
+| `skippy/commands/review.md` | NEW | ~120 lines following command pattern |
+| `skippy/SKILL.md` | MODIFY | Add `/skippy:review` to Commands section |
+| `.claude-plugin/marketplace.json` | NO CHANGE | skippy plugin already includes all commands in `skills/skippy` |
+| `INDEX.md` | MODIFY | Add /skippy:review to skippy's Commands column |
 | `tools/verify.sh` | MODIFY | Add review.md to the expected commands list (line 201) |
 
 ## Feature 3: bats-core Test Suite
@@ -360,7 +360,7 @@ Scripts in `tools/` source from `tools/lib/common.sh` -- straightforward via `$S
 
 But `validate-hooks.sh` is also in `tools/` and uses the same patterns, so it works the same way.
 
-`skippy-cleanup.sh` is in `skills/skippy-dev/scripts/` and should NOT source common.sh. It's a skill script, not a tool script. Leave it standalone.
+`skippy-cleanup.sh` is in `skills/skippy/scripts/` and should NOT source common.sh. It's a skill script, not a tool script. Leave it standalone.
 
 ### Integration Points
 
