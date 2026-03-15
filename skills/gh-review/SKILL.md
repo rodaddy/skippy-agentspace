@@ -46,6 +46,23 @@ Automates the full setup of Claude Code PR reviews on a self-hosted runner for a
 |---------|------|
 | `/gh-review:setup` | Full setup for a repo (register runner, secret, workflow) |
 
+## Gotchas
+
+- **Vaultwarden key lookup:** Use `get_secret` with name `"LiteLLM"` (returns `text` field). Do NOT use `get_credential` with `"LiteLLM API Key - gh_runner"` -- that entry stores the key in a non-password field and returns empty.
+- **Runner PATH:** The runner service doesn't inherit the user's login PATH. You must add `PATH=...` to the runner's `.env` file so it can find node, bun, and claude.
+- **Claude Code on runner:** `su - runner -c 'claude --version'` will fail if `/usr/local/bin` isn't in PATH. Use `export PATH=/usr/local/bin:$PATH` first.
+- **Workflow activation:** New workflow files only activate from the default branch (main). A workflow added on a feature branch won't trigger until merged -- or cherry-pick just the workflow file to main.
+- **Node 24 + actions/checkout@v6:** Set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"` as env var to use Node 24 with v6 actions.
+
+## Active Runners
+
+| Repo | Runner Name | Label | Status |
+|------|-------------|-------|--------|
+| rodaddy/skippy-agentspace | gh-runner-skippy | skippy | online |
+| rodaddy/mcp2cli | gh-runner | (default) | online |
+| rodaddy/king-ng | king-ng | king-ng | online |
+| rodaddy/king-ng | king-uat | king-uat | online |
+
 ## References
 
 - King-ng workflow: `gh api repos/rodaddy/king-ng/contents/.github/workflows/claude-code-review.yml`
