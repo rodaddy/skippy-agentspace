@@ -15,7 +15,7 @@ Runner LXC: 106 (gh-runner) at 10.71.1.114, SSH as root
 Runner user: runner
 Runner home: /home/runner/
 LiteLLM proxy: http://10.71.20.53:4000
-Vaultwarden secret: "LiteLLM API Key - gh_runner"
+Vaultwarden secret: "LiteLLM" (via get_secret, returns text field -- NOT get_credential)
 </context>
 
 <process>
@@ -70,9 +70,10 @@ ssh -o ConnectTimeout=10 root@10.71.1.114 "
   su - runner -c '
     mkdir -p $RUNNER_DIR
     cd $RUNNER_DIR
-    # Copy runner binaries from existing installation
-    tar xzf /home/runner/actions-runner/actions-runner-linux-x64-*.tar.gz 2>/dev/null || \
-      cp -r /home/runner/actions-runner/bin /home/runner/actions-runner/externals $RUNNER_DIR/ 2>/dev/null
+    # Download latest runner release (check version at https://github.com/actions/runner/releases)
+    RUNNER_VERSION=\$(curl -s https://api.github.com/repos/actions/runner/releases/latest | grep tag_name | cut -d\\\"\\\" -f4 | sed s/v//)
+    curl -fsSL https://github.com/actions/runner/releases/download/v\${RUNNER_VERSION}/actions-runner-linux-x64-\${RUNNER_VERSION}.tar.gz -o /tmp/runner.tar.gz
+    tar xzf /tmp/runner.tar.gz
     ./config.sh --url https://github.com/$REPO --token $TOKEN --name $RUNNER_NAME --labels self-hosted,Linux,X64,$RUNNER_LABEL --unattended
   '
 "
@@ -199,6 +200,10 @@ git add .github/workflows/claude-code-review.yml
 git commit -m "feat: add Claude Code review workflow with self-hosted runner"
 git push
 ```
+
+**IMPORTANT:** New workflow files only activate from the default branch (main). If you're on a feature branch, the workflow won't trigger until merged. Options:
+- Merge the PR that adds the workflow first (reviews start on subsequent PRs)
+- Cherry-pick just the workflow file to main to activate immediately
 
 ## Step 9: Verify
 
