@@ -2,7 +2,7 @@
 name: architecture-reviewer
 description: Architecture specialist for skippy-agentspace. Reviews skill portability, convention compliance, dependency structure, and separation of concerns. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash
-model: opus
+complexity: HIGH
 permissionMode: plan
 ---
 

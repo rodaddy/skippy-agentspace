@@ -2,7 +2,7 @@
 name: fix-agent
 description: Fix agent for skippy-agentspace audit swarm. Applies specific remediation for findings identified by reviewer agents. Makes atomic commits per fix. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash, Write, Edit
-model: sonnet
+complexity: MEDIUM
 permissionMode: bypassPermissions
 isolation: worktree
 ---

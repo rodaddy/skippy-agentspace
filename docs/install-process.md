@@ -10,11 +10,38 @@ First-time installation. For updates, see `update-process.md`.
 
 This is an **interactive, step-by-step** install. You do NOT run all steps automatically. For each step:
 
-1. **Explain** -- tell the user what this step does and why
-2. **Ask** -- use the `AskUserQuestion` tool with structured choices (checkboxes/radio). NEVER ask free-text questions. The user should click, not type.
-3. **Execute** -- run the step
-4. **Show** -- display the log output / results
-5. **Confirm** -- use `AskUserQuestion` with "Looks good / Investigate / Rollback" choices
+1. **LOG** -- write what you're about to do to `$LOG_FILE` BEFORE doing it
+2. **Explain** -- tell the user what this step does and why
+3. **Ask** -- use the `AskUserQuestion` tool with structured choices (checkboxes/radio). NEVER ask free-text questions. The user should click, not type.
+4. **Execute** -- run the step
+5. **LOG** -- write results to `$LOG_FILE` IMMEDIATELY after execution, BEFORE showing the user
+6. **Show** -- display the log output / results
+7. **Confirm** -- use `AskUserQuestion` with "Looks good / Investigate / Rollback" choices
+
+### Real-Time Logging (HARD ENFORCED)
+
+**LOG EVERYTHING. LOG IT NOW. NOT LATER. NOT IN A BATCH. NOW.**
+
+Every Bash command, every Read, every Edit, every user choice, every result -- appended to `$LOG_FILE` IMMEDIATELY after it happens. Not at the end of the step. Not at the checkpoint. After EACH action.
+
+**The pattern for EVERY action inside a step:**
+1. Append to `$LOG_FILE`: `[CMD] the command you're about to run`
+2. Run the command
+3. Append to `$LOG_FILE`: `[PASS|FAIL|SKIP|WARN|INFO] the result`
+
+**What gets logged:**
+- `[CMD]` -- every bash command, every file read, every tool call (BEFORE running)
+- `[PASS]` -- successful result with output summary
+- `[FAIL]` -- failure with the actual error message
+- `[SKIP]` -- step or action skipped with reason
+- `[WARN]` -- non-blocking issue detected
+- `[INFO]` -- discovery, context, or user choice recorded
+- `[ASK]` -- question presented to user + which option they chose
+
+**Between every step is a `LOG CHECKPOINT` marker.** You MUST NOT proceed past a checkpoint until `$LOG_FILE` contains the complete record of EVERY action from the previous step -- not a summary, the actual commands and results.
+
+**If you realize you forgot to log something: STOP. Log it NOW before doing anything else.**
+**If a step has 5 commands, the log should have 5 `[CMD]` + 5 result entries from that step.**
 
 **CRITICAL: Every question MUST use the `AskUserQuestion` tool with predefined options. No free-text prompts. No "type 1, 2, or 3." Click-only interaction.**
 
@@ -46,18 +73,26 @@ In all modes, EVERY step is logged to `$BACKUP_DIR/install-log.md`. The log capt
 | 5 | Capture current skill/command counts |
 | 6 | Ensure symlink architecture |
 | 7 | Command collision check |
-| 8 | Remove old marketplace commands (moved to /tmp) |
-| 9 | Copy skippy skills |
-| 10 | Reference doc completeness check |
-| 11 | After inventory + eval baseline |
-| 12 | OMC hook audit |
-| 13 | Post-install smoke test |
-| 14 | Change manifest |
-| 15 | Generate handoff/verification prompt |
+| 8 | Remove old marketplace commands and agents (moved to /tmp) |
+| 9 | Migrate skippy-dev to skippy |
+| 10 | Copy skippy skills |
+| 11 | Command routing setup |
+| 12 | Reference doc and path portability check |
+| 13 | After inventory + eval baseline |
+| 14 | OMC hook audit |
+| 15 | Post-install smoke test |
+| 16 | Change manifest |
+| 17 | Generate handoff/verification prompt |
+| 18 | Save install config |
 
 Then immediately use AskUserQuestion to ask the install mode. Do NOT start reading system state until the user has chosen a mode.
 
 Then read `docs/process.md` silently -- do not show its contents to the user. It's internal reference for you.
+
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 1 must be in `$LOG_FILE`. Verify: install mode chosen, timestamp.**
+
+---
 
 ## Step 2: Backup
 
@@ -75,6 +110,11 @@ Follow process.md "Backup" section. Backup location is determined by process.md 
 
 Start the install log: `$BACKUP_DIR/install-log.md`.
 
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 2 must be in `$LOG_FILE`. Verify: backup location, sizes, restore.sh path, rollback test result.**
+
+---
+
 ## Step 3: Discover Consumed Sources
 
 Read `upstreams/*/upstream.json` for marketplace definitions. Read `.planning/audits/` for audit data. Read `CLAUDE.md` "Consumed Sources" table.
@@ -85,6 +125,11 @@ Read `upstreams/*/upstream.json` for marketplace definitions. Read `.planning/au
 - What skippy replaces
 
 **Ask (AskUserQuestion):** "Sources reviewed." -- options: Continue / Tell me more about a source / Skip
+
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 3 must be in `$LOG_FILE`. Verify: upstream count, sources found, audit data location.**
+
+---
 
 ## Step 4: Pre-Install Diff
 
@@ -120,6 +165,11 @@ First, use AI judgment: compare the repo SKILL.md vs installed SKILL.md. If the 
 
 **Default depends on assessment. NEVER clean-replace without explicit approval.**
 
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 4 must be in `$LOG_FILE`. Verify: per-skill diff status (NEW/IDENTICAL/DIFFERS), user merge choices.**
+
+---
+
 ## Step 5: Before Inventory
 
 Follow process.md "Before/After Inventory" -- capture the "before" snapshot.
@@ -130,6 +180,11 @@ Follow process.md "Before/After Inventory" -- capture the "before" snapshot.
 - Where skills live (symlink target or direct directory)
 
 **Ask (AskUserQuestion):** "Current setup captured." -- options: Continue / Show details / Stop
+
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 5 must be in `$LOG_FILE`. Verify: skill count, command count, symlink target.**
+
+---
 
 ## Step 6: Ensure Symlink Architecture
 
@@ -153,6 +208,11 @@ target=$(readlink "$HOME/.claude/skills" 2>/dev/null || echo "NOT_A_SYMLINK")
 
 **Show:** result and verification (`readlink ~/.claude/skills`)
 
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 6 must be in `$LOG_FILE`. Verify: symlink state (already correct / migrated / created), readlink output.**
+
+---
+
 ## Step 7: Command Collision Check
 
 Follow process.md "Command Collision Check" section.
@@ -163,81 +223,64 @@ Follow process.md "Command Collision Check" section.
 
 **Ask (AskUserQuestion):** "Collision check complete." -- options: Continue / Resolve a collision / Skip
 
-## Step 8: Remove Old Marketplace Commands
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 7 must be in `$LOG_FILE`. Verify: collisions found (or none), resolution choices.**
 
-Only remove what exists. Move to /tmp, never rm.
+---
 
-**Show the user** what will be removed:
-```
-GSD: ~/.claude/commands/gsd (32 commands) -> /tmp/gsd-commands-backup-XXXX
-GSD: ~/.claude/agents/gsd-*.md (agent definitions) -> /tmp/gsd-agents-backup-XXXX
-GSD: ~/.claude/gsd-local-patches/ (if exists) -> /tmp/gsd-patches-backup-XXXX
-GSD: ~/.claude/get-shit-done (core) -> /tmp/gsd-core-backup-XXXX
-OMC: keeping (hooks provide value, commands coexist)
-```
-Or: "No GSD/OMC found -- nothing to remove."
+## Step 8: Remove Old Marketplace Commands and Agents
 
-**Ask (AskUserQuestion):** "Ready to remove old commands." -- options: Proceed (moved to /tmp) / Show what will be removed / Skip
+Follow process.md "Consumed Source Cleanup" section. Move to /tmp, never rm.
 
-**Execute:**
-```bash
-# GSD commands
-if [[ -d "$HOME/.claude/commands/gsd" ]]; then
-    mv "$HOME/.claude/commands/gsd" "/tmp/gsd-commands-backup-$$"
-    echo "REMOVED: ~/.claude/commands/gsd"
-fi
-# GSD core (workflows, templates, references)
-if [[ -d "$HOME/.claude/get-shit-done" ]]; then
-    mv "$HOME/.claude/get-shit-done" "/tmp/gsd-core-backup-$$"
-    echo "REMOVED: ~/.claude/get-shit-done"
-fi
-# GSD agent definitions (show up as subagent types in Claude Code)
-for agent in gsd-executor gsd-planner gsd-verifier gsd-plan-checker gsd-phase-researcher; do
-    if [[ -f "$HOME/.claude/agents/$agent.md" ]]; then
-        mkdir -p "/tmp/gsd-agents-backup-$$"
-        mv "$HOME/.claude/agents/$agent.md" "/tmp/gsd-agents-backup-$$/"
-        echo "REMOVED: ~/.claude/agents/$agent.md"
-    fi
-done
-# GSD local patches (leftover from GSD update system)
-if [[ -d "$HOME/.claude/gsd-local-patches" ]]; then
-    mv "$HOME/.claude/gsd-local-patches" "/tmp/gsd-patches-backup-$$"
-    echo "REMOVED: ~/.claude/gsd-local-patches"
-fi
-```
+**Show the user** what will be removed (scan before acting):
+- Count GSD commands, agents, core, patches directories that exist
+- Report OMC status (keeping, with reason)
+- Or: "No GSD/OMC found -- nothing to remove."
 
-**OMC:** If installed, report what's kept and why. If not installed, skip. **No OMC required** -- Claude Code discovers skills natively.
+**Ask (AskUserQuestion):** "Ready to remove old commands and agents." -- options: Proceed (moved to /tmp) / Show what will be removed / Skip
 
-**Show:** what was removed, what was kept.
+**Execute** the cleanup from process.md. Run the verification check at the end.
 
-## Step 8.5: Migrate skippy to skippy (if needed)
+**Show:** what was removed, what was kept, verification result.
 
-The skill directory was renamed from `skippy` to `skippy`. If the installed system has the old name, migrate it:
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 8 must be in `$LOG_FILE`. Verify: each item removed with /tmp path, agent count removed, verification result.**
+
+---
+
+## Step 9: Migrate skippy-dev to skippy (if needed)
+
+The skill directory was renamed from `skippy-dev` to `skippy`. If the installed system has the old name, migrate it:
 
 ```bash
 PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
-if [[ -d "$PAI_SKILLS/skippy" ]] && [[ ! -d "$PAI_SKILLS/skippy" ]]; then
-    mv "$PAI_SKILLS/skippy" "$PAI_SKILLS/skippy"
-    echo "MIGRATED: skippy -> skippy"
-elif [[ -d "$PAI_SKILLS/skippy" ]] && [[ -d "$PAI_SKILLS/skippy" ]]; then
-    # Both exist -- merge skippy into skippy, then remove old
-    rsync -a "$PAI_SKILLS/skippy/" "$PAI_SKILLS/skippy/"
-    mv "$PAI_SKILLS/skippy" "/tmp/skippy-migrated-$$"
-    echo "MERGED: skippy into skippy (old moved to /tmp)"
+if [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ ! -d "$PAI_SKILLS/skippy" ]]; then
+    mv "$PAI_SKILLS/skippy-dev" "$PAI_SKILLS/skippy"
+    echo "MIGRATED: skippy-dev -> skippy"
+elif [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ -d "$PAI_SKILLS/skippy" ]]; then
+    # Both exist -- merge skippy-dev into skippy, then remove old
+    rsync -a "$PAI_SKILLS/skippy-dev/" "$PAI_SKILLS/skippy/"
+    mv "$PAI_SKILLS/skippy-dev" "/tmp/skippy-dev-migrated-$$"
+    echo "MERGED: skippy-dev into skippy (old moved to /tmp)"
 fi
 ```
 
 Also clean up old command routing if it exists:
 ```bash
-if [[ -d "$HOME/.claude/commands/skippy" ]]; then
-    mv "$HOME/.claude/commands/skippy" "/tmp/skippy-commands-$$"
-    echo "CLEANED: old ~/.claude/commands/skippy"
+if [[ -d "$HOME/.claude/commands/skippy-dev" ]]; then
+    mv "$HOME/.claude/commands/skippy-dev" "/tmp/skippy-dev-commands-$$"
+    echo "CLEANED: old ~/.claude/commands/skippy-dev"
 fi
 ```
 
 **Log all migration actions. Show the user what was migrated.**
 
-## Step 9: Copy Skippy Skills
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 9 must be in `$LOG_FILE`. Verify: migration actions taken (or skipped), old paths cleaned.**
+
+---
+
+## Step 10: Copy Skippy Skills
 
 **Show the user:**
 - List of skills to install with command counts
@@ -270,7 +313,12 @@ done
 
 **Show:** each skill installed with its commands listed.
 
-## Step 9.5: Command Routing Setup
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 10 must be in `$LOG_FILE`. Verify: each skill installed with command list, rsync/cp method used.**
+
+---
+
+## Step 11: Command Routing Setup
 
 Claude Code discovers slash commands from `~/.claude/commands/<prefix>/`. Skills installed via `~/.claude/skills/` have their commands in the skill directory, but they also need to be linked into `~/.claude/commands/` for slash command routing.
 
@@ -291,16 +339,21 @@ One symlink per skill, not per command. All commands in the skill are automatica
 
 **Ask (AskUserQuestion):** "Command routing set up." -- options: Continue / Show command list / Skip
 
-## Step 10: Reference Doc and Path Portability Check
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 11 must be in `$LOG_FILE`. Verify: each skill routed with command count.**
+
+---
+
+## Step 12: Reference Doc and Path Portability Check
 
 Follow process.md "Reference Doc Completeness Check".
 
 **Additionally, check for non-portable paths in command files:**
 ```bash
 for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
-    # Check for repo-relative paths (skills/skippy/agents/ etc.)
-    if grep -q 'skills/skippy/' "$cmd_file" 2>/dev/null; then
-        echo "NON-PORTABLE: $cmd_file references repo-relative path 'skills/skippy/'"
+    # Check for repo-relative paths (skills/skippy-dev/agents/ etc.)
+    if grep -q 'skills/skippy-dev/' "$cmd_file" 2>/dev/null; then
+        echo "NON-PORTABLE: $cmd_file references repo-relative path 'skills/skippy-dev/'"
     fi
     # Check for hardcoded absolute paths
     if grep -q '/Volumes/' "$cmd_file" 2>/dev/null; then
@@ -309,7 +362,7 @@ for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
 done
 ```
 
-Non-portable paths should use relative references (e.g., `references/` not `~/.config/pai/Skills/skippy/references/`) or `${CLAUDE_SKILL_DIR}` variables.
+Non-portable paths should use relative references (e.g., `references/` not `~/.config/pai/Skills/skippy-dev/references/`) or `${CLAUDE_SKILL_DIR}` variables.
 
 **Show the user:** OK/MISSING table for referenced docs + any non-portable path warnings.
 
@@ -324,7 +377,12 @@ Log stale files separately. Don't delete -- just report for user awareness.
 
 Any MISSING reference is a blocker -- do not proceed until resolved.
 
-## Step 11: After Inventory + Eval Baseline
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 12 must be in `$LOG_FILE`. Verify: OK/MISSING per reference doc, any non-portable path warnings.**
+
+---
+
+## Step 13: After Inventory + Eval Baseline
 
 Follow process.md "Before/After Inventory" (capture "after") and "Eval Baseline" sections.
 
@@ -342,7 +400,12 @@ Eval baseline:
 
 **Ask (AskUserQuestion):** "Inventory captured." -- options: Looks good / Show details / Investigate
 
-## Step 12: OMC Hook Audit
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 13 must be in `$LOG_FILE`. Verify: before/after counts, delta, eval baseline scores.**
+
+---
+
+## Step 14: OMC Hook Audit
 
 Follow process.md "OMC Hook Audit" section. Skip if no OMC.
 
@@ -350,7 +413,12 @@ Follow process.md "OMC Hook Audit" section. Skip if no OMC.
 
 **Ask** (only if warnings): "Remove these hooks?"
 
-## Step 13: Post-Install Smoke Test
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 14 must be in `$LOG_FILE`. Verify: hooks found, warnings issued, removals made.**
+
+---
+
+## Step 15: Post-Install Smoke Test
 
 Follow process.md "Post-Install Smoke Test" section.
 
@@ -366,13 +434,23 @@ Follow process.md "Post-Install Smoke Test" section.
 
 If any FAIL: options become: Investigate / Rollback / Continue anyway (not recommended)
 
-## Step 14: Change Manifest
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 15 must be in `$LOG_FILE`. Verify: each smoke test PASS/FAIL with details.**
+
+---
+
+## Step 16: Change Manifest
 
 Follow process.md "Change Manifest" section. Write to `$BACKUP_DIR/changes.md`.
 
 **Show the user:** the manifest summary (added/updated/removed/unchanged counts).
 
-## Step 15: Generate Handoff Prompt
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 16 must be in `$LOG_FILE`. Verify: added/updated/removed/unchanged counts.**
+
+---
+
+## Step 17: Generate Handoff Prompt
 
 Create a prompt the user pastes into a NEW CC session to verify the install. Base it on what was ACTUALLY installed:
 
@@ -391,7 +469,12 @@ Create a prompt the user pastes into a NEW CC session to verify the install. Bas
 
 **Ask (AskUserQuestion):** "Install complete." -- options: Copy handoff prompt / Show summary again / Rollback
 
-## Step 16: Save Install Config
+---
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 17 must be in `$LOG_FILE`. Verify: handoff prompt path, verification test list.**
+
+---
+
+## Step 18: Save Install Config
 
 Write permanent config so future updates have defaults. Follow process.md "Install config (permanent)" section.
 

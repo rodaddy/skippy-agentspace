@@ -2,7 +2,7 @@
 name: eval-agent
 description: Evaluator agent for skippy-agentspace audit swarm. Verifies fixes applied correctly, checks for regressions, and provides PASS/FAIL verdict per finding. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+complexity: MEDIUM
 permissionMode: plan
 ---
 

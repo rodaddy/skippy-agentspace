@@ -2,7 +2,7 @@
 name: security-reviewer
 description: Security audit specialist for skippy-agentspace. Scans for vulnerabilities, injection risks, secret exposure, and unsafe shell patterns. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+complexity: MEDIUM
 permissionMode: plan
 ---
 
