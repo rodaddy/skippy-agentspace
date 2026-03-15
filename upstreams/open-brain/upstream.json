@@ -1,0 +1,10 @@
+{
+  "name": "open-brain",
+  "description": "Semantic knowledge server -- pgvector search, decision/thought logging, session persistence via MCP",
+  "repo": "https://github.com/rodaddy/open-brain.git",
+  "branch": "main",
+  "last_checked_sha": "aa02844b9d41e13891e2510ee62a2ef7e58ef277",
+  "last_check": "2026-03-15T20:33:00Z",
+  "cherry_picks": [],
+  "notes": "Runtime dependency via mcp2cli -- unlike GSD/OMC/PAUL, Open Brain is a live service, not just pattern extraction. Skills call mcp2cli open-brain <tool> at runtime. Server runs on LXC 208 (10.71.20.15:3100)."
+}
