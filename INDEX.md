@@ -8,33 +8,34 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| core [installed] | `core/SKILL.md` | (none) |
+| core | `core/SKILL.md` | (none) |
 
 ## Workflow
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| add-todo [installed] | `add-todo/SKILL.md` | (none) |
-| check-todos [installed] | `check-todos/SKILL.md` | (none) |
-| correct [installed] | `correct/SKILL.md` | (none) |
-| session-wrap [installed] | `session-wrap/SKILL.md` | (none) |
-| skippy [installed] | `skippy/SKILL.md` | /skippy:cleanup, /skippy:migrate, /skippy:reconcile, /skippy:review, /skippy:update, /skippy:upgrade |
-| update-todo [installed] | `update-todo/SKILL.md` | (none) |
+| add-todo | `add-todo/SKILL.md` | (none) |
+| check-todos | `check-todos/SKILL.md` | (none) |
+| correct | `correct/SKILL.md` | (none) |
+| session-wrap | `session-wrap/SKILL.md` | (none) |
+| skippy [installed] | `skippy/SKILL.md` | /skippy:cleanup, /skippy:execute, /skippy:install, /skippy:migrate, /skippy:plan, /skippy:progress, /skippy:quick, /skippy:reconcile, /skippy:review, /skippy:update, /skippy:upgrade, /skippy:verify |
+| update-todo | `update-todo/SKILL.md` | (none) |
 
 ## Utility
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| browser [installed] | `browser/SKILL.md` | (none) |
-| excalidraw [installed] | `excalidraw/SKILL.md` | (none) |
-| fabric [installed] | `fabric/SKILL.md` | (none) |
-| vaultwarden [installed] | `vaultwarden/SKILL.md` | (none) |
+| browser | `browser/SKILL.md` | (none) |
+| excalidraw | `excalidraw/SKILL.md` | (none) |
+| fabric | `fabric/SKILL.md` | (none) |
+| gh-review | `gh-review/SKILL.md` | /gh-review:setup |
+| vaultwarden | `vaultwarden/SKILL.md` | (none) |
 
 ## Domain
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| deploy-service [installed] | `deploy-service/SKILL.md` | (none) |
+| deploy-service | `deploy-service/SKILL.md` | (none) |
 
 ## Plugin Distribution
 
