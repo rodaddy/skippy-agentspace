@@ -43,23 +43,34 @@ Phase number: $ARGUMENTS (auto-detects next unplanned phase if omitted)
 
 4. **Check for context** -- If `.planning/phases/{phase}/CONTEXT.md` exists, read it for locked decisions and gray area resolutions.
 
-5. **Research** (unless --skip-research) -- Spawn a research agent to investigate the phase's domain. Agent reads ROADMAP.md phase description + any CONTEXT.md, searches for patterns/pitfalls, writes RESEARCH.md to the phase directory.
+5. **Research** (unless --skip-research) -- Read `skills/skippy/agents/researcher.md` for agent instructions. Spawn with:
+   - Prompt: phase number, goal from ROADMAP.md, CONTEXT.md path if exists
+   - Mode and model: read from agent frontmatter (see model routing below)
+   - Wait for RESEARCH.md to be created in the phase directory
 
-6. **Plan** -- Spawn a planner agent with these instructions:
-   - Read: ROADMAP.md (phase goals + success criteria), RESEARCH.md (if exists), CONTEXT.md (if exists), PROJECT.md (constraints)
-   - Read: `references/plan-structure.md` for format spec
-   - Read: `references/plan-boundaries.md` for scope protection
-   - Write PLAN.md files to `.planning/phases/{phase}/`
-   - Each plan: task breakdown with files, action, verify fields
-   - Include DO NOT CHANGE and SCOPE LIMITS sections
+6. **Plan** -- Read `skills/skippy/agents/planner.md` for agent instructions. Spawn with:
+   - Prompt: phase number, ROADMAP.md phase section, RESEARCH.md path, CONTEXT.md path if exists
+   - Mode and model: read from agent frontmatter (see model routing below)
+   - Wait for PLAN.md files to be created in the phase directory
 
-7. **Verify** (unless --skip-verify) -- Spawn a reviewer agent to check the plan:
-   - Does every success criterion from ROADMAP.md have a task that delivers it?
-   - Are scope boundaries explicit?
-   - Are file ownership conflicts between plans resolved?
-   - If issues found: report to orchestrator, planner revises, re-verify (max 3 iterations)
+7. **Verify** (unless --skip-verify) -- Read `skills/skippy/agents/critic.md` for agent instructions. Spawn with:
+   - Prompt: phase number, ROADMAP.md phase section, paths to all PLAN.md files
+   - Mode and model: read from agent frontmatter (see model routing below)
+   - If issues found: report to orchestrator, re-spawn planner with critic feedback, re-verify (max 3 iterations)
 
 8. **Update state** -- Update STATE.md with new phase status. Report plan count and next step.
 
 9. **Route** -- Suggest: "Run `/skippy:execute {phase}` to execute" or flag blockers.
+
+## Model Routing
+
+Agent definitions use `complexity:` (not `model:`) in frontmatter. Map at spawn time:
+
+| complexity | Model parameter | Rationale |
+|------------|----------------|-----------|
+| HIGH | opus | Deep reasoning, tradeoff analysis |
+| MEDIUM | sonnet | Standard implementation work |
+| LOW | haiku | Mechanical lookups, simple edits |
+
+If no `complexity:` field, default to MEDIUM. See `references/model-routing.md` for full decision rules.
 </process>

@@ -72,11 +72,11 @@ Spawn each of the 4 reviewers one at a time using the Agent tool. Sequential spa
 For each reviewer in order:
 1. **security-reviewer** -- scans for vulnerabilities, injection, secret exposure
 2. **code-quality-reviewer** -- reviews DRY, error handling, dead code, complexity
-3. **architecture-reviewer** -- checks portability, conventions, dependencies, SoC (uses opus model)
+3. **architecture-reviewer** -- checks portability, conventions, dependencies, SoC (HIGH complexity)
 4. **consistency-reviewer** -- verifies cross-file alignment (SKILL.md, INDEX.md, state files)
 
 For each reviewer, read its agent definition file (`skills/skippy/agents/{agent-name}.md`) and extract YAML frontmatter fields to pass as Agent tool parameters:
-- `model` → Agent tool `model` parameter (e.g., "opus" for architecture-reviewer)
+- `complexity` → map to Agent tool `model` parameter (HIGH=opus, MEDIUM=sonnet, LOW=haiku; default MEDIUM)
 - `permissionMode` → Agent tool `mode` parameter (e.g., "plan" for reviewers)
 - `isolation` → Agent tool `isolation` parameter (e.g., "worktree" for fix-agent)
 

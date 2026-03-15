@@ -2,7 +2,7 @@
 name: code-quality-reviewer
 description: Code quality specialist for skippy-agentspace. Reviews for DRY violations, error handling gaps, dead code, and maintainability issues. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+complexity: MEDIUM
 permissionMode: plan
 ---
 

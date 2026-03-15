@@ -36,6 +36,11 @@ If total is **over 50MB**, use AskUserQuestion:
 rsync -al "$HOME/.config/pai/Skills/" "$BACKUP_DIR/config-pai-Skills/"
 [[ -d "$HOME/.claude/commands/gsd" ]] && rsync -al "$HOME/.claude/commands/gsd/" "$BACKUP_DIR/commands-gsd/"
 [[ -d "$HOME/.claude/get-shit-done" ]] && rsync -al "$HOME/.claude/get-shit-done/" "$BACKUP_DIR/get-shit-done/"
+# GSD agent definitions (hijack Claude Code's agent routing if present)
+mkdir -p "$BACKUP_DIR/agents-gsd"
+for agent in "$HOME/.claude/agents"/gsd-*.md; do
+    [[ -f "$agent" ]] && cp "$agent" "$BACKUP_DIR/agents-gsd/"
+done
 [[ -d "$HOME/.config/pai-private" ]] && rsync -al "$HOME/.config/pai-private/" "$BACKUP_DIR/config-pai-private/"
 ```
 
@@ -315,6 +320,60 @@ COLLISION: skippy:plan vs gsd:plan-phase (different name, same purpose)
 ```
 
 Collisions with different names (like plan vs plan-phase) are fine -- they coexist. Same-name collisions need resolution.
+
+## Consumed Source Cleanup
+
+Remove artifacts from consumed marketplaces (GSD, OMC, PAUL) that interfere with skippy's own commands and agents. Move everything to /tmp -- never delete.
+
+### GSD Cleanup
+
+GSD installs to 4 locations. All must be removed:
+
+```bash
+# GSD slash commands
+if [[ -d "$HOME/.claude/commands/gsd" ]]; then
+    mv "$HOME/.claude/commands/gsd" "/tmp/gsd-commands-backup-$$"
+    echo "REMOVED: ~/.claude/commands/gsd"
+fi
+
+# GSD core (workflows, templates, references)
+if [[ -d "$HOME/.claude/get-shit-done" ]]; then
+    mv "$HOME/.claude/get-shit-done" "/tmp/gsd-core-backup-$$"
+    echo "REMOVED: ~/.claude/get-shit-done"
+fi
+
+# GSD agent definitions -- GLOB, not hardcoded names
+# These hijack Claude Code's agent routing (gsd-planner, gsd-executor, etc.)
+# GSD adds new agents across versions so a fixed list goes stale
+mkdir -p "/tmp/gsd-agents-backup-$$"
+for agent in "$HOME/.claude/agents"/gsd-*.md; do
+    [[ -f "$agent" ]] || continue
+    mv "$agent" "/tmp/gsd-agents-backup-$$/"
+    echo "REMOVED: $(basename "$agent")"
+done
+
+# GSD local patches (leftover from GSD update system)
+if [[ -d "$HOME/.claude/gsd-local-patches" ]]; then
+    mv "$HOME/.claude/gsd-local-patches" "/tmp/gsd-patches-backup-$$"
+    echo "REMOVED: ~/.claude/gsd-local-patches"
+fi
+```
+
+### OMC Handling
+
+OMC hooks provide value and commands coexist with skippy. Keep OMC installed. Report what's kept and why.
+
+### Verification
+
+After cleanup, confirm no GSD agents remain:
+```bash
+remaining=$(ls "$HOME/.claude/agents"/gsd-*.md 2>/dev/null | wc -l | tr -d ' ')
+if [[ "$remaining" -gt 0 ]]; then
+    echo "FAIL: $remaining GSD agents still present"
+else
+    echo "PASS: No GSD agents remaining"
+fi
+```
 
 ## Reference Doc Completeness Check
 

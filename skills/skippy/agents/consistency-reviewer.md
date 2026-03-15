@@ -2,7 +2,7 @@
 name: consistency-reviewer
 description: Consistency specialist for skippy-agentspace. Verifies cross-file alignment between SKILL.md, INDEX.md, marketplace.json, STATE.md, and actual files on disk. Use when running /skippy:review.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+complexity: MEDIUM
 permissionMode: plan
 ---
 
