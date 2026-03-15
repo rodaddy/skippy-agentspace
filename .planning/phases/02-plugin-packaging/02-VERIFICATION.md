@@ -5,20 +5,20 @@ status: passed
 score: 4/4 must-haves verified
 re_verification: false
 human_verification:
-  - test: "Clone repo to fresh machine, run /plugin marketplace add and /plugin install skippy-dev"
+  - test: "Clone repo to fresh machine, run /plugin marketplace add and /plugin install skippy"
     expected: "Skill loads without errors, /skippy:reconcile appears in slash command list"
     why_human: "Plugin install flow requires live Claude Code session with marketplace support"
-  - test: "Run tools/install.sh skippy-dev on a machine with ~/.claude/skills/ present"
-    expected: "Symlink created at ~/.claude/skills/skippy-dev pointing to repo skills/skippy-dev"
+  - test: "Run tools/install.sh skippy on a machine with ~/.claude/skills/ present"
+    expected: "Symlink created at ~/.claude/skills/skippy pointing to repo skills/skippy"
     why_human: "Symlink creation depends on real filesystem state"
-  - test: "Run tools/install.sh skippy-dev --target=commands on a machine without ~/.claude/skills/"
-    expected: "Symlink created at ~/.claude/commands/skippy-dev pointing to repo skills/skippy-dev/commands"
+  - test: "Run tools/install.sh skippy --target=commands on a machine without ~/.claude/skills/"
+    expected: "Symlink created at ~/.claude/commands/skippy pointing to repo skills/skippy/commands"
     why_human: "Legacy target behavior needs real environment"
 ---
 
 # Phase 2: Plugin Packaging Verification Report
 
-**Phase Goal:** Users can install skippy-dev via `/plugin marketplace add` with a single command, and install tooling supports both modern and legacy targets
+**Phase Goal:** Users can install skippy via `/plugin marketplace add` with a single command, and install tooling supports both modern and legacy targets
 **Verified:** 2026-03-07T06:15:00Z
 **Status:** passed
 **Re-verification:** No -- initial verification
@@ -30,7 +30,7 @@ human_verification:
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
 | 1 | `.claude-plugin/marketplace.json` exists with valid schema, `strict: false` pattern (no plugin.json needed) | VERIFIED | File exists (25 lines valid JSON), `strict: false` at line 15, no `.claude-plugin/plugin.json` exists |
-| 2 | marketplace.json lists available skills with correct paths and `source: "./"` | VERIFIED | `source: "./"` at line 14, `skills: ["./skills/skippy-dev"]` at lines 20-22 |
+| 2 | marketplace.json lists available skills with correct paths and `source: "./"` | VERIFIED | `source: "./"` at line 14, `skills: ["./skills/skippy"]` at lines 20-22 |
 | 3 | Install tooling detects target environment and symlinks to correct target | VERIFIED | `tools/install.sh` (203 lines): `detect_target()` at line 76 checks `~/.claude/skills/` existence, `--target=skills\|commands\|auto` parsing at line 29, `install_skill_modern()` at line 107, `install_skill_legacy()` at line 130 |
 | 4 | A clean clone can be installed via plugin system and skill loads without errors | VERIFIED (code) | All artifacts present and correctly structured. Human verification needed for live install test. |
 
@@ -51,7 +51,7 @@ human_verification:
 
 | From | To | Via | Status | Details |
 |------|----|-----|--------|---------|
-| `marketplace.json` | `skills/skippy-dev/` | skills array path | WIRED | `"./skills/skippy-dev"` correctly references the skill directory |
+| `marketplace.json` | `skills/skippy/` | skills array path | WIRED | `"./skills/skippy"` correctly references the skill directory |
 | `install.sh` | `skills/*/SKILL.md` | SKILL.md existence check | WIRED | Line 166: `if [[ ! -f "$skill_dir/SKILL.md" ]]` validates skill before install |
 | `install.sh` | `~/.claude/skills/` or `~/.claude/commands/` | symlink creation | WIRED | `ln -s` at lines 122 and 150, `mkdir -p` ensures target dirs exist |
 | `uninstall.sh` | `~/.claude/skills/` and `~/.claude/commands/` | symlink removal | WIRED | Checks both at lines 45-63, `unlink` for removal |
@@ -91,20 +91,20 @@ These are tracking/bookkeeping updates that typically happen at phase completion
 
 ### 1. Plugin Marketplace Install
 
-**Test:** Clone repo to a fresh machine (or clean Claude Code install). Run `/plugin marketplace add owner/skippy-agentspace` then `/plugin install skippy-dev@skippy-agentspace`.
+**Test:** Clone repo to a fresh machine (or clean Claude Code install). Run `/plugin marketplace add owner/skippy-agentspace` then `/plugin install skippy@skippy-agentspace`.
 **Expected:** Skill loads without errors. `/skippy:reconcile`, `/skippy:update`, `/skippy:cleanup` appear in slash command list.
 **Why human:** Plugin install flow requires a live Claude Code session with marketplace support enabled.
 
 ### 2. Manual Install (Modern Target)
 
-**Test:** Run `tools/install.sh skippy-dev` on a machine where `~/.claude/skills/` exists.
-**Expected:** Symlink created at `~/.claude/skills/skippy-dev` pointing to repo's `skills/skippy-dev`. Commands appear after `/clear`.
+**Test:** Run `tools/install.sh skippy` on a machine where `~/.claude/skills/` exists.
+**Expected:** Symlink created at `~/.claude/skills/skippy` pointing to repo's `skills/skippy`. Commands appear after `/clear`.
 **Why human:** Requires real filesystem with Claude Code installed.
 
 ### 3. Manual Install (Legacy Target)
 
-**Test:** Run `tools/install.sh skippy-dev --target=commands` (or on a machine without `~/.claude/skills/`).
-**Expected:** Symlink created at `~/.claude/commands/skippy-dev` pointing to `skills/skippy-dev/commands`.
+**Test:** Run `tools/install.sh skippy --target=commands` (or on a machine without `~/.claude/skills/`).
+**Expected:** Symlink created at `~/.claude/commands/skippy` pointing to `skills/skippy/commands`.
 **Why human:** Requires real filesystem to test symlink behavior.
 
 ### 4. Uninstall Both Targets

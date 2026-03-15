@@ -20,7 +20,7 @@ key-files:
   created:
     - tools/lib/skippy-state.ts
   modified:
-    - skills/skippy-dev/commands/reconcile.md
+    - skills/skippy/commands/reconcile.md
 
 key-decisions:
   - "Manual YAML parsing over gray-matter dependency -- simple structures don't justify external deps"
@@ -69,7 +69,7 @@ Each task was committed atomically:
 ## Files Created/Modified
 
 - `tools/lib/skippy-state.ts` - Minimal bun-based parser for YAML frontmatter, markdown tasks, and task classification
-- `skills/skippy-dev/commands/reconcile.md` - Updated from XML to markdown task format, references skippy-state.ts
+- `skills/skippy/commands/reconcile.md` - Updated from XML to markdown task format, references skippy-state.ts
 
 ## Decisions Made
 

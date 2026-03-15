@@ -19,7 +19,7 @@ created: 2026-03-08
 |----------|-------|
 | **Framework** | Manual verification (Phase 12 bats-core not yet available) |
 | **Config file** | none |
-| **Quick run command** | `test -f skills/skippy-dev/commands/review.md && echo PASS` |
+| **Quick run command** | `test -f skills/skippy/commands/review.md && echo PASS` |
 | **Full suite command** | Invoke `/skippy:review` against test scope, verify all 5 success criteria |
 | **Estimated runtime** | ~60 seconds (agent spawning) |
 
@@ -38,9 +38,9 @@ created: 2026-03-08
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 14-01-01 | 01 | 1 | SWARM-02 | smoke | `test -f skills/skippy-dev/references/audit-swarm.md` | n/a W0 | pending |
-| 14-01-02 | 01 | 1 | SWARM-01 | smoke | `test -f skills/skippy-dev/commands/review.md` | n/a W0 | pending |
-| 14-01-03 | 01 | 1 | SWARM-05 | review | `grep -l 'HOME.*BATS_TEST_TMPDIR\|HOME.*mktemp' skills/skippy-dev/agents/*.md` | n/a W0 | pending |
+| 14-01-01 | 01 | 1 | SWARM-02 | smoke | `test -f skills/skippy/references/audit-swarm.md` | n/a W0 | pending |
+| 14-01-02 | 01 | 1 | SWARM-01 | smoke | `test -f skills/skippy/commands/review.md` | n/a W0 | pending |
+| 14-01-03 | 01 | 1 | SWARM-05 | review | `grep -l 'HOME.*BATS_TEST_TMPDIR\|HOME.*mktemp' skills/skippy/agents/*.md` | n/a W0 | pending |
 | 14-02-01 | 02 | 2 | SWARM-01 | manual | Invoke `/skippy:review`, verify 4 agent spawns | n/a | pending |
 | 14-02-02 | 02 | 2 | SWARM-03 | manual | Check git log for atomic fix commits | n/a | pending |
 | 14-02-03 | 02 | 2 | SWARM-04 | manual | Check findings board evaluation section | n/a | pending |
@@ -51,9 +51,9 @@ created: 2026-03-08
 
 ## Wave 0 Requirements
 
-- [ ] `skills/skippy-dev/agents/` directory created
-- [ ] `skills/skippy-dev/references/audit-swarm.md` reference doc
-- [ ] `skills/skippy-dev/commands/review.md` command definition
+- [ ] `skills/skippy/agents/` directory created
+- [ ] `skills/skippy/references/audit-swarm.md` reference doc
+- [ ] `skills/skippy/commands/review.md` command definition
 
 ---
 

@@ -88,8 +88,8 @@ plan: 01
 type: execute
 wave: 1
 files_modified:
-  - skills/skippy-dev/SKILL.md
-  - skills/skippy-dev/commands/reconcile.md
+  - skills/skippy/SKILL.md
+  - skills/skippy/commands/reconcile.md
 requirements:
   - SPEC-01
   - SPEC-02
@@ -97,7 +97,7 @@ must_haves:
   truths:
     - "No hardcoded absolute paths exist in any skill file under skills/"
   artifacts:
-    - path: "skills/skippy-dev/SKILL.md"
+    - path: "skills/skippy/SKILL.md"
       provides: "Spec-compliant skill entry point"
       contains: "metadata:"
 ---
@@ -108,7 +108,7 @@ must_haves:
 <tasks>
 <task type="auto">
   <name>Task 1: Fix hardcoded paths</name>
-  <files>skills/skippy-dev/SKILL.md, skills/skippy-dev/commands/reconcile.md</files>
+  <files>skills/skippy/SKILL.md, skills/skippy/commands/reconcile.md</files>
   <action>...</action>
   <verify><automated>command here</automated></verify>
   <done>Observable completion signal</done>
@@ -131,7 +131,7 @@ completed: 2026-03-07
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/SKILL.md
+    - skills/skippy/SKILL.md
 key-decisions:
   - "Relative @../ paths for command file context refs"
 ---
@@ -502,7 +502,7 @@ QUARANTINE_BASE="${SKIPPY_QUARANTINE_DIR:-${HOME}/.cache/skippy-quarantine}"
 |----------|-------|
 | Framework | Manual shell script execution + Claude Code command invocation |
 | Config file | None -- commands are markdown prompts, scripts are standalone bash |
-| Quick run command | `bash skills/skippy-dev/scripts/skippy-update.sh` / `bash skills/skippy-dev/scripts/skippy-cleanup.sh --quarantine` |
+| Quick run command | `bash skills/skippy/scripts/skippy-update.sh` / `bash skills/skippy/scripts/skippy-cleanup.sh --quarantine` |
 | Full suite command | Run all 3 commands and inspect output |
 
 ### Phase Requirements to Test Map
@@ -511,8 +511,8 @@ QUARANTINE_BASE="${SKIPPY_QUARANTINE_DIR:-${HOME}/.cache/skippy-quarantine}"
 |--------|----------|-----------|-------------------|-------------|
 | CMD-01 | Reconcile produces correct report for completed phase | manual-only | Invoke `/skippy:reconcile` in Claude Code against this project's Phase 1 | N/A (prompt) |
 | CMD-01 | Reconcile handles multi-plan phase | manual-only | Invoke `/skippy:reconcile` for Phase 2 (3 plans) | N/A (prompt) |
-| CMD-02 | Update script clones to ~/.cache/ | smoke | `bash -c 'SKIPPY_CACHE_DIR=/tmp/test-skippy-cache bash skills/skippy-dev/scripts/skippy-update.sh && test -d /tmp/test-skippy-cache/gsd/.git && echo PASS'` | Script exists |
-| CMD-02 | Update script uses safe .versions parsing | unit | `grep -c "^source " skills/skippy-dev/scripts/skippy-update.sh` -- must be 0 | Script exists |
+| CMD-02 | Update script clones to ~/.cache/ | smoke | `bash -c 'SKIPPY_CACHE_DIR=/tmp/test-skippy-cache bash skills/skippy/scripts/skippy-update.sh && test -d /tmp/test-skippy-cache/gsd/.git && echo PASS'` | Script exists |
+| CMD-02 | Update script uses safe .versions parsing | unit | `grep -c "^source " skills/skippy/scripts/skippy-update.sh` -- must be 0 | Script exists |
 | CMD-02 | Update script stores full SHA | unit | After running, `grep gsd_hash .versions \| wc -c` -- must be > 45 (key + 40-char hash + newline) | Script exists |
 | CMD-03 | Cleanup quarantine moves files and reports space | smoke | Create test dir, run cleanup in quarantine mode, verify files moved | Script exists |
 | CMD-03 | Cleanup nuke deletes permanently | smoke | Create test dir, run cleanup in nuke mode, verify files gone | Script exists |
@@ -537,12 +537,12 @@ Note: Given project constraints (shell + markdown only, no TypeScript/Node depen
 ### Primary (HIGH confidence)
 
 - **Project files analyzed directly:**
-  - `skills/skippy-dev/scripts/skippy-update.sh` -- identified 3 bugs (source, short SHA, /tmp/ reference)
-  - `skills/skippy-dev/scripts/skippy-cleanup.sh` -- identified 1 bug (TMPDIR default)
-  - `skills/skippy-dev/commands/reconcile.md` -- identified 4 gaps (finding latest phase, multi-plan, XML parsing, git diff)
-  - `skills/skippy-dev/commands/update.md` -- identified stale `/tmp/` reference
-  - `skills/skippy-dev/references/reconciliation.md` -- analyzed report template structure
-  - `skills/skippy-dev/references/state-consistency.md` -- analyzed state check requirements
+  - `skills/skippy/scripts/skippy-update.sh` -- identified 3 bugs (source, short SHA, /tmp/ reference)
+  - `skills/skippy/scripts/skippy-cleanup.sh` -- identified 1 bug (TMPDIR default)
+  - `skills/skippy/commands/reconcile.md` -- identified 4 gaps (finding latest phase, multi-plan, XML parsing, git diff)
+  - `skills/skippy/commands/update.md` -- identified stale `/tmp/` reference
+  - `skills/skippy/references/reconciliation.md` -- analyzed report template structure
+  - `skills/skippy/references/state-consistency.md` -- analyzed state check requirements
   - `.planning/phases/01-spec-compliance/01-01-PLAN.md` -- analyzed GSD plan structure (YAML + XML)
   - `.planning/phases/01-spec-compliance/01-01-SUMMARY.md` -- analyzed GSD summary structure
   - `.planning/phases/02-plugin-packaging/02-01-PLAN.md` -- confirmed multi-plan pattern

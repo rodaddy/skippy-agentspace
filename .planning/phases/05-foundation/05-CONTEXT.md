@@ -62,8 +62,8 @@ Establish the architectural conventions that all subsequent phases (6-10) build 
 ## Existing Code Insights
 
 ### Reusable Assets
-- `skills/skippy-dev/.versions`: Current upstream tracking (shell-sourceable, to be replaced)
-- `skills/skippy-dev/scripts/skippy-update.sh`: Reads `.versions`, will need updating in Phase 8
+- `skills/skippy/.versions`: Current upstream tracking (shell-sourceable, to be replaced)
+- `skills/skippy/scripts/skippy-update.sh`: Reads `.versions`, will need updating in Phase 8
 - `.claude-plugin/marketplace.json`: JSON precedent for structured metadata in this repo
 
 ### Established Patterns

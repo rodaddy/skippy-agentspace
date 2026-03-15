@@ -8,7 +8,7 @@
 
 Phase 8 adds OMC as a third tracked upstream, performs a systematic cross-package pattern analysis across GSD/PAUL/OMC, creates best-of-breed reference docs that synthesize the strongest implementations of shared patterns, and replaces the hardcoded shell-script-based `/skippy:update` with a generic AI-driven markdown command that iterates `upstreams/*/upstream.json`.
 
-The codebase is well-prepared for this phase. Phase 5 established the directory-per-upstream pattern (`upstreams/<name>/upstream.json`) with a documented schema in CONVENTIONS.md. The existing PAUL reference docs in `skills/skippy-dev/references/` provide a clear format template to evolve. The current `skippy-update.sh` shell script and `.versions` file need to be replaced, and the `update.md` command needs to be rewritten as AI-driven instructions.
+The codebase is well-prepared for this phase. Phase 5 established the directory-per-upstream pattern (`upstreams/<name>/upstream.json`) with a documented schema in CONVENTIONS.md. The existing PAUL reference docs in `skills/skippy/references/` provide a clear format template to evolve. The current `skippy-update.sh` shell script and `.versions` file need to be replaced, and the `update.md` command needs to be rewritten as AI-driven instructions.
 
 The OMC codebase (v4.7.3, SHA `96a5d372`) contains 37 skills across 6 categories. After systematic scanning, I've identified the cross-package patterns and cherry-pick candidates that the implementation phase will need to analyze and document.
 
@@ -27,7 +27,7 @@ The OMC codebase (v4.7.3, SHA `96a5d372`) contains 37 skills across 6 categories
 - Best-of-breed docs use evolved format from existing PAUL reference docs: add structured sections like 'Source Upstreams', 'Why This Version', 'Integration Points'
 - Credit sources inline (e.g., "Context management: GSD's approach with OMC's notepad persistence")
 - Count determined by analysis -- create a doc for every pattern worth synthesizing, quality over quantity (minimum 3 per requirement)
-- Location: skills/skippy-dev/references/ alongside existing PAUL reference docs
+- Location: skills/skippy/references/ alongside existing PAUL reference docs
 - /skippy:update becomes an AI-driven command (markdown instructions that Claude executes interactively) instead of a shell script
 - The command iterates upstreams/*/upstream.json, fetches each repo, compares SHAs, reports changes conversationally, and can suggest cherry-picks
 - Updates upstream.json files in-place (writes new last_checked_sha and last_check after each run)
@@ -86,7 +86,7 @@ upstreams/
   omc/upstream.json           # NEW: Phase 8
 docs/
   cross-package-analysis.md   # NEW: Living analysis document
-skills/skippy-dev/
+skills/skippy/
   commands/
     update.md                 # REWRITTEN: AI-driven generic command
   references/
@@ -151,7 +151,7 @@ Synthesized from [upstream1] and [upstream2]. [One-line description].
 
 ## Integration Points
 
-[How this fits into the skippy-dev workflow, which GSD phases it applies to]
+[How this fits into the skippy workflow, which GSD phases it applies to]
 
 ## When to Apply
 
@@ -479,8 +479,8 @@ Present all findings conversationally. No auto-merge -- human decides.
 | Single-source reference docs (PAUL only) | Multi-source best-of-breed synthesis | Phase 8 (this phase) | Stronger patterns from multiple perspectives |
 
 **Deprecated/outdated after this phase:**
-- `skills/skippy-dev/.versions` -- replaced by upstream.json files
-- `skills/skippy-dev/scripts/skippy-update.sh` -- replaced by AI-driven command
+- `skills/skippy/.versions` -- replaced by upstream.json files
+- `skills/skippy/scripts/skippy-update.sh` -- replaced by AI-driven command
 - Hardcoded GSD/PAUL references in update command -- replaced by generic upstream iteration
 
 ## Open Questions
@@ -514,11 +514,11 @@ Present all findings conversationally. No auto-merge -- human decides.
 | UPST-01 | /skippy:update reports OMC status | manual | Run update command, verify OMC appears | Wave 0 |
 | UPST-02 | Cross-package analysis document exists | smoke | `test -f docs/cross-package-analysis.md` | Wave 0 |
 | UPST-02 | Analysis covers patterns in 2+ upstreams | manual | Review document for pattern comparison tables | Wave 0 |
-| UPST-03 | At least 3 best-of-breed reference docs exist | smoke | `ls skills/skippy-dev/references/*.md \| wc -l` (count > 10, was 6) | Wave 0 |
+| UPST-03 | At least 3 best-of-breed reference docs exist | smoke | `ls skills/skippy/references/*.md \| wc -l` (count > 10, was 6) | Wave 0 |
 | UPST-03 | Reference docs have evolved format (Source Upstreams, Why This Version) | manual | Read each new doc for required sections | Wave 0 |
 | UPST-04 | /skippy:update iterates upstreams/ generically | manual | Read update.md, verify no hardcoded URLs | Wave 0 |
-| UPST-04 | .versions file is removed | smoke | `test ! -f skills/skippy-dev/.versions` | Wave 0 |
-| UPST-04 | skippy-update.sh is removed | smoke | `test ! -f skills/skippy-dev/scripts/skippy-update.sh` | Wave 0 |
+| UPST-04 | .versions file is removed | smoke | `test ! -f skills/skippy/.versions` | Wave 0 |
+| UPST-04 | skippy-update.sh is removed | smoke | `test ! -f skills/skippy/scripts/skippy-update.sh` | Wave 0 |
 
 ### Sampling Rate
 - **Per task commit:** Manual review of changed files
@@ -535,7 +535,7 @@ None -- this is a markdown/documentation-heavy phase. No test infrastructure nee
 - OMC AGENTS.md (root + skills/) -- full skill catalog and agent catalog
 - Existing upstream.json files at `upstreams/gsd/` and `upstreams/paul/`
 - CONVENTIONS.md -- upstream.json schema documentation
-- Existing reference docs at `skills/skippy-dev/references/` -- 6 files, format established
+- Existing reference docs at `skills/skippy/references/` -- 6 files, format established
 - Current `skippy-update.sh` and `update.md` -- logic to replace
 
 ### Secondary (MEDIUM confidence)

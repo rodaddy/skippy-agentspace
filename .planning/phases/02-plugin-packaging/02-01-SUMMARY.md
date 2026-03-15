@@ -23,7 +23,7 @@ key-files:
 
 key-decisions:
   - "Used strict: false pattern -- marketplace.json alone defines the plugin, no plugin.json needed"
-  - "Source set to './' pointing to repo root, skills array explicitly lists './skills/skippy-dev'"
+  - "Source set to './' pointing to repo root, skills array explicitly lists './skills/skippy'"
 
 patterns-established:
   - "Anthropic strict: false single-repo marketplace pattern for skill distribution"
@@ -50,7 +50,7 @@ completed: 2026-03-07
 ## Accomplishments
 - Created .claude-plugin/marketplace.json with valid Anthropic plugin schema
 - Used strict: false pattern (no plugin.json needed -- marketplace.json is complete definition)
-- Skills array correctly points to ./skills/skippy-dev
+- Skills array correctly points to ./skills/skippy
 
 ## Task Commits
 

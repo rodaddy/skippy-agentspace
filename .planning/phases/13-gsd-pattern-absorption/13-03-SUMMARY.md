@@ -13,7 +13,7 @@ provides:
   - "Updated SKILL.md with 13 enhancement rows and new agent loading examples"
   - "Updated PROJECT.md constraints allowing Bun/TypeScript and declaring standalone execution"
   - "Deleted superseded files (task-anatomy.md, gsd-dependency-map.md)"
-affects: [skippy-dev, core, project-constraints]
+affects: [skippy, core, project-constraints]
 
 # Tech tracking
 tech-stack:
@@ -23,15 +23,15 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/SKILL.md
-    - skills/skippy-dev/references/verification-loops.md
-    - skills/skippy-dev/references/state-consistency.md
-    - skills/skippy-dev/references/reconciliation.md
-    - skills/skippy-dev/references/model-routing.md
-    - skills/skippy-dev/references/context-brackets.md
-    - skills/skippy-dev/references/plan-boundaries.md
-    - skills/skippy-dev/references/session-persistence.md
-    - skills/skippy-dev/references/structured-deliberation.md
+    - skills/skippy/SKILL.md
+    - skills/skippy/references/verification-loops.md
+    - skills/skippy/references/state-consistency.md
+    - skills/skippy/references/reconciliation.md
+    - skills/skippy/references/model-routing.md
+    - skills/skippy/references/context-brackets.md
+    - skills/skippy/references/plan-boundaries.md
+    - skills/skippy/references/session-persistence.md
+    - skills/skippy/references/structured-deliberation.md
     - skills/core/hooks/INSTALL.md
     - skills/core/references/rules/output-locations.md
     - skills/core/references/laws/law-13-no-silent-autopilot.md
@@ -77,21 +77,21 @@ Each task was committed atomically:
 2. **Task 2: Update SKILL.md, update PROJECT.md, delete superseded files** - `8e9af66` (feat)
 
 ## Files Created/Modified
-- `skills/skippy-dev/references/verification-loops.md` - Replaced 6 GSD references with neutral framework language
-- `skills/skippy-dev/references/state-consistency.md` - Replaced 2 GSD references
-- `skills/skippy-dev/references/reconciliation.md` - Replaced 2 GSD command references
-- `skills/skippy-dev/references/model-routing.md` - Replaced 7 GSD references
-- `skills/skippy-dev/references/context-brackets.md` - Replaced 2 GSD references
-- `skills/skippy-dev/references/plan-boundaries.md` - Replaced 3 GSD references
-- `skills/skippy-dev/references/session-persistence.md` - Replaced 8 GSD references
-- `skills/skippy-dev/references/structured-deliberation.md` - Replaced 5 GSD references
+- `skills/skippy/references/verification-loops.md` - Replaced 6 GSD references with neutral framework language
+- `skills/skippy/references/state-consistency.md` - Replaced 2 GSD references
+- `skills/skippy/references/reconciliation.md` - Replaced 2 GSD command references
+- `skills/skippy/references/model-routing.md` - Replaced 7 GSD references
+- `skills/skippy/references/context-brackets.md` - Replaced 2 GSD references
+- `skills/skippy/references/plan-boundaries.md` - Replaced 3 GSD references
+- `skills/skippy/references/session-persistence.md` - Replaced 8 GSD references
+- `skills/skippy/references/structured-deliberation.md` - Replaced 5 GSD references
 - `skills/core/hooks/INSTALL.md` - Replaced "GSD, OMC, and other hooks" with neutral language
 - `skills/core/references/rules/output-locations.md` - Replaced "GSD planning artifacts" with neutral description
 - `skills/core/references/laws/law-13-no-silent-autopilot.md` - Replaced "GSD auto-chain" with "auto-chain"
-- `skills/skippy-dev/SKILL.md` - 13 enhancement rows, plan-structure.md reference, new agent examples, no gsd-dependency-map.md
+- `skills/skippy/SKILL.md` - 13 enhancement rows, plan-structure.md reference, new agent examples, no gsd-dependency-map.md
 - `.planning/PROJECT.md` - Standalone execution constraint, Bun/TypeScript stack allowance
-- `skills/skippy-dev/references/task-anatomy.md` - DELETED (absorbed into plan-structure.md)
-- `skills/skippy-dev/references/gsd-dependency-map.md` - DELETED (absorbed into 4 new reference docs)
+- `skills/skippy/references/task-anatomy.md` - DELETED (absorbed into plan-structure.md)
+- `skills/skippy/references/gsd-dependency-map.md` - DELETED (absorbed into 4 new reference docs)
 
 ## Decisions Made
 - Source attribution footers restructured to use "Adapted from GSD" phrasing, keeping upstream credit while cleanly passing the non-attribution grep filter
@@ -103,7 +103,7 @@ Each task was committed atomically:
 
 **1. [Rule 2 - Missing Critical] Cleaned 3 additional skills/core/ files**
 - **Found during:** Task 1 (reference doc language cleanup)
-- **Issue:** Success criteria requires zero non-attribution GSD in ALL of skills/, but the plan only listed 8 skippy-dev reference docs. Three skills/core/ files also had non-attribution GSD references.
+- **Issue:** Success criteria requires zero non-attribution GSD in ALL of skills/, but the plan only listed 8 skippy reference docs. Three skills/core/ files also had non-attribution GSD references.
 - **Fix:** Updated INSTALL.md, output-locations.md, and law-13-no-silent-autopilot.md with neutral language
 - **Files modified:** skills/core/hooks/INSTALL.md, skills/core/references/rules/output-locations.md, skills/core/references/laws/law-13-no-silent-autopilot.md
 - **Verification:** grep -rn "GSD" skills/ | grep -v "Source:\|Adapted from\|Sources:\|Last reviewed:" returns zero matches

@@ -6,7 +6,7 @@ score: 9/9 must-haves verified
 re_verification: false
 must_haves:
   truths:
-    - "6 agent definition files exist under skills/skippy-dev/agents/ with correct YAML frontmatter"
+    - "6 agent definition files exist under skills/skippy/agents/ with correct YAML frontmatter"
     - "Every agent definition includes HOME sandbox instructions in its system prompt"
     - "Reviewer agents use permissionMode plan (read-only); fix agent uses bypassPermissions with isolation worktree"
     - "audit-swarm.md reference doc defines the full orchestration protocol"
@@ -30,7 +30,7 @@ must_haves:
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | 6 agent definition files exist under skills/skippy-dev/agents/ with correct YAML frontmatter (name, description, tools, model, permissionMode) | VERIFIED | `ls agents/*.md` returns 6 files. All have name, description, tools, model, permissionMode in frontmatter. architecture-reviewer uses opus; all others sonnet. |
+| 1 | 6 agent definition files exist under skills/skippy/agents/ with correct YAML frontmatter (name, description, tools, model, permissionMode) | VERIFIED | `ls agents/*.md` returns 6 files. All have name, description, tools, model, permissionMode in frontmatter. architecture-reviewer uses opus; all others sonnet. |
 | 2 | Every agent definition includes HOME sandbox instructions in its system prompt | VERIFIED | `grep -l "HOME.*mktemp" agents/*.md` returns all 6 files. Each has the `export HOME=$(mktemp -d)` block under "Sandbox Rule (CRITICAL)". |
 | 3 | Reviewer agents use permissionMode plan (read-only); fix agent uses bypassPermissions with isolation worktree | VERIFIED | 4 reviewers + eval-agent have `permissionMode: plan`. fix-agent has `permissionMode: bypassPermissions` and `isolation: worktree`. |
 | 4 | audit-swarm.md reference doc defines the full orchestration protocol including findings board format and severity ratings | VERIFIED | 124 lines (>80 min). Contains: 8-step Orchestration Flow, Findings Board Protocol with template, Severity Classification table, Sandbox Protocol (3 layers), Agent Roster table, Exit Conditions, Integration Points, When to Apply. |
@@ -46,16 +46,16 @@ must_haves:
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `skills/skippy-dev/agents/security-reviewer.md` | Security audit specialist subagent | VERIFIED | Contains `permissionMode: plan`, 5 focus areas, output format, sandbox rule |
-| `skills/skippy-dev/agents/code-quality-reviewer.md` | Code quality specialist subagent | VERIFIED | Contains `permissionMode: plan`, 6 focus areas, output format, sandbox rule |
-| `skills/skippy-dev/agents/architecture-reviewer.md` | Architecture specialist subagent | VERIFIED | Contains `permissionMode: plan`, `model: opus` (HIGH complexity), 6 focus areas, sandbox rule |
-| `skills/skippy-dev/agents/consistency-reviewer.md` | Consistency specialist subagent | VERIFIED | Contains `permissionMode: plan`, 5 focus areas, cross-file checks, sandbox rule |
-| `skills/skippy-dev/agents/fix-agent.md` | Fix agent with worktree isolation | VERIFIED | Contains `permissionMode: bypassPermissions`, `isolation: worktree`, atomic commit rules, safety rules |
-| `skills/skippy-dev/agents/eval-agent.md` | Evaluator agent with cycling protocol | VERIFIED | Contains `permissionMode: plan`, references verification-loops.md, PASS/FAIL/ESCALATE verdicts, max 3 iterations |
-| `skills/skippy-dev/references/audit-swarm.md` | Swarm orchestration protocol reference | VERIFIED | 124 lines, 8-step flow, findings board template, severity table, sandbox protocol, agent roster, exit conditions |
-| `skills/skippy-dev/commands/review.md` | /skippy:review command definition | VERIFIED | 184 lines, 8-step process, references all 6 agents by name, scope detection, findings board creation, fix/eval cycling |
-| `skills/skippy-dev/SKILL.md` | Updated skill index with review command | VERIFIED | Row 14 (Audit Swarm), /skippy:review command section, audit-swarm.md in For Agents |
-| `INDEX.md` | Updated registry with review command | VERIFIED | skippy-dev row includes /skippy:review in commands list |
+| `skills/skippy/agents/security-reviewer.md` | Security audit specialist subagent | VERIFIED | Contains `permissionMode: plan`, 5 focus areas, output format, sandbox rule |
+| `skills/skippy/agents/code-quality-reviewer.md` | Code quality specialist subagent | VERIFIED | Contains `permissionMode: plan`, 6 focus areas, output format, sandbox rule |
+| `skills/skippy/agents/architecture-reviewer.md` | Architecture specialist subagent | VERIFIED | Contains `permissionMode: plan`, `model: opus` (HIGH complexity), 6 focus areas, sandbox rule |
+| `skills/skippy/agents/consistency-reviewer.md` | Consistency specialist subagent | VERIFIED | Contains `permissionMode: plan`, 5 focus areas, cross-file checks, sandbox rule |
+| `skills/skippy/agents/fix-agent.md` | Fix agent with worktree isolation | VERIFIED | Contains `permissionMode: bypassPermissions`, `isolation: worktree`, atomic commit rules, safety rules |
+| `skills/skippy/agents/eval-agent.md` | Evaluator agent with cycling protocol | VERIFIED | Contains `permissionMode: plan`, references verification-loops.md, PASS/FAIL/ESCALATE verdicts, max 3 iterations |
+| `skills/skippy/references/audit-swarm.md` | Swarm orchestration protocol reference | VERIFIED | 124 lines, 8-step flow, findings board template, severity table, sandbox protocol, agent roster, exit conditions |
+| `skills/skippy/commands/review.md` | /skippy:review command definition | VERIFIED | 184 lines, 8-step process, references all 6 agents by name, scope detection, findings board creation, fix/eval cycling |
+| `skills/skippy/SKILL.md` | Updated skill index with review command | VERIFIED | Row 14 (Audit Swarm), /skippy:review command section, audit-swarm.md in For Agents |
+| `INDEX.md` | Updated registry with review command | VERIFIED | skippy row includes /skippy:review in commands list |
 | `CLAUDE.md` | Updated project README with review command | VERIFIED | Commands table row for /skippy:review, agents/ in What's Built tree, counts updated to "6 commands, 14 reference docs" |
 
 ### Key Link Verification
@@ -72,7 +72,7 @@ must_haves:
 | `SKILL.md` | `commands/review.md` | Command listing | WIRED | Line 111: `/skippy:review` section with workflow summary |
 | `SKILL.md` | `references/audit-swarm.md` | Enhancement table + For Agents | WIRED | Line 34: row 14 links to audit-swarm.md; line 146: read reference for agents |
 | `CLAUDE.md` | `/skippy:review` | Commands table | WIRED | Line 80: command listed with description |
-| `INDEX.md` | `skippy-dev/SKILL.md` | Skill registry | WIRED | Line 21: skippy-dev row includes /skippy:review in commands column |
+| `INDEX.md` | `skippy/SKILL.md` | Skill registry | WIRED | Line 21: skippy row includes /skippy:review in commands column |
 
 ### Requirements Coverage
 

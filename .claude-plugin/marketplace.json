@@ -18,13 +18,13 @@
       "skills": ["./skills/core"]
     },
     {
-      "name": "skippy-dev",
+      "name": "skippy",
       "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
       "author": { "name": "Rico" },
-      "skills": ["./skills/skippy-dev"]
+      "skills": ["./skills/skippy"]
     },
     {
       "name": "add-todo",

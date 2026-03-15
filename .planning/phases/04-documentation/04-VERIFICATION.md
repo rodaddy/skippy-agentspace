@@ -8,7 +8,7 @@ gaps:
     status: partial
     reason: "gsd-dependency-map.md exists in references/ but is not listed in SKILL.md enhancements table or INDEX.md References column -- orphaned from skill navigation"
     artifacts:
-      - path: "skills/skippy-dev/SKILL.md"
+      - path: "skills/skippy/SKILL.md"
         issue: "Enhancements table lists 5 references but omits gsd-dependency-map.md"
       - path: "INDEX.md"
         issue: "References column lists 5 docs but omits gsd-dependency-map.md"
@@ -30,7 +30,7 @@ gaps:
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | GSD dependency map exists documenting every `.planning/` integration point with breakage risk annotations | VERIFIED | 367-line doc at `skills/skippy-dev/references/gsd-dependency-map.md` -- 6 integration points, 4 file type sections, 9 "If GSD changes this" annotations, HIGH/MEDIUM/LOW risk levels |
+| 1 | GSD dependency map exists documenting every `.planning/` integration point with breakage risk annotations | VERIFIED | 367-line doc at `skills/skippy/references/gsd-dependency-map.md` -- 6 integration points, 4 file type sections, 9 "If GSD changes this" annotations, HIGH/MEDIUM/LOW risk levels |
 | 2 | CLAUDE.md includes origin story, architectural decisions, current project status, and enough context for cold session orientation | VERIFIED | 126-line CLAUDE.md with PAUL origin story, 3-option architecture table, all 4 phases marked Complete, self-contained (no .planning/ reading required) |
 
 **Score:** 2/2 truths verified
@@ -39,7 +39,7 @@ gaps:
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `skills/skippy-dev/references/gsd-dependency-map.md` | GSD integration point documentation with breakage risks | VERIFIED (exists, substantive) / WARNING (wiring) | 367 lines. Covers PLAN.md (YAML + XML), SUMMARY.md, STATE.md, ROADMAP.md. 38 `.planning/` path references. 5 breakage annotations. 9 "If GSD changes" callouts. Risk summary table. Upstream monitoring guide. **But not referenced from SKILL.md or INDEX.md** |
+| `skills/skippy/references/gsd-dependency-map.md` | GSD integration point documentation with breakage risks | VERIFIED (exists, substantive) / WARNING (wiring) | 367 lines. Covers PLAN.md (YAML + XML), SUMMARY.md, STATE.md, ROADMAP.md. 38 `.planning/` path references. 5 breakage annotations. 9 "If GSD changes" callouts. Risk summary table. Upstream monitoring guide. **But not referenced from SKILL.md or INDEX.md** |
 | `CLAUDE.md` | Cold session context document | VERIFIED | 126 lines (under 150 limit). Origin story present. Architecture decisions table present. Status shows all 4 phases Complete. "Known issues" and "Next action" stale content removed. No hardcoded paths. No TODOs/FIXMEs/placeholders |
 
 ### Key Link Verification
@@ -64,7 +64,7 @@ gaps:
 
 | File | Line | Pattern | Severity | Impact |
 |------|------|---------|----------|--------|
-| `skills/skippy-dev/SKILL.md` | 14-22 | gsd-dependency-map.md omitted from enhancements table | Warning | Reference doc not discoverable through skill navigation |
+| `skills/skippy/SKILL.md` | 14-22 | gsd-dependency-map.md omitted from enhancements table | Warning | Reference doc not discoverable through skill navigation |
 | `INDEX.md` | 9 | References column missing gsd-dependency-map.md | Warning | Skill registry incomplete -- `index-sync.sh --generate` would not pick up files not listed in SKILL.md |
 
 No TODOs, FIXMEs, placeholders, or empty implementations found in either artifact.

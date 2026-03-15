@@ -39,9 +39,9 @@ setup() {
 # --- Single skill ---
 
 @test "install single skill by name" {
-    run bash "$INSTALL_SCRIPT" skippy-dev
+    run bash "$INSTALL_SCRIPT" skippy
     assert_success
-    [ -L "$HOME/.claude/skills/skippy-dev" ]
+    [ -L "$HOME/.claude/skills/skippy" ]
 }
 
 # --- Idempotent ---
@@ -73,8 +73,8 @@ setup() {
 # --- Legacy target ---
 
 @test "install --target=commands uses legacy path" {
-    # Only skippy-dev has a commands/ subdirectory -- core would SKIP (no commands/)
-    run bash "$INSTALL_SCRIPT" skippy-dev --target=commands
+    # Only skippy has a commands/ subdirectory -- core would SKIP (no commands/)
+    run bash "$INSTALL_SCRIPT" skippy --target=commands
     assert_success
-    [ -L "$HOME/.claude/commands/skippy-dev" ]
+    [ -L "$HOME/.claude/commands/skippy" ]
 }

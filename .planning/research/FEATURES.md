@@ -129,7 +129,7 @@ The audit swarm pattern has emerged as one of the most successful multi-agent us
 - Sandboxed fixes: create branch `review/YYYY-MM-DD`, apply fixes, user merges or discards
 
 **Implementation for skippy:**
-- New command at `skills/skippy-dev/commands/review.md`
+- New command at `skills/skippy/commands/review.md`
 - Command describes the orchestration pattern (spawn agents, collect findings, synthesize)
 - Agents read `CLAUDE.md`, `CONVENTIONS.md`, and project-specific rules for context
 - Scope: current branch diff from main (default), specific files (argument), or full codebase (`--all`)
@@ -150,10 +150,10 @@ The audit swarm pattern has emerged as one of the most successful multi-agent us
 **Key syntax:**
 ```bash
 @test "install.sh installs skill to modern target" {
-  run bash "$REPO_ROOT/tools/install.sh" skippy-dev --target=skills
+  run bash "$REPO_ROOT/tools/install.sh" skippy --target=skills
   assert_success
-  assert_output --partial "INSTALLED (skills): skippy-dev"
-  [ -L "$TEST_HOME/.claude/skills/skippy-dev" ]
+  assert_output --partial "INSTALLED (skills): skippy"
+  [ -L "$TEST_HOME/.claude/skills/skippy" ]
 }
 ```
 

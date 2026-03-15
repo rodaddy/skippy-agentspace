@@ -128,7 +128,7 @@ Recent decisions affecting current work:
 - [13-03]: 3 additional skills/core/ files cleaned beyond planned 8 reference docs to satisfy full skills/ grep scan
 - [12-01]: Load paths in test helper use test_helper/ prefix -- bats resolves relative to .bats file, not the helper
 - [12-01]: 10 tests instead of planned 8 -- added SKIPPY_ROOT fallback and color-disable tests for completeness
-- [12-02]: Used skippy-dev instead of core for --target=commands test -- core has no commands/ subdirectory
+- [12-02]: Used skippy instead of core for --target=commands test -- core has no commands/ subdirectory
 - [12-03]: Teardown restore pattern for index-sync tests -- backup/restore INDEX.md to avoid corrupting real file
 - [12-03]: Skip validate-hooks --full mode tests -- complex hook install/uninstall already tested by the script itself
 - [12-03]: brew install bun in CI -- ensures hook validation tests that need bun actually run

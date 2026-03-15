@@ -26,7 +26,7 @@ re_verification: false
 | 5 | CLAUDE.md project status table includes Phases 12-16 | VERIFIED | All 5 rows present: Phase 12 (Testing), 13 (GSD Absorption), 14 (Audit Swarm), 15 (Hardening), 16 (Integration & Polish) |
 | 6 | verify.sh checks all 6 commands including review | VERIFIED | Line 209: `for cmd_name in reconcile update cleanup migrate upgrade review; do` |
 | 7 | verify.sh passes with zero failures after all v1.2 changes | VERIFIED | Live run: 25 passed, 1 warning (PAI hooks not in settings.json -- expected), 0 failures |
-| 8 | INDEX.md is consistent with actual skill state | VERIFIED | INDEX.md lists `/skippy:review` in skippy-dev commands. `index-sync.sh --check` reports consistent. Live verify.sh confirms. |
+| 8 | INDEX.md is consistent with actual skill state | VERIFIED | INDEX.md lists `/skippy:review` in skippy commands. `index-sync.sh --check` reports consistent. Live verify.sh confirms. |
 | 9 | All 37 bats tests pass | VERIFIED | Live run: 37 tests, 0 failures (full TAP output confirmed) |
 
 **Score:** 9/9 truths verified
@@ -39,15 +39,15 @@ re_verification: false
 | `CLAUDE.md` | Updated project context with standalone framing | VERIFIED | "standalone" appears 3 times in framing lines plus once in Phase 13 row. v1.2 status line updated. Phases 12-16 in table. |
 | `README.md` | Public-facing docs with accurate counts and framing | VERIFIED | "18 reference docs" present, "Standalone Claude Code skill framework" in line 1, bats instructions in Testing section, bump-version.sh in Tools table, "Patterns Adapted" upstream table |
 | `tools/verify.sh` | Health check script with review command verification | VERIFIED | "review" in command check loop on line 209. Live execution confirms all 6 commands checked. |
-| `INDEX.md` | Regenerated with /skippy:review in command list | VERIFIED | Line 21: `/skippy:review` listed in skippy-dev commands. Consistent with skills/ per index-sync --check. |
+| `INDEX.md` | Regenerated with /skippy:review in command list | VERIFIED | Line 21: `/skippy:review` listed in skippy commands. Consistent with skills/ per index-sync --check. |
 
 ### Key Link Verification
 
 | From | To | Via | Status | Details |
 |------|----|-----|--------|---------|
 | `CONTRIBUTING.md` | `CONVENTIONS.md` | reference link | WIRED | Line 69: `See [CONVENTIONS.md](CONVENTIONS.md) for full coding conventions and content classification.` |
-| `README.md` | `skills/skippy-dev/references/` | reference doc listing | WIRED | "Reference Docs (18)" header matches actual count of 18 .md files in references/ directory |
-| `tools/verify.sh` | `skills/skippy-dev/commands/review.md` | command existence check loop | WIRED | `for cmd_name in reconcile update cleanup migrate upgrade review; do` -- review.md file confirmed to exist |
+| `README.md` | `skills/skippy/references/` | reference doc listing | WIRED | "Reference Docs (18)" header matches actual count of 18 .md files in references/ directory |
+| `tools/verify.sh` | `skills/skippy/commands/review.md` | command existence check loop | WIRED | `for cmd_name in reconcile update cleanup migrate upgrade review; do` -- review.md file confirmed to exist |
 
 ### Requirements Coverage
 

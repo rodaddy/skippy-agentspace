@@ -54,10 +54,10 @@ re_verification: false
 
 | Artifact                                      | Expected                                | Status     | Details                                        |
 | --------------------------------------------- | --------------------------------------- | ---------- | ---------------------------------------------- |
-| `skills/skippy-dev/commands/reconcile.md`      | Enhanced reconcile command prompt       | VERIFIED   | 125 lines, 8-step process, multi-plan support  |
-| `skills/skippy-dev/scripts/skippy-update.sh`   | Hardened update script                  | VERIFIED   | 122 lines, safe parsing, error isolation       |
-| `skills/skippy-dev/commands/update.md`         | Update command with correct paths       | VERIFIED   | 26 lines, ~/.cache/ reference, no /tmp/        |
-| `skills/skippy-dev/scripts/skippy-cleanup.sh`  | Validated cleanup script                | VERIFIED   | 80 lines, persistent quarantine, graceful edge cases |
+| `skills/skippy/commands/reconcile.md`      | Enhanced reconcile command prompt       | VERIFIED   | 125 lines, 8-step process, multi-plan support  |
+| `skills/skippy/scripts/skippy-update.sh`   | Hardened update script                  | VERIFIED   | 122 lines, safe parsing, error isolation       |
+| `skills/skippy/commands/update.md`         | Update command with correct paths       | VERIFIED   | 26 lines, ~/.cache/ reference, no /tmp/        |
+| `skills/skippy/scripts/skippy-cleanup.sh`  | Validated cleanup script                | VERIFIED   | 80 lines, persistent quarantine, graceful edge cases |
 
 ### Key Link Verification
 

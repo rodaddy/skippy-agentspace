@@ -12,7 +12,7 @@ requires:
     provides: rules and templates reference files under skills/core/references/
 provides:
   - Slim SKILL.md entry point (88 lines) tying together all core content
-  - Core skill registered in INDEX.md alongside skippy-dev
+  - Core skill registered in INDEX.md alongside skippy
   - Core skill in marketplace.json plugin manifest for install
   - CLAUDE.md updated with core skill in What's Built and Key Files
 affects: [07-hook-installation, 09-install-experience, 10-validation]
@@ -74,13 +74,13 @@ Each task was committed atomically:
 ## Files Created/Modified
 - `skills/core/SKILL.md` - 88-line slim entry point with topic tables for all 4 reference directories
 - `INDEX.md` - Added core skill row, restored Plugin Distribution section after index-sync.sh regen
-- `.claude-plugin/marketplace.json` - Added core plugin entry alongside skippy-dev
+- `.claude-plugin/marketplace.json` - Added core plugin entry alongside skippy
 - `CLAUDE.md` - Added core/ to What's Built tree, Key Files table, and updated repo description
 
 ## Decisions Made
-- Used topic-table pattern for SKILL.md sections -- each section is a brief intro + table with File column pointing to specific references. Mirrors skippy-dev structure but with different content sections.
+- Used topic-table pattern for SKILL.md sections -- each section is a brief intro + table with File column pointing to specific references. Mirrors skippy structure but with different content sections.
 - Made CORE-05 deferral explicit: "Command packaging deferred. Core provides reference content only -- no slash commands yet. See roadmap Phase 9+ for portable command install tooling (CORE-05)."
-- After index-sync.sh regenerated INDEX.md, restored the Plugin Distribution section and skippy-dev commands that the script had stripped.
+- After index-sync.sh regenerated INDEX.md, restored the Plugin Distribution section and skippy commands that the script had stripped.
 
 ## Deviations from Plan
 
@@ -88,8 +88,8 @@ Each task was committed atomically:
 
 **1. [Rule 3 - Blocking] Restored INDEX.md content after index-sync.sh stripped it**
 - **Found during:** Task 2 (INDEX.md integration)
-- **Issue:** `tools/index-sync.sh --generate` overwrote the entire INDEX.md, losing the Plugin Distribution section and skippy-dev's commands column
-- **Fix:** Manually edited the generated output to restore the Plugin Distribution section and skippy-dev commands
+- **Issue:** `tools/index-sync.sh --generate` overwrote the entire INDEX.md, losing the Plugin Distribution section and skippy's commands column
+- **Fix:** Manually edited the generated output to restore the Plugin Distribution section and skippy commands
 - **Files modified:** INDEX.md
 - **Verification:** Grep confirms both skills listed, Plugin Distribution section present
 - **Committed in:** 2d29f96 (Task 2 commit)
@@ -109,6 +109,6 @@ None -- no external service configuration required.
 - Phase 6 (Core Infrastructure) fully complete: all 3 plans executed
 - Core skill is structurally ready for plugin install and index-sync validation
 - Phase 7 (Hook Installation) has clear input: 5 LAWs needing hooks (6, 10, 12, 13, 14)
-- Phase 9 (Install Experience) can build on the core + skippy-dev dual-skill architecture
+- Phase 9 (Install Experience) can build on the core + skippy dual-skill architecture
 
 ## Self-Check: PASSED

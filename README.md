@@ -14,7 +14,7 @@ PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think 
 ```
 /plugin marketplace add rodaddy/skippy-agentspace
 /plugin install core@skippy-agentspace
-/plugin install skippy-dev@skippy-agentspace
+/plugin install skippy@skippy-agentspace
 ```
 
 Install individual skills: `/plugin install <skill-name>@skippy-agentspace`
@@ -44,7 +44,7 @@ After install, try these in any project with Claude Code:
 | Category | Skills | Requires |
 |----------|--------|----------|
 | Core | personas, LAWs, 15 hooks, templates | bun |
-| Workflow (6) | add-todo, check-todos, update-todo, correct, session-wrap, skippy-dev | Standalone |
+| Workflow (6) | add-todo, check-todos, update-todo, correct, session-wrap, skippy | Standalone |
 | Utility (4) | browser, excalidraw, fabric, vaultwarden | Infrastructure |
 | Domain (1) | deploy-service (LXC + nginx + DNS) | Proxmox |
 
@@ -52,7 +52,7 @@ See [INDEX.md](INDEX.md) for the full catalog with portability badges.
 
 ### Reference Docs (18)
 
-Workflow patterns adapted from 3 frameworks, distilled into standalone reference docs in `skills/skippy-dev/references/`:
+Workflow patterns adapted from 3 frameworks, distilled into standalone reference docs in `skills/skippy/references/`:
 
 **From PAUL (5)** -- planning discipline:
 - Context brackets, reconciliation, plan structure (task format), plan boundaries, state consistency

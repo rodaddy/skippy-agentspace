@@ -12,7 +12,7 @@ provides:
   - 6 subagent definitions for the audit swarm (security, code-quality, architecture, consistency, fix, eval)
   - audit-swarm.md reference doc defining the orchestration protocol
 
-affects: [14-02, skippy-dev]
+affects: [14-02, skippy]
 
 tech-stack:
   added: [claude-code-subagents]
@@ -20,13 +20,13 @@ tech-stack:
 
 key-files:
   created:
-    - skills/skippy-dev/agents/security-reviewer.md
-    - skills/skippy-dev/agents/code-quality-reviewer.md
-    - skills/skippy-dev/agents/architecture-reviewer.md
-    - skills/skippy-dev/agents/consistency-reviewer.md
-    - skills/skippy-dev/agents/fix-agent.md
-    - skills/skippy-dev/agents/eval-agent.md
-    - skills/skippy-dev/references/audit-swarm.md
+    - skills/skippy/agents/security-reviewer.md
+    - skills/skippy/agents/code-quality-reviewer.md
+    - skills/skippy/agents/architecture-reviewer.md
+    - skills/skippy/agents/consistency-reviewer.md
+    - skills/skippy/agents/fix-agent.md
+    - skills/skippy/agents/eval-agent.md
+    - skills/skippy/references/audit-swarm.md
   modified: []
 
 key-decisions:
@@ -73,13 +73,13 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `skills/skippy-dev/agents/security-reviewer.md` - Security audit specialist (injection, exposure, traversal, unsafe ops)
-- `skills/skippy-dev/agents/code-quality-reviewer.md` - Code quality reviewer (DRY, error handling, dead code, complexity)
-- `skills/skippy-dev/agents/architecture-reviewer.md` - Architecture reviewer (portability, conventions, dependencies, SoC) -- uses opus
-- `skills/skippy-dev/agents/consistency-reviewer.md` - Consistency reviewer (SKILL.md accuracy, INDEX.md staleness, state alignment)
-- `skills/skippy-dev/agents/fix-agent.md` - Fix agent with atomic commits, worktree isolation, and escalation rules
-- `skills/skippy-dev/agents/eval-agent.md` - Evaluator agent with cycling protocol, regression checks, and PASS/FAIL verdicts
-- `skills/skippy-dev/references/audit-swarm.md` - Orchestration protocol: flow, findings board, severity, sandbox, roster, exit conditions
+- `skills/skippy/agents/security-reviewer.md` - Security audit specialist (injection, exposure, traversal, unsafe ops)
+- `skills/skippy/agents/code-quality-reviewer.md` - Code quality reviewer (DRY, error handling, dead code, complexity)
+- `skills/skippy/agents/architecture-reviewer.md` - Architecture reviewer (portability, conventions, dependencies, SoC) -- uses opus
+- `skills/skippy/agents/consistency-reviewer.md` - Consistency reviewer (SKILL.md accuracy, INDEX.md staleness, state alignment)
+- `skills/skippy/agents/fix-agent.md` - Fix agent with atomic commits, worktree isolation, and escalation rules
+- `skills/skippy/agents/eval-agent.md` - Evaluator agent with cycling protocol, regression checks, and PASS/FAIL verdicts
+- `skills/skippy/references/audit-swarm.md` - Orchestration protocol: flow, findings board, severity, sandbox, roster, exit conditions
 
 ## Decisions Made
 

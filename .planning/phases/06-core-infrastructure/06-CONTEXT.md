@@ -76,13 +76,13 @@ Package PAI's essential operating layer -- personas, LAWs, rules/style, and proj
 ## Existing Code Insights
 
 ### Reusable Assets
-- `skills/skippy-dev/SKILL.md` (12 lines) -- reference model for slim SKILL.md pattern
-- `skills/skippy-dev/references/` -- 5 reference docs demonstrating the deep-doc pattern
+- `skills/skippy/SKILL.md` (12 lines) -- reference model for slim SKILL.md pattern
+- `skills/skippy/references/` -- 5 reference docs demonstrating the deep-doc pattern
 - `CONVENTIONS.md` -- documents public/private boundary and upstream.json schema
 - `upstreams/` -- directory-per-item extensibility pattern (apply same thinking to laws/)
 
 ### Established Patterns
-- Slim entry point + deep references (proven in skippy-dev)
+- Slim entry point + deep references (proven in skippy)
 - Frontmatter standard: name, description, metadata (version, author, source)
 - Directory-as-registry: adding new items = creating new directory/file, no code changes
 - Shell scripts + markdown only, no build step

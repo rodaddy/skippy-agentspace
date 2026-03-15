@@ -177,7 +177,7 @@ fi
 
 # Verify PAUL reference docs exist
 for ref in context-brackets reconciliation plan-structure plan-boundaries state-consistency; do
-    if [[ -f "$REPO_DIR/skills/skippy-dev/references/$ref.md" ]]; then
+    if [[ -f "$REPO_DIR/skills/skippy/references/$ref.md" ]]; then
         pass "PAUL ref: $ref.md"
     else
         fail "PAUL ref missing: $ref.md"
@@ -195,7 +195,7 @@ fi
 
 # Verify OMC reference docs exist
 for ref in pre-execution-gate ambiguity-scoring compaction-resilience parallel-file-ownership; do
-    if [[ -f "$REPO_DIR/skills/skippy-dev/references/$ref.md" ]]; then
+    if [[ -f "$REPO_DIR/skills/skippy/references/$ref.md" ]]; then
         pass "OMC ref: $ref.md"
     else
         fail "OMC ref missing: $ref.md"
@@ -315,7 +315,7 @@ else
 fi
 
 # Positional args
-bash tools/install.sh skippy-dev add-todo check-todos >/dev/null 2>&1
+bash tools/install.sh skippy add-todo check-todos >/dev/null 2>&1
 POS_COUNT=$(ls "$HOME/.claude/skills/" 2>/dev/null | wc -l | tr -d ' ')
 if [[ "$POS_COUNT" -eq 4 ]]; then
     pass "Positional: 3 more installed (total 4)"
@@ -430,7 +430,7 @@ else
 fi
 
 # Reference doc count
-REF_COUNT=$(ls skills/skippy-dev/references/*.md 2>/dev/null | wc -l | tr -d ' ')
+REF_COUNT=$(ls skills/skippy/references/*.md 2>/dev/null | wc -l | tr -d ' ')
 if [[ "$REF_COUNT" -eq 18 ]]; then
     pass "Reference docs: $REF_COUNT"
 else

@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Skippy-agentspace v1.2 transforms from a "parasitic skill" riding GSD into a standalone framework. The core challenge is absorbing GSD's execution patterns (phased execution, wave parallelism, state tracking, checkpoints) without absorbing its tooling (gsd-tools.cjs, 2000+ lines of Node.js). Research unanimously recommends absorbing patterns as markdown reference docs -- not code -- because skippy's commands are AI-driven: the agent IS the runtime. This sidesteps the entire "reimplement gsd-tools.cjs in bash" trap that would violate the project's no-build-step, shell-scripts-plus-markdown constraint. Five to six new reference docs under `skills/skippy-dev/references/` complete the absorption, following the same pattern successfully used for 10 existing PAUL/OMC cherry-picks.
+Skippy-agentspace v1.2 transforms from a "parasitic skill" riding GSD into a standalone framework. The core challenge is absorbing GSD's execution patterns (phased execution, wave parallelism, state tracking, checkpoints) without absorbing its tooling (gsd-tools.cjs, 2000+ lines of Node.js). Research unanimously recommends absorbing patterns as markdown reference docs -- not code -- because skippy's commands are AI-driven: the agent IS the runtime. This sidesteps the entire "reimplement gsd-tools.cjs in bash" trap that would violate the project's no-build-step, shell-scripts-plus-markdown constraint. Five to six new reference docs under `skills/skippy/references/` complete the absorption, following the same pattern successfully used for 10 existing PAUL/OMC cherry-picks.
 
 The headline feature is `/skippy:review`, a multi-agent audit swarm that spawns 3 specialist agents (reviewer, fixer, evaluator) to provide structured code review. This is well-supported by Claude Code's native Task() subagent system -- no experimental features needed. The critical risk here is real: a prior session had a red team agent run `uninstall --all` against real `$HOME`, nuking 71 installed skills. Every agent-spawning feature MUST override `$HOME` to a temp directory before any agent touches the filesystem.
 
@@ -58,7 +58,7 @@ See [FEATURES.md](FEATURES.md) for dependency graph, MVP definition, and competi
 
 ### Architecture Approach
 
-v1.2 is additive -- new features integrate into the existing skill structure without reorganization. New reference docs go in `skills/skippy-dev/references/`, the review command goes in `skills/skippy-dev/commands/`, the shared library goes in `tools/lib/`, and tests go in `tests/` at repo root. The key architectural insight is that `tools/` scripts source `common.sh` but `skills/*/scripts/` do NOT -- skill scripts remain standalone per the portability constraint.
+v1.2 is additive -- new features integrate into the existing skill structure without reorganization. New reference docs go in `skills/skippy/references/`, the review command goes in `skills/skippy/commands/`, the shared library goes in `tools/lib/`, and tests go in `tests/` at repo root. The key architectural insight is that `tools/` scripts source `common.sh` but `skills/*/scripts/` do NOT -- skill scripts remain standalone per the portability constraint.
 
 **Major components:**
 1. **Reference docs (5-6 new)** -- absorbed GSD patterns as standalone markdown, loaded by agents on demand
@@ -107,7 +107,7 @@ Based on research, suggested phase structure (6 phases):
 ### Phase 3: `/skippy:review` Audit Swarm
 
 **Rationale:** Headline feature of v1.2. Benefits from stable foundation (Phase 1) and absorbed patterns (Phase 2 -- verification loops inform the swarm's cycling). Can run in parallel with Phase 2 since it depends on existing v1.1 references, not the new ones.
-**Delivers:** `skills/skippy-dev/commands/review.md` (~120 lines), 3-agent pipeline (reviewer/fixer/evaluator), structured findings output.
+**Delivers:** `skills/skippy/commands/review.md` (~120 lines), 3-agent pipeline (reviewer/fixer/evaluator), structured findings output.
 **Addresses:** `/skippy:review` audit swarm (differentiator).
 **Avoids:** Pitfall 1 (swarm destroys real HOME -- sandbox design BEFORE agent logic), Pitfall 6 (model availability -- sequential default, configurable models).
 

@@ -8,7 +8,7 @@
 
 Phase 1 is entirely mechanical -- fixing 5 hardcoded absolute paths, removing a non-standard frontmatter field, renaming a directory, and verifying progressive disclosure structure. No new libraries, no architectural decisions, no ambiguous trade-offs. The existing domain research (STACK.md, ARCHITECTURE.md, PITFALLS.md from 2026-03-06) already mapped every change needed with HIGH confidence from official sources.
 
-The critical technical decision -- relative paths vs `${CLAUDE_SKILL_DIR}` -- is already locked by CONTEXT.md: use relative paths because `${CLAUDE_SKILL_DIR}` has a known bug (#11011) with plugin scripts on first execution. The `@` file reference syntax in command `.md` files supports relative paths from the file's own location, so `@../SKILL.md` from `commands/reconcile.md` resolves correctly to `skills/skippy-dev/SKILL.md`.
+The critical technical decision -- relative paths vs `${CLAUDE_SKILL_DIR}` -- is already locked by CONTEXT.md: use relative paths because `${CLAUDE_SKILL_DIR}` has a known bug (#11011) with plugin scripts on first execution. The `@` file reference syntax in command `.md` files supports relative paths from the file's own location, so `@../SKILL.md` from `commands/reconcile.md` resolves correctly to `skills/skippy/SKILL.md`.
 
 **Primary recommendation:** Execute as a sequential sweep: paths first (most impactful), frontmatter second, directory rename third (touches the most files), progressive disclosure verification last.
 
@@ -72,7 +72,7 @@ No installation needed for Phase 1. This is file editing only.
 
 ### Recommended Project Structure (Post-Phase 1)
 ```
-skills/skippy-dev/
+skills/skippy/
   SKILL.md                # Entry point -- frontmatter + instructions (< 150 lines)
   commands/               # Kept for Phase 1 (merge to SKILL.md deferred to Phase 2)
     reconcile.md          # @../SKILL.md, @../references/reconciliation.md, @../references/state-consistency.md
@@ -120,7 +120,7 @@ skills/skippy-dev/
 **Example:**
 ```yaml
 ---
-name: skippy-dev
+name: skippy
 description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
 metadata:
   version: "0.1.0"
@@ -158,9 +158,9 @@ metadata:
 **What goes wrong:** `bin/` renamed to `scripts/` but references in SKILL.md, command files, CLAUDE.md, and INDEX.md still say `bin/`.
 **Why it happens:** References are scattered across many files. Easy to miss one.
 **How to avoid:** Full grep sweep: `grep -r 'bin/skippy' .` after rename. The complete list of files needing updates:
-- `skills/skippy-dev/SKILL.md` (lines 54, 64) -- references `bin/skippy-update.sh` and `bin/skippy-cleanup.sh`
-- `skills/skippy-dev/commands/update.md` (line 19) -- references `bin/skippy-update.sh`
-- `skills/skippy-dev/commands/cleanup.md` (line 23) -- references `bin/skippy-cleanup.sh`
+- `skills/skippy/SKILL.md` (lines 54, 64) -- references `bin/skippy-update.sh` and `bin/skippy-cleanup.sh`
+- `skills/skippy/commands/update.md` (line 19) -- references `bin/skippy-update.sh`
+- `skills/skippy/commands/cleanup.md` (line 23) -- references `bin/skippy-cleanup.sh`
 - `CLAUDE.md` (file tree shows `bin/`)
 - `INDEX.md` (if it references bin/)
 **Warning signs:** Script invocation fails with "no such file or directory".
@@ -180,7 +180,7 @@ metadata:
 **Warning signs:** Quarantine mode fails on any machine without `/Volumes/ThunderBolt/`.
 
 ### Pitfall 5: SKILL.md Body References to Absolute Paths
-**What goes wrong:** SKILL.md lines 54, 64, and 73-80 reference `~/.config/pai/Skills/skippy-dev/...` -- these are PAI-installation-specific paths that won't work when the skill is loaded from a plugin cache or a different install location.
+**What goes wrong:** SKILL.md lines 54, 64, and 73-80 reference `~/.config/pai/Skills/skippy/...` -- these are PAI-installation-specific paths that won't work when the skill is loaded from a plugin cache or a different install location.
 **Why it happens:** SKILL.md was written assuming PAI's install location.
 **How to avoid:** Replace with `${CLAUDE_SKILL_DIR}/...` for script execution paths. For the "For Agents" section, use `${CLAUDE_SKILL_DIR}/references/...` pattern.
 
@@ -191,7 +191,7 @@ Verified patterns from official sources:
 ### Relative Path Reference in Command File
 ```markdown
 <!-- Source: Claude Code docs -- @ file references resolve relative to file location -->
-<!-- File: skills/skippy-dev/commands/reconcile.md -->
+<!-- File: skills/skippy/commands/reconcile.md -->
 <execution_context>
 @../SKILL.md
 @../references/reconciliation.md
@@ -202,7 +202,7 @@ Verified patterns from official sources:
 ### SKILL.md Script Reference with CLAUDE_SKILL_DIR
 ```markdown
 <!-- Source: Claude Code docs -- ${CLAUDE_SKILL_DIR} substitution variables -->
-<!-- File: skills/skippy-dev/SKILL.md -->
+<!-- File: skills/skippy/SKILL.md -->
 ### /skippy:update
 
 Check GSD and PAUL repos for upstream changes worth absorbing.
@@ -218,7 +218,7 @@ Check GSD and PAUL repos for upstream changes worth absorbing.
 ```yaml
 # Source: Agent Skills spec (agentskills.io) + CONTEXT.md target frontmatter
 ---
-name: skippy-dev
+name: skippy
 description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
 metadata:
   version: "0.1.0"
@@ -261,38 +261,38 @@ Read ${CLAUDE_SKILL_DIR}/references/state-consistency.md
 
 Every file that needs modification in Phase 1, with exact changes:
 
-### File: `skills/skippy-dev/commands/reconcile.md`
+### File: `skills/skippy/commands/reconcile.md`
 | Line | Current | Target |
 |------|---------|--------|
-| 12 | `@/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md` | `@../SKILL.md` |
-| 13 | `@/Users/rico/.config/pai/Skills/skippy-dev/references/reconciliation.md` | `@../references/reconciliation.md` |
-| 14 | `@/Users/rico/.config/pai/Skills/skippy-dev/references/state-consistency.md` | `@../references/state-consistency.md` |
+| 12 | `@/Users/rico/.config/pai/Skills/skippy/SKILL.md` | `@../SKILL.md` |
+| 13 | `@/Users/rico/.config/pai/Skills/skippy/references/reconciliation.md` | `@../references/reconciliation.md` |
+| 14 | `@/Users/rico/.config/pai/Skills/skippy/references/state-consistency.md` | `@../references/state-consistency.md` |
 
-### File: `skills/skippy-dev/commands/update.md`
+### File: `skills/skippy/commands/update.md`
 | Line | Current | Target |
 |------|---------|--------|
-| 12 | `@/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md` | `@../SKILL.md` |
-| 19 | `~/.config/pai/Skills/skippy-dev/bin/skippy-update.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh` |
+| 12 | `@/Users/rico/.config/pai/Skills/skippy/SKILL.md` | `@../SKILL.md` |
+| 19 | `~/.config/pai/Skills/skippy/bin/skippy-update.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh` |
 
-### File: `skills/skippy-dev/commands/cleanup.md`
+### File: `skills/skippy/commands/cleanup.md`
 | Line | Current | Target |
 |------|---------|--------|
-| 12 | `@/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md` | `@../SKILL.md` |
+| 12 | `@/Users/rico/.config/pai/Skills/skippy/SKILL.md` | `@../SKILL.md` |
 | 17 | `/Volumes/ThunderBolt/_tmp/skippy-cleanup/` | `a configurable quarantine directory` (or similar generic description) |
-| 23 | `~/.config/pai/Skills/skippy-dev/bin/skippy-cleanup.sh [--quarantine|--nuke]` | `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh [--quarantine|--nuke]` |
+| 23 | `~/.config/pai/Skills/skippy/bin/skippy-cleanup.sh [--quarantine|--nuke]` | `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh [--quarantine|--nuke]` |
 
-### File: `skills/skippy-dev/SKILL.md`
+### File: `skills/skippy/SKILL.md`
 | Area | Current | Target |
 |------|---------|--------|
 | Frontmatter | Has `triggers:` field | Remove `triggers:`, add `metadata:` block |
 | Description | 154 chars | Trim to ~127 chars |
-| Line 54 | `~/.config/pai/Skills/skippy-dev/bin/skippy-update.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh` |
-| Line 64 | `~/.config/pai/Skills/skippy-dev/bin/skippy-cleanup.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh` |
+| Line 54 | `~/.config/pai/Skills/skippy/bin/skippy-update.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh` |
+| Line 64 | `~/.config/pai/Skills/skippy/bin/skippy-cleanup.sh` | `${CLAUDE_SKILL_DIR}/scripts/skippy-cleanup.sh` |
 | Line 65 | `/Volumes/ThunderBolt/_tmp/skippy-cleanup/` | Generic description (e.g., "a quarantine directory") |
-| Lines 73-80 | `~/.config/pai/Skills/skippy-dev/references/...` (3 occurrences) | `${CLAUDE_SKILL_DIR}/references/...` |
+| Lines 73-80 | `~/.config/pai/Skills/skippy/references/...` (3 occurrences) | `${CLAUDE_SKILL_DIR}/references/...` |
 
-### File: `skills/skippy-dev/bin/` -> `skills/skippy-dev/scripts/`
-- `git mv skills/skippy-dev/bin/ skills/skippy-dev/scripts/`
+### File: `skills/skippy/bin/` -> `skills/skippy/scripts/`
+- `git mv skills/skippy/bin/ skills/skippy/scripts/`
 
 ### File: `CLAUDE.md`
 - Update file tree: `bin/` -> `scripts/`
@@ -331,9 +331,9 @@ Every file that needs modification in Phase 1, with exact changes:
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | SPEC-01 | No absolute paths in skill files | smoke | `grep -rn '/Users/\|/Volumes/' skills/ \| grep -v '.planning/'` | N/A -- inline command |
-| SPEC-02 | Frontmatter has name, description, metadata; no triggers | smoke | `head -20 skills/skippy-dev/SKILL.md \| grep -c 'triggers:'` (expect 0) | N/A -- inline command |
-| SPEC-03 | scripts/ exists, bin/ does not, no broken refs | smoke | `test -d skills/skippy-dev/scripts/ && ! test -d skills/skippy-dev/bin/ && ! grep -rn 'bin/skippy' skills/` | N/A -- inline command |
-| STRU-01 | SKILL.md under 150 lines, references exist, index present | smoke | `wc -l skills/skippy-dev/SKILL.md` (expect < 150) + `ls skills/skippy-dev/references/*.md \| wc -l` (expect 5) + `test -f INDEX.md` | N/A -- inline command |
+| SPEC-02 | Frontmatter has name, description, metadata; no triggers | smoke | `head -20 skills/skippy/SKILL.md \| grep -c 'triggers:'` (expect 0) | N/A -- inline command |
+| SPEC-03 | scripts/ exists, bin/ does not, no broken refs | smoke | `test -d skills/skippy/scripts/ && ! test -d skills/skippy/bin/ && ! grep -rn 'bin/skippy' skills/` | N/A -- inline command |
+| STRU-01 | SKILL.md under 150 lines, references exist, index present | smoke | `wc -l skills/skippy/SKILL.md` (expect < 150) + `ls skills/skippy/references/*.md \| wc -l` (expect 5) + `test -f INDEX.md` | N/A -- inline command |
 
 ### Sampling Rate
 - **Per task commit:** `grep -rn '/Users/\|/Volumes/' skills/` -- zero matches expected

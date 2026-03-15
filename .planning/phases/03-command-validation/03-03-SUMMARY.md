@@ -18,7 +18,7 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/scripts/skippy-cleanup.sh
+    - skills/skippy/scripts/skippy-cleanup.sh
 
 key-decisions:
   - "~/.cache/skippy-quarantine as default -- follows XDG convention, survives macOS reboots"
@@ -57,7 +57,7 @@ Each task was committed atomically:
 **Plan metadata:** pending (docs: complete plan)
 
 ## Files Created/Modified
-- `skills/skippy-dev/scripts/skippy-cleanup.sh` - Changed default quarantine path from TMPDIR to ~/.cache/skippy-quarantine
+- `skills/skippy/scripts/skippy-cleanup.sh` - Changed default quarantine path from TMPDIR to ~/.cache/skippy-quarantine
 
 ## Decisions Made
 - Used ~/.cache/skippy-quarantine (XDG convention) instead of TMPDIR -- macOS TMPDIR resolves to session-specific /var/folders/ paths that get cleaned on reboot, defeating quarantine purpose
@@ -78,7 +78,7 @@ None -- no external service configuration required.
 
 ## Self-Check: PASSED
 
-- FOUND: skills/skippy-dev/scripts/skippy-cleanup.sh
+- FOUND: skills/skippy/scripts/skippy-cleanup.sh
 - FOUND: .planning/phases/03-command-validation/03-03-SUMMARY.md
 - FOUND: commit 74f799a
 

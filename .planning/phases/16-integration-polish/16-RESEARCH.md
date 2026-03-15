@@ -17,7 +17,7 @@ The codebase is in good shape. `tools/verify.sh` currently passes with 24 pass, 
 
 | ID | Description | Research Support |
 |----|-------------|-----------------|
-| FOUND-03 | `CONTRIBUTING.md` documents how to add skills, run tests, and submit changes | Skill structure patterns documented in CONVENTIONS.md, SKILL.md convention in skills/skippy-dev/SKILL.md, test runner is `bats tests/` and `tools/integration-test.sh`, branching convention is feat/fix/wip/ branches (hook-enforced) |
+| FOUND-03 | `CONTRIBUTING.md` documents how to add skills, run tests, and submit changes | Skill structure patterns documented in CONVENTIONS.md, SKILL.md convention in skills/skippy/SKILL.md, test runner is `bats tests/` and `tools/integration-test.sh`, branching convention is feat/fix/wip/ branches (hook-enforced) |
 </phase_requirements>
 
 ## Current State Audit
@@ -44,8 +44,8 @@ The codebase is in good shape. `tools/verify.sh` currently passes with 24 pass, 
 | File | Status | Evidence |
 |------|--------|---------|
 | `INDEX.md` | Already lists `/skippy:review` | `verify.sh` reports "INDEX.md is consistent with skills/" |
-| `skills/skippy-dev/SKILL.md` | Already has 18 enhancement rows including audit-swarm | Verified in Phase 14 |
-| `skills/skippy-dev/commands/review.md` | Exists | `ls` confirmed 6 commands including review.md |
+| `skills/skippy/SKILL.md` | Already has 18 enhancement rows including audit-swarm | Verified in Phase 14 |
+| `skills/skippy/commands/review.md` | Exists | `ls` confirmed 6 commands including review.md |
 | `skills/` directory | Zero GSD dependency language | Phase 13 verification confirmed |
 | `tools/lib/common.sh` | Functioning | verify.sh sources it successfully |
 | All bats tests | 37/37 pass | Confirmed via `bats tests/` run |
@@ -112,7 +112,7 @@ This brings the check from 5 to 6 commands, matching the actual command count.
 | Problem | Don't Build | Use Instead | Why |
 |---------|-------------|-------------|-----|
 | INDEX.md regeneration | Manual edits | `tools/index-sync.sh --generate` | Auto-generates from SKILL.md frontmatter |
-| Reference doc count | Manual counting | `ls skills/skippy-dev/references/ \| wc -l` | Source of truth is the directory |
+| Reference doc count | Manual counting | `ls skills/skippy/references/ \| wc -l` | Source of truth is the directory |
 | Verify.sh testing | Ad-hoc manual runs | `bats tests/verify.bats` | Existing tests cover verify.sh behavior |
 
 ## Common Pitfalls
@@ -271,7 +271,7 @@ for cmd_name in reconcile update cleanup migrate upgrade review; do
 - Direct file inspection of all affected files (CLAUDE.md, README.md, verify.sh, INDEX.md, SKILL.md)
 - `tools/verify.sh` output (24 pass, 1 warning, 0 failures)
 - `bats tests/` output (37/37 pass)
-- `ls skills/skippy-dev/references/` (18 files)
+- `ls skills/skippy/references/` (18 files)
 - Phase 13 VERIFICATION.md (confirmed GSD language cleanup in skills/)
 
 ### Secondary (MEDIUM confidence)

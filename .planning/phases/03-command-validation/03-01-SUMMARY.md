@@ -21,7 +21,7 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/commands/reconcile.md
+    - skills/skippy/commands/reconcile.md
 
 key-decisions:
   - "Reconcile always saves RECONCILIATION.md -- persistent record over optional output"
@@ -68,7 +68,7 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `skills/skippy-dev/commands/reconcile.md` - Enhanced reconcile command prompt with 8-step process covering all 5 identified gaps
+- `skills/skippy/commands/reconcile.md` - Enhanced reconcile command prompt with 8-step process covering all 5 identified gaps
 
 ## Decisions Made
 

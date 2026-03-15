@@ -25,7 +25,7 @@ gaps: []
 | 4 | Running ls upstreams/ shows one directory per tracked upstream (gsd, paul) | VERIFIED | `ls upstreams/` outputs `gsd` and `paul` -- two directories |
 | 5 | Each upstream directory contains a valid upstream.json with repo URL, branch, and SHA | VERIFIED | Both parse as valid JSON via jq. GSD has gsd-build/get-shit-done repo. PAUL has ChristopherKahler/paul repo. Both have branch, last_checked_sha, last_check fields. |
 | 6 | Adding a new upstream requires only creating a new directory with upstream.json -- no code changes | VERIFIED | Registry is directory-based. CONVENTIONS.md documents 3-step process (mkdir, create JSON, done). Plan 05-02 validated this with a temporary test-upstream directory. |
-| 7 | The old .versions file is removed with no data loss | VERIFIED | `skills/skippy-dev/.versions` does not exist. Both upstream.json files have `last_checked_sha: "none"` and `last_check: "never"` matching the old .versions data. |
+| 7 | The old .versions file is removed with no data loss | VERIFIED | `skills/skippy/.versions` does not exist. Both upstream.json files have `last_checked_sha: "none"` and `last_check: "never"` matching the old .versions data. |
 
 **Score:** 7/7 truths verified
 
@@ -38,7 +38,7 @@ gaps: []
 | `CLAUDE.md` | Reference to CONVENTIONS.md | VERIFIED | Key Files table row at line 127 |
 | `upstreams/gsd/upstream.json` | GSD upstream tracking metadata | VERIFIED | Valid JSON, contains `gsd-build/get-shit-done` repo URL, all required schema fields |
 | `upstreams/paul/upstream.json` | PAUL upstream tracking metadata | VERIFIED | Valid JSON, contains `ChristopherKahler/paul` repo URL, 5 cherry_picks, all required schema fields |
-| `skills/skippy-dev/.versions` | Must NOT exist (removed) | VERIFIED | File does not exist |
+| `skills/skippy/.versions` | Must NOT exist (removed) | VERIFIED | File does not exist |
 | `private/` directory | Must NOT exist in repo | VERIFIED | No in-repo private/ directory |
 
 ### Key Link Verification
@@ -65,8 +65,8 @@ No orphaned requirements. REQUIREMENTS.md maps FOUN-01 through FOUN-04 to Phase 
 | File | Line | Pattern | Severity | Impact |
 |------|------|---------|----------|--------|
 | `CLAUDE.md` | 57 | Stale reference to `.versions` in "What's Built" tree diagram | Warning | Misleading -- tree still lists `.versions` but the file was removed. Not a blocker since it's a documentation tree, not functional code. Phase 5 plan only required adding Key Files row, not updating the tree. |
-| `skills/skippy-dev/scripts/skippy-update.sh` | 10 | References `.versions` file | Info | Expected -- Phase 8 will rewrite this script to use `upstreams/*/upstream.json`. Script self-heals by reinitializing `.versions` if missing. |
-| `skills/skippy-dev/references/gsd-dependency-map.md` | 23 | Documents `.versions` usage | Info | Documenting v1.0 state -- will need update when Phase 8 rewrites the update script. |
+| `skills/skippy/scripts/skippy-update.sh` | 10 | References `.versions` file | Info | Expected -- Phase 8 will rewrite this script to use `upstreams/*/upstream.json`. Script self-heals by reinitializing `.versions` if missing. |
+| `skills/skippy/references/gsd-dependency-map.md` | 23 | Documents `.versions` usage | Info | Documenting v1.0 state -- will need update when Phase 8 rewrites the update script. |
 
 ### Human Verification Required
 

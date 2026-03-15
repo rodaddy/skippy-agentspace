@@ -22,7 +22,7 @@ re_verification: false
 | 1 | install.sh --core installs only the core skill | VERIFIED | install.sh line 222-225: `INSTALL_CORE` flag triggers `install_skill "core"` only. --help shows --core mode. |
 | 2 | install.sh with multiple positional args installs multiple skills | VERIFIED | install.sh line 226-240: `SKILL_NAMES` array iterated with per-skill error tracking. Status table confirms multi-arg support. |
 | 3 | install.sh with no args shows status table with [installed]/[available] badges | VERIFIED | Ran `install.sh` with no args -- output shows 12 skills with `[installed]` badges, correct descriptions, formatted columns. |
-| 4 | At least 10 skills exist under skills/ with valid SKILL.md files under 150 lines | VERIFIED | 12 SKILL.md files found. Max line count: 117 (core). All under 150. 10 new + 2 existing (core, skippy-dev). |
+| 4 | At least 10 skills exist under skills/ with valid SKILL.md files under 150 lines | VERIFIED | 12 SKILL.md files found. Max line count: 117 (core). All under 150. 10 new + 2 existing (core, skippy). |
 | 5 | No private content (IPs, domains, credentials) in any migrated skill | VERIFIED | `grep -rl '10\.71\.\|rodaddy' skills/` returned empty. deploy-service uses sanitized placeholders (`<your-server-ip>`, `<your-domain>`). |
 | 6 | INDEX.md lists all skills grouped by category with install status | VERIFIED | INDEX.md has 4 category sections (## Core, ## Workflow, ## Utility, ## Domain) with 12 skills. `index-sync.sh --check` passes. |
 | 7 | marketplace.json has plugin entries for all skills | VERIFIED | `jq '.plugins \| length'` returns 12. All 12 skill names present and paths point to `./skills/<name>`. |
@@ -36,9 +36,9 @@ re_verification: false
 | `tools/install.sh` | Selective install with --core, multi-positional, --all, no-arg status | VERIFIED | 247 lines. SKILL_NAMES array, INSTALL_CORE flag, show_status(), continue-on-error batch. |
 | `tools/uninstall.sh` | Selective uninstall with multi-positional args | VERIFIED | 163 lines. SKILL_NAMES array, UNINSTALL_ALL flag, batch error handling. |
 | `tools/index-sync.sh` | Category-grouped INDEX.md generation with install badges | VERIFIED | 207 lines. Extracts category from SKILL.md frontmatter, groups by core/workflow/utility/domain, checks symlinks for badges. |
-| `skills/skippy-dev/commands/migrate.md` | AI-driven skill migration command | VERIFIED | 156 lines. 5-step process: scan, rank, dry-run, migrate, update. Follows update.md AI command pattern. |
+| `skills/skippy/commands/migrate.md` | AI-driven skill migration command | VERIFIED | 156 lines. 5-step process: scan, rank, dry-run, migrate, update. Follows update.md AI command pattern. |
 | `skills/core/SKILL.md` | Core skill with category: core | VERIFIED | 117 lines. `category: core` at line 8 in metadata block. |
-| `skills/skippy-dev/SKILL.md` | Skippy-dev with category: workflow | VERIFIED | 99 lines. `category: workflow` at line 8. |
+| `skills/skippy/SKILL.md` | Skippy-dev with category: workflow | VERIFIED | 99 lines. `category: workflow` at line 8. |
 | `skills/vaultwarden/SKILL.md` | Migrated utility skill | VERIFIED | 92 lines. Substantive content -- MCP access patterns, gotchas, references. |
 | `skills/add-todo/SKILL.md` | Migrated workflow skill with references/ | VERIFIED | 108 lines. Overflow in references/bulk-extraction.md and references/examples.md. |
 | `skills/check-todos/SKILL.md` | Migrated workflow skill | VERIFIED | 90 lines. references/ directory present. |
@@ -91,7 +91,7 @@ No orphaned requirements -- all 4 SKIL-* requirements mapped to Phase 9 in REQUI
 
 ### 2. Selective Install Regression
 
-**Test:** Run `bash tools/install.sh --core` then `bash tools/install.sh` to verify only core shows [installed]. Then `bash tools/install.sh skippy-dev excalidraw` and verify 3 total installed.
+**Test:** Run `bash tools/install.sh --core` then `bash tools/install.sh` to verify only core shows [installed]. Then `bash tools/install.sh skippy excalidraw` and verify 3 total installed.
 **Expected:** Selective install works correctly, status table reflects reality.
 **Why human:** Stateful test requiring sequential operations on real filesystem.
 
