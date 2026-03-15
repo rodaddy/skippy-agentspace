@@ -12,7 +12,7 @@ provides:
   - Standalone state-tracking.md with STATE.md lifecycle spec
   - Standalone plan-structure.md with markdown+YAML task format
   - Standalone checkpoints.md with 3 checkpoint types and golden rule
-affects: [13-02, 13-03, skippy-dev-SKILL.md]
+affects: [13-02, 13-03, skippy-SKILL.md]
 
 tech-stack:
   added: []
@@ -20,10 +20,10 @@ tech-stack:
 
 key-files:
   created:
-    - skills/skippy-dev/references/phased-execution.md
-    - skills/skippy-dev/references/state-tracking.md
-    - skills/skippy-dev/references/plan-structure.md
-    - skills/skippy-dev/references/checkpoints.md
+    - skills/skippy/references/phased-execution.md
+    - skills/skippy/references/state-tracking.md
+    - skills/skippy/references/plan-structure.md
+    - skills/skippy/references/checkpoints.md
   modified: []
 
 key-decisions:
@@ -69,10 +69,10 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `skills/skippy-dev/references/phased-execution.md` - Standalone protocol for phased plan execution with wave-based parallelism
-- `skills/skippy-dev/references/state-tracking.md` - STATE.md lifecycle, format spec, size management
-- `skills/skippy-dev/references/plan-structure.md` - PLAN.md format spec with canonical markdown+YAML task format
-- `skills/skippy-dev/references/checkpoints.md` - Checkpoint protocol for human-in-the-loop verification
+- `skills/skippy/references/phased-execution.md` - Standalone protocol for phased plan execution with wave-based parallelism
+- `skills/skippy/references/state-tracking.md` - STATE.md lifecycle, format spec, size management
+- `skills/skippy/references/plan-structure.md` - PLAN.md format spec with canonical markdown+YAML task format
+- `skills/skippy/references/checkpoints.md` - Checkpoint protocol for human-in-the-loop verification
 
 ## Decisions Made
 

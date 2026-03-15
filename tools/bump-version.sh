@@ -10,7 +10,7 @@ set -euo pipefail
 # Targets:
 #   - .claude-plugin/marketplace.json  (13 version fields -- 1 metadata + 12 plugins)
 #   - skills/*/SKILL.md                (12 files -- YAML frontmatter version)
-#   - skills/skippy-dev/commands/migrate.md  (1 template instruction)
+#   - skills/skippy/commands/migrate.md  (1 template instruction)
 #
 # Exit codes:
 #   0 - All locations updated (or dry run completed)
@@ -127,7 +127,7 @@ for skill_md in "$REPO_ROOT"/skills/*/SKILL.md; do
     [[ -f "$skill_md" ]] && FILES+=("$skill_md")
 done
 
-MIGRATE_MD="$REPO_ROOT/skills/skippy-dev/commands/migrate.md"
+MIGRATE_MD="$REPO_ROOT/skills/skippy/commands/migrate.md"
 [[ -f "$MIGRATE_MD" ]] && FILES+=("$MIGRATE_MD")
 
 # ---------------------------------------------------------------------------

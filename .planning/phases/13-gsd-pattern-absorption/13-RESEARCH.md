@@ -88,7 +88,7 @@ cd tools/lib && bun add gray-matter
 
 ### Recommended File Structure
 ```
-skills/skippy-dev/
+skills/skippy/
   references/
     phased-execution.md     # NEW -- absorbs execute-phase.md + wave parallelism
     state-tracking.md        # NEW -- absorbs STATE.md lifecycle + progress tracking
@@ -257,8 +257,8 @@ plan: 01
 wave: 1
 autonomous: true
 files_modified:
-  - skills/skippy-dev/references/phased-execution.md
-  - skills/skippy-dev/references/state-tracking.md
+  - skills/skippy/references/phased-execution.md
+  - skills/skippy/references/state-tracking.md
 requirements:
   - ABSORB-01
   - ABSORB-02
@@ -279,13 +279,13 @@ Create phased-execution.md and state-tracking.md reference docs.
 - state-consistency.md (complement, don't overlap)
 
 ## Task 1: Create phased-execution.md
-- files: `skills/skippy-dev/references/phased-execution.md`
+- files: `skills/skippy/references/phased-execution.md`
 - action: Absorb execute-phase.md wave discovery, agent spawning, result aggregation, failure handling into ~120-line reference doc
 - verify: File exists, follows established reference doc format, no GSD dependency language
 - done: phased-execution.md covers plan -> execute -> verify cycle with wave parallelism
 
 ## Task 2: Create state-tracking.md
-- files: `skills/skippy-dev/references/state-tracking.md`
+- files: `skills/skippy/references/state-tracking.md`
 - action: Absorb STATE.md lifecycle, progress tracking, position markers, session handoff from state.md template and execute-plan.md state update steps
 - verify: File exists, follows established reference doc format, no GSD dependency language
 - done: state-tracking.md covers STATE.md creation, reading, writing, and size constraints
@@ -437,18 +437,18 @@ Detailed mapping of what goes where from each GSD source file.
 
 | File | Occurrences | Type of Change |
 |------|-------------|----------------|
-| `skills/skippy-dev/SKILL.md` | 3 | "GSD's planning" -> "planning workflows"; "GSD agents" -> "agents"; gsd-dependency-map reference removed |
-| `skills/skippy-dev/references/task-anatomy.md` | 3 | "GSD plan" -> "plan"; "gsd-planner" -> "planner" -- then DELETE (merges into plan-structure.md) |
-| `skills/skippy-dev/references/gsd-dependency-map.md` | 30+ | DELETE entire file (content absorbed into 4 new docs) |
-| `skills/skippy-dev/references/state-consistency.md` | 2 | "GSD maintains state" -> "State is maintained"; remove `/gsd:remove-phase` reference |
-| `skills/skippy-dev/references/reconciliation.md` | 2 | "After `/gsd:execute-phase`" -> "After phase execution"; "Before `/gsd:verify-work`" -> "Before verification" |
-| `skills/skippy-dev/references/model-routing.md` | 7 | "GSD" -> "workflow framework" or remove; "gsd-executor" -> "executor" |
-| `skills/skippy-dev/references/context-brackets.md` | 2 | "GSD agents" -> "Executor agents"; remove "gsd-executor" |
-| `skills/skippy-dev/references/plan-boundaries.md` | 3 | "GSD plan" -> "plan"; "gsd-planner" -> "planner"; "gsd-executor" -> "executor" |
-| `skills/skippy-dev/references/verification-loops.md` | 6 | "GSD" source reference -> "phased execution framework"; "gsd:verify-work" -> "verify-work" |
-| `skills/skippy-dev/references/session-persistence.md` | 8 | "GSD" -> "phased execution" or remove; keep source attribution footer |
-| `skills/skippy-dev/references/structured-deliberation.md` | 5 | "GSD plan-check" -> "plan-check"; remove GSD from source references |
-| `skills/skippy-dev/commands/reconcile.md` | 2 (description + step 3) | "GSD phase" -> "phase"; XML task extraction -> markdown task extraction |
+| `skills/skippy/SKILL.md` | 3 | "GSD's planning" -> "planning workflows"; "GSD agents" -> "agents"; gsd-dependency-map reference removed |
+| `skills/skippy/references/task-anatomy.md` | 3 | "GSD plan" -> "plan"; "gsd-planner" -> "planner" -- then DELETE (merges into plan-structure.md) |
+| `skills/skippy/references/gsd-dependency-map.md` | 30+ | DELETE entire file (content absorbed into 4 new docs) |
+| `skills/skippy/references/state-consistency.md` | 2 | "GSD maintains state" -> "State is maintained"; remove `/gsd:remove-phase` reference |
+| `skills/skippy/references/reconciliation.md` | 2 | "After `/gsd:execute-phase`" -> "After phase execution"; "Before `/gsd:verify-work`" -> "Before verification" |
+| `skills/skippy/references/model-routing.md` | 7 | "GSD" -> "workflow framework" or remove; "gsd-executor" -> "executor" |
+| `skills/skippy/references/context-brackets.md` | 2 | "GSD agents" -> "Executor agents"; remove "gsd-executor" |
+| `skills/skippy/references/plan-boundaries.md` | 3 | "GSD plan" -> "plan"; "gsd-planner" -> "planner"; "gsd-executor" -> "executor" |
+| `skills/skippy/references/verification-loops.md` | 6 | "GSD" source reference -> "phased execution framework"; "gsd:verify-work" -> "verify-work" |
+| `skills/skippy/references/session-persistence.md` | 8 | "GSD" -> "phased execution" or remove; keep source attribution footer |
+| `skills/skippy/references/structured-deliberation.md` | 5 | "GSD plan-check" -> "plan-check"; remove GSD from source references |
+| `skills/skippy/commands/reconcile.md` | 2 (description + step 3) | "GSD phase" -> "phase"; XML task extraction -> markdown task extraction |
 | `.planning/PROJECT.md` | 1 | Stack constraint update (add bun/TypeScript allowance) |
 
 ### Files NOT Requiring Changes (Exclusions)
@@ -471,13 +471,13 @@ Detailed mapping of what goes where from each GSD source file.
 ### Phase Requirements -> Test Map
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
-| ABSORB-01 | phased-execution.md exists with correct content | smoke | `test -f skills/skippy-dev/references/phased-execution.md && wc -l < skills/skippy-dev/references/phased-execution.md` | Wave 0 |
-| ABSORB-02 | state-tracking.md exists with correct content | smoke | `test -f skills/skippy-dev/references/state-tracking.md && wc -l < skills/skippy-dev/references/state-tracking.md` | Wave 0 |
-| ABSORB-03 | plan-structure.md exists with task format spec | smoke | `test -f skills/skippy-dev/references/plan-structure.md && grep -q "## Task" skills/skippy-dev/references/plan-structure.md` | Wave 0 |
-| ABSORB-04 | checkpoints.md exists with checkpoint types | smoke | `test -f skills/skippy-dev/references/checkpoints.md && grep -q "human-verify" skills/skippy-dev/references/checkpoints.md` | Wave 0 |
-| ABSORB-05 | verification-loops.md updated (no GSD dependency language) | grep | `! grep -q "gsd-executor\|gsd:verify-work" skills/skippy-dev/references/verification-loops.md` | Existing file |
+| ABSORB-01 | phased-execution.md exists with correct content | smoke | `test -f skills/skippy/references/phased-execution.md && wc -l < skills/skippy/references/phased-execution.md` | Wave 0 |
+| ABSORB-02 | state-tracking.md exists with correct content | smoke | `test -f skills/skippy/references/state-tracking.md && wc -l < skills/skippy/references/state-tracking.md` | Wave 0 |
+| ABSORB-03 | plan-structure.md exists with task format spec | smoke | `test -f skills/skippy/references/plan-structure.md && grep -q "## Task" skills/skippy/references/plan-structure.md` | Wave 0 |
+| ABSORB-04 | checkpoints.md exists with checkpoint types | smoke | `test -f skills/skippy/references/checkpoints.md && grep -q "human-verify" skills/skippy/references/checkpoints.md` | Wave 0 |
+| ABSORB-05 | verification-loops.md updated (no GSD dependency language) | grep | `! grep -q "gsd-executor\|gsd:verify-work" skills/skippy/references/verification-loops.md` | Existing file |
 | ABSORB-06 | No GSD dependency language in distributed content | grep | `! grep -rn "requires GSD\|gsd-tools\|gsd-executor\|gsd-verifier\|gsd-planner" skills/ --include="*.md"` | N/A |
-| ABSORB-07 | reconcile.md parses markdown task format | smoke | `grep -q "## Task" skills/skippy-dev/commands/reconcile.md && ! grep -q "<task" skills/skippy-dev/commands/reconcile.md` | Existing file |
+| ABSORB-07 | reconcile.md parses markdown task format | smoke | `grep -q "## Task" skills/skippy/commands/reconcile.md && ! grep -q "<task" skills/skippy/commands/reconcile.md` | Existing file |
 
 ### Sampling Rate
 - **Per task commit:** Quick grep for GSD dependency language

@@ -11,7 +11,7 @@ requires:
   - phase: 14-audit-swarm
     provides: /skippy:review command file
 provides:
-  - verify.sh checks all 6 skippy-dev commands including review
+  - verify.sh checks all 6 skippy commands including review
   - Full verification pass confirming all v1.2 changes are consistent
 affects: []
 
@@ -39,7 +39,7 @@ completed: 2026-03-08
 
 # Phase 16 Plan 02: Verification & Final Green-Light Summary
 
-**verify.sh fixed to check all 6 skippy-dev commands (adding review), full verification suite passes with zero failures and 37/37 bats tests green**
+**verify.sh fixed to check all 6 skippy commands (adding review), full verification suite passes with zero failures and 37/37 bats tests green**
 
 ## Performance
 

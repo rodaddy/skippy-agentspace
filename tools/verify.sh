@@ -202,8 +202,8 @@ echo ""
 
 skippy_section "Commands"
 
-# Check skippy-dev skill accessibility
-skippy_dev_dir="$SKILLS_DIR/skippy-dev"
+# Check skippy skill accessibility
+skippy_dev_dir="$SKILLS_DIR/skippy"
 if [ -d "$skippy_dev_dir" ]; then
     # Check each expected command file
     for cmd_name in reconcile update cleanup migrate upgrade review; do
@@ -211,19 +211,19 @@ if [ -d "$skippy_dev_dir" ]; then
         if [ -f "$cmd_file" ]; then
             skippy_pass "command: /skippy:${cmd_name}"
         else
-            skippy_warn "command file missing: skippy-dev/commands/${cmd_name}.md"
+            skippy_warn "command file missing: skippy/commands/${cmd_name}.md"
         fi
     done
 
-    # Check if skippy-dev is installed (accessible via symlink)
-    if [ -L "$HOME/.claude/skills/skippy-dev" ] || [ -L "$HOME/.claude/commands/skippy-dev" ]; then
-        skippy_pass "skippy-dev skill installed (commands accessible)"
+    # Check if skippy is installed (accessible via symlink)
+    if [ -L "$HOME/.claude/skills/skippy" ] || [ -L "$HOME/.claude/commands/skippy" ]; then
+        skippy_pass "skippy skill installed (commands accessible)"
     else
-        skippy_warn "skippy-dev skill not installed -- commands won't appear in Claude Code"
-        skippy_suggest "Run: tools/install.sh skippy-dev"
+        skippy_warn "skippy skill not installed -- commands won't appear in Claude Code"
+        skippy_suggest "Run: tools/install.sh skippy"
     fi
 else
-    skippy_warn "skippy-dev skill directory not found"
+    skippy_warn "skippy skill directory not found"
 fi
 
 echo ""

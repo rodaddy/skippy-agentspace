@@ -9,28 +9,28 @@
     {
       "id": "pre-execution-gate",
       "source": "skills/ralplan/SKILL.md",
-      "target": "skills/skippy-dev/references/pre-execution-gate.md",
+      "target": "skills/skippy/references/pre-execution-gate.md",
       "description": "Vague prompt interception with concrete signal detection",
       "date": "2026-03-07"
     },
     {
       "id": "ambiguity-scoring",
       "source": "skills/deep-interview/SKILL.md",
-      "target": "skills/skippy-dev/references/ambiguity-scoring.md",
+      "target": "skills/skippy/references/ambiguity-scoring.md",
       "description": "Weighted clarity dimensions with challenge agent modes",
       "date": "2026-03-07"
     },
     {
       "id": "compaction-resilience",
       "source": "src/hooks/pre-compact/index.ts",
-      "target": "skills/skippy-dev/references/compaction-resilience.md",
+      "target": "skills/skippy/references/compaction-resilience.md",
       "description": "Checkpoint structure for mid-session compaction survival",
       "date": "2026-03-07"
     },
     {
       "id": "parallel-file-ownership",
       "source": "src/features/task-decomposer/index.ts",
-      "target": "skills/skippy-dev/references/parallel-file-ownership.md",
+      "target": "skills/skippy/references/parallel-file-ownership.md",
       "description": "File ownership patterns for parallel execution safety",
       "date": "2026-03-07"
     }

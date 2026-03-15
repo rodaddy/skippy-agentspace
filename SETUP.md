@@ -59,7 +59,7 @@ bash tools/install.sh --all
 Or install individual skills by name:
 
 ```bash
-bash tools/install.sh skippy-dev
+bash tools/install.sh skippy
 bash tools/install.sh fabric excalidraw
 ```
 

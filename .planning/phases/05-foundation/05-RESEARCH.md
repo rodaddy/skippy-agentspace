@@ -89,7 +89,7 @@ skippy-agentspace/
     paul/
       upstream.json         # PAUL tracking metadata
   skills/
-    skippy-dev/
+    skippy/
       SKILL.md
       .versions             # REMOVED (replaced by upstreams/)
       commands/
@@ -203,7 +203,7 @@ skippy-agentspace/
 
 **How to avoid:** Phase 5 establishes the structure. Phase 8 rewrites the consumer. The CONTEXT.md deferred list explicitly calls this out.
 
-**Warning signs:** Any plan task that modifies files in `skills/skippy-dev/scripts/`.
+**Warning signs:** Any plan task that modifies files in `skills/skippy/scripts/`.
 
 ### Pitfall 4: Overly Complex .gitignore Additions
 
@@ -249,14 +249,14 @@ skippy-agentspace/
     "plan-boundaries",
     "state-consistency"
   ],
-  "notes": "5 ideas cherry-picked as reference docs in skills/skippy-dev/references/"
+  "notes": "5 ideas cherry-picked as reference docs in skills/skippy/references/"
 }
 ```
 
 ### Existing .versions Content (being replaced)
 
 ```bash
-# Current content of skills/skippy-dev/.versions
+# Current content of skills/skippy/.versions
 gsd_hash=none
 paul_hash=none
 last_check=never
@@ -312,7 +312,7 @@ secrets/
 | Implicit public/private understanding | Documented convention in CONVENTIONS.md | Phase 5 (this phase) | All subsequent phases know where content goes |
 
 **Deprecated/outdated:**
-- `skills/skippy-dev/.versions`: Replaced by `upstreams/*/upstream.json`. Remove after upstreams are created.
+- `skills/skippy/.versions`: Replaced by `upstreams/*/upstream.json`. Remove after upstreams are created.
 
 ## Open Questions
 
@@ -340,7 +340,7 @@ secrets/
 | Framework | bash + manual verification (no test framework -- this is a convention/docs phase) |
 | Config file | none |
 | Quick run command | `ls upstreams/*/upstream.json && jq . upstreams/*/upstream.json` |
-| Full suite command | `jq . upstreams/gsd/upstream.json && jq . upstreams/paul/upstream.json && test ! -f skills/skippy-dev/.versions && test -f CONVENTIONS.md && echo "PASS"` |
+| Full suite command | `jq . upstreams/gsd/upstream.json && jq . upstreams/paul/upstream.json && test ! -f skills/skippy/.versions && test -f CONVENTIONS.md && echo "PASS"` |
 
 ### Phase Requirements -> Test Map
 
@@ -349,7 +349,7 @@ secrets/
 | FOUN-01 | Public/private boundary documented | manual | `test -f CONVENTIONS.md && grep -q "Content Classification" CONVENTIONS.md` | No -- Wave 0 |
 | FOUN-02 | Upstream registry exists with gsd + paul | smoke | `ls upstreams/gsd/upstream.json upstreams/paul/upstream.json` | No -- Wave 0 |
 | FOUN-03 | New upstream = new directory only | smoke | `mkdir -p upstreams/test-upstream && cp upstreams/gsd/upstream.json upstreams/test-upstream/ && ls upstreams/test-upstream/upstream.json && rm -rf upstreams/test-upstream` | No -- Wave 0 |
-| FOUN-04 | .versions data migrated, .versions removed | smoke | `test ! -f skills/skippy-dev/.versions && jq -e '.last_checked_sha' upstreams/gsd/upstream.json` | No -- Wave 0 |
+| FOUN-04 | .versions data migrated, .versions removed | smoke | `test ! -f skills/skippy/.versions && jq -e '.last_checked_sha' upstreams/gsd/upstream.json` | No -- Wave 0 |
 
 ### Sampling Rate
 
@@ -363,7 +363,7 @@ secrets/
 - [ ] `upstreams/paul/upstream.json` -- covers FOUN-02, FOUN-04
 - [ ] `CONVENTIONS.md` -- covers FOUN-01
 - [ ] `.gitignore` updates -- covers FOUN-01
-- [ ] Removal of `skills/skippy-dev/.versions` -- covers FOUN-04
+- [ ] Removal of `skills/skippy/.versions` -- covers FOUN-04
 
 *(All gaps are the deliverables themselves -- this phase creates net-new files, not code that needs testing infrastructure.)*
 
@@ -371,8 +371,8 @@ secrets/
 
 ### Primary (HIGH confidence)
 
-- `skills/skippy-dev/.versions` -- direct inspection of current tracking file (3 lines, all "none/never")
-- `skills/skippy-dev/scripts/skippy-update.sh` -- direct inspection of script that reads .versions (122 lines)
+- `skills/skippy/.versions` -- direct inspection of current tracking file (3 lines, all "none/never")
+- `skills/skippy/scripts/skippy-update.sh` -- direct inspection of script that reads .versions (122 lines)
 - `.claude-plugin/marketplace.json` -- JSON format precedent in this repo
 - `.planning/phases/05-foundation/05-CONTEXT.md` -- locked user decisions
 - `.planning/research/STACK.md` -- original stack recommendations (overridden by CONTEXT.md for format choice)

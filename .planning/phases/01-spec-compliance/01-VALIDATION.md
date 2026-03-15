@@ -39,9 +39,9 @@ created: 2026-03-07
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 01-01-01 | 01 | 1 | SPEC-01 | smoke | `grep -rn '/Users/\|/Volumes/' skills/ \| grep -v '.planning/'` | N/A -- inline | ⬜ pending |
-| 01-01-02 | 01 | 1 | SPEC-02 | smoke | `head -20 skills/skippy-dev/SKILL.md \| grep -c 'triggers:'` (expect 0) | N/A -- inline | ⬜ pending |
-| 01-01-03 | 01 | 1 | SPEC-03 | smoke | `test -d skills/skippy-dev/scripts/ && ! test -d skills/skippy-dev/bin/ && ! grep -rn 'bin/skippy' skills/` | N/A -- inline | ⬜ pending |
-| 01-01-04 | 01 | 1 | STRU-01 | smoke | `wc -l skills/skippy-dev/SKILL.md` (expect < 150) + `ls skills/skippy-dev/references/*.md \| wc -l` (expect 5) + `test -f INDEX.md` | N/A -- inline | ⬜ pending |
+| 01-01-02 | 01 | 1 | SPEC-02 | smoke | `head -20 skills/skippy/SKILL.md \| grep -c 'triggers:'` (expect 0) | N/A -- inline | ⬜ pending |
+| 01-01-03 | 01 | 1 | SPEC-03 | smoke | `test -d skills/skippy/scripts/ && ! test -d skills/skippy/bin/ && ! grep -rn 'bin/skippy' skills/` | N/A -- inline | ⬜ pending |
+| 01-01-04 | 01 | 1 | STRU-01 | smoke | `wc -l skills/skippy/SKILL.md` (expect < 150) + `ls skills/skippy/references/*.md \| wc -l` (expect 5) + `test -f INDEX.md` | N/A -- inline | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 

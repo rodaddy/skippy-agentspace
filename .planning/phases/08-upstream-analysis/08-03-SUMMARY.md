@@ -22,14 +22,14 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - skills/skippy-dev/commands/update.md
-    - skills/skippy-dev/SKILL.md
-    - skills/skippy-dev/references/gsd-dependency-map.md
+    - skills/skippy/commands/update.md
+    - skills/skippy/SKILL.md
+    - skills/skippy/references/gsd-dependency-map.md
     - INDEX.md
     - CLAUDE.md
     - CONVENTIONS.md
   deleted:
-    - skills/skippy-dev/scripts/skippy-update.sh
+    - skills/skippy/scripts/skippy-update.sh
 
 key-decisions:
   - "AI-driven intent description over shell script wrapper -- Claude adapts to upstream count and change patterns conversationally"
@@ -70,13 +70,13 @@ Each task was committed atomically:
 2. **Task 2: Update SKILL.md, INDEX.md, and CLAUDE.md integration points** - `bd83883` (chore)
 
 ## Files Created/Modified
-- `skills/skippy-dev/commands/update.md` - Rewritten as AI-driven command (76 lines) with generic upstream iteration
-- `skills/skippy-dev/SKILL.md` - Expanded to 10 enhancements, updated command descriptions, added maintenance row
-- `skills/skippy-dev/references/gsd-dependency-map.md` - Updated /skippy:update dependency description
+- `skills/skippy/commands/update.md` - Rewritten as AI-driven command (76 lines) with generic upstream iteration
+- `skills/skippy/SKILL.md` - Expanded to 10 enhancements, updated command descriptions, added maintenance row
+- `skills/skippy/references/gsd-dependency-map.md` - Updated /skippy:update dependency description
 - `INDEX.md` - References column expanded to list all 10 reference docs
 - `CLAUDE.md` - File tree updated (no .versions, scripts/ reflects only skippy-cleanup.sh), command table updated
 - `CONVENTIONS.md` - Updated examples and Phase 8 tense correction
-- `skills/skippy-dev/scripts/skippy-update.sh` - DELETED (replaced by AI-driven update.md)
+- `skills/skippy/scripts/skippy-update.sh` - DELETED (replaced by AI-driven update.md)
 
 ## Decisions Made
 - AI-driven intent description over shell script wrapper -- Claude adapts to upstream count and change patterns conversationally, which a shell script cannot
@@ -98,8 +98,8 @@ Each task was committed atomically:
 - **Found during:** Task 1
 - **Issue:** gsd-dependency-map.md still referenced `.versions` in the /skippy:update row
 - **Fix:** Changed to reference `upstreams/*/upstream.json`
-- **Files modified:** skills/skippy-dev/references/gsd-dependency-map.md
-- **Verification:** grep confirms no .versions references in skills/skippy-dev/
+- **Files modified:** skills/skippy/references/gsd-dependency-map.md
+- **Verification:** grep confirms no .versions references in skills/skippy/
 - **Committed in:** b063ee4 (Task 1 commit)
 
 ---

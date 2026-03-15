@@ -8,9 +8,9 @@
 
 Phase 6 packages PAI's essential operating layer -- personas, LAWs, style rules, and project templates -- as a portable `core/` skill following the established slim SKILL.md + deep references pattern. The source material already exists across `~/.config/pai/Skills/CORE/`, `~/.claude/docs/laws.md`, and `~/.config/pai-private/rules/`. This phase is primarily an extraction and restructuring task, not a creation task.
 
-The key challenge is fitting the content into the established patterns: SKILL.md must stay under 150 lines, individual files under 750 lines, and the structure must use the same `references/` deep-doc pattern proven in `skills/skippy-dev/`. The existing persona files (112-169 lines each) are already well-sized. The LAWs doc (211 lines) needs splitting into 15 individual files. Style rules are currently scattered across private rules and need consolidation into a public-safe format.
+The key challenge is fitting the content into the established patterns: SKILL.md must stay under 150 lines, individual files under 750 lines, and the structure must use the same `references/` deep-doc pattern proven in `skills/skippy/`. The existing persona files (112-169 lines each) are already well-sized. The LAWs doc (211 lines) needs splitting into 15 individual files. Style rules are currently scattered across private rules and need consolidation into a public-safe format.
 
-**Primary recommendation:** Create `core/` as a peer to `skills/skippy-dev/` in the `skills/` directory, following the exact same SKILL.md + references pattern. Extract personas verbatim, split LAWs into individual files with enforcement metadata, create a public-safe rules template, and build an opinionated CLAUDE.md template with placeholder syntax.
+**Primary recommendation:** Create `core/` as a peer to `skills/skippy/` in the `skills/` directory, following the exact same SKILL.md + references pattern. Extract personas verbatim, split LAWs into individual files with enforcement metadata, create a public-safe rules template, and build an opinionated CLAUDE.md template with placeholder syntax.
 
 <user_constraints>
 ## User Constraints (from CONTEXT.md)
@@ -45,7 +45,7 @@ The key challenge is fitting the content into the established patterns: SKILL.md
 | CORE-03 | Style rules and communication conventions packaged | Source at `~/.config/pai-private/rules/style/communication-style.md` plus stack preferences. Create public-safe versions in `core/references/rules/`. Private content stays external |
 | CORE-04 | CLAUDE.md template available for new projects | Build opinionated ~80-100 line template at `core/references/templates/claude-md.template`. Includes placeholder defaults for stack, persona, LAW refs |
 | CORE-05 | All 10 claude commands packaged for portable install | **DEFERRED** -- per CONTEXT.md decision. Do NOT plan for this requirement |
-| CORE-06 | Core follows slim SKILL.md + deep references pattern | `core/SKILL.md` under 150 lines with topic sections pointing to `references/` subdirectories. Proven pattern from `skills/skippy-dev/SKILL.md` (87 lines) |
+| CORE-06 | Core follows slim SKILL.md + deep references pattern | `core/SKILL.md` under 150 lines with topic sections pointing to `references/` subdirectories. Proven pattern from `skills/skippy/SKILL.md` (87 lines) |
 </phase_requirements>
 
 ## Standard Stack
@@ -111,7 +111,7 @@ skills/
 ### Pattern 1: Slim SKILL.md + Deep References
 **What:** Entry-point file stays under 150 lines with topic sections that point to subdirectories. Agents do a second lookup only when relevant.
 **When to use:** Every skill in the agentspace repo.
-**Proven by:** `skills/skippy-dev/SKILL.md` (87 lines, 5 reference docs, 3 commands).
+**Proven by:** `skills/skippy/SKILL.md` (87 lines, 5 reference docs, 3 commands).
 
 ```markdown
 # Example SKILL.md structure (core)
@@ -225,7 +225,7 @@ Use HTML comments for customization instructions (invisible in rendered markdown
 | Persona structure | New format from scratch | Extract from existing `~/.config/pai/Skills/CORE/personas/` | 4 well-tested personas already exist (563 total lines) |
 | LAW definitions | Rewrite all LAWs | Extract from `~/.claude/docs/laws.md` | 211 lines of battle-tested LAW definitions |
 | Style conventions | Invent new style rules | Extract from `~/.config/pai-private/rules/style/communication-style.md` | Existing rules are actively enforced and working |
-| SKILL.md format | New entry-point pattern | Follow `skills/skippy-dev/SKILL.md` exactly | Proven pattern, 87 lines, works with plugin system |
+| SKILL.md format | New entry-point pattern | Follow `skills/skippy/SKILL.md` exactly | Proven pattern, 87 lines, works with plugin system |
 | INDEX.md registration | Manual INDEX.md editing | Run `tools/index-sync.sh --generate` | Existing tool handles this correctly |
 
 **Key insight:** This phase is 90% extraction/restructuring and 10% new content (user.md.template and the CLAUDE.md template). Every source file already exists and is battle-tested.
@@ -470,7 +470,7 @@ macOS system bash is v3.2.57 (2007). Homebrew bash is v5.3.9. The `env` shebang 
 - `~/.claude/docs/laws.md` -- 15 LAWs with enforcement details (211 lines), direct source material
 - `~/.config/pai-private/rules/style/communication-style.md` -- style conventions (29 lines), direct source material
 - `~/.config/pai-private/rules/stack/` -- python-preferences.md (28 lines) + typescript-preferences.md (33 lines)
-- `skills/skippy-dev/SKILL.md` -- proven slim SKILL.md pattern (87 lines), architectural template
+- `skills/skippy/SKILL.md` -- proven slim SKILL.md pattern (87 lines), architectural template
 - `CONVENTIONS.md` -- public/private boundary documentation, content classification rules
 
 ### Secondary (MEDIUM confidence)
@@ -484,7 +484,7 @@ macOS system bash is v3.2.57 (2007). Homebrew bash is v5.3.9. The `env` shebang 
 
 **Confidence breakdown:**
 - Standard stack: HIGH -- markdown-only, no libraries, no dependencies
-- Architecture: HIGH -- pattern proven by skippy-dev, source material fully audited
+- Architecture: HIGH -- pattern proven by skippy, source material fully audited
 - Pitfalls: HIGH -- based on direct examination of source files and known constraints
 - Persona extraction: HIGH -- all 4 persona files read in full, content well-understood
 - LAW extraction: HIGH -- full laws.md read, all 15 LAWs with enforcement status documented

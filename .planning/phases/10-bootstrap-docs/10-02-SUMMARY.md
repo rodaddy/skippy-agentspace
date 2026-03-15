@@ -27,7 +27,7 @@ key-files:
     - INSTALL.md
     - UPGRADE.md
     - README.md
-    - skills/skippy-dev/commands/upgrade.md
+    - skills/skippy/commands/upgrade.md
   modified: []
 
 key-decisions:
@@ -77,7 +77,7 @@ Each task was committed atomically:
 - `INSTALL.md` - Skill management: plugin install, manual install, status checking, uninstalling (89 lines)
 - `UPGRADE.md` - Dual upgrade paths: manual steps and AI-assisted /skippy:upgrade (70 lines)
 - `README.md` - Project overview with quick start, doc routing table, skill summary (52 lines)
-- `skills/skippy-dev/commands/upgrade.md` - AI command: pre-snapshot, pull, reinstall, verify, conflict handling (80 lines)
+- `skills/skippy/commands/upgrade.md` - AI command: pre-snapshot, pull, reinstall, verify, conflict handling (80 lines)
 
 ## Decisions Made
 - README.md kept thin as a routing layer -- links to SETUP/INSTALL/UPGRADE for detail rather than duplicating CLAUDE.md content
@@ -107,7 +107,7 @@ All files and commits verified:
 - INSTALL.md: FOUND
 - UPGRADE.md: FOUND
 - README.md: FOUND
-- skills/skippy-dev/commands/upgrade.md: FOUND
+- skills/skippy/commands/upgrade.md: FOUND
 - 10-02-SUMMARY.md: FOUND
 - Commit 6f8adf1: FOUND
 - Commit e1fdd47: FOUND

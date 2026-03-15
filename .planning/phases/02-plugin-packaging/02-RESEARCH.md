@@ -8,7 +8,7 @@
 
 The Claude Code plugin system is well-documented and stable as of v2.1.71. The system uses two files for distribution: `marketplace.json` (in `.claude-plugin/`) catalogs available plugins, and `plugin.json` (also in `.claude-plugin/`) describes a single plugin's metadata. Crucially, `plugin.json` is OPTIONAL -- when a marketplace entry sets `strict: false`, the marketplace entry itself becomes the complete plugin definition, and no `plugin.json` is needed. This is the pattern Anthropic uses in their own `anthropics/skills` repo.
 
-For skippy-agentspace, the cleanest approach is the "single-repo marketplace" pattern: the repo IS the marketplace AND the plugin. `marketplace.json` lives at `.claude-plugin/marketplace.json`, defines one plugin entry with `source: "./"` and `strict: false`, and explicitly lists the skills directory. No `plugin.json` is needed. Users install with `/plugin marketplace add owner/repo` then `/plugin install skippy-dev@skippy-agentspace`.
+For skippy-agentspace, the cleanest approach is the "single-repo marketplace" pattern: the repo IS the marketplace AND the plugin. `marketplace.json` lives at `.claude-plugin/marketplace.json`, defines one plugin entry with `source: "./"` and `strict: false`, and explicitly lists the skills directory. No `plugin.json` is needed. Users install with `/plugin marketplace add owner/repo` then `/plugin install skippy@skippy-agentspace`.
 
 The dual-target install requirement (STRU-03) is straightforward. `~/.claude/skills/` is the modern path (skill directories with SKILL.md), `~/.claude/commands/` is legacy (standalone .md files). Both coexist. Detection is simple: check if `~/.claude/skills/` exists (modern Claude Code) and prefer it; fall back to `~/.claude/commands/` for legacy. The current install.sh only targets commands/ -- it needs a new code path for skills/.
 
@@ -58,7 +58,7 @@ skippy-agentspace/
   .claude-plugin/
     marketplace.json          # NEW -- marketplace catalog
   skills/
-    skippy-dev/
+    skippy/
       SKILL.md                # Existing -- skill entry point
       commands/               # Existing -- slash commands
       references/             # Existing -- enhancement docs
@@ -93,13 +93,13 @@ skippy-agentspace/
   },
   "plugins": [
     {
-      "name": "skippy-dev",
+      "name": "skippy",
       "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
       "source": "./",
       "strict": false,
       "version": "0.1.0",
       "skills": [
-        "./skills/skippy-dev"
+        "./skills/skippy"
       ]
     }
   ]
@@ -149,11 +149,11 @@ fi
 **When to use:** Understanding how the installed skill will appear to users.
 
 **Details:**
-- Plugin install: `/skippy-agentspace:skippy-dev` (namespaced)
-- Manual install to `~/.claude/skills/`: `/skippy-dev` (no namespace)
+- Plugin install: `/skippy-agentspace:skippy` (namespaced)
+- Manual install to `~/.claude/skills/`: `/skippy` (no namespace)
 - Manual install to `~/.claude/commands/`: `/skippy:reconcile`, `/skippy:update`, `/skippy:cleanup` (directory-based)
 
-**Known bug #22063:** If SKILL.md has a `name` field, the namespace prefix may be stripped, causing the skill to appear as `/skippy-dev` instead of `/skippy-agentspace:skippy-dev`. Bug is closed (inactive), status unclear. Anthropic's own skills all use `name:` in frontmatter, suggesting they accept this behavior or the bug is effectively a feature.
+**Known bug #22063:** If SKILL.md has a `name` field, the namespace prefix may be stripped, causing the skill to appear as `/skippy` instead of `/skippy-agentspace:skippy`. Bug is closed (inactive), status unclear. Anthropic's own skills all use `name:` in frontmatter, suggesting they accept this behavior or the bug is effectively a feature.
 
 ### Anti-Patterns to Avoid
 
@@ -178,7 +178,7 @@ fi
 
 **What goes wrong:** After plugin install, skill files reference paths that don't exist because the plugin was copied to `~/.claude/plugins/cache/`.
 **Why it happens:** Plugin install copies the plugin directory, not files outside it. Paths like `../shared/` or absolute paths break.
-**How to avoid:** Everything the skill needs must be inside the plugin directory tree. All our skill files are already under `skills/skippy-dev/` -- verify no references escape this boundary.
+**How to avoid:** Everything the skill needs must be inside the plugin directory tree. All our skill files are already under `skills/skippy/` -- verify no references escape this boundary.
 **Warning signs:** "File not found" errors after plugin install that don't happen with manual symlink install.
 
 ### Pitfall 2: strict: false with Existing plugin.json
@@ -197,16 +197,16 @@ fi
 
 ### Pitfall 4: Namespace Flattening (#22063)
 
-**What goes wrong:** Plugin skill appears as `/skippy-dev` instead of `/skippy-agentspace:skippy-dev` because SKILL.md has `name: skippy-dev`.
+**What goes wrong:** Plugin skill appears as `/skippy` instead of `/skippy-agentspace:skippy` because SKILL.md has `name: skippy`.
 **Why it happens:** Bug #22063 -- `name` field in frontmatter bypasses plugin namespace prefix.
-**How to avoid:** Anthropic's own skills have `name` fields and presumably accept this behavior. For our case, this is actually desirable -- users probably WANT `/skippy-dev` not `/skippy-agentspace:skippy-dev`. Keep the `name` field.
+**How to avoid:** Anthropic's own skills have `name` fields and presumably accept this behavior. For our case, this is actually desirable -- users probably WANT `/skippy` not `/skippy-agentspace:skippy`. Keep the `name` field.
 **Warning signs:** None -- this behavior is arguably better for usability.
 
 ### Pitfall 5: install.sh Doesn't Handle Both Targets
 
 **What goes wrong:** User has modern Claude Code with `~/.claude/skills/` but install.sh only symlinks to `~/.claude/commands/`, meaning skill is discovered as commands-only (no SKILL.md auto-loading, no supporting files).
 **Why it happens:** Current install.sh only knows about `~/.claude/commands/`.
-**How to avoid:** Update install.sh to detect `~/.claude/skills/` and symlink the entire skill directory there. When targeting skills/, symlink `skills/skippy-dev/` to `~/.claude/skills/skippy-dev/`. When targeting commands/, symlink `skills/skippy-dev/commands/` to `~/.claude/commands/skippy/`.
+**How to avoid:** Update install.sh to detect `~/.claude/skills/` and symlink the entire skill directory there. When targeting skills/, symlink `skills/skippy/` to `~/.claude/skills/skippy/`. When targeting commands/, symlink `skills/skippy/commands/` to `~/.claude/commands/skippy/`.
 **Warning signs:** Skill works as slash commands but Claude doesn't auto-invoke it based on description.
 
 ## Code Examples
@@ -227,7 +227,7 @@ fi
   },
   "plugins": [
     {
-      "name": "skippy-dev",
+      "name": "skippy",
       "description": "Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency",
       "source": "./",
       "strict": false,
@@ -236,7 +236,7 @@ fi
         "name": "Rico"
       },
       "skills": [
-        "./skills/skippy-dev"
+        "./skills/skippy"
       ]
     }
   ]
@@ -336,11 +336,11 @@ claude plugin validate /Volumes/ThunderBolt/Development/skippy-agentspace
 
 1. **Does `commands/` subdirectory get discovered when plugin uses `skills: [...]`?**
    - What we know: The `skills` field in marketplace.json points to skill directories (with SKILL.md). Commands inside a skill's `commands/` subdirectory are a separate discovery mechanism.
-   - What's unclear: When installed via plugin with `strict: false` and `skills: ["./skills/skippy-dev"]`, will the `commands/reconcile.md` etc. inside that skill directory also be discovered as slash commands? The official docs say "commands/ directory in plugin root" is the default location, but our commands are nested inside a skill.
-   - Recommendation: Test this during implementation. If commands aren't auto-discovered, add `"commands": ["./skills/skippy-dev/commands/"]` to the marketplace plugin entry. This is a supplemental path (doesn't replace defaults).
+   - What's unclear: When installed via plugin with `strict: false` and `skills: ["./skills/skippy"]`, will the `commands/reconcile.md` etc. inside that skill directory also be discovered as slash commands? The official docs say "commands/ directory in plugin root" is the default location, but our commands are nested inside a skill.
+   - Recommendation: Test this during implementation. If commands aren't auto-discovered, add `"commands": ["./skills/skippy/commands/"]` to the marketplace plugin entry. This is a supplemental path (doesn't replace defaults).
 
 2. **How does the `skippy` symlink in `~/.claude/commands/` interact with plugin-installed skills?**
-   - What we know: Rico currently has `~/.claude/commands/skippy -> ../../.config/pai/Skills/skippy-dev/commands` as a symlink. Plugin install would add skills to `~/.claude/plugins/cache/`.
+   - What we know: Rico currently has `~/.claude/commands/skippy -> ../../.config/pai/Skills/skippy/commands` as a symlink. Plugin install would add skills to `~/.claude/plugins/cache/`.
    - What's unclear: Does having the same skill accessible via both commands/ symlink AND plugin cache cause conflicts or duplicate slash commands?
    - Recommendation: Document that users should run `tools/uninstall.sh` before installing via plugin marketplace to avoid duplicate registration. Add a check to install.sh that warns if plugin-installed version is detected.
 
@@ -365,9 +365,9 @@ claude plugin validate /Volumes/ThunderBolt/Development/skippy-agentspace
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | SPEC-04 | marketplace.json is valid and plugin installs | smoke | `claude plugin validate .` | No -- Wave 0 |
-| SPEC-04 | Plugin install via marketplace loads skill without errors | manual | `/plugin marketplace add ./` then `/plugin install skippy-dev@skippy-agentspace` | No -- manual |
-| STRU-03 | install.sh detects skills/ target correctly | smoke | `bash tools/install.sh --all --target=skills && ls -la ~/.claude/skills/skippy-dev` | No -- Wave 0 |
-| STRU-03 | install.sh falls back to commands/ target | smoke | `bash tools/install.sh --all --target=commands && ls -la ~/.claude/commands/skippy-dev` | No -- Wave 0 |
+| SPEC-04 | Plugin install via marketplace loads skill without errors | manual | `/plugin marketplace add ./` then `/plugin install skippy@skippy-agentspace` | No -- manual |
+| STRU-03 | install.sh detects skills/ target correctly | smoke | `bash tools/install.sh --all --target=skills && ls -la ~/.claude/skills/skippy` | No -- Wave 0 |
+| STRU-03 | install.sh falls back to commands/ target | smoke | `bash tools/install.sh --all --target=commands && ls -la ~/.claude/commands/skippy` | No -- Wave 0 |
 
 ### Sampling Rate
 

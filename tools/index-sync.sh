@@ -198,7 +198,7 @@ This repo is also a Claude Code plugin marketplace. Install via:
 
 ```
 /plugin marketplace add rodaddy/skippy-agentspace
-/plugin install skippy-dev@skippy-agentspace
+/plugin install skippy@skippy-agentspace
 ```
 
 Plugin manifest: `.claude-plugin/marketplace.json` (strict: false -- no plugin.json needed).

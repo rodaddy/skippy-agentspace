@@ -39,11 +39,11 @@ created: 2026-03-07
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 08-01-01 | 01 | 1 | UPST-01 | smoke | `cat upstreams/omc/upstream.json \| jq .` | ❌ W0 | ⬜ pending |
-| 08-01-02 | 01 | 1 | UPST-04 | smoke | `test ! -f skills/skippy-dev/.versions` | ✅ | ⬜ pending |
-| 08-01-03 | 01 | 1 | UPST-04 | smoke | `test ! -f skills/skippy-dev/scripts/skippy-update.sh` | ✅ | ⬜ pending |
+| 08-01-02 | 01 | 1 | UPST-04 | smoke | `test ! -f skills/skippy/.versions` | ✅ | ⬜ pending |
+| 08-01-03 | 01 | 1 | UPST-04 | smoke | `test ! -f skills/skippy/scripts/skippy-update.sh` | ✅ | ⬜ pending |
 | 08-02-01 | 02 | 2 | UPST-02 | smoke | `test -f docs/cross-package-analysis.md` | ❌ W0 | ⬜ pending |
 | 08-02-02 | 02 | 2 | UPST-02 | manual | Review document for pattern comparison tables | ❌ W0 | ⬜ pending |
-| 08-02-03 | 02 | 2 | UPST-03 | smoke | `ls skills/skippy-dev/references/*.md \| wc -l` (count > 10) | ❌ W0 | ⬜ pending |
+| 08-02-03 | 02 | 2 | UPST-03 | smoke | `ls skills/skippy/references/*.md \| wc -l` (count > 10) | ❌ W0 | ⬜ pending |
 | 08-02-04 | 02 | 2 | UPST-03 | manual | Read each new doc for Source Upstreams / Why This Version sections | ❌ W0 | ⬜ pending |
 | 08-xx-01 | TBD | TBD | UPST-01 | manual | Run /skippy:update, verify OMC appears | ❌ W0 | ⬜ pending |
 | 08-xx-02 | TBD | TBD | UPST-04 | manual | Read update.md, verify no hardcoded URLs | ❌ W0 | ⬜ pending |

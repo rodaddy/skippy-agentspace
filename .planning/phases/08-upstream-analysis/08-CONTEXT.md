@@ -24,7 +24,7 @@ Add OMC as third tracked upstream source alongside GSD and PAUL, perform systema
 - Evolved format from existing PAUL reference docs: add structured sections like 'Source Upstreams', 'Why This Version', 'Integration Points'
 - Credit sources inline (e.g., "Context management: GSD's approach with OMC's notepad persistence") -- traceability for future updates
 - Count determined by analysis -- create a doc for every pattern worth synthesizing, quality over quantity (minimum 3 per requirement)
-- Location: skills/skippy-dev/references/ alongside existing PAUL reference docs
+- Location: skills/skippy/references/ alongside existing PAUL reference docs
 
 ### Generic Upstream Checker
 - /skippy:update becomes an AI-driven command (markdown instructions that Claude executes interactively) instead of a shell script
@@ -52,20 +52,20 @@ Add OMC as third tracked upstream source alongside GSD and PAUL, perform systema
 
 ### Reusable Assets
 - `upstreams/gsd/upstream.json` and `upstreams/paul/upstream.json`: established schema template for OMC entry
-- `skills/skippy-dev/references/`: 5 existing PAUL reference docs as format examples
-- `skills/skippy-dev/commands/update.md`: existing command definition to evolve
-- `skills/skippy-dev/scripts/skippy-update.sh`: fetch_repo() and report_changes() functions as logic reference
+- `skills/skippy/references/`: 5 existing PAUL reference docs as format examples
+- `skills/skippy/commands/update.md`: existing command definition to evolve
+- `skills/skippy/scripts/skippy-update.sh`: fetch_repo() and report_changes() functions as logic reference
 
 ### Established Patterns
 - Directory-per-upstream pattern (Phase 5): `upstreams/<name>/upstream.json`
 - upstream.json schema: name, description, repo, branch, last_checked_sha, last_check, cherry_picks, notes
-- Reference docs: ~2-5KB markdown, actionable guidance, in skills/skippy-dev/references/
-- Commands: markdown files in skills/skippy-dev/commands/ that Claude executes
+- Reference docs: ~2-5KB markdown, actionable guidance, in skills/skippy/references/
+- Commands: markdown files in skills/skippy/commands/ that Claude executes
 
 ### Integration Points
-- `/skippy:update` command entry point: skills/skippy-dev/commands/update.md
+- `/skippy:update` command entry point: skills/skippy/commands/update.md
 - Upstream registry: upstreams/ directory (gsd, paul, will add omc)
-- SKILL.md: skills/skippy-dev/SKILL.md references commands and references
+- SKILL.md: skills/skippy/SKILL.md references commands and references
 - OMC source: cached at ~/.claude/plugins/cache/omc/oh-my-claudecode/ and repo at https://github.com/Yeachan-Heo/oh-my-claudecode.git
 
 </code_context>

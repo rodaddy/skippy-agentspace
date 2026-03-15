@@ -210,28 +210,28 @@ fi
 
 **Show:** what was removed, what was kept.
 
-## Step 8.5: Migrate skippy-dev to skippy (if needed)
+## Step 8.5: Migrate skippy to skippy (if needed)
 
-The skill directory was renamed from `skippy-dev` to `skippy`. If the installed system has the old name, migrate it:
+The skill directory was renamed from `skippy` to `skippy`. If the installed system has the old name, migrate it:
 
 ```bash
 PAI_SKILLS="${SKILLS_TARGET:-$HOME/.config/pai/Skills}"
-if [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ ! -d "$PAI_SKILLS/skippy" ]]; then
-    mv "$PAI_SKILLS/skippy-dev" "$PAI_SKILLS/skippy"
-    echo "MIGRATED: skippy-dev -> skippy"
-elif [[ -d "$PAI_SKILLS/skippy-dev" ]] && [[ -d "$PAI_SKILLS/skippy" ]]; then
-    # Both exist -- merge skippy-dev into skippy, then remove old
-    rsync -a "$PAI_SKILLS/skippy-dev/" "$PAI_SKILLS/skippy/"
-    mv "$PAI_SKILLS/skippy-dev" "/tmp/skippy-dev-migrated-$$"
-    echo "MERGED: skippy-dev into skippy (old moved to /tmp)"
+if [[ -d "$PAI_SKILLS/skippy" ]] && [[ ! -d "$PAI_SKILLS/skippy" ]]; then
+    mv "$PAI_SKILLS/skippy" "$PAI_SKILLS/skippy"
+    echo "MIGRATED: skippy -> skippy"
+elif [[ -d "$PAI_SKILLS/skippy" ]] && [[ -d "$PAI_SKILLS/skippy" ]]; then
+    # Both exist -- merge skippy into skippy, then remove old
+    rsync -a "$PAI_SKILLS/skippy/" "$PAI_SKILLS/skippy/"
+    mv "$PAI_SKILLS/skippy" "/tmp/skippy-migrated-$$"
+    echo "MERGED: skippy into skippy (old moved to /tmp)"
 fi
 ```
 
 Also clean up old command routing if it exists:
 ```bash
-if [[ -d "$HOME/.claude/commands/skippy-dev" ]]; then
-    mv "$HOME/.claude/commands/skippy-dev" "/tmp/skippy-dev-commands-$$"
-    echo "CLEANED: old ~/.claude/commands/skippy-dev"
+if [[ -d "$HOME/.claude/commands/skippy" ]]; then
+    mv "$HOME/.claude/commands/skippy" "/tmp/skippy-commands-$$"
+    echo "CLEANED: old ~/.claude/commands/skippy"
 fi
 ```
 
@@ -298,9 +298,9 @@ Follow process.md "Reference Doc Completeness Check".
 **Additionally, check for non-portable paths in command files:**
 ```bash
 for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
-    # Check for repo-relative paths (skills/skippy-dev/agents/ etc.)
-    if grep -q 'skills/skippy-dev/' "$cmd_file" 2>/dev/null; then
-        echo "NON-PORTABLE: $cmd_file references repo-relative path 'skills/skippy-dev/'"
+    # Check for repo-relative paths (skills/skippy/agents/ etc.)
+    if grep -q 'skills/skippy/' "$cmd_file" 2>/dev/null; then
+        echo "NON-PORTABLE: $cmd_file references repo-relative path 'skills/skippy/'"
     fi
     # Check for hardcoded absolute paths
     if grep -q '/Volumes/' "$cmd_file" 2>/dev/null; then
@@ -309,7 +309,7 @@ for cmd_file in "$PAI_SKILLS"/*/commands/*.md; do
 done
 ```
 
-Non-portable paths should use relative references (e.g., `references/` not `~/.config/pai/Skills/skippy-dev/references/`) or `${CLAUDE_SKILL_DIR}` variables.
+Non-portable paths should use relative references (e.g., `references/` not `~/.config/pai/Skills/skippy/references/`) or `${CLAUDE_SKILL_DIR}` variables.
 
 **Show the user:** OK/MISSING table for referenced docs + any non-portable path warnings.
 

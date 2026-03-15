@@ -7,7 +7,7 @@ tags: [upstream-registry, json, migration, extensibility]
 # Dependency graph
 requires:
   - phase: 01-spec-compliance
-    provides: "skills/skippy-dev/.versions file being replaced"
+    provides: "skills/skippy/.versions file being replaced"
 provides:
   - "upstreams/gsd/upstream.json -- GSD upstream tracking metadata"
   - "upstreams/paul/upstream.json -- PAUL upstream tracking metadata"
@@ -68,7 +68,7 @@ Each task was committed atomically:
 ## Files Created/Modified
 - `upstreams/gsd/upstream.json` - GSD upstream tracking (repo URL, branch, SHA, empty cherry_picks)
 - `upstreams/paul/upstream.json` - PAUL upstream tracking (repo URL, branch, SHA, 5 cherry_picks listed)
-- `skills/skippy-dev/.versions` - Removed (migrated to upstreams/)
+- `skills/skippy/.versions` - Removed (migrated to upstreams/)
 
 ## Decisions Made
 - Initialized `last_checked_sha` and `last_check` to `none`/`never` to match existing `.versions` data exactly -- no information lost

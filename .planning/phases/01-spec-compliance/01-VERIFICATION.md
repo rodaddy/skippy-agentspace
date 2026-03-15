@@ -12,7 +12,7 @@ human_verification:
 
 # Phase 1: Spec Compliance Verification Report
 
-**Phase Goal:** Make the skippy-dev skill portable and spec-compliant -- fix hardcoded paths, align frontmatter, rename bin/ to scripts/
+**Phase Goal:** Make the skippy skill portable and spec-compliant -- fix hardcoded paths, align frontmatter, rename bin/ to scripts/
 **Verified:** 2026-03-07T06:00:00Z
 **Status:** passed
 **Re-verification:** No -- initial verification
@@ -24,9 +24,9 @@ human_verification:
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
 | 1 | No hardcoded absolute paths exist in any skill file under skills/ | VERIFIED | `grep -rn '/Users/rico\|/Volumes/ThunderBolt\|~/.config/pai/Skills' skills/` returns zero matches |
-| 2 | SKILL.md frontmatter has name, description, metadata -- no triggers field | VERIFIED | Frontmatter contains `name: skippy-dev`, `description:` (118 chars), `metadata:` block with version/author/source. `grep 'triggers:' SKILL.md` returns zero matches |
-| 3 | scripts/ directory exists where bin/ was -- no bin/ directory remains | VERIFIED | `skills/skippy-dev/scripts/` exists with `skippy-update.sh` and `skippy-cleanup.sh`. `skills/skippy-dev/bin/` does not exist. `grep 'bin/skippy' *.{md,sh}` returns zero matches outside .planning/ |
-| 4 | All script and reference paths resolve correctly (no broken references) | VERIFIED | All 3 command files use `@../SKILL.md` (file exists at `skills/skippy-dev/SKILL.md`). reconcile.md also uses `@../references/reconciliation.md` and `@../references/state-consistency.md` (both exist). SKILL.md body uses `${CLAUDE_SKILL_DIR}/scripts/` and `${CLAUDE_SKILL_DIR}/references/` patterns. Shell scripts use env var overrides with portable defaults. |
+| 2 | SKILL.md frontmatter has name, description, metadata -- no triggers field | VERIFIED | Frontmatter contains `name: skippy`, `description:` (118 chars), `metadata:` block with version/author/source. `grep 'triggers:' SKILL.md` returns zero matches |
+| 3 | scripts/ directory exists where bin/ was -- no bin/ directory remains | VERIFIED | `skills/skippy/scripts/` exists with `skippy-update.sh` and `skippy-cleanup.sh`. `skills/skippy/bin/` does not exist. `grep 'bin/skippy' *.{md,sh}` returns zero matches outside .planning/ |
+| 4 | All script and reference paths resolve correctly (no broken references) | VERIFIED | All 3 command files use `@../SKILL.md` (file exists at `skills/skippy/SKILL.md`). reconcile.md also uses `@../references/reconciliation.md` and `@../references/state-consistency.md` (both exist). SKILL.md body uses `${CLAUDE_SKILL_DIR}/scripts/` and `${CLAUDE_SKILL_DIR}/references/` patterns. Shell scripts use env var overrides with portable defaults. |
 | 5 | SKILL.md is under 150 lines with detail in references/ | VERIFIED | SKILL.md is 80 lines. 5 reference docs exist in `references/`: context-brackets.md, plan-boundaries.md, reconciliation.md, state-consistency.md, task-anatomy.md. INDEX.md exists and lists the skill. |
 
 **Score:** 5/5 truths verified
@@ -35,12 +35,12 @@ human_verification:
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `skills/skippy-dev/SKILL.md` | Spec-compliant skill entry point, contains `metadata:` | VERIFIED | 80 lines, has name/description/metadata frontmatter, no triggers, description 118 chars (under 130) |
-| `skills/skippy-dev/commands/reconcile.md` | Reconcile command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`, Line 13-14: `@../references/` paths. Zero absolute paths. |
-| `skills/skippy-dev/commands/update.md` | Update command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`. Script path uses `${CLAUDE_SKILL_DIR}/scripts/`. Zero absolute paths. |
-| `skills/skippy-dev/commands/cleanup.md` | Cleanup command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`. Script path uses `${CLAUDE_SKILL_DIR}/scripts/`. Quarantine uses configurable language. Zero absolute paths. |
-| `skills/skippy-dev/scripts/skippy-update.sh` | Update script (renamed from bin/) | VERIFIED | 106 lines, executable, uses `SKIPPY_CACHE_DIR` env var with `~/.cache/skippy-upstream` default, `CLAUDE_SKILL_DIR` fallback for SKILL_DIR |
-| `skills/skippy-dev/scripts/skippy-cleanup.sh` | Cleanup script (renamed from bin/) | VERIFIED | 80 lines, executable, uses `SKIPPY_QUARANTINE_DIR` env var with `$TMPDIR/skippy-cleanup` default |
+| `skills/skippy/SKILL.md` | Spec-compliant skill entry point, contains `metadata:` | VERIFIED | 80 lines, has name/description/metadata frontmatter, no triggers, description 118 chars (under 130) |
+| `skills/skippy/commands/reconcile.md` | Reconcile command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`, Line 13-14: `@../references/` paths. Zero absolute paths. |
+| `skills/skippy/commands/update.md` | Update command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`. Script path uses `${CLAUDE_SKILL_DIR}/scripts/`. Zero absolute paths. |
+| `skills/skippy/commands/cleanup.md` | Cleanup command with portable paths, contains `@../SKILL.md` | VERIFIED | Line 12: `@../SKILL.md`. Script path uses `${CLAUDE_SKILL_DIR}/scripts/`. Quarantine uses configurable language. Zero absolute paths. |
+| `skills/skippy/scripts/skippy-update.sh` | Update script (renamed from bin/) | VERIFIED | 106 lines, executable, uses `SKIPPY_CACHE_DIR` env var with `~/.cache/skippy-upstream` default, `CLAUDE_SKILL_DIR` fallback for SKILL_DIR |
+| `skills/skippy/scripts/skippy-cleanup.sh` | Cleanup script (renamed from bin/) | VERIFIED | 80 lines, executable, uses `SKIPPY_QUARANTINE_DIR` env var with `$TMPDIR/skippy-cleanup` default |
 
 ### Key Link Verification
 
@@ -48,7 +48,7 @@ human_verification:
 |------|----|-----|--------|---------|
 | `commands/reconcile.md` | `SKILL.md` | `@../SKILL.md` relative reference | WIRED | Line 12: `@../SKILL.md` found. Pattern `@\.\./` matches. |
 | `SKILL.md` | `scripts/` | `${CLAUDE_SKILL_DIR}/scripts/` body references | WIRED | Lines 51, 61: `${CLAUDE_SKILL_DIR}/scripts/skippy-update.sh` and `skippy-cleanup.sh` |
-| `INDEX.md` | `SKILL.md` | Skill registry entry | WIRED | Line 9: `skippy-dev` entry with path `skippy-dev/SKILL.md`, all 3 commands, all 5 references listed |
+| `INDEX.md` | `SKILL.md` | Skill registry entry | WIRED | Line 9: `skippy` entry with path `skippy/SKILL.md`, all 3 commands, all 5 references listed |
 
 ### Requirements Coverage
 
@@ -65,7 +65,7 @@ No orphaned requirements found -- REQUIREMENTS.md maps SPEC-01, SPEC-02, SPEC-03
 
 | File | Line | Pattern | Severity | Impact |
 |------|------|---------|----------|--------|
-| `skills/skippy-dev/commands/update.md` | 22 | Stale path `/tmp/skippy-upstream/` in documentation text | Warning | The script itself uses `${SKIPPY_CACHE_DIR:-~/.cache/skippy-upstream}`, but the command file's process text still tells users to look in `/tmp/skippy-upstream/`. Documentation inconsistency, not a functional break. |
+| `skills/skippy/commands/update.md` | 22 | Stale path `/tmp/skippy-upstream/` in documentation text | Warning | The script itself uses `${SKIPPY_CACHE_DIR:-~/.cache/skippy-upstream}`, but the command file's process text still tells users to look in `/tmp/skippy-upstream/`. Documentation inconsistency, not a functional break. |
 | `CLAUDE.md` | 50-55 | Phase 1 status shows "Not started" despite being complete | Warning | CLAUDE.md status table was not updated to reflect Phase 1 completion. The file tree section was correctly updated (shows `scripts/` not `bin/`), but the status table is stale. Not a Phase 1 goal blocker -- CLAUDE.md accuracy is a Phase 4 concern (STRU-02). |
 
 ### Commit Verification

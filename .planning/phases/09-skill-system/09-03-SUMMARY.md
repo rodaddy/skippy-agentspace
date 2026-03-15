@@ -68,7 +68,7 @@ completed: 2026-03-08
 
 ## Accomplishments
 
-- Migrated 10 essential skills from ~/.config/pai/Skills/ to portable format (12 total with core + skippy-dev)
+- Migrated 10 essential skills from ~/.config/pai/Skills/ to portable format (12 total with core + skippy)
 - All 12 SKILL.md files under 150 lines (max observed: 117 lines)
 - Zero private content leaks -- no IPs, domains, or credentials in any skill file
 - marketplace.json updated with plugin entries for all 12 skills

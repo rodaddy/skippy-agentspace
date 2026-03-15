@@ -157,13 +157,13 @@ We chose the portable skill repo approach: standalone execution with source attr
 ### Relationship to PAI
 
 - **Source:** This repo (`skippy-agentspace/`) is the development copy
-- **Installed copy:** `~/.config/pai/Skills/skippy-dev/` (symlinked via `tools/install.sh`)
-- **Commands registered:** `~/.claude/commands/skippy/` (symlinks to `skills/skippy-dev/commands/`)
+- **Installed copy:** `~/.config/pai/Skills/skippy/` (symlinked via `tools/install.sh`)
+- **Commands registered:** `~/.claude/commands/skippy/` (symlinks to `skills/skippy/commands/`)
 - **Agent access:** Listed in `~/.config/pai/Skills/AGENT-INDEX.md` under "Development Workflow"
 
 ### Backup
 
-Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy-dev/` with restore script. Ephemeral files (2.5G of debug/telemetry/history) quarantined to `/Volumes/ThunderBolt/_tmp/claude-cleanup-2026-03-06/`.
+Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy/` with restore script. Ephemeral files (2.5G of debug/telemetry/history) quarantined to `/Volumes/ThunderBolt/_tmp/claude-cleanup-2026-03-06/`.
 
 ## Constraints
 

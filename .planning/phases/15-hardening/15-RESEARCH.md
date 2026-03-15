@@ -225,7 +225,7 @@ done
 **Warning signs:** Grep for `<your-` returning matches after implementation.
 
 ### Pitfall 6: migrate.md Contains Hardcoded Version Instruction
-**What goes wrong:** `skills/skippy-dev/commands/migrate.md` line 105 instructs the AI to use `version: 0.1.0` when creating new skills. After a bump, newly migrated skills get the old version.
+**What goes wrong:** `skills/skippy/commands/migrate.md` line 105 instructs the AI to use `version: 0.1.0` when creating new skills. After a bump, newly migrated skills get the old version.
 **Why it happens:** This is an instruction template, not a version declaration, so it was missed in the 25-location count.
 **How to avoid:** bump-version.sh should also update this file. It's a 26th location (or treat it as part of the 25 -- the count in prior research was from production files only). Add it to the bump scope.
 **Warning signs:** New skills created after a version bump show the old version.
@@ -349,7 +349,7 @@ for f in "$REPO_ROOT"/skills/*/SKILL.md; do
     FILES+=("$f")
 done
 # Also update migrate.md instruction template
-MIGRATE_MD="$REPO_ROOT/skills/skippy-dev/commands/migrate.md"
+MIGRATE_MD="$REPO_ROOT/skills/skippy/commands/migrate.md"
 [[ -f "$MIGRATE_MD" ]] && FILES+=("$MIGRATE_MD")
 
 if $DRY_RUN; then
@@ -425,7 +425,7 @@ Complete inventory of `<your-*>` placeholders across all deploy-service files:
 |------|-------|--------|---------------|
 | `.claude-plugin/marketplace.json` | 13 | `"version": "0.1.0"` (1 metadata + 12 plugins) | jq |
 | `skills/core/SKILL.md` | 1 | `  version: 0.1.0` (YAML frontmatter) | sed |
-| `skills/skippy-dev/SKILL.md` | 1 | `  version: 0.1.0` | sed |
+| `skills/skippy/SKILL.md` | 1 | `  version: 0.1.0` | sed |
 | `skills/add-todo/SKILL.md` | 1 | `  version: 0.1.0` | sed |
 | `skills/browser/SKILL.md` | 1 | `  version: 0.1.0` | sed |
 | `skills/check-todos/SKILL.md` | 1 | `  version: 0.1.0` | sed |
@@ -437,7 +437,7 @@ Complete inventory of `<your-*>` placeholders across all deploy-service files:
 | `skills/update-todo/SKILL.md` | 1 | `  version: 0.1.0` | sed |
 | `skills/vaultwarden/SKILL.md` | 1 | `  version: 0.1.0` | sed |
 | **Total production locations** | **25** | | |
-| `skills/skippy-dev/commands/migrate.md` | 1 | `version: 0.1.0` (template instruction) | sed |
+| `skills/skippy/commands/migrate.md` | 1 | `version: 0.1.0` (template instruction) | sed |
 | **Grand total** | **26** | | |
 
 **Files NOT to update** (these are in .planning/ -- historical docs, not production):

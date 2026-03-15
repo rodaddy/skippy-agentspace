@@ -12,7 +12,7 @@ provides:
   - /skippy:review command definition (8-step orchestration process)
   - Updated SKILL.md, INDEX.md, CLAUDE.md registrations
 
-affects: [skippy-dev, audit-workflows]
+affects: [skippy, audit-workflows]
 
 tech-stack:
   added: []
@@ -20,9 +20,9 @@ tech-stack:
 
 key-files:
   created:
-    - skills/skippy-dev/commands/review.md
+    - skills/skippy/commands/review.md
   modified:
-    - skills/skippy-dev/SKILL.md
+    - skills/skippy/SKILL.md
     - INDEX.md
     - CLAUDE.md
 
@@ -57,7 +57,7 @@ completed: 2026-03-08
 
 - Created 184-line `/skippy:review` command definition with complete 8-step process matching audit-swarm.md protocol
 - Registered command in SKILL.md (enhancement row 14, command section, agent reference), INDEX.md (via index-sync.sh), and CLAUDE.md (commands table, What's Built tree)
-- Updated skippy-dev counts from "5 commands, 11 reference docs" to "6 commands, 14 reference docs"
+- Updated skippy counts from "5 commands, 11 reference docs" to "6 commands, 14 reference docs"
 
 ## Task Commits
 
@@ -68,9 +68,9 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `skills/skippy-dev/commands/review.md` - /skippy:review command definition (184 lines, 8-step process, references all 6 agents)
-- `skills/skippy-dev/SKILL.md` - Added enhancement row 14 (Audit Swarm), /skippy:review command section, audit-swarm.md agent reference
-- `INDEX.md` - Regenerated via index-sync.sh to include /skippy:review in skippy-dev command list
+- `skills/skippy/commands/review.md` - /skippy:review command definition (184 lines, 8-step process, references all 6 agents)
+- `skills/skippy/SKILL.md` - Added enhancement row 14 (Audit Swarm), /skippy:review command section, audit-swarm.md agent reference
+- `INDEX.md` - Regenerated via index-sync.sh to include /skippy:review in skippy command list
 - `CLAUDE.md` - Added /skippy:review to commands table, updated What's Built tree with agents/ directory and new counts
 
 ## Decisions Made

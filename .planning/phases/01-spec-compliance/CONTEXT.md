@@ -2,7 +2,7 @@
 
 ## What This Phase Fixes
 
-The skippy-dev skill works but is not portable -- hardcoded paths, non-standard frontmatter, and wrong directory names prevent it from working on any machine other than Rico's or via plugin install.
+The skippy skill works but is not portable -- hardcoded paths, non-standard frontmatter, and wrong directory names prevent it from working on any machine other than Rico's or via plugin install.
 
 ## Concrete Problems to Fix
 
@@ -11,11 +11,11 @@ The skippy-dev skill works but is not portable -- hardcoded paths, non-standard 
 5 hardcoded paths found in command files. Must be replaced with `${CLAUDE_SKILL_DIR}` or relative paths:
 
 ```
-skills/skippy-dev/commands/reconcile.md:12  @/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md
-skills/skippy-dev/commands/reconcile.md:13  @/Users/rico/.config/pai/Skills/skippy-dev/references/reconciliation.md
-skills/skippy-dev/commands/reconcile.md:14  @/Users/rico/.config/pai/Skills/skippy-dev/references/state-consistency.md
-skills/skippy-dev/commands/update.md:12     @/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md
-skills/skippy-dev/commands/cleanup.md:12    @/Users/rico/.config/pai/Skills/skippy-dev/SKILL.md
+skills/skippy/commands/reconcile.md:12  @/Users/rico/.config/pai/Skills/skippy/SKILL.md
+skills/skippy/commands/reconcile.md:13  @/Users/rico/.config/pai/Skills/skippy/references/reconciliation.md
+skills/skippy/commands/reconcile.md:14  @/Users/rico/.config/pai/Skills/skippy/references/state-consistency.md
+skills/skippy/commands/update.md:12     @/Users/rico/.config/pai/Skills/skippy/SKILL.md
+skills/skippy/commands/cleanup.md:12    @/Users/rico/.config/pai/Skills/skippy/SKILL.md
 ```
 
 **Replace with:** Relative paths from the command file to the skill directory, e.g. `@../SKILL.md`, `@../references/reconciliation.md`. Or use `${CLAUDE_SKILL_DIR}` if Claude Code expands it in command files (needs verification -- known bug #11011).
@@ -25,7 +25,7 @@ skills/skippy-dev/commands/cleanup.md:12    @/Users/rico/.config/pai/Skills/skip
 Current SKILL.md frontmatter:
 ```yaml
 ---
-name: skippy-dev
+name: skippy
 description: Development workflow enhancements...
 triggers:
   - /skippy:reconcile
@@ -44,7 +44,7 @@ triggers:
 **Target frontmatter:**
 ```yaml
 ---
-name: skippy-dev
+name: skippy
 description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, and state consistency. Augments GSD with best-of-breed ideas from the PAUL framework.
 metadata:
   version: "0.1.0"
@@ -59,12 +59,12 @@ metadata:
 
 Agent Skills spec convention uses `scripts/` not `bin/`. Rename:
 ```
-skills/skippy-dev/bin/skippy-update.sh  →  skills/skippy-dev/scripts/skippy-update.sh
-skills/skippy-dev/bin/skippy-cleanup.sh →  skills/skippy-dev/scripts/skippy-cleanup.sh
+skills/skippy/bin/skippy-update.sh  →  skills/skippy/scripts/skippy-update.sh
+skills/skippy/bin/skippy-cleanup.sh →  skills/skippy/scripts/skippy-cleanup.sh
 ```
 
 Update all references to `bin/` in:
-- `skills/skippy-dev/SKILL.md` (commands section references bin/)
+- `skills/skippy/SKILL.md` (commands section references bin/)
 - `CLAUDE.md` (file tree shows bin/)
 - `INDEX.md` (if it references bin/)
 
@@ -81,10 +81,10 @@ May need a `docs/` directory for project-level documentation (origin, decisions)
 
 | File | Why |
 |------|-----|
-| `skills/skippy-dev/SKILL.md` | The main file to modify |
-| `skills/skippy-dev/commands/reconcile.md` | Has 3 hardcoded paths |
-| `skills/skippy-dev/commands/update.md` | Has 1 hardcoded path |
-| `skills/skippy-dev/commands/cleanup.md` | Has 1 hardcoded path |
+| `skills/skippy/SKILL.md` | The main file to modify |
+| `skills/skippy/commands/reconcile.md` | Has 3 hardcoded paths |
+| `skills/skippy/commands/update.md` | Has 1 hardcoded path |
+| `skills/skippy/commands/cleanup.md` | Has 1 hardcoded path |
 | `.planning/research/STACK.md` | Agent Skills spec details |
 | `.planning/research/ARCHITECTURE.md` | Claude Code discovery mechanisms |
 | `.planning/research/PITFALLS.md` | Known bugs and naming collision risks |
