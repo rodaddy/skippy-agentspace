@@ -14,7 +14,7 @@ Repo: $ARGUMENTS (required -- e.g., "rodaddy/my-project")
 Runner LXC: 106 (gh-runner) at 10.71.1.114, SSH as root
 Runner user: runner
 Runner home: /home/runner/
-LiteLLM proxy: http://10.71.20.53:4000
+LiteLLM proxy: http://10.71.20.33:4000
 Vaultwarden secret: "LiteLLM" (via get_secret, returns text field -- NOT get_credential)
 </context>
 
@@ -159,7 +159,7 @@ jobs:
       pull-requests: write
       issues: write
     env:
-      ANTHROPIC_BASE_URL: http://10.71.20.53:4000
+      ANTHROPIC_BASE_URL: http://10.71.20.33:4000
       ANTHROPIC_API_KEY: ${{ secrets.LITELLM_API_KEY }}
       ANTHROPIC_MODEL: opus
       ANTHROPIC_DEFAULT_SONNET_MODEL: sonnet

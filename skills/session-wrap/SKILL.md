@@ -66,6 +66,16 @@ Use parallel Write calls:
 3. Append briefing block to BRIEFING_FILE (Edit, not Write)
 4. Handle todo status changes
 
+### Step 3.5: Persist to Open Brain (optional)
+
+If `mcp2cli open-brain` is available, save session summary to Open Brain for semantic search:
+
+```bash
+mcp2cli open-brain session_save --params '{"summary": "<session summary from Step 2>", "project": "<PROJECT_NAME>", "tags": ["session-wrap"], "key_decisions": ["<decision1>"], "next_steps": ["<next1>"], "blockers": []}'
+```
+
+**Graceful degradation:** If this call fails (server down, mcp2cli not configured), log a warning and continue. Never block the commit or file writes. Local session files are the source of truth; Open Brain is supplemental.
+
 ### Step 4: Commit on Current Branch
 
 NO session branch. Commit directly on current branch:
