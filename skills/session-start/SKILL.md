@@ -24,7 +24,7 @@ Restores project context after `/clear` using a lightweight scout agent.
 Tell the user "Pulling session state..." then spawn:
 
 ```
-Task(subagent_type="oh-my-claudecode:explore", model="opus", prompt="""
+Task(subagent_type="Explore", model="opus", prompt="""
 Working directory: {CWD}
 
 Reports are centralized at Development/.reports/<project-name>/.
