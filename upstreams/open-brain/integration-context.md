@@ -1,7 +1,7 @@
 # Open Brain Integration Context
 
 **Source:** open-brain `.planning/phases/06-pai-integration/06-CONTEXT.md`
-**Status:** Ready for planning in skippy-agentspace
+**Status:** COMPLETE -- all skills wired, hooks cleaned, old stores handled (2026-03-15)
 **Ability:** #11 "Remember" -- semantic memory + cross-session continuity + decision logging
 
 ## What Open Brain Provides
@@ -35,19 +35,19 @@
 
 | Hook | Current State | Target State |
 |------|---------------|--------------|
-| `open-brain-session-load.ts` | Fires on SessionStart, queries Open Brain | Enhance -- richer output, coordinate with load-core-context |
-| `open-brain-session-save.ts` | Fires on PreCompact, saves to Open Brain | Enhance -- richer capture (files, commands, decisions) |
-| `open-brain-session-capture.ts` | Fires on SessionEnd, captures git state | New -- just committed to open-brain repo |
-| `inject-brain-context.ts` | Queries /Exports/pai/ markdown | Replace with Open Brain search |
-| `query-knowledge.ts` | PostgreSQL tag/full-text search | Replace with Open Brain search |
+| `open-brain-session-load.ts` | Fires on SessionStart, queries Open Brain | Working -- **DONE** (OB session) |
+| `open-brain-session-save.ts` | Fires on PreCompact, saves to Open Brain | Working -- **DONE** (OB session) |
+| `open-brain-session-capture.ts` | Fires on SessionEnd, captures git state | Working -- **DONE** (OB session) |
+| `inject-brain-context.ts` | Was inactive, read stale markdown exports | **REMOVED** (moved to /tmp, 2026-03-15) |
+| `query-knowledge.ts` | Was inactive, queried old PostgreSQL KB | **REMOVED** (moved to /tmp, 2026-03-15) |
 
 ### Old Stores to Deprecate
 
 | Store | Location | Action |
 |-------|----------|--------|
-| JSON KB files | `~/.config/pai-private/knowledge/*.json` | Archive (stale, last extracted 2026-02-01) |
-| Markdown exports | `/Volumes/ThunderBolt/Exports/pai/` | Deprecate (no longer needed) |
-| PostgreSQL KB (CT 200) | `10.71.20.49 knowledge table` | Replace with Open Brain |
+| JSON KB files | `~/.config/pai-private/knowledge/*.json` | **KEPT** -- brain skill local fallback reads these |
+| Markdown exports | `/Volumes/ThunderBolt/Exports/pai/` | **ARCHIVED** to `~/Archive/pai-exports-20260131` (2026-03-15) |
+| PostgreSQL KB (CT 200) | `10.71.20.49 knowledge table` | Superseded by Open Brain (same server, new schema) |
 
 ### What Stays Unchanged
 
@@ -64,11 +64,11 @@ All skills and hooks MUST detect Open Brain availability at runtime. If the serv
 - Hooks silently skip Open Brain calls (never block session lifecycle)
 - Log a warning but don't error
 
-## Sequencing Recommendation
+## Sequencing (COMPLETED 2026-03-15)
 
-1. **Migrate skills:** Move `/brain` and `/capture-session` from `~/.config/pai/Skills/` into `skills/` in this repo
-2. **Wire session-wrap:** Add Open Brain push as Step 4.5 (after write, before commit)
-3. **Wire session-start:** Add Open Brain session_load query alongside .reports/ reads
-4. **Replace old hooks:** Swap inject-brain-context.ts and query-knowledge.ts for Open Brain equivalents
-5. **Deprecate old stores:** Archive JSON KB, remove markdown export references
-6. **Verify:** End-to-end test of capture -> search -> retrieval cycle
+1. ~~Migrate skills~~ -- brain, capture-session, session-start migrated (PR #18)
+2. ~~Wire session-wrap~~ -- Step 3.5 added for session_save (PR #18)
+3. ~~Wire session-start~~ -- 8th scout source added (PR #18)
+4. ~~Replace old hooks~~ -- inject-brain-context.ts + query-knowledge.ts removed (inactive, replaced by OB session hooks)
+5. ~~Deprecate old stores~~ -- exports archived, JSON KB kept for fallback
+6. **Verify:** End-to-end test of capture -> search -> retrieval cycle -- PENDING
