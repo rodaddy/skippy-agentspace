@@ -115,6 +115,42 @@
       "version": "0.1.0",
       "author": { "name": "Rico" },
       "skills": ["./skills/vaultwarden"]
+    },
+    {
+      "name": "drive",
+      "description": "Persistence loop with PRD-driven story tracking, acceptance criteria verification, and architect sign-off.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/drive"]
+    },
+    {
+      "name": "autopilot",
+      "description": "Full autonomous execution from idea to working code. Multi-phase pipeline: expansion, planning, implementation, QA, validation.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/autopilot"]
+    },
+    {
+      "name": "team",
+      "description": "Spawn N coordinated agents working on a shared task list using Claude Code native team tools.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/team"]
+    },
+    {
+      "name": "trace",
+      "description": "Agent flow visualization. Shows skill activations, agent spawns, and verification results during a session.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/trace"]
     }
   ]
 }

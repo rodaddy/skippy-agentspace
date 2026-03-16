@@ -21,7 +21,10 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 | session-handoff | `session-handoff/SKILL.md` | (none) |
 | session-start | `session-start/SKILL.md` | (none) |
 | session-wrap | `session-wrap/SKILL.md` | (none) |
+| autopilot | `autopilot/SKILL.md` | (none) |
+| drive | `drive/SKILL.md` | (none) |
 | skippy [installed] | `skippy/SKILL.md` | /skippy:cleanup, /skippy:execute, /skippy:install, /skippy:migrate, /skippy:plan, /skippy:progress, /skippy:quick, /skippy:reconcile, /skippy:review, /skippy:update, /skippy:upgrade, /skippy:verify |
+| team | `team/SKILL.md` | (none) |
 | update-todo | `update-todo/SKILL.md` | (none) |
 
 ## Utility
@@ -33,6 +36,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 | excalidraw | `excalidraw/SKILL.md` | (none) |
 | fabric | `fabric/SKILL.md` | (none) |
 | gh-review | `gh-review/SKILL.md` | /gh-review:setup |
+| trace | `trace/SKILL.md` | (none) |
 | vaultwarden | `vaultwarden/SKILL.md` | (none) |
 
 ## Domain

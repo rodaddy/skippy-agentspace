@@ -41,19 +41,23 @@ Three layers:
 
 ```
 .claude-plugin/
-  marketplace.json          # Plugin marketplace (12 skills, strict: false)
+  marketplace.json          # Plugin marketplace (16 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
   skippy/                   # [workflow] Dev enhancements -- 12 commands, 18 reference docs
-    agents/                 # Subagent definitions for /skippy:review audit swarm
+    agents/                 # Subagent definitions (11 agents: planning swarm, review swarm, executors)
   add-todo/                 # [workflow] Scope-aware todo/idea capture
+  autopilot/                # [workflow] Full autonomous lifecycle -- expand, plan, execute, QA, validate
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections
+  drive/                    # [workflow] Persistence loop -- PRD stories, acceptance criteria, architect sign-off
   session-wrap/             # [workflow] End-of-session file/commit workflow
+  team/                     # [workflow] Coordinated N-agent execution via Claude Code native teams
   update-todo/              # [workflow] Progress, complete, defer, or drop todos
   browser/                  # [utility] Browser automation via MCP and browse CLI
   excalidraw/               # [utility] Mermaid-to-Excalidraw diagram generation
   fabric/                   # [utility] AI content processing (228+ patterns)
+  trace/                    # [utility] Agent flow visualization -- session timeline and summary
   vaultwarden/              # [utility] Fast credential lookup via MCP
   deploy-service/           # [domain] LXC + nginx proxy + DNS deployment
 tools/
