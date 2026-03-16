@@ -38,7 +38,7 @@ Automates the full setup of Claude Code PR reviews on a self-hosted runner for a
 | Node | v24+ at `/usr/local/bin/node` |
 | Bun | `/usr/local/bin/bun` |
 | Claude Code | `/home/runner/.local/bin/claude` |
-| LiteLLM proxy | `http://10.71.20.53:4000` |
+| LiteLLM proxy | `http://10.71.20.33:4000` |
 
 ## Commands
 

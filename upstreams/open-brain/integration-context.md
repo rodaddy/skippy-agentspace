@@ -17,7 +17,7 @@
 | `session_load` | Retrieve latest session context for a project |
 | `find_person` | Relationship lookup with warmth score |
 
-**Server:** LXC 208 (10.71.20.15:3100), PostgreSQL + pgvector on 10.71.20.49, LiteLLM embeddings (gemini-embedding-001, 768 dims)
+**Server:** LXC 208 (10.71.20.15:3100), PostgreSQL + pgvector on 10.71.20.49, LiteLLM embeddings via 10.71.20.33:4000 (gemini-embedding-001, 768 dims)
 **Auth:** Bearer token via `OPEN_BRAIN_AGENT_TOKEN` env var
 
 ## Integration Work (Consumer-Side)
@@ -26,10 +26,10 @@
 
 | Skill | Location | Current State | Target State |
 |-------|----------|---------------|--------------|
-| `/brain` | `~/.config/pai/Skills/brain/` | Already calls mcp2cli open-brain | Working -- migrate into skippy-agentspace |
-| `/capture-session` | `~/.config/pai/Skills/capture-session/` | Already calls mcp2cli open-brain | Working -- migrate into skippy-agentspace |
-| `/session-wrap` | `skills/session-wrap/` (this repo) | Markdown-only, no Open Brain | Add Open Brain push after markdown write |
-| `/session-start` | `~/.config/pai/Skills/session-start/` | Reads .reports/ markdown only | Add Open Brain session_load query |
+| `/brain` | `skills/brain/` | Migrated with graceful degradation (local JSON fallback) | **DONE** |
+| `/capture-session` | `skills/capture-session/` | Rewritten as OB-native (removed legacy Mattermost script) | **DONE** |
+| `/session-wrap` | `skills/session-wrap/` | Step 3.5 added for OB session_save | **DONE** |
+| `/session-start` | `skills/session-start/` | 8th source added (OB session_load in scout prompt) | **DONE** |
 
 ### Hooks to Wire
 
