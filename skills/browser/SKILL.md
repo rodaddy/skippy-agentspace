@@ -10,6 +10,12 @@ metadata:
 
 # Browser Automation
 
+## Requirements
+
+- `agent-browser` MCP server (provides browser_* tools)
+- `browse` CLI wrapper (for Cloudflare-protected sites)
+- **Without these:** Use `WebFetch` for simple page content, or skip browser-dependent workflows entirely. No silent fallback -- skill will report missing dependencies.
+
 Two interfaces, pick the right one:
 
 | Interface | When to Use |

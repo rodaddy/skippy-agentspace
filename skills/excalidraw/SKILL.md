@@ -12,11 +12,12 @@ metadata:
 
 Generate `.excalidraw` files via Mermaid syntax + browser conversion. Output: `~/Downloads/<name>.excalidraw` + optional PNG.
 
-## Dependencies
+## Requirements
 
-- `@excalidraw/mermaid-to-excalidraw` + `mermaid` (bun packages, peer deps)
+- `bun` runtime with `@excalidraw/mermaid-to-excalidraw` + `mermaid` packages
 - `agent-browser` MCP (real Chromium for dagre layout -- server-side mocks produce garbage spacing)
 - `claudePy` (all Python post-processing -- never `python3`)
+- **Without these:** Generate Mermaid `.mmd` files only (skip Excalidraw conversion). The `.mmd` output is still useful -- GitHub renders it, and users can paste into excalidraw.com manually.
 
 ## Architecture (CRITICAL)
 

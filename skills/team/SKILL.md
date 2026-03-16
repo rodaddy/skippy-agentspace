@@ -13,6 +13,12 @@ metadata:
 
 Spawn N agents working on a shared task list. Decomposes a high-level task, distributes sub-tasks to agents, coordinates via messaging, and verifies results.
 
+## Requirements
+
+- Claude Code with native team APIs (`TeamCreate`, `SendMessage`, `TaskCreate`)
+- These are built-in Claude Code tools -- no MCP or external setup needed
+- **Without team APIs:** Fall back to spawning independent agents via the `Agent` tool (loses inter-agent messaging but parallel execution still works)
+
 ## Usage
 
 ```

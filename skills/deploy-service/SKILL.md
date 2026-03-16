@@ -10,6 +10,14 @@ metadata:
 
 # Deploy Service - Automated LXC + Proxy + DNS Setup
 
+## Requirements
+
+- Proxmox VE cluster with SSH access
+- Pi-hole DNS server(s) on the cluster
+- nginx reverse proxy host
+- `config.env` populated with your infrastructure values (copy from `config.env.example`)
+- **Without these:** This skill is infrastructure-specific and has no generic fallback. It serves as a reference pattern for automated LXC deployment that can be adapted to other environments.
+
 Automates the complete deployment of a new service to an LXC container.
 
 ## What It Does

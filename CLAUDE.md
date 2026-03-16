@@ -119,11 +119,19 @@ Full audit: `.planning/audits/marketplace-audit-2026-03-13.md`
 
 ## Constraints
 
-- **Portability**: Every skill works with vanilla Claude Code. PAI enhancements optional.
+- **Portability**: Tiered -- see table below. Core workflow skills work on vanilla Claude Code. Utility/domain skills may require external infrastructure but document their requirements and fallback behavior.
 - **Self-contained**: No cross-skill imports. Each skill is a standalone directory.
 - **No build step**: Shell scripts + markdown only. No TypeScript/Node dependencies.
 - **Standalone**: No runtime dependency on GSD, PAUL, or OMC. Historical source attribution only.
 - **Stack**: `#!/usr/bin/env bash` for scripts. Markdown for rules/references.
+
+### Portability Tiers
+
+| Tier | Skills | Notes |
+|------|--------|-------|
+| **Fully portable** | core, skippy, add-todo, update-todo, check-todos, correct, trace | No external dependencies. Works on any Claude Code install. |
+| **Degraded without infra** | autopilot, drive, session-start, session-wrap, session-handoff, brain, capture-session, fabric | Falls back to local files or reduced functionality when Open Brain, mcp2cli, or LiteLLM are unavailable. |
+| **Requires setup** | team, browser, vaultwarden, excalidraw, deploy-service | Need specific infrastructure (MCP servers, Proxmox, bun packages). Each skill documents requirements and what happens without them. |
 
 ## Project Status
 
