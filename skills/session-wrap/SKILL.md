@@ -1,6 +1,6 @@
 ---
 name: session-wrap
-description: Wrap up a session - create session file + dated history file + briefing update, commit on current branch.
+description: Wrap up a session - create session file + dated history file + briefing update + persist to Open Brain, commit on current branch.
 metadata:
   version: 0.1.0
   author: Rico
@@ -66,15 +66,31 @@ Use parallel Write calls:
 3. Append briefing block to BRIEFING_FILE (Edit, not Write)
 4. Handle todo status changes
 
-### Step 3.5: Persist to Open Brain (optional)
+### Step 3.5: Persist to Open Brain
 
-If `mcp2cli open-brain` is available, save session summary to Open Brain for semantic search:
+Save session knowledge to Open Brain for semantic search across sessions. Three calls:
 
+**Session summary:**
 ```bash
 mcp2cli open-brain session_save --params '{"summary": "<session summary from Step 2>", "project": "<PROJECT_NAME>", "tags": ["session-wrap"], "key_decisions": ["<decision1>"], "next_steps": ["<next1>"], "blockers": []}'
 ```
 
-**Graceful degradation:** If this call fails (server down, mcp2cli not configured), log a warning and continue. Never block the commit or file writes. Local session files are the source of truth; Open Brain is supplemental.
+**Decisions** (one call per significant decision made this session):
+```bash
+mcp2cli open-brain log_decision --params '{"title": "<decision>", "rationale": "<why>", "alternatives": ["<alt1>"], "tags": ["<project>"]}'
+```
+
+**Learnings** (one call per gotcha, pattern, or solution discovered):
+```bash
+mcp2cli open-brain log_thought --params '{"content": "<learning with context>", "tags": ["<project>"]}'
+```
+
+**Graceful degradation:** If `mcp2cli open-brain` fails, fall back to local files:
+- Decisions: append to `~/.config/pai-private/knowledge/decisions-v2.json`
+- Learnings: append to `~/.config/pai-private/knowledge/learnings-v2.json`
+- Session: the local session file (Step 3) already captures this
+
+These local files are indexed by qmd, so knowledge remains searchable. Never block the file writes or commit on OB failure.
 
 ### Step 4: Commit on Current Branch
 
@@ -99,6 +115,7 @@ Session wrapped:
    - Session file: .reports/sessions/<SESSION_ID>.md
    - History: .reports/session-<DATE>_<slug>.md
    - Briefing: .reports/briefing.md [APPENDED/SKIPPED]
+   - Open Brain: session + N decisions + M learnings [saved/fallback to local]
    - Todos: [N completed, M progressed, K unchanged]
    - Commit: [hash] on [branch]
 ```
