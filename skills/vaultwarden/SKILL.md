@@ -10,6 +10,11 @@ metadata:
 
 # Vaultwarden Secrets Management
 
+## Requirements
+
+- `vaultwarden-secrets` MCP server connected to a Vaultwarden/Bitwarden instance
+- **Without this:** Use environment variables (`.env` files) or ask the user for credentials directly. No silent fallback -- skill will report the MCP server is unavailable.
+
 Fast credential access via vaultwarden-secrets MCP. One call, not three.
 
 ## Quick Reference

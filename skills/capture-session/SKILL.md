@@ -67,10 +67,39 @@ Captured to Open Brain:
 ## Graceful Degradation
 
 If `mcp2cli open-brain` fails at any step:
-1. Log a warning with the specific failure
-2. Continue with remaining steps (don't abort on partial failure)
+1. Log a warning: "Open Brain unavailable, falling back to local capture"
+2. Save to local files instead (see fallback below)
 3. At the end, report what succeeded and what failed
-4. Suggest manual capture for failed items
+
+### Local Fallback (when Open Brain is unavailable)
+
+Save captured knowledge to local files that can be searched later via qmd or Grep:
+
+**Decisions** -- append to `~/.config/pai-private/knowledge/decisions-v2.json`:
+```bash
+claudePy -c "
+import json, os, datetime
+path = os.path.expanduser('~/.config/pai-private/knowledge/decisions-v2.json')
+data = json.load(open(path)) if os.path.exists(path) else []
+data.append({'title': '<decision>', 'rationale': '<why>', 'alternatives': ['<alt1>'], 'tags': ['<tag>'], 'date': datetime.date.today().isoformat()})
+json.dump(data, open(path, 'w'), indent=2)
+"
+```
+
+**Learnings** -- append to `~/.config/pai-private/knowledge/learnings-v2.json`:
+```bash
+claudePy -c "
+import json, os, datetime
+path = os.path.expanduser('~/.config/pai-private/knowledge/learnings-v2.json')
+data = json.load(open(path)) if os.path.exists(path) else []
+data.append({'content': '<learning>', 'tags': ['<tag>'], 'date': datetime.date.today().isoformat()})
+json.dump(data, open(path, 'w'), indent=2)
+"
+```
+
+**Session summary** -- save to the project's `.reports/` directory (same path session-wrap uses).
+
+These local files are indexed by qmd, so captured knowledge remains searchable via `qmd search` and `qmd vsearch` even without Open Brain.
 
 ## Usage
 
