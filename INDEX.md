@@ -18,6 +18,7 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 | capture-session | `capture-session/SKILL.md` | (none) |
 | check-todos | `check-todos/SKILL.md` | (none) |
 | correct | `correct/SKILL.md` | (none) |
+| session-handoff | `session-handoff/SKILL.md` | (none) |
 | session-start | `session-start/SKILL.md` | (none) |
 | session-wrap | `session-wrap/SKILL.md` | (none) |
 | skippy [installed] | `skippy/SKILL.md` | /skippy:cleanup, /skippy:execute, /skippy:install, /skippy:migrate, /skippy:plan, /skippy:progress, /skippy:quick, /skippy:reconcile, /skippy:review, /skippy:update, /skippy:upgrade, /skippy:verify |
