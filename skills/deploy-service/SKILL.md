@@ -20,6 +20,14 @@ metadata:
 
 Automates the complete deployment of a new service to an LXC container.
 
+<HARD-GATE>
+Do NOT create LXC containers, modify nginx configs, or update DNS entries until you have:
+1. Presented the full deployment plan (service name, port, IPs, proxy config, DNS entries)
+2. Confirmed infrastructure targets (which Proxmox node, which DNS servers)
+3. Received user confirmation to proceed
+Infrastructure changes are hard to reverse. No exceptions for "simple" deployments.
+</HARD-GATE>
+
 ## What It Does
 
 1. **Finds next available IP** - Scans networks for next free matching IP

@@ -30,6 +30,64 @@ Phase: $ARGUMENTS
 </context>
 
 <process>
+
+<HARD-GATE>
+Do NOT spawn any executor agents or begin implementation until you have:
+1. Listed all plans and their dependency graph to the user
+2. Shown the wave grouping (which plans run in parallel)
+3. Received user confirmation to proceed
+This applies to EVERY execution regardless of phase size.
+</HARD-GATE>
+
+## Process Flow
+
+```dot
+digraph execute {
+    "Locate plans" [shape=box];
+    "Analyze dependencies" [shape=box];
+    "Group into waves" [shape=box];
+    "Present wave plan to user" [shape=box];
+    "User approves?" [shape=diamond];
+    "Execute wave N" [shape=box];
+    "Agent failure?" [shape=diamond];
+    "Log failure, report to user" [shape=box];
+    "Wave conflicts?" [shape=diamond];
+    "Resolve conflicts" [shape=box];
+    "More waves?" [shape=diamond];
+    "Reconcile" [shape=box];
+    "Route to verify/reconcile" [shape=doublecircle];
+
+    "Locate plans" -> "Analyze dependencies";
+    "Analyze dependencies" -> "Group into waves";
+    "Group into waves" -> "Present wave plan to user";
+    "Present wave plan to user" -> "User approves?";
+    "User approves?" -> "Execute wave N" [label="yes"];
+    "User approves?" -> "Group into waves" [label="revise"];
+    "Execute wave N" -> "Agent failure?";
+    "Agent failure?" -> "Log failure, report to user" [label="yes"];
+    "Agent failure?" -> "Wave conflicts?" [label="no"];
+    "Log failure, report to user" -> "Wave conflicts?";
+    "Wave conflicts?" -> "Resolve conflicts" [label="yes"];
+    "Wave conflicts?" -> "More waves?" [label="no"];
+    "Resolve conflicts" -> "More waves?";
+    "More waves?" -> "Execute wave N" [label="yes"];
+    "More waves?" -> "Reconcile" [label="no"];
+    "Reconcile" -> "Route to verify/reconcile";
+}
+```
+
+## Model Selection
+
+Select agent model based on task complexity (see `references/model-selection-guidance.md`):
+
+| Complexity Signal | Model | Examples |
+|-------------------|-------|----------|
+| 1-2 files, clear spec, mechanical | Sonnet | Rename, add validation, wire config |
+| Multi-file, integration concerns | Sonnet or Opus | API + handler + tests coordination |
+| Design judgment, broad codebase | Opus | Architecture changes, debugging |
+
+**Never Haiku.** Minimum is Sonnet.
+
 1. **Locate plans** -- Find all PLAN.md files in `.planning/phases/{phase}/`. Sort by filename (01-PLAN.md, 02-PLAN.md, etc.).
 
 2. **Analyze dependencies** -- Read each plan's frontmatter for `depends_on` fields. Build dependency graph.

@@ -405,7 +405,9 @@ Eval baseline:
 
 ---
 
-## Step 14: OMC Hook Audit
+## Step 14: Hook Audit (OMC + Open Brain)
+
+### 14a: OMC Hook Audit
 
 Follow process.md "OMC Hook Audit" section. Skip if no OMC.
 
@@ -413,8 +415,42 @@ Follow process.md "OMC Hook Audit" section. Skip if no OMC.
 
 **Ask** (only if warnings): "Remove these hooks?"
 
+### 14b: Open Brain Integration
+
+Open Brain provides semantic memory across sessions. Three hooks must be registered in `~/.claude/settings.json`, and the agent token must be available.
+
+**Check these in order:**
+
+1. **OPEN_BRAIN_AGENT_TOKEN** -- check `settings.json` env block and shell environment
+   - If missing: fetch from vaultwarden (`mcp2cli vaultwarden-secrets get_credential --params '{"query": "Open Brain - Agent Token"}'`)
+   - Add to `settings.json` env block: `"OPEN_BRAIN_AGENT_TOKEN": "<token>"`
+
+2. **OB hooks in settings.json** -- check for all 3:
+   - `SessionStart`: `bun run <open-brain-repo>/hooks/open-brain-session-load.ts` (timeout: 10)
+   - `PreCompact`: `bun run <open-brain-repo>/hooks/open-brain-session-save.ts` (timeout: 15)
+   - `SessionEnd`: `bun run <open-brain-repo>/hooks/open-brain-session-capture.ts` (timeout: 15, async: true)
+   - The `<open-brain-repo>` path is discovered from: `upstreams/open-brain/upstream.json` or ask user
+
+3. **mcp2cli open-brain service** -- verify `mcp2cli open-brain --help` works
+   - If not configured: check `~/.config/mcp2cli/services.json` for the open-brain entry
+   - Service URL: `http://10.71.20.15:3100/mcp` with bearer auth
+
+4. **OB server reachability** -- `curl -sf --max-time 3 http://10.71.20.15:3100/mcp` with an init request
+   - If unreachable: warn but don't block (OB is best-effort infrastructure)
+
+**Show the user:**
+```
+Open Brain Integration:
+  Token: set / MISSING
+  Hooks: 3/3 registered / N/3 (missing: X, Y)
+  mcp2cli: configured / NOT configured
+  Server: reachable / unreachable (non-blocking)
+```
+
+**Ask (AskUserQuestion):** "Open Brain integration status." -- options: Fix missing items / Continue (OB is optional) / Skip
+
 ---
-**LOG CHECKPOINT: Every `[CMD]` and result from Step 14 must be in `$LOG_FILE`. Verify: hooks found, warnings issued, removals made.**
+**LOG CHECKPOINT: Every `[CMD]` and result from Step 14 must be in `$LOG_FILE`. Verify: OMC hooks, OB token status, OB hook registration, mcp2cli status, server reachability.**
 
 ---
 
@@ -429,6 +465,9 @@ Follow process.md "Post-Install Smoke Test" section.
 - Skippy commands present: PASS/FAIL
 - GSD removed: PASS/FAIL
 - Broken symlinks: PASS/FAIL
+- Open Brain hooks: PASS/WARN (3/3 registered)
+- OB token: PASS/WARN (set in env)
+- PAI Skills symlinks: PASS/WARN (session-wrap, capture-session, brain, session-start point to SAS)
 
 **Ask (AskUserQuestion):** "Smoke test results shown." -- options: Continue to handoff / Investigate failures / Rollback
 

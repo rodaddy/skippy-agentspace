@@ -52,6 +52,9 @@ Create the findings board:
 ## Consistency Review
 [pending -- will be populated by consistency-reviewer agent]
 
+## Cross-Model Review (Gemini 3.1 Pro)
+[pending -- will be populated by cross-model antagonist review]
+
 ## Synthesis
 
 ### Priority Actions
@@ -65,7 +68,50 @@ Create the findings board:
 [pending -- will be populated by eval agent]
 ```
 
-## Step 2: Spawn Reviewer Agents (Sequential)
+## Step 2: Spec Compliance Review (MUST RUN FIRST)
+
+<HARD-GATE>
+Do NOT start specialist reviews (security, code quality, architecture, consistency) until
+spec compliance review has passed. Spec compliance MUST be explicitly approved before
+any quality-focused review begins. Polishing code that doesn't meet the spec is waste.
+</HARD-GATE>
+
+Before running the specialist swarm, verify the implementation matches its spec:
+
+1. Identify the relevant spec/plan/requirements for the scope being reviewed
+2. Spawn a spec-compliance reviewer agent with:
+   - The spec/plan document(s)
+   - The implemented code paths
+   - Instruction: "Compare implementation against spec. For each requirement: does the code satisfy it? Is anything missing? Is anything extra (not requested)? Return PASS or list of gaps."
+3. If gaps found: report to user, fix before proceeding to specialist reviews
+4. If no spec exists (ad-hoc review): skip this step, proceed to specialists
+
+See also: `references/two-stage-review.md`
+
+## Step 3: Cross-Model Antagonist Review (Gemini 3.1 Pro)
+
+Use a different model family to catch blind spots Claude systematically misses. Claude reviewing Claude is an echo chamber -- Gemini has different training data, different failure modes, different strengths.
+
+1. Generate the diff for the scope being reviewed:
+   ```bash
+   git diff main...HEAD > /tmp/review-diff.diff
+   ```
+2. Write a review prompt to `/tmp/review-prompt.md` containing:
+   - What was built (summary from spec or commit messages)
+   - Key files and their purpose
+   - Specific concerns to focus on (if any)
+3. Call the cross-model review script:
+   ```bash
+   scripts/cross-model-review.sh gemini-3.1-pro /tmp/review-prompt.md --diff /tmp/review-diff.diff
+   ```
+4. Capture the Gemini review output and add to the findings board under a new `## Cross-Model Review` section
+5. Any CRITICAL or HIGH findings from Gemini get added to the Priority Actions table alongside Claude findings
+
+**Skip when:** Scope is trivial (< 50 lines changed) or review is time-constrained and user explicitly opts out.
+
+See also: `references/model-routing.md` (Gemini section), `scripts/cross-model-review.sh`
+
+## Step 4: Spawn Specialist Reviewer Agents (Sequential)
 
 Spawn each of the 4 reviewers one at a time using the Agent tool. Sequential spawning is intentional -- it prevents context overflow from large simultaneous returns and avoids findings board write conflicts.
 
@@ -76,7 +122,7 @@ For each reviewer in order:
 4. **consistency-reviewer** -- verifies cross-file alignment (SKILL.md, INDEX.md, state files)
 
 For each reviewer, read its agent definition file (`skills/skippy/agents/{agent-name}.md`) and extract YAML frontmatter fields to pass as Agent tool parameters:
-- `complexity` → map to Agent tool `model` parameter (HIGH=opus, MEDIUM=sonnet, LOW=haiku; default MEDIUM)
+- `complexity` → map to Agent tool `model` parameter (HIGH=opus, MEDIUM=sonnet, LOW=sonnet; default MEDIUM. Never haiku.)
 - `permissionMode` → Agent tool `mode` parameter (e.g., "plan" for reviewers)
 - `isolation` → Agent tool `isolation` parameter (e.g., "worktree" for fix-agent)
 
@@ -88,7 +134,7 @@ Spawn the Agent tool with:
 
 All agents include HOME sandbox instructions in their definition files. Reviewers use `permissionMode: plan` (read-only) -- they cannot modify project files.
 
-## Step 3: Synthesize Findings
+## Step 5: Synthesize Findings
 
 After all 4 reviewers complete:
 
@@ -99,7 +145,7 @@ After all 4 reviewers complete:
 3. Deduplicate findings that describe the same issue from different perspectives
 4. Add cross-ref notes to duplicate findings (e.g., "See also: Security Review finding #2")
 
-## Step 4: Prioritize
+## Step 6: Prioritize
 
 Build the Priority Actions table in the Synthesis section:
 
@@ -112,7 +158,7 @@ Build the Priority Actions table in the Synthesis section:
 
 Only CRITICAL and HIGH findings trigger fix agent spawning. MEDIUM and LOW are documented but not auto-fixed.
 
-## Step 5: Fix (CRITICAL and HIGH only)
+## Step 7: Fix (CRITICAL and HIGH only)
 
 For each CRITICAL or HIGH finding (or group of findings on the same file):
 
@@ -125,7 +171,7 @@ For each CRITICAL or HIGH finding (or group of findings on the same file):
 
 If no CRITICAL or HIGH findings exist, skip this step and report "No critical fixes needed."
 
-## Step 6: Evaluate
+## Step 8: Evaluate
 
 Spawn the eval-agent with a prompt containing:
 - The findings board path (to see what was fixed)
@@ -140,7 +186,7 @@ If eval returns FAIL:
 
 If no fixes were applied (Step 5 was skipped), skip evaluation too.
 
-## Step 7: Finalize Findings Board
+## Step 9: Finalize Findings Board
 
 Update the findings board:
 1. Set status to "verified" (or "partial -- N issues remain" if some fixes failed)
@@ -156,7 +202,7 @@ Update the findings board:
    ```
 3. Update all finding statuses: OPEN -> FIXED or WONTFIX (with reason)
 
-## Step 8: Report
+## Step 10: Report
 
 Display a summary to the user:
 
