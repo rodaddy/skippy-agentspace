@@ -94,31 +94,35 @@ echo ""
 
 skippy_section "Skills"
 
+PAI_SKILLS_DIR="${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}"
+
 for skill_dir in "$SKILLS_DIR"/*/; do
     [ -d "$skill_dir" ] || continue
     name="$(basename "$skill_dir")"
 
-    # Check for symlink in either modern or legacy location
+    # Check for install in: SAS symlink, PAI Skills, or legacy commands
     modern_link="$HOME/.claude/skills/$name"
     legacy_link="$HOME/.claude/commands/$name"
-    found_link=""
+    pai_dir="$PAI_SKILLS_DIR/$name"
+    found_at=""
 
-    if [ -L "$modern_link" ]; then
-        found_link="$modern_link"
-    elif [ -L "$legacy_link" ]; then
-        found_link="$legacy_link"
+    if [ -L "$modern_link" ] && [ -e "$modern_link" ]; then
+        found_at="$modern_link (SAS symlink)"
+    elif [ -L "$pai_dir" ] && [ -e "$pai_dir" ]; then
+        found_at="$pai_dir (PAI symlink)"
+    elif [ -d "$pai_dir" ] && [ -f "$pai_dir/SKILL.md" ]; then
+        found_at="$pai_dir (PAI installed)"
+    elif [ -L "$legacy_link" ] && [ -e "$legacy_link" ]; then
+        found_at="$legacy_link (legacy)"
     fi
 
-    if [ -n "$found_link" ]; then
-        # Symlink exists -- verify target resolves
-        if [ -e "$found_link" ]; then
-            skippy_pass "$name (installed at $found_link)"
-        else
-            skippy_fail "$name symlink is dangling: $found_link"
-            skippy_suggest "Re-run tools/install.sh $name"
-        fi
+    if [ -n "$found_at" ]; then
+        skippy_pass "$name (installed at $found_at)"
+    elif [ -L "$modern_link" ] && [ ! -e "$modern_link" ]; then
+        skippy_fail "$name symlink is dangling: $modern_link"
+        skippy_suggest "Re-run tools/install.sh $name"
     else
-        # Not installed
+        # Not installed anywhere
         if [ "$name" = "core" ]; then
             skippy_fail "core skill not installed (core is essential)"
             skippy_suggest "Run: tools/install.sh --core"
@@ -245,6 +249,83 @@ if [ -f "$index_sync_script" ]; then
 else
     skippy_warn "index-sync.sh not found -- skipping index check"
 fi
+
+echo ""
+
+# ---------------------------------------------------------------------------
+# Category 5: Open Brain Integration
+# ---------------------------------------------------------------------------
+
+skippy_section "Open Brain Integration"
+
+# Check OPEN_BRAIN_AGENT_TOKEN
+if [ -n "${OPEN_BRAIN_AGENT_TOKEN:-}" ]; then
+    skippy_pass "OPEN_BRAIN_AGENT_TOKEN is set"
+else
+    skippy_warn "OPEN_BRAIN_AGENT_TOKEN not set -- OB hooks will silently skip"
+    skippy_suggest "Fetch from vaultwarden: mcp2cli vaultwarden-secrets get_credential --params '{\"query\": \"Open Brain\"}'"
+    skippy_suggest "Add to ~/.zshrc or settings.json env block"
+fi
+
+# Check mcp2cli open-brain service
+if command -v mcp2cli >/dev/null 2>&1; then
+    if mcp2cli open-brain --help >/dev/null 2>&1; then
+        skippy_pass "mcp2cli open-brain service configured"
+    else
+        skippy_warn "mcp2cli open-brain service not registered"
+        skippy_suggest "Register in ~/.config/mcp2cli/services.json"
+    fi
+else
+    skippy_warn "mcp2cli not found -- Open Brain CLI integration unavailable"
+fi
+
+# Check OB server reachability via mcp2cli (uses actual auth + transport)
+if command -v mcp2cli >/dev/null 2>&1; then
+    if mcp2cli open-brain search_brain --params '{"query": "test", "limit": 1}' >/dev/null 2>&1; then
+        skippy_pass "Open Brain server reachable (via mcp2cli)"
+    else
+        skippy_warn "Open Brain server not responding via mcp2cli"
+        skippy_suggest "Check LXC 208 is running: ssh root@10.71.20.15 systemctl status open-brain"
+    fi
+fi
+
+# Check OB hooks registered in settings.json
+if [ -f "$settings_file" ] && command -v bun >/dev/null 2>&1; then
+    ob_hook_count="$(SETTINGS="$settings_file" bun -e "
+        const fs = require('fs');
+        const s = JSON.parse(fs.readFileSync(process.env.SETTINGS, 'utf-8'));
+        let c = 0;
+        for (const gs of Object.values(s.hooks || {})) {
+            for (const g of gs) {
+                for (const h of g.hooks || []) {
+                    if ((h.command || '').includes('open-brain')) c++;
+                }
+            }
+        }
+        console.log(c);
+    " 2>/dev/null || echo "0")"
+
+    if [ "$ob_hook_count" -ge 3 ] 2>/dev/null; then
+        skippy_pass "all 3 Open Brain hooks registered (SessionStart, PreCompact, SessionEnd)"
+    elif [ "$ob_hook_count" = "0" ]; then
+        skippy_fail "no Open Brain hooks in settings.json"
+        skippy_suggest "Run: bash tools/setup-integrations.sh"
+    else
+        skippy_warn "partial OB hook registration ($ob_hook_count/3)"
+        skippy_suggest "Run: bash tools/setup-integrations.sh"
+    fi
+fi
+
+# Check PAI Skills symlinks (not copies)
+for skill_name in session-wrap capture-session brain session-start; do
+    pai_skill="$HOME/.config/pai/Skills/$skill_name"
+    if [ -L "$pai_skill" ]; then
+        skippy_pass "PAI Skills/$skill_name is symlink (source of truth: SAS)"
+    elif [ -d "$pai_skill" ]; then
+        skippy_warn "PAI Skills/$skill_name is a copy (should be symlink to SAS)"
+        skippy_suggest "Replace with: ln -sfn $SKILLS_DIR/$skill_name $pai_skill"
+    fi
+done
 
 echo ""
 

@@ -69,7 +69,8 @@ Captured to Open Brain:
 If `mcp2cli open-brain` fails at any step:
 1. Log a warning: "Open Brain unavailable, falling back to local capture"
 2. Save to local files instead (see fallback below)
-3. At the end, report what succeeded and what failed
+3. Continue with remaining steps (don't abort on partial failure)
+4. At the end, report what succeeded and what fell back to local
 
 ### Local Fallback (when Open Brain is unavailable)
 

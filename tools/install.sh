@@ -177,6 +177,25 @@ install_skill_modern() {
     # Atomic symlink create/replace (no TOCTOU race)
     ln -sfn "$src" "$dest"
     echo "  INSTALLED (skills): $name -> $dest"
+
+    # Also symlink into PAI Skills directory if it exists
+    if [[ -d "$PAI_SKILLS_DIR" ]]; then
+        local pai_dest="$PAI_SKILLS_DIR/$name"
+        if [[ -L "$pai_dest" ]]; then
+            # Update existing symlink
+            ln -sfn "$src" "$pai_dest"
+        elif [[ -d "$pai_dest" ]]; then
+            # Replace copy with symlink (backup first)
+            backup_skill "$name" "$PAI_SKILLS_DIR"
+            mv "$pai_dest" "/tmp/skippy-replaced-$name-$$" 2>/dev/null || true
+            ln -sfn "$src" "$pai_dest"
+            echo "    PAI Skills: replaced copy with symlink"
+        else
+            ln -sfn "$src" "$pai_dest"
+        fi
+        echo "    PAI Skills: $pai_dest -> $src"
+    fi
+
     echo "    Skill entry: $src/SKILL.md"
     if [[ -d "$src/commands" ]]; then
         local cmd_list=""

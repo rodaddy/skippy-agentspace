@@ -19,11 +19,41 @@ The global profile approach is too coarse -- a phase doing both simple file edit
 
 Before delegating any task to a subagent, classify its complexity:
 
+### Claude Models (via Agent tool)
+
 | Complexity | Model Tier | Signal Words | Examples |
 |------------|-----------|--------------|----------|
-| **LOW** | Haiku | lookup, list, check, rename, add export | Find all usages of X, add a missing import, update a version string |
+| **LOW** | Sonnet | lookup, list, check, rename, add export | Find all usages of X, add a missing import, update a version string |
 | **MEDIUM** | Sonnet | implement, add feature, write tests, debug | Build an API endpoint, write integration tests, fix a failing test |
 | **HIGH** | Opus | refactor, architect, analyze tradeoffs, debug complex | Redesign module structure, analyze performance bottleneck, review security model |
+
+> **Haiku is banned.** Minimum tier is Sonnet. See MEMORY.md (2026-02-19).
+
+### Gemini Models (via LiteLLM API -- `cross-model-review.sh`)
+
+Claude Code's Agent tool only supports Claude models. For Gemini, call LiteLLM directly.
+
+| Model | Use Case | Why |
+|-------|----------|-----|
+| **gemini-3.1-pro** | Adversarial review, cross-model QA, research second opinion | Different model family catches different blind spots. Use as antagonist reviewer. |
+| **gemini-3-flash** | Cheap mechanical tasks, bulk text processing, summarization | Fast and cheap. Good for tasks where quality floor is acceptable. |
+
+**When to use Gemini instead of Claude:**
+- **Review/QA** -- Gemini 3.1 Pro as adversarial reviewer after Claude implements. Different training data = different blind spots.
+- **Research diversity** -- For research tasks, spawning one Claude researcher + one Gemini researcher gives broader coverage.
+- **Cost optimization** -- Gemini 3 Flash for bulk ops where Sonnet is overkill but Haiku is banned.
+
+**How to call:**
+```bash
+# Adversarial review with diff
+scripts/cross-model-review.sh gemini-3.1-pro /tmp/review-prompt.md --diff /tmp/changes.diff
+
+# Direct LiteLLM API call
+curl -s http://10.71.1.33:4000/v1/chat/completions \
+  -H "Authorization: Bearer $LITELLM_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "gemini-3.1-pro", "messages": [{"role": "user", "content": "..."}]}'
+```
 
 ### Decision Rules
 

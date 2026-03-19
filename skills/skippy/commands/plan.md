@@ -35,6 +35,56 @@ Phase number: $ARGUMENTS (auto-detects next unplanned phase if omitted)
 </context>
 
 <process>
+
+<HARD-GATE>
+Do NOT spawn planner or researcher agents until you have:
+1. Confirmed the target phase with the user
+2. Shown any existing context (CONTEXT.md, prior plans)
+3. Received user confirmation on scope and approach
+This applies to EVERY planning run regardless of perceived clarity.
+</HARD-GATE>
+
+## Process Flow
+
+```dot
+digraph plan {
+    "Locate project" [shape=box];
+    "Resolve phase" [shape=box];
+    "Validate" [shape=box];
+    "Check context" [shape=box];
+    "Present scope to user" [shape=box];
+    "User approves?" [shape=diamond];
+    "Skip research?" [shape=diamond];
+    "Spawn researcher" [shape=box];
+    "Spawn planner" [shape=box];
+    "Skip verify?" [shape=diamond];
+    "Spawn critic" [shape=box];
+    "Critic approves?" [shape=diamond];
+    "Re-plan (max 3)" [shape=box];
+    "Update state" [shape=box];
+    "Route to execute" [shape=doublecircle];
+
+    "Locate project" -> "Resolve phase";
+    "Resolve phase" -> "Validate";
+    "Validate" -> "Check context";
+    "Check context" -> "Present scope to user";
+    "Present scope to user" -> "User approves?";
+    "User approves?" -> "Skip research?" [label="yes"];
+    "User approves?" -> "Present scope to user" [label="revise"];
+    "Skip research?" -> "Spawn planner" [label="--skip-research"];
+    "Skip research?" -> "Spawn researcher" [label="research"];
+    "Spawn researcher" -> "Spawn planner";
+    "Spawn planner" -> "Skip verify?";
+    "Skip verify?" -> "Update state" [label="--skip-verify"];
+    "Skip verify?" -> "Spawn critic" [label="verify"];
+    "Spawn critic" -> "Critic approves?";
+    "Critic approves?" -> "Update state" [label="yes"];
+    "Critic approves?" -> "Re-plan (max 3)" [label="issues"];
+    "Re-plan (max 3)" -> "Spawn critic";
+    "Update state" -> "Route to execute";
+}
+```
+
 1. **Locate project** -- Find `.planning/` in current directory or parents. Read STATE.md and ROADMAP.md.
 
 2. **Resolve phase** -- If phase number provided, use it. Otherwise find next unplanned phase from ROADMAP.md.
@@ -70,7 +120,7 @@ Agent definitions use `complexity:` (not `model:`) in frontmatter. Map at spawn 
 |------------|----------------|-----------|
 | HIGH | opus | Deep reasoning, tradeoff analysis |
 | MEDIUM | sonnet | Standard implementation work |
-| LOW | haiku | Mechanical lookups, simple edits |
+| LOW | sonnet | Mechanical lookups, simple edits |
 
 If no `complexity:` field, default to MEDIUM. See `references/model-routing.md` for full decision rules.
 </process>

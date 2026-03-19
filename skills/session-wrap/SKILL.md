@@ -66,31 +66,47 @@ Use parallel Write calls:
 3. Append briefing block to BRIEFING_FILE (Edit, not Write)
 4. Handle todo status changes
 
-### Step 3.5: Persist to Open Brain
+**Step 3 MUST complete before Step 3.5. Files are ALWAYS the source of truth.**
 
-Save session knowledge to Open Brain for semantic search across sessions. Three calls:
+### Step 3.5: Persist to Open Brain (MANDATORY attempt -- graceful on failure)
 
-**Session summary:**
+**You MUST attempt this step. Do NOT skip it.** Open Brain is PAI's semantic memory -- without it, session knowledge is trapped in flat files. If OB fails, fall back to local files and report the failure. But you must TRY.
+
+**This supplements Step 3 file writes** -- files are always the source of truth. OB adds cross-session semantic search.
+
+Run these mcp2cli calls and **show the result of each call to the user:**
+
+**1. Session summary (REQUIRED):**
 ```bash
-mcp2cli open-brain session_save --params '{"summary": "<session summary from Step 2>", "project": "<PROJECT_NAME>", "tags": ["session-wrap"], "key_decisions": ["<decision1>"], "next_steps": ["<next1>"], "blockers": []}'
+mcp2cli open-brain session_save --params '{"summary": "<full session summary from Step 2>", "project": "<PROJECT_NAME>", "tags": ["session-wrap", "<branch-type>"], "key_decisions": ["<decision1>", "<decision2>"], "next_steps": ["<next1>"], "blockers": []}'
 ```
+Expected: `{"id": "uuid", "embedded": true}` -- save the ID for the report.
 
-**Decisions** (one call per significant decision made this session):
+**2. Decisions (one call per significant decision):**
 ```bash
 mcp2cli open-brain log_decision --params '{"title": "<decision>", "rationale": "<why>", "alternatives": ["<alt1>"], "tags": ["<project>"]}'
 ```
 
-**Learnings** (one call per gotcha, pattern, or solution discovered):
+**3. Learnings (one call per gotcha, pattern, or solution discovered):**
 ```bash
 mcp2cli open-brain log_thought --params '{"content": "<learning with context>", "tags": ["<project>"]}'
 ```
 
-**Graceful degradation:** If `mcp2cli open-brain` fails, fall back to local files:
-- Decisions: append to `~/.config/pai-private/knowledge/decisions-v2.json`
-- Learnings: append to `~/.config/pai-private/knowledge/learnings-v2.json`
-- Session: the local session file (Step 3) already captures this
+**Show results inline** -- the user must see what went into OB:
+```
+Open Brain capture:
+  - Session: saved (id: abc123, embedded: true)
+  - Decisions: 2 logged
+  - Learnings: 1 logged
+```
 
-These local files are indexed by qmd, so knowledge remains searchable. Never block the file writes or commit on OB failure.
+**On failure:** If `mcp2cli open-brain` returns an error or times out:
+1. Print the error to the user
+2. Fall back to local files:
+   - Decisions: append to `~/.config/pai-private/knowledge/decisions-v2.json`
+   - Learnings: append to `~/.config/pai-private/knowledge/learnings-v2.json`
+3. Report "fallback to local" in Step 6
+4. Continue to Step 4 -- never block the commit
 
 ### Step 4: Commit on Current Branch
 
@@ -104,20 +120,35 @@ git commit -m "session: wrap TODAY -- SHORT_SUMMARY"
 
 Each git command in its own Bash call. Only stage reports files.
 
-### Step 5: Sync Index (optional)
+### Step 5: Sync Indexes
 
-Run any search index update tools if available.
+**qmd index sync** (background -- don't wait for completion):
+
+```bash
+rsync -az ~/.cache/qmd/index.sqlite root@10.71.20.15:/root/.cache/qmd/index.sqlite
+```
+
+Run this in the background. Report success/failure in the final summary but don't block on it. The server uses this index for `search_all` federated search. First sync is ~1GB, incrementals are small.
+
+If rsync fails (server unreachable, etc.), note it in the report and move on -- it's non-critical.
 
 ### Step 6: Report
 
 ```
 Session wrapped:
-   - Session file: .reports/sessions/<SESSION_ID>.md
+   Files:
+   - Session: .reports/sessions/<SESSION_ID>.md
    - History: .reports/session-<DATE>_<slug>.md
    - Briefing: .reports/briefing.md [APPENDED/SKIPPED]
-   - Open Brain: session + N decisions + M learnings [saved/fallback to local]
-   - Todos: [N completed, M progressed, K unchanged]
-   - Commit: [hash] on [branch]
+
+   Open Brain:
+   - Session: saved (id: <uuid>) | FAILED: <reason> | fallback to local
+   - Decisions: N logged | FAILED | fallback to local
+   - Learnings: N logged | FAILED | fallback to local
+
+   Todos: [N completed, M progressed, K unchanged]
+   Commit: [hash] on [branch]
+   qmd sync: synced | FAILED: <reason> | skipped (no index)
 ```
 
 ## Error Handling
@@ -128,12 +159,14 @@ Session wrapped:
 | No changes to commit | Continue (not an error) |
 | Directories don't exist | Create with mkdir -p |
 | No previous session files | No carry-forward to extract |
+| mcp2cli open-brain fails | Log warning, fall back to local files, continue to Step 4 |
 
 ## Rules
 
 - **Carry-forward pruning is mandatory.** Compare every item from previous carry-forward against what was done this session. Only carry genuinely pending items.
 - **Use separate Bash calls** for each git command
 - **Never use Write on briefing file** -- append only via Edit
+- **Step 3.5 never blocks.** If Open Brain is down, log the error and move on. File writes (Step 3) and commit (Step 4) must always succeed regardless of OB status.
 
 ## References
 

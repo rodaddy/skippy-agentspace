@@ -65,6 +65,13 @@ Compare post-upgrade state to the pre-upgrade snapshot:
 - List any hook changes (count difference)
 - Report verify.sh results -- all PASS is clean, any FAIL needs attention
 
+**Open Brain integration check:**
+- Verify OB hooks still registered in settings.json (3/3)
+- Verify `OPEN_BRAIN_AGENT_TOKEN` still set
+- Verify PAI Skills symlinks (session-wrap, capture-session, brain, session-start) point to SAS, not stale copies
+- If `install.sh --all` replaced symlinks with copies, fix them back to symlinks
+- Report OB integration status in the upgrade summary
+
 ## 5. Handle Customizations
 
 Check `git status` after the pull for modified tracked files:

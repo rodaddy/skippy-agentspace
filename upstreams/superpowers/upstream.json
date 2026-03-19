@@ -1,0 +1,46 @@
+{
+  "name": "superpowers",
+  "description": "Agentic skills framework for coding agents -- anti-rationalization patterns, HARD-GATE enforcement, two-stage review, TDD discipline, subagent orchestration with model selection, Graphviz dot process flows",
+  "repo": "https://github.com/obra/superpowers.git",
+  "branch": "main",
+  "last_checked_sha": "3cee13e516e91d44b957c1336c3d08c8a8392702",
+  "last_check": "2026-03-17",
+  "cherry_picks": [
+    {
+      "id": "anti-rationalization",
+      "source": "skills/test-driven-development/SKILL.md, skills/brainstorming/SKILL.md",
+      "target": "skills/skippy/references/anti-rationalization.md",
+      "description": "Rationalization tables and red-flag lists that preempt LLM excuse-making. Applied to LAW 4/5.",
+      "date": "2026-03-17"
+    },
+    {
+      "id": "hard-gate",
+      "source": "skills/brainstorming/SKILL.md",
+      "target": "skills/skippy/references/hard-gate.md",
+      "description": "XML-like <HARD-GATE> tags in skill definitions that block progression without user approval.",
+      "date": "2026-03-17"
+    },
+    {
+      "id": "two-stage-review",
+      "source": "skills/subagent-driven-development/SKILL.md",
+      "target": "skills/skippy/references/two-stage-review.md",
+      "description": "Enforced ordering: spec compliance review before code quality review. Prevents polishing wrong code.",
+      "date": "2026-03-17"
+    },
+    {
+      "id": "dot-process-flows",
+      "source": "skills/*/SKILL.md (all 14 skills use this pattern)",
+      "target": "skills/skippy/references/dot-process-flows.md",
+      "description": "Graphviz dot notation embedded in skill definitions for dual-purpose docs + agent-parseable process flows.",
+      "date": "2026-03-17"
+    },
+    {
+      "id": "model-selection-guidance",
+      "source": "skills/subagent-driven-development/SKILL.md",
+      "target": "skills/skippy/references/model-selection-guidance.md",
+      "description": "Three-tier model selection (cheap/standard/capable) with complexity signals for agent dispatch.",
+      "date": "2026-03-17"
+    }
+  ],
+  "notes": "Cherry-pick ideas only -- do NOT absorb their anti-MCP stance, mandatory-TDD absolutism, or lack of personas. Focus on: (1) anti-rationalization tables for LAW 4/5, (2) <HARD-GATE> markers for skills requiring user approval, (3) two-stage review ordering (spec compliance then code quality), (4) Graphviz dot diagrams in skill definitions, (5) subagent model selection guidance. Their skills are MIT-licensed markdown SKILL.md files -- same format as PAI skills, low friction to adapt."
+}

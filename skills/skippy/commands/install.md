@@ -79,7 +79,27 @@ readlink ~/.claude/skills
 - Check commands are discoverable: list all `commands/*.md` across installed skills
 - Report total: "X skills installed, Y commands available"
 
-## 6. Cleanup
+## 6. Open Brain Integration
+
+Check and configure OB integration for semantic session memory:
+
+1. **Token:** Check if `OPEN_BRAIN_AGENT_TOKEN` is set (env or `~/.claude/settings.json` env block). If missing, fetch from vaultwarden and add to settings.json env block.
+
+2. **Hooks:** Verify these 3 hooks exist in `~/.claude/settings.json`:
+   - `SessionStart`: `open-brain-session-load.ts` (loads brain context)
+   - `PreCompact`: `open-brain-session-save.ts` (saves before compaction)
+   - `SessionEnd`: `open-brain-session-capture.ts` (captures session knowledge)
+   Hook paths point to the open-brain repo (discover via `upstreams/open-brain/` or ask user for path). Register any missing hooks.
+
+3. **mcp2cli:** Verify `mcp2cli open-brain --help` works. If not, warn (needed for session-wrap Step 3.5).
+
+4. **PAI Skills symlinks:** Ensure session-wrap, capture-session, brain, session-start in `~/.config/pai/Skills/` are symlinks to the SAS repo, not copies. Replace copies with symlinks if found.
+
+Report: "Open Brain: token [set/missing], hooks [N/3], mcp2cli [ok/missing], symlinks [ok/copies]"
+
+Skip items that can't be resolved (e.g., OB server unreachable) -- they're non-blocking.
+
+## 7. Cleanup
 
 ```bash
 rm -rf "$CLONE_DIR"
@@ -87,7 +107,7 @@ rm -rf "$CLONE_DIR"
 
 Report backup location in case rollback needed.
 
-## 7. Final Report
+## 8. Final Report
 
 ```
 === Skippy Install Complete ===
@@ -95,6 +115,12 @@ Skills installed: N
 Commands available: skippy:plan, skippy:execute, skippy:verify, skippy:quick, skippy:progress, ...
 Backup: ~/.cache/skippy-backups/pre-install-YYYYMMDD-HHMMSS/
 Source: github.com/REPO
+
+Open Brain:
+  Token: set / MISSING
+  Hooks: 3/3 / N/3
+  mcp2cli: configured / NOT configured
+  PAI symlinks: OK / N copies need replacing
 
 Run /skippy:progress to check project state.
 Run /skippy:upgrade from the repo to pull future updates.
