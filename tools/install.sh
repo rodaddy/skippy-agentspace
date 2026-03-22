@@ -35,7 +35,7 @@ else
     skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
     skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
     skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
-    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
+    skippy_is_installed() { [[ -d "$HOME/.claude/skills/${1:?}" ]] || [[ -d "$HOME/.claude/commands/${1:?}" ]] || [[ -d "${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}/${1:?}" ]]; }
     skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; ! [[ "$n" =~ ^[a-zA-Z0-9_-]+$ ]] && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
 fi
 
@@ -133,38 +133,61 @@ warn_plugin_conflict() {
 install_skill_modern() {
     local name="$1"
     local src="$SKILLS_DIR/$name"
-    local dest="$HOME/.claude/skills/$name"
 
-    mkdir -p "$HOME/.claude/skills"
+    # Determine install target:
+    #   - If PAI_SKILLS_DIR exists: COPY to pai (stable install). pai handles CC discovery.
+    #   - If no pai: COPY to ~/.claude/skills/ (direct CC discovery).
+    # NEVER symlink to sas dev repo -- dev changes would break live skills.
 
-    if [[ -e "$dest" ]] && [[ ! -L "$dest" ]]; then
-        echo "  ERROR: $dest exists and is not a symlink -- remove manually"
-        return 1
-    fi
-
-    # Atomic symlink create/replace (no TOCTOU race)
-    ln -sfn "$src" "$dest"
-    echo "  INSTALLED (skills): $name -> $dest"
-
-    # Also symlink into PAI Skills directory if it exists
     if [[ -d "$PAI_SKILLS_DIR" ]]; then
-        local pai_dest="$PAI_SKILLS_DIR/$name"
-        if [[ -L "$pai_dest" ]]; then
-            # Update existing symlink
-            ln -sfn "$src" "$pai_dest"
-        elif [[ -d "$pai_dest" ]]; then
-            # Replace copy with symlink (backup first)
+        local dest="$PAI_SKILLS_DIR/$name"
+        mkdir -p "$PAI_SKILLS_DIR"
+
+        # Backup existing before overwrite
+        if [[ -d "$dest" ]] && [[ ! -L "$dest" ]]; then
             backup_skill "$name" "$PAI_SKILLS_DIR"
-            mv "$pai_dest" "/tmp/skippy-replaced-$name-$$" 2>/dev/null || true
-            ln -sfn "$src" "$pai_dest"
-            echo "    PAI Skills: replaced copy with symlink"
-        else
-            ln -sfn "$src" "$pai_dest"
         fi
-        echo "    PAI Skills: $pai_dest -> $src"
+
+        # Remove stale symlink or existing copy
+        if [[ -L "$dest" ]]; then
+            rm "$dest"
+            echo "    Removed stale symlink: $dest"
+        elif [[ -d "$dest" ]]; then
+            mv "$dest" "/tmp/skippy-replaced-$name-$$" 2>/dev/null || true
+        fi
+
+        # Copy (not symlink) to pai
+        if command -v rsync >/dev/null 2>&1; then
+            rsync -a --delete "$src/" "$dest/"
+        else
+            cp -R "$src" "$dest"
+        fi
+
+        echo "  INSTALLED (copy -> pai): $name -> $dest"
+        echo "    Skill entry: $dest/SKILL.md"
+    else
+        local dest="$HOME/.claude/skills/$name"
+        mkdir -p "$HOME/.claude/skills"
+
+        # Remove stale symlink or existing copy
+        if [[ -L "$dest" ]]; then
+            rm "$dest"
+        elif [[ -d "$dest" ]]; then
+            backup_skill "$name" "$HOME/.claude/skills"
+            mv "$dest" "/tmp/skippy-replaced-$name-$$" 2>/dev/null || true
+        fi
+
+        # Copy (not symlink) directly to claude
+        if command -v rsync >/dev/null 2>&1; then
+            rsync -a --delete "$src/" "$dest/"
+        else
+            cp -R "$src" "$dest"
+        fi
+
+        echo "  INSTALLED (copy -> claude): $name -> $dest"
+        echo "    Skill entry: $dest/SKILL.md"
     fi
 
-    echo "    Skill entry: $src/SKILL.md"
     if [[ -d "$src/commands" ]]; then
         local cmd_list=""
         for cmd_file in "$src/commands/"*.md; do
@@ -183,22 +206,24 @@ install_skill_legacy() {
     local dest="$HOME/.claude/commands/$name"
 
     if [[ ! -d "$commands_src" ]]; then
-        echo "  SKIP (commands): $name has no commands/ directory -- nothing to symlink in legacy mode"
+        echo "  SKIP (commands): $name has no commands/ directory -- nothing to copy in legacy mode"
         return 0
     fi
 
     mkdir -p "$HOME/.claude/commands"
 
+    # Remove existing (symlink or directory)
     if [[ -L "$dest" ]]; then
         echo "  UPDATE: Removing existing symlink at $dest"
-        unlink "$dest"
-    elif [[ -e "$dest" ]]; then
-        echo "  ERROR: $dest exists and is not a symlink -- remove manually"
-        return 1
+        rm "$dest"
+    elif [[ -d "$dest" ]]; then
+        backup_skill "$name" "$HOME/.claude/commands"
+        mv "$dest" "/tmp/skippy-replaced-cmd-$name-$$" 2>/dev/null || true
     fi
 
-    ln -s "$commands_src" "$dest"
-    echo "  INSTALLED (commands): $name -> $dest"
+    # Copy (not symlink) commands directory
+    cp -R "$commands_src" "$dest"
+    echo "  INSTALLED (commands copy): $name -> $dest"
     local cmd_list=""
     for cmd_file in "$commands_src"/*.md; do
         [[ -f "$cmd_file" ]] || continue

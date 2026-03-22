@@ -127,8 +127,8 @@ restore() {
                 elif [[ "$target" == *..* ]]; then
                     echo "  WARN: refusing path traversal target for $skill_name: $target"
                 elif [[ -d "$target" ]]; then
-                    ln -s "$target" "$CLAUDE_DIR/skills/$skill_name"
-                    echo "  RESTORED: $skill_name -> $target"
+                    cp -R "$target" "$CLAUDE_DIR/skills/$skill_name"
+                    echo "  RESTORED (copy): $skill_name from $target"
                 else
                     echo "  WARN: target missing or not a directory for $skill_name: $target"
                 fi
@@ -159,8 +159,8 @@ restore() {
                 elif [[ "$target" == *..* ]]; then
                     echo "  WARN: refusing path traversal target for $cmd_name: $target"
                 elif [[ -e "$target" ]]; then
-                    ln -s "$target" "$CLAUDE_DIR/commands/$cmd_name"
-                    echo "  RESTORED: $cmd_name -> $target"
+                    cp -R "$target" "$CLAUDE_DIR/commands/$cmd_name"
+                    echo "  RESTORED (copy): $cmd_name from $target"
                 else
                     echo "  WARN: target missing for $cmd_name: $target"
                 fi
