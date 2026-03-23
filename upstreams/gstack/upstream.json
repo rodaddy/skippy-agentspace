@@ -1,0 +1,10 @@
+{
+  "name": "gstack",
+  "description": "Garry Tan's ordered sprint pipeline -- 25 skills from idea to production",
+  "repo": "https://github.com/garrytan/gstack.git",
+  "branch": "main",
+  "last_checked_sha": "2c0d4b39c7dea78d33e55aa8ce27d828df0662c4",
+  "last_check": "2026-03-21",
+  "cherry_picks": [],
+  "notes": "Pattern extraction only -- 8 patterns enrich 5 existing abilities. No new skills or abilities needed. See .planning/audits/gstack-audit-2026-03-21.md"
+}

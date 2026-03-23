@@ -124,8 +124,9 @@ skippy_validate_skill_name() {
 }
 
 # --- Install detection ---
-# Returns 0 if skill is installed (symlink exists), 1 otherwise.
+# Returns 0 if skill is installed (symlink or copy exists), 1 otherwise.
 skippy_is_installed() {
     local skill_name="$1"
-    [[ -L "$HOME/.claude/skills/$skill_name" ]] || [[ -L "$HOME/.claude/commands/$skill_name" ]]
+    local pai_dir="${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}"
+    [[ -d "$HOME/.claude/skills/$skill_name" ]] || [[ -d "$HOME/.claude/commands/$skill_name" ]] || [[ -d "$pai_dir/$skill_name" ]]
 }

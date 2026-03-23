@@ -52,7 +52,21 @@ Read (some may not exist -- that's fine):
 
 Draft session summary covering: what was done, files changed, decisions made, known issues, new ideas. See `references/session-templates.md` for file templates.
 
-### Step 2.5: Review Active Todos (MANDATORY)
+### Step 2.5: Glossary Check (if GLOSSARY.md exists)
+
+If the project has a `GLOSSARY.md`, scan session work for new domain terms that were introduced but aren't in the glossary. Present candidates to the user:
+
+```
+New terms used this session not in GLOSSARY.md:
+- "regime" (used in strategy context)
+- "staleness window" (used in data freshness checks)
+
+Add to glossary? [yes/skip]
+```
+
+If yes, append the terms with definitions. If no GLOSSARY.md exists, skip silently.
+
+### Step 2.6: Review Active Todos (MANDATORY)
 
 Compare each active todo against session work:
 - **Completed:** Add to completed list

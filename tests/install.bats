@@ -19,20 +19,20 @@ setup() {
 
 # --- Core install ---
 
-@test "install --core creates core symlink" {
+@test "install --core installs core skill" {
     run bash "$INSTALL_SCRIPT" --core
     assert_success
-    [ -L "$HOME/.claude/skills/core" ]
+    [ -d "$HOME/.claude/skills/core" ] || [ -L "$HOME/.claude/skills/core" ]
 }
 
 # --- All install ---
 
-@test "install --all creates symlinks for all skills" {
+@test "install --all installs all skills" {
     run bash "$INSTALL_SCRIPT" --all
     assert_success
-    # Count symlinks in skills dir -- should be 12 (all skills)
+    # Count installed skills (follow symlink, count entries)
     local count
-    count=$(find "$HOME/.claude/skills" -maxdepth 1 -type l | wc -l | tr -d ' ')
+    count=$(ls "$HOME/.claude/skills/" | wc -l | tr -d ' ')
     [ "$count" -ge 10 ]
 }
 
@@ -41,18 +41,18 @@ setup() {
 @test "install single skill by name" {
     run bash "$INSTALL_SCRIPT" skippy
     assert_success
-    [ -L "$HOME/.claude/skills/skippy" ]
+    [ -d "$HOME/.claude/skills/skippy" ] || [ -L "$HOME/.claude/skills/skippy" ]
 }
 
 # --- Idempotent ---
 
 @test "install is idempotent" {
     bash "$INSTALL_SCRIPT" --core
-    [ -L "$HOME/.claude/skills/core" ]
+    [ -d "$HOME/.claude/skills/core" ] || [ -L "$HOME/.claude/skills/core" ]
     # Second install should succeed (UPDATE path)
     run bash "$INSTALL_SCRIPT" --core
     assert_success
-    [ -L "$HOME/.claude/skills/core" ]
+    [ -d "$HOME/.claude/skills/core" ] || [ -L "$HOME/.claude/skills/core" ]
 }
 
 # --- Error: nonexistent skill ---
@@ -76,5 +76,5 @@ setup() {
     # Only skippy has a commands/ subdirectory -- core would SKIP (no commands/)
     run bash "$INSTALL_SCRIPT" skippy --target=commands
     assert_success
-    [ -L "$HOME/.claude/commands/skippy" ]
+    [ -d "$HOME/.claude/commands/skippy" ] || [ -L "$HOME/.claude/commands/skippy" ]
 }
