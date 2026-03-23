@@ -30,9 +30,9 @@ setup() {
 @test "install --all installs all skills" {
     run bash "$INSTALL_SCRIPT" --all
     assert_success
-    # Count installed skills (dirs or symlinks)
+    # Count installed skills (follow symlink, count entries)
     local count
-    count=$(find "$HOME/.claude/skills" -maxdepth 1 -mindepth 1 \( -type d -o -type l \) | wc -l | tr -d ' ')
+    count=$(ls "$HOME/.claude/skills/" | wc -l | tr -d ' ')
     [ "$count" -ge 10 ]
 }
 

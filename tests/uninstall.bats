@@ -38,7 +38,7 @@ setup() {
     # Install all skills first
     bash "$INSTALL_SCRIPT" --all
     local before_count
-    before_count=$(find "$HOME/.claude/skills" -maxdepth 1 -mindepth 1 \( -type d -o -type l \) | wc -l | tr -d ' ')
+    before_count=$(ls "$HOME/.claude/skills/" | wc -l | tr -d ' ')
     [ "$before_count" -ge 10 ]
 
     # Uninstall all -- pipe "n" to decline hook removal prompt
@@ -47,7 +47,7 @@ setup() {
 
     # All skippy skills should be gone
     local after_count
-    after_count=$(find "$HOME/.claude/skills" -maxdepth 1 -mindepth 1 \( -type d -o -type l \) | wc -l | tr -d ' ')
+    after_count=$(ls "$HOME/.claude/skills/" 2>/dev/null | wc -l | tr -d ' ')
     [ "$after_count" -eq 0 ]
 }
 
