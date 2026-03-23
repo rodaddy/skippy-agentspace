@@ -2,7 +2,7 @@
 set -euo pipefail
 
 _CLEANUP_DIRS=()
-trap 'for d in "${_CLEANUP_DIRS[@]}"; do rm -rf "$d" 2>/dev/null; done' EXIT
+trap 'if [ "${#_CLEANUP_DIRS[@]}" -gt 0 ]; then for d in "${_CLEANUP_DIRS[@]}"; do rm -rf "$d" 2>/dev/null; done; fi' EXIT
 
 # install -- Install skills into Claude Code's discovery system
 #
