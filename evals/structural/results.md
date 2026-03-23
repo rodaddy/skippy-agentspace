@@ -1,8 +1,9 @@
 # Structural Eval Results
 
 - **Date:** 2026-03-22
-- **Score:** 103/103 (100%)
+- **Score:** 111/111 (100%)
 - **Iterations:** 21
+- **Categories:** 23
 - **Runner:** `evals/structural/runner.sh`
 
 ## Iteration History
@@ -92,6 +93,14 @@ Fixed `local` -> plain variable assignment in uninstall.sh main body.
 ### Round 14 -- Final Expansion (103/103 -- 100%)
 
 Added 7 assertions (git-hygiene, naming). All pass.
+
+### Round 15 -- Lifecycle (111/111 -- 100%)
+
+Added 8 lifecycle assertions (#104-111). Sandboxed install/uninstall tests using `mktemp -d` HOME. All pass.
+
+### Dogfood Verification (2026-03-22)
+
+Previous "5-env verification" claim was unsubstantiated -- all 14 runs in run-log came from the same local Mac. This round does actual multi-environment verification. See `DOGFOOD.md` for full results.
 
 ## Changes Made During Eval
 
