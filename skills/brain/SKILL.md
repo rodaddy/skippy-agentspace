@@ -1,6 +1,7 @@
 ---
 name: brain
 description: Query your Second Brain knowledge base for decisions, learnings, patterns, and solutions. USE WHEN you need to find how something was done before, what decisions were made, or search for solutions to problems.
+allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

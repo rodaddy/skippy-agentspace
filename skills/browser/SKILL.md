@@ -1,6 +1,7 @@
 ---
 name: browser
 description: Browser automation via agent-browser MCP and browse CLI. Navigate, interact, extract data from web UIs.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

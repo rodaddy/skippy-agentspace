@@ -1,6 +1,7 @@
 ---
 name: team
 description: Spawn N coordinated agents working on a shared task list using Claude Code native team tools. Decompose, distribute, and verify.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
   author: Rico

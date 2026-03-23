@@ -1,6 +1,7 @@
 ---
 name: skippy
 description: Development workflow enhancements -- context awareness, reconciliation, task rigor, plan boundaries, state consistency
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
   author: Rico

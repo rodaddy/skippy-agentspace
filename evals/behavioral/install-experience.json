@@ -1,0 +1,104 @@
+{
+  "skill": "skippy-agentspace-install",
+  "description": "Binary assertions for the install/upgrade/uninstall experience. Validates that a user on a clean machine can go from zero to productive with minimal friction.",
+  "test_prompt": "You are testing the skippy-agentspace installation experience. Simulate being a user who just cloned the repo to a clean machine with only git, bash, and jq installed. Walk through the complete install, verify, uninstall, and reinstall cycle. For each step, describe exactly what happens, what output the user sees, and what could go wrong. Do NOT actually execute anything -- just output every step, every decision point, every error message, and every edge case you'd encounter.",
+  "pass_threshold": 1.0,
+  "assertions": [
+    {
+      "id": 1,
+      "category": "first-run",
+      "assertion": "Running install.sh with no args shows a status/help message, not an error",
+      "check": "First-time user should see what skills are available, not a cryptic error"
+    },
+    {
+      "id": 2,
+      "category": "first-run",
+      "assertion": "The install process does NOT require Node.js, Python, or bun as prerequisites",
+      "check": "Shell-only dependency chain -- bash + git + jq should be enough"
+    },
+    {
+      "id": 3,
+      "category": "first-run",
+      "assertion": "install.sh --all works and installs all 24 skills in under 10 seconds",
+      "check": "Copy operations should be fast -- no network, no builds"
+    },
+    {
+      "id": 4,
+      "category": "first-run",
+      "assertion": "After install, /clear in Claude Code picks up the new skills immediately",
+      "check": "No manual restart or session refresh required beyond /clear"
+    },
+    {
+      "id": 5,
+      "category": "error-handling",
+      "assertion": "Installing a non-existent skill gives a clear error naming the skill and suggesting alternatives",
+      "check": "Not just 'not found' -- tell the user what IS available"
+    },
+    {
+      "id": 6,
+      "category": "error-handling",
+      "assertion": "Installing to a path without write permissions gives a clear error with fix instructions",
+      "check": "Don't just fail silently -- tell user to fix permissions or use sudo"
+    },
+    {
+      "id": 7,
+      "category": "error-handling",
+      "assertion": "Running install.sh outside the repo directory gives a clear error",
+      "check": "Detect when not in repo root and tell the user to cd"
+    },
+    {
+      "id": 8,
+      "category": "upgrade",
+      "assertion": "Re-installing over existing skills backs up the old version first",
+      "check": "Never silently overwrite -- always preserve the user's customizations"
+    },
+    {
+      "id": 9,
+      "category": "upgrade",
+      "assertion": "The upgrade path preserves user customizations to SKILL.md files",
+      "check": "If user edited a skill, don't clobber their changes without warning"
+    },
+    {
+      "id": 10,
+      "category": "uninstall",
+      "assertion": "uninstall.sh removes ALL traces of installed skills (both symlinks AND copied dirs)",
+      "check": "Known bug: uninstall only checks symlinks, not copies. Must be fixed."
+    },
+    {
+      "id": 11,
+      "category": "uninstall",
+      "assertion": "uninstall.sh is idempotent -- running twice produces no errors",
+      "check": "Second run should say 'already uninstalled' or similar, not crash"
+    },
+    {
+      "id": 12,
+      "category": "uninstall",
+      "assertion": "Uninstalling a single skill does not affect other installed skills",
+      "check": "Surgical removal -- no blast radius"
+    },
+    {
+      "id": 13,
+      "category": "output",
+      "assertion": "Install/uninstall output uses color coding (green=success, red=error, yellow=warning)",
+      "check": "Visual feedback helps users scan output quickly"
+    },
+    {
+      "id": 14,
+      "category": "output",
+      "assertion": "Install summary shows: count installed, count skipped, count failed",
+      "check": "User should know exactly what happened without reading the full log"
+    },
+    {
+      "id": 15,
+      "category": "portability",
+      "assertion": "install.sh works on both macOS (zsh default) and Linux (bash default)",
+      "check": "No macOS-specific flags (like BSD sed) or Linux-specific assumptions"
+    },
+    {
+      "id": 16,
+      "category": "portability",
+      "assertion": "install.sh detects and handles the PAI symlink architecture (skills/ -> ~/.config/pai/Skills/)",
+      "check": "Should follow the symlink and install to the real target"
+    }
+  ]
+}

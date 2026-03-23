@@ -32,3 +32,6 @@ secrets/
 
 # Deploy-service config
 skills/deploy-service/config.env
+
+# Eval run logs (ephemeral, not tracked)
+evals/structural/run-log.txt

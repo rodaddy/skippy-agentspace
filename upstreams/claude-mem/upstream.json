@@ -1,0 +1,10 @@
+{
+  "name": "claude-mem",
+  "description": "Persistent memory compression with hooks, SQLite, ChromaDB vector search, and background worker",
+  "repo": "https://github.com/thedotmack/claude-mem.git",
+  "branch": "main",
+  "last_checked_sha": "e2a230286dd9fb351c4631c75da23daff1d27f12",
+  "last_check": "2026-03-22",
+  "cherry_picks": [],
+  "notes": "Extract: hook-to-worker decoupling pattern, progressive memory disclosure, session continuity tracking. 39.5K stars."
+}

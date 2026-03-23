@@ -1,6 +1,7 @@
 ---
 name: capture-session
 description: Capture insights from the current Claude Code session and save to Open Brain. Extracts decisions, learnings, and session context for long-term semantic storage.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

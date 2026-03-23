@@ -1,0 +1,10 @@
+{
+  "name": "ccps",
+  "description": "Claude Code Plugins Plus Skills -- 346 plugins, 1916 skills, 100-point grading rubric",
+  "repo": "https://github.com/jeremylongshore/claude-code-plugins-plus-skills.git",
+  "branch": "main",
+  "last_checked_sha": "0c0895165a62344fd45db49581c282a174c3df75",
+  "last_check": "2026-03-22",
+  "cherry_picks": [],
+  "notes": "Extract the 100-point grading rubric (5 dimensions: Progressive Disclosure 30pts, Ease of Use 25pts, Utility 20pts, Spec Compliance 15pts, Writing Style 10pts). Skip the 1916 skills themselves."
+}

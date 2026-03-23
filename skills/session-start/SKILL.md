@@ -1,6 +1,7 @@
 ---
 name: session-start
 description: Pick up where you left off after /clear. Reads project state via lightweight agent, presents briefing and next actions. Counterpart to /session-wrap.
+allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

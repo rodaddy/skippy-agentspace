@@ -1,6 +1,7 @@
 ---
 name: fabric
 description: Process content through Fabric AI patterns (228+ available). Handles YouTube videos, URLs, and text input.
+allowed-tools: "Read,Write,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

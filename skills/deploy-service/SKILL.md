@@ -1,6 +1,7 @@
 ---
 name: deploy-service
 description: Deploy a new service to LXC with nginx proxy and DNS setup. Automates container creation, networking, base packages, reverse proxy, and DNS.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

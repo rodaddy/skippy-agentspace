@@ -1,6 +1,7 @@
 ---
 name: researcher
 description: Phase research specialist. Investigates domain, identifies stack/patterns/pitfalls, produces RESEARCH.md consumed by planner agent. Spawned by /skippy:plan.
+complexity: MEDIUM
 tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch
 permissionMode: plan
 ---

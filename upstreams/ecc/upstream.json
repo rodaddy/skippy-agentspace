@@ -1,0 +1,10 @@
+{
+  "name": "ecc",
+  "description": "Everything Claude Code -- instinct system with confidence scoring, hook runtime profiles, selective install",
+  "repo": "https://github.com/affaan-m/everything-claude-code.git",
+  "branch": "main",
+  "last_checked_sha": "0f22cb4450087dfa3999815573d6b197b1f2bab0",
+  "last_check": "2026-03-22",
+  "cherry_picks": [],
+  "notes": "Extract: instinct system with confidence scoring, hook runtime profiles (minimal|standard|strict), selective install with state tracking. 98K stars."
+}

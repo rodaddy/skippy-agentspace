@@ -1,11 +1,16 @@
 # skippy-agentspace
 
-> Standalone Claude Code skill framework with patterns adapted from GSD, PAUL, and OMC.
+> **Why this exists:** Claude Code marketplaces ship 30-40+ commands each. 85% is ceremony. Skippy is the machine that finds the 15% that matters and proves it with binary assertion evals.
+
 > All LAWs from `~/.claude/CLAUDE.md` apply. `bun` for Node.js, `uv` for Python, never npm/yarn/pip.
 
+## Quick Start
 
-> All LAWs (#!/bin/bash, protected branches, stack prefs) enforced via ~/.claude/CLAUDE.md and hooks.
-
+```bash
+git clone https://github.com/rodaddy/skippy-agentspace.git
+cd skippy-agentspace && ./tools/install.sh --all
+# In Claude Code: /clear to pick up new skills
+```
 
 ## What This Is
 
@@ -19,11 +24,11 @@ Not "here's some skills, trust us." Instead: "here's skills with assertions prov
 
 Claude Code has a growing ecosystem of marketplaces and plugins (GSD, OMC, PAUL, superpowers, etc.). Each ships 30-40+ commands. Most are ceremony, overlap, or marketing. The actual value in any marketplace is 5-7 core patterns buried under wrapper commands.
 
-Skippy is the machine that extracts those patterns. On 2026-03-13, we ran the first manual audit:
-- **93 commands** audited across GSD (32), OMC (38), Open Brain (18 patterns), PAUL (5)
+Skippy is the machine that extracts those patterns. We audited 93 commands across 6 sources:
 - **85% cut** -- 60 commands were ceremony, duplicates, or self-referential tooling
 - **11 abilities** emerged from the remaining 15% after cross-source deduplication
-- **8 process failures** from the manual run became pipeline features
+- **103 structural assertions** verify repo integrity on every commit
+- **Per-skill Karpathy evals** prove each skill actually works (not just that it exists)
 
 See `.planning/audits/marketplace-audit-2026-03-13.md` for full audit data.
 
@@ -41,32 +46,45 @@ Three layers:
 
 ```
 .claude-plugin/
-  marketplace.json          # Plugin marketplace (16 skills, strict: false)
+  marketplace.json          # Plugin marketplace (24 skills, strict: false)
 skills/
   core/                     # [core] PAI identity -- personas, LAWs, rules, templates
   skippy/                   # [workflow] Dev enhancements -- 12 commands, 18 reference docs
     agents/                 # Subagent definitions (11 agents: planning swarm, review swarm, executors)
   add-todo/                 # [workflow] Scope-aware todo/idea capture
   autopilot/                # [workflow] Full autonomous lifecycle -- expand, plan, execute, QA, validate
+  brain/                    # [utility] Second Brain knowledge base queries via Open Brain
+  browser/                  # [utility] Browser automation via MCP and browse CLI
+  capture-session/          # [workflow] Capture session insights to Open Brain
   check-todos/              # [workflow] Unified todo viewer with action routing
   correct/                  # [workflow] Add correction rules to doc Gotchas sections
+  deploy-service/           # [domain] LXC + nginx proxy + DNS deployment
   drive/                    # [workflow] Persistence loop -- PRD stories, acceptance criteria, architect sign-off
-  session-wrap/             # [workflow] End-of-session file/commit workflow
-  team/                     # [workflow] Coordinated N-agent execution via Claude Code native teams
-  update-todo/              # [workflow] Progress, complete, defer, or drop todos
-  browser/                  # [utility] Browser automation via MCP and browse CLI
   excalidraw/               # [utility] Mermaid-to-Excalidraw diagram generation
   fabric/                   # [utility] AI content processing (228+ patterns)
+  gh-review/                # [utility] Claude Code review workflow with self-hosted runner
+  prd/                      # [workflow] Bulletproof PRDs with machine-verifiable acceptance criteria
+  prd-to-issues/            # [workflow] Break PRDs into GitHub issues with vertical slicing
+  session-handoff/          # [workflow] Generate targeted first message for next session
+  session-start/            # [workflow] Pick up where you left off after /clear
+  session-wrap/             # [workflow] End-of-session file/commit workflow
+  team/                     # [workflow] Coordinated N-agent execution via Claude Code native teams
   trace/                    # [utility] Agent flow visualization -- session timeline and summary
+  ubiquitous-language/      # [workflow] Project glossary for shared domain terminology
+  update-todo/              # [workflow] Progress, complete, defer, or drop todos
   vaultwarden/              # [utility] Fast credential lookup via MCP
-  deploy-service/           # [domain] LXC + nginx proxy + DNS deployment
+evals/
+  structural/               # 68 binary assertions for repo integrity (runner.sh)
+  behavioral/               # Karpathy-style evals for install UX and repo quality
 tools/
   lib/
     common.sh               # Shared shell library (skippy_* helpers: colors, logging, repo root, summary)
   install.sh                # Selective installer (--core, --all, positional args)
-  uninstall.sh              # Selective uninstaller
+  uninstall.sh              # Selective uninstaller (handles symlinks AND copied dirs)
   index-sync.sh             # Category-grouped INDEX.md generator
 INDEX.md                    # Auto-generated skill registry (4 category sections)
+VERSION                     # Semantic version (current: 1.2.0)
+GLOSSARY.md                 # Ubiquitous language -- shared domain terminology
 ```
 
 ## Commands
@@ -113,6 +131,8 @@ cd skippy-agentspace
 | [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | 32 | 10 | 22 | Bootstrap, Plan, Execute, Verify, Persist, Debug |
 | [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | 38 | 13 | 25 | Loop, Interview, Review, Plan (adversarial) |
 | [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | 5 | 5 | 0 | Context brackets, reconciliation, plan boundaries |
+| [garrytan/gstack](https://github.com/garrytan/gstack) | 25 | 0 | 25 | 8 patterns enriched existing abilities |
+| [obra/superpowers](https://github.com/obra/superpowers) | 14 | 0 | 14 | Anti-rationalization, hard-gate, two-stage review |
 | Open Brain (local) | 18 patterns | 6 | 12 | Remember |
 
 Full audit: `.planning/audits/marketplace-audit-2026-03-13.md`
@@ -153,7 +173,7 @@ v1.0-v1.2 shipped (16 phases, 39 plans). v2.0 in planning -- curation engine.
 | Phase structure + success criteria | `.planning/ROADMAP.md` |
 | Current position + blockers | `.planning/STATE.md` |
 | Skill composition + workflow patterns | `ORCHESTRATION.md` |
-| Skill index (all 12 skills by category) | `INDEX.md` |
+| Skill index (all 24 skills by category) | `INDEX.md` |
 | Dev workflow skill | `skills/skippy/SKILL.md` |
 | Core skill entry point | `skills/core/SKILL.md` |
 | Content conventions + upstream registry | `CONVENTIONS.md` |

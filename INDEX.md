@@ -8,42 +8,50 @@ Auto-generated from `skills/*/SKILL.md` frontmatter. Run `tools/index-sync.sh --
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| core | `core/SKILL.md` | (none) |
+| core [installed] | `core/SKILL.md` | (none) |
 
 ## Workflow
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| add-todo | `add-todo/SKILL.md` | (none) |
-| capture-session | `capture-session/SKILL.md` | (none) |
-| check-todos | `check-todos/SKILL.md` | (none) |
-| correct | `correct/SKILL.md` | (none) |
-| session-handoff | `session-handoff/SKILL.md` | (none) |
-| session-start | `session-start/SKILL.md` | (none) |
-| session-wrap | `session-wrap/SKILL.md` | (none) |
-| autopilot | `autopilot/SKILL.md` | (none) |
-| drive | `drive/SKILL.md` | (none) |
+| add-todo [installed] | `add-todo/SKILL.md` | (none) |
+| autopilot [installed] | `autopilot/SKILL.md` | (none) |
+| capture-session [installed] | `capture-session/SKILL.md` | (none) |
+| check-todos [installed] | `check-todos/SKILL.md` | (none) |
+| correct [installed] | `correct/SKILL.md` | (none) |
+| drive [installed] | `drive/SKILL.md` | (none) |
+| session-handoff [installed] | `session-handoff/SKILL.md` | (none) |
+| session-start [installed] | `session-start/SKILL.md` | (none) |
+| session-wrap [installed] | `session-wrap/SKILL.md` | (none) |
 | skippy [installed] | `skippy/SKILL.md` | /skippy:cleanup, /skippy:execute, /skippy:install, /skippy:migrate, /skippy:plan, /skippy:progress, /skippy:quick, /skippy:reconcile, /skippy:review, /skippy:update, /skippy:upgrade, /skippy:verify |
-| team | `team/SKILL.md` | (none) |
-| update-todo | `update-todo/SKILL.md` | (none) |
+| team [installed] | `team/SKILL.md` | (none) |
+| update-todo [installed] | `update-todo/SKILL.md` | (none) |
 
 ## Utility
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| brain | `brain/SKILL.md` | (none) |
-| browser | `browser/SKILL.md` | (none) |
-| excalidraw | `excalidraw/SKILL.md` | (none) |
-| fabric | `fabric/SKILL.md` | (none) |
-| gh-review | `gh-review/SKILL.md` | /gh-review:setup |
-| trace | `trace/SKILL.md` | (none) |
-| vaultwarden | `vaultwarden/SKILL.md` | (none) |
+| brain [installed] | `brain/SKILL.md` | (none) |
+| browser [installed] | `browser/SKILL.md` | (none) |
+| excalidraw [installed] | `excalidraw/SKILL.md` | (none) |
+| fabric [installed] | `fabric/SKILL.md` | (none) |
+| gh-review [installed] | `gh-review/SKILL.md` | /gh-review:setup |
+| trace [installed] | `trace/SKILL.md` | (none) |
+| vaultwarden [installed] | `vaultwarden/SKILL.md` | (none) |
 
 ## Domain
 
 | Skill | Path | Commands |
 |-------|------|----------|
-| deploy-service | `deploy-service/SKILL.md` | (none) |
+| deploy-service [installed] | `deploy-service/SKILL.md` | (none) |
+
+## Uncategorized
+
+| Skill | Path | Commands |
+|-------|------|----------|
+| prd-to-issues [installed] | `prd-to-issues/SKILL.md` | (none) |
+| prd [installed] | `prd/SKILL.md` | (none) |
+| ubiquitous-language [installed] | `ubiquitous-language/SKILL.md` | (none) |
 
 ## Plugin Distribution
 

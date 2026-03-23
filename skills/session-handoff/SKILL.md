@@ -1,6 +1,7 @@
 ---
 name: session-handoff
 description: Generate a targeted first message for the next session -- captures decisions, failures, and next actions. Supports cross-directory handoffs.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

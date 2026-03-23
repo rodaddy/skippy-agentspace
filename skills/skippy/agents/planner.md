@@ -1,6 +1,7 @@
 ---
 name: planner
 description: Plan creation specialist. Decomposes phases into executable PLAN.md files with task breakdown, wave ordering, and goal-backward must_haves. Spawned by /skippy:plan.
+complexity: MEDIUM
 tools: Read, Write, Glob, Grep
 permissionMode: plan
 ---

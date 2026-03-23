@@ -1,6 +1,7 @@
 ---
 name: gh-review
 description: Set up Claude Code review workflow with self-hosted runner for any GitHub repo. Registers runner, configures secrets, creates workflow file.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

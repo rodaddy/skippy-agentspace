@@ -26,33 +26,61 @@ else
     skippy_suggest() { printf '  \033[36m💡\033[0m %s\n' "${1:?requires message}"; }
     skippy_section() { printf '\n=== %s ===\n\n' "${1:?requires section name}"; }
     skippy_summary() { printf '\n%d passed, %d warnings, %d failures\n' "$SKIPPY_PASS" "$SKIPPY_WARN" "$SKIPPY_FAIL"; [[ "$SKIPPY_FAIL" -eq 0 ]]; }
-    skippy_is_installed() { [[ -L "$HOME/.claude/skills/${1:?}" ]] || [[ -L "$HOME/.claude/commands/${1:?}" ]]; }
+    skippy_is_installed() { [[ -d "$HOME/.claude/skills/${1:?}" ]] || [[ -d "$HOME/.claude/commands/${1:?}" ]] || [[ -d "${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}/${1:?}" ]]; }
     skippy_validate_skill_name() { local n="$1"; [[ -z "$n" ]] && { echo "Error: Skill name cannot be empty" >&2; return 1; }; ! [[ "$n" =~ ^[a-zA-Z0-9_-]+$ ]] && { echo "Error: Invalid skill name '$n'" >&2; return 1; }; return 0; }
 fi
 
 REPO_ROOT="$(skippy_repo_root)"
 SKILLS_DIR="$HOME/.claude/skills"
 COMMANDS_DIR="$HOME/.claude/commands"
+PAI_DIR="${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}"
 
 list_installed() {
     local found=0
 
     if [[ -d "$SKILLS_DIR" ]]; then
-        for link in "$SKILLS_DIR"/*/; do
-            link="${link%/}"
-            if [[ -L "$link" ]]; then
+        for entry in "$SKILLS_DIR"/*/; do
+            entry="${entry%/}"
+            [[ -e "$entry" ]] || continue
+            local name
+            name="$(basename "$entry")"
+            if [[ -L "$entry" ]]; then
                 found=1
-                echo "  $(basename "$link") -> $(readlink "$link")  [skills]"
+                echo "  $name -> $(readlink "$entry")  [skills/symlink]"
+            elif [[ -d "$entry" && -f "$entry/SKILL.md" ]]; then
+                found=1
+                echo "  $name  [skills/copied]"
             fi
         done
     fi
 
     if [[ -d "$COMMANDS_DIR" ]]; then
-        for link in "$COMMANDS_DIR"/*/; do
-            link="${link%/}"
-            if [[ -L "$link" ]]; then
+        for entry in "$COMMANDS_DIR"/*/; do
+            entry="${entry%/}"
+            [[ -e "$entry" ]] || continue
+            local name
+            name="$(basename "$entry")"
+            if [[ -L "$entry" ]]; then
                 found=1
-                echo "  $(basename "$link") -> $(readlink "$link")  [commands]"
+                echo "  $name -> $(readlink "$entry")  [commands/symlink]"
+            elif [[ -d "$entry" && -f "$entry/SKILL.md" ]]; then
+                found=1
+                echo "  $name  [commands/copied]"
+            fi
+        done
+    fi
+
+    # Also check PAI directory (where install.sh copies to)
+    if [[ -d "$PAI_DIR" ]]; then
+        for entry in "$PAI_DIR"/*/; do
+            entry="${entry%/}"
+            [[ -e "$entry" ]] || continue
+            local name
+            name="$(basename "$entry")"
+            # Only list if this skill exists in our repo
+            if [[ -d "$REPO_ROOT/skills/$name" && -d "$entry" && -f "$entry/SKILL.md" ]]; then
+                found=1
+                echo "  $name  [pai/copied]"
             fi
         done
     fi
@@ -68,27 +96,44 @@ uninstall_skill() {
     local removed=0
 
     # Check modern target: ~/.claude/skills/<name>
-    local skills_link="$SKILLS_DIR/$name"
-    if [[ -L "$skills_link" ]]; then
-        unlink "$skills_link"
-        echo "  REMOVED: $name from $SKILLS_DIR/"
+    local skills_path="$SKILLS_DIR/$name"
+    if [[ -L "$skills_path" ]]; then
+        unlink "$skills_path"
+        echo "  REMOVED: $name symlink from $SKILLS_DIR/"
         removed=$((removed + 1))
-    elif [[ -d "$skills_link" ]]; then
-        echo "  WARN: $skills_link is a directory, not a symlink -- skipping (remove manually)"
+    elif [[ -d "$skills_path" && -f "$skills_path/SKILL.md" ]]; then
+        rm -rf "$skills_path"
+        echo "  REMOVED: $name directory from $SKILLS_DIR/"
+        removed=$((removed + 1))
     fi
 
     # Check legacy target: ~/.claude/commands/<name>
-    local commands_link="$COMMANDS_DIR/$name"
-    if [[ -L "$commands_link" ]]; then
-        unlink "$commands_link"
-        echo "  REMOVED: $name from $COMMANDS_DIR/"
+    local commands_path="$COMMANDS_DIR/$name"
+    if [[ -L "$commands_path" ]]; then
+        unlink "$commands_path"
+        echo "  REMOVED: $name symlink from $COMMANDS_DIR/"
         removed=$((removed + 1))
-    elif [[ -d "$commands_link" ]]; then
-        echo "  WARN: $commands_link is a directory, not a symlink -- skipping (remove manually)"
+    elif [[ -d "$commands_path" && -f "$commands_path/SKILL.md" ]]; then
+        rm -rf "$commands_path"
+        echo "  REMOVED: $name directory from $COMMANDS_DIR/"
+        removed=$((removed + 1))
+    fi
+
+    # Check PAI target: ~/.config/pai/Skills/<name>
+    local pai_path="$PAI_DIR/$name"
+    if [[ -d "$pai_path" && -f "$pai_path/SKILL.md" ]]; then
+        # Safety: only remove if this skill exists in our repo
+        if [[ -d "$REPO_ROOT/skills/$name" ]]; then
+            rm -rf "$pai_path"
+            echo "  REMOVED: $name directory from $PAI_DIR/"
+            removed=$((removed + 1))
+        else
+            echo "  WARN: $pai_path exists but '$name' not in repo -- skipping for safety"
+        fi
     fi
 
     if [[ "$removed" -eq 0 ]]; then
-        echo "  WARN: $name not found in $SKILLS_DIR/ or $COMMANDS_DIR/ -- nothing to uninstall"
+        echo "  WARN: $name not found in any target directory -- nothing to uninstall"
         return 1
     fi
 
@@ -141,38 +186,38 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
     echo "=== Uninstalling all skippy-agentspace skills ==="
     found_any=0
 
-    # CRITICAL: Only remove symlinks that point INTO this repo's skills/ directory.
-    # Never touch symlinks belonging to other projects (PAI, n8n, etc.)
+    # Iterate over skills in our repo and remove matching installations
+    # This handles BOTH symlinks and copied directories safely
     REPO_SKILLS_DIR="$REPO_ROOT/skills"
 
-    if [[ -d "$SKILLS_DIR" ]]; then
-        for link in "$SKILLS_DIR"/*/; do
-            link="${link%/}"
-            if [[ -L "$link" ]]; then
-                link_target="$(readlink "$link")"
-                if [[ "$link_target" == "$REPO_SKILLS_DIR"/* ]]; then
-                    found_any=1
-                    uninstall_skill "$(basename "$link")"
-                fi
-            fi
-        done
-    fi
+    for skill_dir in "$REPO_SKILLS_DIR"/*/; do
+        [[ -d "$skill_dir" ]] || continue
+        local_name="$(basename "$skill_dir")"
 
-    if [[ -d "$COMMANDS_DIR" ]]; then
-        for link in "$COMMANDS_DIR"/*/; do
-            link="${link%/}"
-            if [[ -L "$link" ]]; then
-                link_target="$(readlink "$link")"
+        # Check all target locations for this skill
+        for target_dir in "$SKILLS_DIR" "$COMMANDS_DIR" "$PAI_DIR"; do
+            [[ -d "$target_dir" ]] || continue
+            target_path="$target_dir/$local_name"
+
+            if [[ -L "$target_path" ]]; then
+                # Symlink -- only remove if it points into our repo
+                link_target="$(readlink "$target_path")"
                 if [[ "$link_target" == "$REPO_SKILLS_DIR"/* ]]; then
+                    unlink "$target_path"
+                    echo "  REMOVED: $local_name symlink from $target_dir/"
                     found_any=1
-                    uninstall_skill "$(basename "$link")"
                 fi
+            elif [[ -d "$target_path" && -f "$target_path/SKILL.md" ]]; then
+                # Copied directory -- safe to remove since the skill exists in our repo
+                rm -rf "$target_path"
+                echo "  REMOVED: $local_name directory from $target_dir/"
+                found_any=1
             fi
         done
-    fi
+    done
 
     if [[ "$found_any" -eq 0 ]]; then
-        echo "  WARN: No symlinked skills found -- nothing to uninstall"
+        echo "  WARN: No installed skills found -- nothing to uninstall"
     fi
 
     # --- Hook cleanup ---
@@ -181,17 +226,24 @@ if [[ "$UNINSTALL_ALL" == true ]]; then
     if [[ -f "$SETTINGS_FILE" ]] && grep -q 'skills/core/hooks/' "$SETTINGS_FILE" 2>/dev/null; then
         echo ""
         echo "PAI hooks detected in $SETTINGS_FILE."
-        read -r -p "Also remove PAI hooks from settings.json? (y/n) " answer
-        if [[ "$answer" =~ ^[Yy]$ ]]; then
-            HOOK_UNINSTALLER="$REPO_ROOT/skills/core/hooks/uninstall-hooks.sh"
-            if [[ -f "$HOOK_UNINSTALLER" ]]; then
-                bash "$HOOK_UNINSTALLER"
+        if [[ -t 0 ]]; then
+            # Interactive terminal -- ask the user
+            read -r -p "Also remove PAI hooks from settings.json? (y/n) " answer || answer="n"
+            if [[ "$answer" =~ ^[Yy]$ ]]; then
+                HOOK_UNINSTALLER="$REPO_ROOT/skills/core/hooks/uninstall-hooks.sh"
+                if [[ -f "$HOOK_UNINSTALLER" ]]; then
+                    bash "$HOOK_UNINSTALLER"
+                else
+                    echo "  WARN: Hook uninstaller not found at $HOOK_UNINSTALLER"
+                    echo "  Manual removal: edit $SETTINGS_FILE and remove entries containing 'skills/core/hooks/'"
+                fi
             else
-                echo "  WARN: Hook uninstaller not found at $HOOK_UNINSTALLER"
-                echo "  Manual removal: edit $SETTINGS_FILE and remove entries containing 'skills/core/hooks/'"
+                echo "  Skipped hook removal. Hooks remain in $SETTINGS_FILE."
             fi
         else
-            echo "  Skipped hook removal. Hooks remain in $SETTINGS_FILE."
+            # Non-interactive -- skip the prompt
+            echo "  INFO: Non-interactive mode. Skipping hook removal prompt."
+            echo "  To remove hooks: edit $SETTINGS_FILE and remove entries containing 'skills/core/hooks/'"
         fi
     fi
 

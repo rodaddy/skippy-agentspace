@@ -1,6 +1,7 @@
 ---
 name: correct
 description: Add a correction to the appropriate doc when Claude repeatedly makes the same mistake. Quick way to capture recurring rules.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico
@@ -74,3 +75,24 @@ When invoked:
 7. Confirm: "Added to [target file]"
 
 > **PAI enhancements available:** In PAI installations, corrections route to specific Deep Doc files at ~/.claude/docs/.
+
+## For Agents
+
+Agents cannot invoke `/correct` directly. Instead:
+
+1. `Read` this SKILL.md to understand the correction format and routing
+2. Classify the correction by topic using the table below
+3. `Read` the target doc file, find its Gotchas section (or create one)
+4. `Edit` to append the correction as: `- **[Short label]** -- [description]`
+
+**Topic-to-file mapping:**
+
+| Topic | File |
+|-------|------|
+| Shell, TypeScript, Python, quoting | `~/.claude/docs/code-conventions.md` |
+| Git, secrets, branches, credentials | `~/.claude/docs/git-and-secrets.md` |
+| Infrastructure, containers, networking | `~/.claude/docs/infrastructure.md` |
+| Agents, parallelism, orchestration | `~/.claude/docs/agent-orchestration.md` |
+| Sessions, checkpoints, persistence | `~/.claude/docs/session-management.md` |
+
+For project-scoped corrections, append to `./CLAUDE.md` instead (create a `## Corrections` section if missing).
