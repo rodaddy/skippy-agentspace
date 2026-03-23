@@ -14,8 +14,14 @@ _common_setup() {
     export HOME="$BATS_TEST_TMPDIR"
 
     # Create standard directories tests expect
-    mkdir -p "$HOME/.claude/skills"
     mkdir -p "$HOME/.claude/commands"
+    mkdir -p "$HOME/.config/pai/Skills"
+
+    # Set up single-symlink architecture (same as real PAI)
+    ln -sfn "$HOME/.config/pai/Skills" "$HOME/.claude/skills"
+
+    # Point PAI_SKILLS_DIR to sandboxed location
+    export PAI_SKILLS_DIR="$HOME/.config/pai/Skills"
 
     # Resolve repo root from this file's location (tests/test_helper/common.bash -> ../../)
     REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
