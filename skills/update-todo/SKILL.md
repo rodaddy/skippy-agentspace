@@ -1,6 +1,7 @@
 ---
 name: update-todo
 description: Update any todo or idea -- add progress notes, complete, defer, or drop. Works with both project todos and global ideas.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

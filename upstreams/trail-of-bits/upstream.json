@@ -1,0 +1,32 @@
+{
+  "name": "trail-of-bits",
+  "description": "Security-focused skill marketplace from Trail of Bits -- variant analysis, fp-check, skill-improver",
+  "repo": "https://github.com/trailofbits/skills.git",
+  "branch": "main",
+  "last_checked_sha": "5c15f4f5644b4bd3d48882a802a7232d501852b6",
+  "last_check": "2026-03-22",
+  "cherry_picks": [
+    {
+      "id": "variant-analysis",
+      "source": "plugins/variant-analysis/",
+      "target": "skills/skippy/references/variant-analysis.md",
+      "description": "5-step methodology for finding pattern variants in code review",
+      "date": "2026-03-22"
+    },
+    {
+      "id": "fp-check-gates",
+      "source": "plugins/fp-check/",
+      "target": "skills/skippy/references/fp-check-gates.md",
+      "description": "6-gate verification system for reducing false positives in reviews",
+      "date": "2026-03-22"
+    },
+    {
+      "id": "skill-improver-loop",
+      "source": "plugins/skill-improver/",
+      "target": "skills/skippy/references/skill-improver-loop.md",
+      "description": "Iterative refinement protocol with severity categorization for /skippy:eval",
+      "date": "2026-03-22"
+    }
+  ],
+  "notes": "Cherry-pick ideas with CC BY-SA 4.0 attribution. Real security methodologies from practitioners, not prompt wrappers."
+}

@@ -1,0 +1,383 @@
+{
+  "skill": "skill-quality-rubric",
+  "description": "100-point quality rubric for evaluating any Claude Code skill. Adapted from the Intent Solutions grading rubric (CCPS v5.0) and tailored for skippy-agentspace conventions. Run against a single SKILL.md to produce a dimensional score.",
+  "source": "https://github.com/jeremylongshore/claude-code-plugins-plus-skills (scripts/validate-skills-schema.py v5.0)",
+  "test_prompt": "You are evaluating a Claude Code skill against a 100-point quality rubric. Read the target skill's SKILL.md file and its directory contents (references/, scripts/, agents/). Score each assertion PASS (1) or FAIL (0). For each assertion, provide a 1-sentence justification. After scoring all assertions, compute the dimensional subtotals, apply modifiers, and report the final score with letter grade (A: 90-100, B: 80-89, C: 70-79, D: 60-69, F: <60). Report weakest dimension first.",
+  "pass_threshold": 0.70,
+  "scoring": {
+    "method": "weighted_dimensional",
+    "dimensions": {
+      "progressive_disclosure": {"max": 30, "description": "Token economy and layered information architecture"},
+      "ease_of_use": {"max": 25, "description": "Discoverability, metadata completeness, workflow clarity"},
+      "utility": {"max": 20, "description": "Problem-solving power, error handling, examples, content density"},
+      "spec_compliance": {"max": 15, "description": "Frontmatter validity, naming conventions, description quality"},
+      "writing_style": {"max": 10, "description": "Imperative voice, objectivity, conciseness"}
+    },
+    "modifiers": {
+      "max_bonus": 6,
+      "max_penalty": -7,
+      "description": "Bonuses for gerund names, grep-friendly structure, exemplary examples. Penalties for first-person voice, stubs, XML tags."
+    },
+    "grade_scale": {
+      "A": "90-100 -- Production-ready",
+      "B": "80-89 -- Good, minor improvements needed",
+      "C": "70-79 -- Adequate, has gaps",
+      "D": "60-69 -- Needs significant work",
+      "F": "<60 -- Major revision required"
+    }
+  },
+  "assertions": [
+    {
+      "id": "PD-01",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "SKILL.md body is <= 150 lines (excluding frontmatter)",
+      "rationale": "Concise skills load less context. 150 lines is the gold standard per Anthropic best practices and CCPS rubric.",
+      "scoring_tiers": {
+        "5": "<= 150 lines",
+        "3": "151-300 lines",
+        "2": "301-500 lines",
+        "0": "> 500 lines"
+      }
+    },
+    {
+      "id": "PD-02",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "Estimated token cost of SKILL.md body is under 2500 tokens (roughly under 1500 words)",
+      "rationale": "Every skill's body is injected into context on activation. Token budget directly impacts how many skills can coexist.",
+      "scoring_tiers": {
+        "5": "< 1500 words",
+        "3": "1500-2500 words",
+        "1": "2500-4000 words",
+        "0": "> 4000 words"
+      }
+    },
+    {
+      "id": "PD-03",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "Skill has a references/ directory with at least 1 markdown file containing substantive content (>100 bytes)",
+      "rationale": "Progressive disclosure means moving detailed docs, API references, and examples into on-demand files that are only loaded when needed.",
+      "scoring_tiers": {
+        "5": "references/ exists with 2+ substantial .md files",
+        "3": "references/ exists with 1 file",
+        "0": "No references/ directory (acceptable if SKILL.md is < 80 lines)"
+      }
+    },
+    {
+      "id": "PD-04",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "References are one level deep only -- no nested subdirectories inside references/",
+      "rationale": "Claude may only partially read nested files. Flat references/ ensures reliable content loading.",
+      "scoring_tiers": {
+        "5": "Flat references/ or no references/ needed",
+        "2": "Has nested subdirectories in references/"
+      }
+    },
+    {
+      "id": "PD-05",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "SKILL.md has clear navigation structure with >= 5 section headers (## level)",
+      "rationale": "Well-structured sections allow agents and users to quickly navigate to relevant content without reading the entire file.",
+      "scoring_tiers": {
+        "5": ">= 7 section headers",
+        "4": "5-6 section headers",
+        "2": "3-4 section headers",
+        "0": "< 3 section headers"
+      }
+    },
+    {
+      "id": "PD-06",
+      "dimension": "progressive_disclosure",
+      "points": 5,
+      "assertion": "Detailed content (error catalogs, schema definitions, prompt templates) is extracted to references/ rather than inline in SKILL.md",
+      "rationale": "Keeps SKILL.md as a routing document. Heavy content inline bloats every activation.",
+      "scoring_tiers": {
+        "5": "All heavy content in references/ (or skill is naturally concise)",
+        "3": "Some heavy content inline but core instructions are concise",
+        "0": "Large schemas, templates, or catalogs inline in SKILL.md"
+      }
+    },
+
+    {
+      "id": "EU-01",
+      "dimension": "ease_of_use",
+      "points": 3,
+      "assertion": "Frontmatter has a 'name' field that is kebab-case, matches the folder name, and is under 64 characters",
+      "rationale": "Consistent naming enables grep-based discovery and prevents confusion between folder and skill identity."
+    },
+    {
+      "id": "EU-02",
+      "dimension": "ease_of_use",
+      "points": 4,
+      "assertion": "Frontmatter 'description' is >= 50 characters, uses third-person voice, and contains 'Use when' or 'Trigger with' phrases",
+      "rationale": "The description is the primary signal for Claude's skill selection. Without trigger phrases, the skill may never auto-activate.",
+      "scoring_tiers": {
+        "4": "50+ chars, third person, has 'Use when' AND trigger phrases",
+        "3": "50+ chars, third person, has 'Use when' OR trigger phrases",
+        "2": "50+ chars but missing discovery cues",
+        "0": "< 50 chars or uses first/second person"
+      }
+    },
+    {
+      "id": "EU-03",
+      "dimension": "ease_of_use",
+      "points": 3,
+      "assertion": "Frontmatter includes 'allowed-tools' as a CSV string listing only the tools the skill actually needs",
+      "rationale": "Pre-approved tools reduce permission prompts during execution. Omitting this field forces the user to approve every tool call.",
+      "scoring_tiers": {
+        "3": "CSV string with scoped tools (e.g., Bash(git:*))",
+        "2": "CSV string with reasonable tool list",
+        "0": "Missing or uses unscoped Bash"
+      }
+    },
+    {
+      "id": "EU-04",
+      "dimension": "ease_of_use",
+      "points": 3,
+      "assertion": "Skill body contains numbered steps or a clear sequential workflow that an agent can follow without ambiguity",
+      "rationale": "Workflow clarity is what separates a useful skill from a reference document. Steps should be imperative and ordered."
+    },
+    {
+      "id": "EU-05",
+      "dimension": "ease_of_use",
+      "points": 4,
+      "assertion": "Frontmatter includes version (semver), and the skill documents what it does in a 1-2 sentence purpose statement immediately after the title",
+      "rationale": "Version tracking enables upgrade paths. Purpose statement gives instant understanding without reading the full body.",
+      "scoring_tiers": {
+        "4": "Has version + purpose statement",
+        "2": "Has one but not the other",
+        "0": "Missing both"
+      }
+    },
+    {
+      "id": "EU-06",
+      "dimension": "ease_of_use",
+      "points": 3,
+      "assertion": "Name/folder match, and terminology is consistent throughout (no mixed casing for the same concept, no synonyms for the same thing)",
+      "rationale": "Terminology consistency reduces cognitive load for both humans and agents reading the skill."
+    },
+    {
+      "id": "EU-07",
+      "dimension": "ease_of_use",
+      "points": 5,
+      "assertion": "Skill is self-contained -- all referenced files exist, all paths use relative references or ${CLAUDE_SKILL_DIR}, no broken links",
+      "rationale": "A skill with dead references fails silently. Every path mentioned must resolve."
+    },
+
+    {
+      "id": "UT-01",
+      "dimension": "utility",
+      "points": 4,
+      "assertion": "Skill has an Overview section that clearly explains WHAT it does, WHEN to use it, and WHAT it produces in 3-5 sentences",
+      "rationale": "The overview is the agent's decision point. If it can't tell what the skill does from the overview, it won't use it correctly."
+    },
+    {
+      "id": "UT-02",
+      "dimension": "utility",
+      "points": 3,
+      "assertion": "Skill documents prerequisites (required tools, APIs, environment variables, packages) explicitly",
+      "rationale": "Missing prerequisites cause silent failures. Explicit documentation prevents wasted execution cycles."
+    },
+    {
+      "id": "UT-03",
+      "dimension": "utility",
+      "points": 3,
+      "assertion": "Skill has an Error Handling section documenting at least 2 common failures with solutions",
+      "rationale": "Error handling documentation is what makes a skill production-grade vs prototype-grade.",
+      "scoring_tiers": {
+        "3": "4+ errors documented with solutions",
+        "2": "2-3 errors documented",
+        "1": "1 error documented",
+        "0": "No error handling section"
+      }
+    },
+    {
+      "id": "UT-04",
+      "dimension": "utility",
+      "points": 3,
+      "assertion": "Skill includes at least 2 concrete usage examples with input and expected output",
+      "rationale": "Examples are the fastest way for an agent to understand expected behavior. Abstract descriptions are insufficient.",
+      "scoring_tiers": {
+        "3": "3+ labeled examples with input/output",
+        "2": "2 examples",
+        "1": "1 example or examples without clear input/output",
+        "0": "No examples"
+      }
+    },
+    {
+      "id": "UT-05",
+      "dimension": "utility",
+      "points": 2,
+      "assertion": "Skill shows flexibility -- documents optional parameters, configuration options, or alternative approaches",
+      "rationale": "Rigid skills break when context varies. Configurable skills adapt to different project shapes."
+    },
+    {
+      "id": "UT-06",
+      "dimension": "utility",
+      "points": 2,
+      "assertion": "Skill body has validation or verification language (validate, verify, check, test, confirm)",
+      "rationale": "Skills that include verification steps produce more reliable outcomes than fire-and-forget skills."
+    },
+    {
+      "id": "UT-07",
+      "dimension": "utility",
+      "points": 3,
+      "assertion": "Skill body has sufficient content density (>= 300 words) to be substantive, not a stub",
+      "rationale": "A skill under 150 words is likely a stub that provides insufficient guidance for reliable execution.",
+      "scoring_tiers": {
+        "3": ">= 500 words",
+        "2": "300-499 words",
+        "1": "150-299 words",
+        "0": "< 150 words (stub)"
+      }
+    },
+
+    {
+      "id": "SC-01",
+      "dimension": "spec_compliance",
+      "points": 3,
+      "assertion": "YAML frontmatter parses without errors and contains no non-standard fields that would confuse validators",
+      "rationale": "Invalid YAML breaks automated tooling. Non-standard fields (metadata, compatibility) are noise.",
+      "note": "skippy-agentspace uses 'metadata' as a wrapper -- this is a known deviation from Anthropic spec that should be flattened"
+    },
+    {
+      "id": "SC-02",
+      "dimension": "spec_compliance",
+      "points": 3,
+      "assertion": "Skill name is kebab-case (lowercase letters, numbers, hyphens only), under 64 chars, contains no reserved words (anthropic, claude)",
+      "rationale": "Naming convention compliance ensures skills work across all Claude Code installations and marketplaces."
+    },
+    {
+      "id": "SC-03",
+      "dimension": "spec_compliance",
+      "points": 3,
+      "assertion": "Description is under 1024 characters, uses third-person voice (not 'I can' or 'You should'), and includes capability + trigger information",
+      "rationale": "The description is injected into the system prompt's available_skills list. First/second person breaks the injection pattern."
+    },
+    {
+      "id": "SC-04",
+      "dimension": "spec_compliance",
+      "points": 3,
+      "assertion": "No hardcoded absolute paths in SKILL.md body. All file references use relative paths, ${CLAUDE_SKILL_DIR}, or {baseDir}",
+      "rationale": "Absolute paths break portability. A skill installed on a different machine or in a different directory fails silently."
+    },
+    {
+      "id": "SC-05",
+      "dimension": "spec_compliance",
+      "points": 3,
+      "assertion": "Body uses all applicable recommended sections: Overview, Prerequisites, Instructions, Output, Error Handling, Examples",
+      "rationale": "Standard sections make skills predictable. Agents can reliably navigate to the section they need.",
+      "scoring_tiers": {
+        "3": "6+ recommended sections present",
+        "2": "4-5 sections present",
+        "1": "2-3 sections present",
+        "0": "< 2 sections present"
+      }
+    },
+
+    {
+      "id": "WS-01",
+      "dimension": "writing_style",
+      "points": 4,
+      "assertion": "Instructions use imperative voice ('Analyze the diff', 'Run the tests') not passive or conditional ('The diff should be analyzed', 'You might want to run tests')",
+      "rationale": "Imperative voice gives agents clear directives. Hedging language causes non-deterministic behavior."
+    },
+    {
+      "id": "WS-02",
+      "dimension": "writing_style",
+      "points": 3,
+      "assertion": "Body avoids first person ('I can', 'I will', 'I help') and second person ('You can', 'You should') -- uses third person or imperative throughout",
+      "rationale": "First/second person in skill bodies confuses the agent's sense of identity. The skill is instructions, not a conversation."
+    },
+    {
+      "id": "WS-03",
+      "dimension": "writing_style",
+      "points": 3,
+      "assertion": "Body is concise -- under 2000 words, no unnecessary repetition, no filler paragraphs, no redundant explanations",
+      "rationale": "Every word in SKILL.md costs tokens. Verbose skills eat into the context budget that should be used for actual work.",
+      "scoring_tiers": {
+        "3": "< 1500 words, tight prose",
+        "2": "1500-2500 words",
+        "1": "2500-3500 words",
+        "0": "> 3500 words"
+      }
+    },
+
+    {
+      "id": "MOD-01",
+      "dimension": "modifier",
+      "points": 1,
+      "type": "bonus",
+      "assertion": "Skill name uses gerund form (verb-ing pattern, e.g., 'reviewing-prs', 'processing-data')",
+      "rationale": "Gerund names are self-describing and improve grep discoverability per Anthropic naming recommendations."
+    },
+    {
+      "id": "MOD-02",
+      "dimension": "modifier",
+      "points": 1,
+      "type": "bonus",
+      "assertion": "SKILL.md has grep-friendly structure -- 7+ section headers with clear, searchable names",
+      "rationale": "Grep-friendly structure means agents can find specific sections without reading the entire file."
+    },
+    {
+      "id": "MOD-03",
+      "dimension": "modifier",
+      "points": 2,
+      "type": "bonus",
+      "assertion": "Skill includes 3+ labeled, concrete examples with clear input/output pairs",
+      "rationale": "Exemplary examples are the strongest signal for reliable agent execution. More examples = fewer misinterpretations."
+    },
+    {
+      "id": "MOD-04",
+      "dimension": "modifier",
+      "points": 1,
+      "type": "bonus",
+      "assertion": "Resources section includes links to external documentation or references/ files with real content",
+      "rationale": "External links and reference files extend the skill without bloating the main body."
+    },
+    {
+      "id": "MOD-05",
+      "dimension": "modifier",
+      "points": 1,
+      "type": "bonus",
+      "assertion": "Skill uses dynamic context injection (!`file.md`) or ${CLAUDE_SKILL_DIR} path references to load content on demand",
+      "rationale": "Dynamic injection is the most sophisticated form of progressive disclosure -- content loaded only when the code path needs it."
+    },
+    {
+      "id": "MOD-06",
+      "dimension": "modifier",
+      "points": -2,
+      "type": "penalty",
+      "assertion": "Description uses first or second person ('I can', 'You should', 'I will help you')",
+      "rationale": "Descriptions are injected into the system prompt's skill list. Wrong voice breaks the injection pattern and confuses routing."
+    },
+    {
+      "id": "MOD-07",
+      "dimension": "modifier",
+      "points": -3,
+      "type": "penalty",
+      "assertion": "Skill is a stub: < 30 lines body, < 150 words, no code blocks, no links, or > 5% placeholder tokens (TODO, FIXME, TBD)",
+      "rationale": "Stubs waste a skill slot and context tokens without providing actionable guidance."
+    },
+    {
+      "id": "MOD-08",
+      "dimension": "modifier",
+      "points": -1,
+      "type": "penalty",
+      "assertion": "Body contains XML-like tags (<tags>, <output>) that are not inside code fences",
+      "rationale": "XML tags outside code fences can be misinterpreted by the model as structural directives rather than content."
+    },
+    {
+      "id": "MOD-09",
+      "dimension": "modifier",
+      "points": -1,
+      "type": "penalty",
+      "assertion": "Body contains a Table of Contents section",
+      "rationale": "TOCs waste tokens. Section headers are sufficient for navigation in a 150-line file."
+    }
+  ]
+}

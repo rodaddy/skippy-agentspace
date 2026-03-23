@@ -1,0 +1,10 @@
+{
+  "name": "claude-forge",
+  "description": "oh-my-zsh for Claude Code -- 6-layer security hooks, output secret filtering, remote command guards",
+  "repo": "https://github.com/sangrokjung/claude-forge.git",
+  "branch": "main",
+  "last_checked_sha": "f32c0e51ccac252f0a9390cc9fc16e2c466587aa",
+  "last_check": "2026-03-22",
+  "cherry_picks": [],
+  "notes": "Extract: output-secret-filter with encoding bypass detection, remote-command-guard categories. 589 stars."
+}

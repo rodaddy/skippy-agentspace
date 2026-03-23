@@ -1,4 +1,4 @@
-name: Tests
+name: Tests & Evals
 on:
   push:
     branches: ['*']
@@ -9,7 +9,15 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  structural-evals:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run structural eval suite (68 assertions)
+        run: bash evals/structural/runner.sh
+
+  bats-tests:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,5 +27,5 @@ jobs:
       - name: Install bun
         run: brew install oven-sh/bun/bun
 
-      - name: Run tests
+      - name: Run bats tests
         run: ./tests/bats/bin/bats tests/

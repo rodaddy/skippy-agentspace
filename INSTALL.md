@@ -23,7 +23,7 @@ For updates after initial install:
 ## Manual Install (if you prefer)
 
 ```bash
-bash tools/install.sh --all --copy
+bash tools/install.sh --all
 ```
 
 See `docs/install-process.md` for the full process with backup, removal, and testing.

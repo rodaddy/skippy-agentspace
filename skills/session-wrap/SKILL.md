@@ -1,6 +1,7 @@
 ---
 name: session-wrap
 description: Wrap up a session - create session file + dated history file + briefing update + persist to Open Brain, commit on current branch.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

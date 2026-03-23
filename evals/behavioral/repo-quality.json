@@ -1,0 +1,80 @@
+{
+  "skill": "skippy-agentspace-repo",
+  "description": "Binary assertions for overall repo quality, documentation clarity, and competitive positioning. Tests whether the repo is best-in-class compared to GSD, OMC, PAUL, and other Claude Code skill frameworks.",
+  "test_prompt": "You are evaluating the skippy-agentspace repository as a potential user comparing it against GSD (get-shit-done), OMC (oh-my-claudecode), PAUL, SuperClaude, and gstack. Read the CLAUDE.md, INDEX.md, CONVENTIONS.md, and 3-4 skill SKILL.md files. Then assess: (1) Can you understand what this repo does within 30 seconds of reading CLAUDE.md? (2) Can you install and use it without asking for help? (3) How does it compare to competitors on documentation, skill quality, and eval rigor? Do NOT actually install anything -- just assess the repo on its merits.",
+  "pass_threshold": 1.0,
+  "assertions": [
+    {
+      "id": 1,
+      "category": "clarity",
+      "assertion": "CLAUDE.md first paragraph explains what skippy-agentspace IS in one sentence without jargon",
+      "check": "30-second comprehension test -- new user should get it immediately"
+    },
+    {
+      "id": 2,
+      "category": "clarity",
+      "assertion": "The value proposition ('why use this over raw Claude Code') is stated within the first 5 lines",
+      "check": "Don't bury the lede -- lead with the differentiator"
+    },
+    {
+      "id": 3,
+      "category": "clarity",
+      "assertion": "CLAUDE.md has a quick-start section with 3 or fewer steps to get running",
+      "check": "Users don't read long docs -- give them the fast path"
+    },
+    {
+      "id": 4,
+      "category": "differentiation",
+      "assertion": "The eval framework (Karpathy-style assertions) is prominently featured as a differentiator",
+      "check": "No other framework has per-skill binary assertion evals -- this IS the selling point"
+    },
+    {
+      "id": 5,
+      "category": "differentiation",
+      "assertion": "The upstream consumption model (audit, extract, coalesce) is explained with a concrete example",
+      "check": "Show the 93-command audit -> 11 abilities result as proof"
+    },
+    {
+      "id": 6,
+      "category": "differentiation",
+      "assertion": "The repo does NOT position itself as 'just another skill collection'",
+      "check": "It's a curation ENGINE -- the machine that builds skills, not the skills themselves"
+    },
+    {
+      "id": 7,
+      "category": "skill-quality",
+      "assertion": "Each SKILL.md explains WHEN to use the skill, not just HOW",
+      "check": "Trigger conditions matter more than implementation details for discovery"
+    },
+    {
+      "id": 8,
+      "category": "skill-quality",
+      "assertion": "Skills that require external infrastructure state their requirements upfront",
+      "check": "Don't let users discover mid-run that they need Proxmox or vaultwarden"
+    },
+    {
+      "id": 9,
+      "category": "skill-quality",
+      "assertion": "Skills with degraded-without-infra behavior document the fallback explicitly",
+      "check": "Graceful degradation should be visible, not discovered by accident"
+    },
+    {
+      "id": 10,
+      "category": "competitive",
+      "assertion": "The consumed sources table shows concrete numbers (commands audited, kept, cut)",
+      "check": "Quantitative proof beats qualitative claims -- show the 85% cut rate"
+    },
+    {
+      "id": 11,
+      "category": "competitive",
+      "assertion": "The portability tiers table clearly separates what works anywhere vs what needs infra",
+      "check": "Users need to know what they're getting before they install"
+    },
+    {
+      "id": 12,
+      "category": "competitive",
+      "assertion": "The repo has a clear versioning strategy (VERSION file, git tags, changelog)",
+      "check": "Professional projects version their releases -- amateurs don't"
+    }
+  ]
+}

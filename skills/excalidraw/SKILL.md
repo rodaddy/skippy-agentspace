@@ -1,6 +1,7 @@
 ---
 name: excalidraw
 description: Generate Excalidraw diagrams from natural language using a Mermaid-based pipeline.
+allowed-tools: "Read,Write,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

@@ -1,6 +1,7 @@
 ---
 name: add-todo
 description: Scope-aware todo/idea capture - routes to project (.planning/todos/) or global (.claude_ideas/) store. Supports single items and bulk extraction.
+allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

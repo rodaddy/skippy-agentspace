@@ -1,6 +1,7 @@
 ---
 name: core
 description: PAI core infrastructure -- personas, LAWs, rules, and project templates
+allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

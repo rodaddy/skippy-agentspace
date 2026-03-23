@@ -1,6 +1,7 @@
 ---
 name: vaultwarden
 description: Fast credential lookup via vaultwarden-secrets MCP. One call, not three.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico
@@ -68,6 +69,21 @@ get_service("prefix")       # ALL secrets matching prefix
 search_secrets("keyword")  # fuzzy match, returns names + scores
 ```
 
+### Service-Specific Examples
+```
+get_credential(query: "LiteLLM")             # API key + base URL for LiteLLM proxy
+get_credential(query: "GitHub", field: "login.password")  # PAT token only
+get_service("n8n")                            # All n8n credentials (API keys, webhook secrets, per-instance)
+get_credential(query: "Proxmox")              # Root or API token for Proxmox cluster
+search_secrets("smtp")                        # Find mail relay credentials by keyword
+```
+
+### Snapshot Management
+```
+snapshot_info()           # Check snapshot age, item count, staleness
+refresh_snapshot()        # Force re-sync after vault changes outside MCP
+```
+
 ### Create/Update
 ```
 create_secret(name: "New Service", type: 1, username: "user", password: "pass")
@@ -81,6 +97,9 @@ update_secret(name: "Existing", password: "new-pass")
 - Secret names are case-sensitive for `get_secret`, case-insensitive for `search`.
 - Create/update/delete only work on secrets in the configured folder.
 - `list_secrets` with filter is like search but returns all matches -- use for browsing.
+- **Snapshot staleness:** The MCP server caches a vault snapshot. If you just created/updated a secret and the next read returns stale data, call `refresh_snapshot` to force a re-sync before retrying.
+- **`get_secret` vs `get_credential` confusion:** `get_secret` returns ONLY the password string. If you need username, URI, notes, or custom fields, use `get_credential` -- it returns everything in one call.
+- **Duplicate names return first match:** `get_secret` silently returns the first item when multiple vault entries share a name. Use unique names, or use `search_secrets` to see all matches and disambiguate.
 
 ## References
 

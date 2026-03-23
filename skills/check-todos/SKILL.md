@@ -1,6 +1,7 @@
 ---
 name: check-todos
 description: Unified todo checker - shows both project todos and global ideas in a single numbered list, then routes selection to action.
+allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
   author: Rico

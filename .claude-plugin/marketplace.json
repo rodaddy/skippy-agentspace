@@ -151,6 +151,78 @@
       "version": "0.1.0",
       "author": { "name": "Rico" },
       "skills": ["./skills/trace"]
+    },
+    {
+      "name": "brain",
+      "description": "Query your Second Brain knowledge base for decisions, learnings, patterns, and solutions.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/brain"]
+    },
+    {
+      "name": "capture-session",
+      "description": "Capture insights from the current Claude Code session and save to Open Brain.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/capture-session"]
+    },
+    {
+      "name": "gh-review",
+      "description": "Set up Claude Code review workflow with self-hosted runner for any GitHub repo.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/gh-review"]
+    },
+    {
+      "name": "prd",
+      "description": "Create bulletproof PRDs with machine-verifiable acceptance criteria, gap analysis, and antagonistic review.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/prd"]
+    },
+    {
+      "name": "prd-to-issues",
+      "description": "Break a PRD into independently-grabbable GitHub issues with vertical slicing and dependency links.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/prd-to-issues"]
+    },
+    {
+      "name": "session-handoff",
+      "description": "Generate a targeted first message for the next session -- captures decisions, failures, and next actions.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/session-handoff"]
+    },
+    {
+      "name": "session-start",
+      "description": "Pick up where you left off after /clear. Reads project state, presents briefing and next actions.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/session-start"]
+    },
+    {
+      "name": "ubiquitous-language",
+      "description": "Create and maintain a project glossary (GLOSSARY.md) so humans and AI share precise domain terminology.",
+      "source": "./",
+      "strict": false,
+      "version": "0.1.0",
+      "author": { "name": "Rico" },
+      "skills": ["./skills/ubiquitous-language"]
     }
   ]
 }

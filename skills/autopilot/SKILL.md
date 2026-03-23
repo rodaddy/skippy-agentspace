@@ -1,6 +1,7 @@
 ---
 name: autopilot
 description: Full autonomous execution from idea to working code. Handles expansion, planning, implementation, QA, and validation in a multi-phase pipeline.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
   author: Rico

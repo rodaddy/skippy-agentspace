@@ -1,6 +1,7 @@
 ---
 name: drive
 description: Persistence loop with PRD-driven story tracking, acceptance criteria verification, and architect sign-off. Keeps working until ALL stories pass.
+allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
   author: Rico

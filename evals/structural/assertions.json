@@ -1,0 +1,227 @@
+{
+  "suite": "skippy-agentspace-structural",
+  "description": "103 binary pass/fail assertions for repo structural integrity across 22 categories. Run via evals/structural/runner.sh. Split into modular category files for LAW 9 compliance.",
+  "pass_threshold": 1.0,
+  "assertion_count": 103,
+  "runner": "evals/structural/runner.sh",
+  "categories": {
+    "skill-structure": "Every skill has required files and valid format",
+    "marketplace": "Plugin marketplace matches reality",
+    "tooling": "Shell scripts are correct and robust",
+    "docs": "Documentation matches actual state",
+    "security": "No unsafe patterns or exposed secrets",
+    "portability": "Works on clean machines without assumptions"
+  },
+  "assertions": [
+    {
+      "id": 1,
+      "category": "skill-structure",
+      "assertion": "Every directory in skills/ has a SKILL.md file",
+      "check": "for d in skills/*/; do [ -f \"$d/SKILL.md\" ] || echo \"FAIL: $d\"; done",
+      "severity": "critical"
+    },
+    {
+      "id": 2,
+      "category": "skill-structure",
+      "assertion": "Every SKILL.md has required frontmatter: name, description, metadata",
+      "check": "grep -l '^name:' skills/*/SKILL.md | wc -l should equal skill count",
+      "severity": "critical"
+    },
+    {
+      "id": 3,
+      "category": "skill-structure",
+      "assertion": "No skill file exceeds 750 lines (LAW 9)",
+      "check": "find skills/ -name '*.md' -exec wc -l {} + | awk '$1 > 750'",
+      "severity": "critical"
+    },
+    {
+      "id": 4,
+      "category": "skill-structure",
+      "assertion": "No skill imports from another skill directory (self-contained)",
+      "check": "grep -r 'skills/[a-z]' skills/ --include='*.md' should not reference sibling skills",
+      "severity": "high"
+    },
+    {
+      "id": 5,
+      "category": "skill-structure",
+      "assertion": "All shell scripts use #!/usr/bin/env bash or #!/usr/bin/env sh (never #!/bin/bash)",
+      "check": "grep -rl '#!/bin/bash' . --include='*.sh' should return nothing",
+      "severity": "critical"
+    },
+    {
+      "id": 6,
+      "category": "skill-structure",
+      "assertion": "Every skill with commands/ dir has at least one .md file in it",
+      "check": "for d in skills/*/commands/; do [ -d \"$d\" ] && ls \"$d\"*.md >/dev/null 2>&1 || echo \"FAIL: $d\"; done",
+      "severity": "high"
+    },
+    {
+      "id": 7,
+      "category": "marketplace",
+      "assertion": "marketplace.json is valid JSON",
+      "check": "jq . .claude-plugin/marketplace.json > /dev/null",
+      "severity": "critical"
+    },
+    {
+      "id": 8,
+      "category": "marketplace",
+      "assertion": "Every skill directory in skills/ has an entry in marketplace.json",
+      "check": "Compare ls skills/ count vs jq '.plugins | length' marketplace.json",
+      "severity": "high"
+    },
+    {
+      "id": 9,
+      "category": "marketplace",
+      "assertion": "Every skill path in marketplace.json exists on disk",
+      "check": "jq -r '.plugins[].skills[]' marketplace.json | while read p; do [ -d \"$p\" ] || echo \"FAIL: $p\"; done",
+      "severity": "critical"
+    },
+    {
+      "id": 10,
+      "category": "marketplace",
+      "assertion": "No duplicate plugin names in marketplace.json",
+      "check": "jq -r '.plugins[].name' marketplace.json | sort | uniq -d should be empty",
+      "severity": "high"
+    },
+    {
+      "id": 11,
+      "category": "tooling",
+      "assertion": "All .sh files pass bash -n syntax check",
+      "check": "find . -name '*.sh' -exec bash -n {} \\;",
+      "severity": "critical"
+    },
+    {
+      "id": 12,
+      "category": "tooling",
+      "assertion": "All .sh files use set -euo pipefail or equivalent",
+      "check": "grep -L 'set -e' tools/*.sh should be empty (or use errexit)",
+      "severity": "high"
+    },
+    {
+      "id": 13,
+      "category": "tooling",
+      "assertion": "index-sync.sh --generate produces valid INDEX.md matching skills/ on disk",
+      "check": "Run index-sync.sh, compare output skill count to ls skills/ count",
+      "severity": "high"
+    },
+    {
+      "id": 14,
+      "category": "tooling",
+      "assertion": "common.sh sources correctly from repo root and from tools/ subdirectory",
+      "check": "cd repo-root && source tools/lib/common.sh && type skippy_pass",
+      "severity": "high"
+    },
+    {
+      "id": 15,
+      "category": "tooling",
+      "assertion": "install.sh handles re-install over existing installation without data loss",
+      "check": "Install, modify installed file, re-install, verify modification is backed up",
+      "severity": "critical"
+    },
+    {
+      "id": 16,
+      "category": "tooling",
+      "assertion": "uninstall.sh removes BOTH symlinked AND copied skill installations",
+      "check": "Install via copy, run uninstall, verify directory is gone",
+      "severity": "critical"
+    },
+    {
+      "id": 17,
+      "category": "tooling",
+      "assertion": "install.sh and uninstall.sh are idempotent (running twice produces same result)",
+      "check": "Run install twice, verify no errors. Run uninstall twice, verify no errors.",
+      "severity": "high"
+    },
+    {
+      "id": 18,
+      "category": "tooling",
+      "assertion": "All scripts work in non-interactive mode (no blocking read without -t check)",
+      "check": "grep -n 'read ' tools/*.sh should all have -t 0 guard or equivalent",
+      "severity": "critical"
+    },
+    {
+      "id": 19,
+      "category": "docs",
+      "assertion": "CLAUDE.md file tree matches actual directory structure",
+      "check": "Extract paths from CLAUDE.md tree, verify each exists on disk",
+      "severity": "high"
+    },
+    {
+      "id": 20,
+      "category": "docs",
+      "assertion": "All file paths referenced in CLAUDE.md Key Files table exist",
+      "check": "Extract paths from Key Files table, verify each exists",
+      "severity": "high"
+    },
+    {
+      "id": 21,
+      "category": "docs",
+      "assertion": "INDEX.md lists the same skills as ls skills/",
+      "check": "Compare INDEX.md skill names to directory listing",
+      "severity": "high"
+    },
+    {
+      "id": 22,
+      "category": "docs",
+      "assertion": "CONVENTIONS.md exists and references current upstream sources",
+      "check": "Verify upstream entries match upstreams/ directory",
+      "severity": "medium"
+    },
+    {
+      "id": 23,
+      "category": "security",
+      "assertion": "No .env files are tracked in git",
+      "check": "git ls-files '*.env' should be empty",
+      "severity": "critical"
+    },
+    {
+      "id": 24,
+      "category": "security",
+      "assertion": ".gitignore covers .env, *.key, *.pem, node_modules, .DS_Store",
+      "check": "grep patterns in .gitignore",
+      "severity": "critical"
+    },
+    {
+      "id": 25,
+      "category": "security",
+      "assertion": "No hardcoded IP addresses, tokens, or passwords in skill files",
+      "check": "grep -r 'password\\|token\\|api_key\\|secret' skills/ --include='*.md' should find only documentation references",
+      "severity": "critical"
+    },
+    {
+      "id": 26,
+      "category": "portability",
+      "assertion": "No absolute paths to user home directories in skill files (no /Users/rico, /home/rico)",
+      "check": "grep -r '/Users/rico\\|/home/rico' skills/ should be empty",
+      "severity": "critical"
+    },
+    {
+      "id": 27,
+      "category": "portability",
+      "assertion": "All skills use $HOME or ~ instead of hardcoded home paths",
+      "check": "Same as above -- verify relative references",
+      "severity": "critical"
+    },
+    {
+      "id": 28,
+      "category": "portability",
+      "assertion": "No bun/node/python version pinning that would break on clean machines",
+      "check": "Check for version-specific requires in scripts",
+      "severity": "medium"
+    },
+    {
+      "id": 29,
+      "category": "skill-structure",
+      "assertion": "Every skill SKILL.md has a ## Commands or ## For Agents section",
+      "check": "grep -L '## Commands\\|## For Agents' skills/*/SKILL.md",
+      "severity": "medium"
+    },
+    {
+      "id": 30,
+      "category": "marketplace",
+      "assertion": "marketplace.json plugin descriptions match SKILL.md descriptions",
+      "check": "Compare description field in marketplace vs SKILL.md frontmatter",
+      "severity": "medium"
+    }
+  ]
+}
