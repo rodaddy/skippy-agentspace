@@ -25,29 +25,29 @@ setup() {
 
 @test "uninstall removes installed skill" {
     # core was installed in setup -- verify it exists
-    [ -L "$HOME/.claude/skills/core" ]
+    [ -d "$HOME/.claude/skills/core" ] || [ -L "$HOME/.claude/skills/core" ]
     run bash "$UNINSTALL_SCRIPT" core
     assert_success
-    # Symlink should be gone
-    [ ! -L "$HOME/.claude/skills/core" ]
+    # Skill should be gone
+    [ ! -e "$HOME/.claude/skills/core" ]
 }
 
-# --- Uninstall --all removes skippy symlinks ---
+# --- Uninstall --all removes skippy skills ---
 
-@test "uninstall --all removes all skippy symlinks" {
+@test "uninstall --all removes all skippy skills" {
     # Install all skills first
     bash "$INSTALL_SCRIPT" --all
     local before_count
-    before_count=$(find "$HOME/.claude/skills" -maxdepth 1 -type l | wc -l | tr -d ' ')
+    before_count=$(find "$HOME/.claude/skills" -maxdepth 1 -mindepth 1 \( -type d -o -type l \) | wc -l | tr -d ' ')
     [ "$before_count" -ge 10 ]
 
     # Uninstall all -- pipe "n" to decline hook removal prompt
     run bash -c 'echo "n" | bash "'"$UNINSTALL_SCRIPT"'" --all'
     assert_success
 
-    # All skippy symlinks should be gone
+    # All skippy skills should be gone
     local after_count
-    after_count=$(find "$HOME/.claude/skills" -maxdepth 1 -type l | wc -l | tr -d ' ')
+    after_count=$(find "$HOME/.claude/skills" -maxdepth 1 -mindepth 1 \( -type d -o -type l \) | wc -l | tr -d ' ')
     [ "$after_count" -eq 0 ]
 }
 
@@ -61,7 +61,7 @@ setup() {
     ln -s /tmp/fake-other-project "$HOME/.claude/skills/other-project"
 
     # Verify both exist
-    [ -L "$HOME/.claude/skills/core" ]
+    [ -d "$HOME/.claude/skills/core" ] || [ -L "$HOME/.claude/skills/core" ]
     [ -L "$HOME/.claude/skills/other-project" ]
 
     # Uninstall --all -- pipe "n" to decline hook removal prompt
@@ -71,9 +71,9 @@ setup() {
     # CRITICAL: non-skippy symlink MUST survive
     [ -L "$HOME/.claude/skills/other-project" ]
 
-    # Skippy symlinks should be gone
-    [ ! -L "$HOME/.claude/skills/core" ]
-    [ ! -L "$HOME/.claude/skills/skippy" ]
+    # Skippy skills should be gone
+    [ ! -e "$HOME/.claude/skills/core" ]
+    [ ! -e "$HOME/.claude/skills/skippy" ]
 }
 
 # --- Error: not-installed skill ---
