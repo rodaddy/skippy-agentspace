@@ -37,6 +37,8 @@ Best-of-breed patterns adapted from PAUL, OMC, and cross-package analysis.
 | 16 | State Tracking | `references/state-tracking.md` | STATE.md lifecycle, progress tracking, size management |
 | 17 | Checkpoints | `references/checkpoints.md` | Human-in-the-loop verification during execution |
 | 18 | Audit Swarm | `references/audit-swarm.md` | Multi-agent review -- spawning, findings, fix/eval cycling |
+| 19 | Debugging Subagents | `references/debugging-subagents.md` | Post-failure -- tracing JSONL transcripts to find where an agent went wrong |
+| 20 | Writing Agent Descriptions | `references/writing-agent-descriptions.md` | Agent creation -- effective description fields for delegation matching |
 
 ## Commands
 
@@ -150,6 +152,12 @@ Read ${CLAUDE_SKILL_DIR}/references/checkpoints.md
 
 Read ${CLAUDE_SKILL_DIR}/references/audit-swarm.md
 # Include when spawning review agents or running audit cycles
+
+Read ${CLAUDE_SKILL_DIR}/references/debugging-subagents.md
+# Include when diagnosing a subagent that returned bad results
+
+Read ${CLAUDE_SKILL_DIR}/references/writing-agent-descriptions.md
+# Include when creating or editing custom agent definitions
 ```
 
 Don't load all references into every agent -- pick the relevant one.
