@@ -1,9 +1,8 @@
 ---
 name: brain
-description: Query your Second Brain knowledge base for decisions, learnings, patterns, and solutions. USE WHEN you need to find how something was done before, what decisions were made, or search for solutions to problems.
-allowed-tools: "Read,Grep,Glob"
+description: Query, write, and manage your Open Brain knowledge base with automatic namespace resolution. USE WHEN logging thoughts, decisions, searching brain, session saves, or any OB interaction. All OB calls MUST go through this skill for proper namespace tagging.
 metadata:
-  version: 0.1.0
+  version: 0.2.0
   author: Rico
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
@@ -13,51 +12,142 @@ triggers:
   - what do I know about
   - how did I handle
   - find in kb
+  - log thought
+  - log decision
+  - save to brain
+  - push to ob
+  - remember this
+  - my brain
+  - personal brain
+  - collab brain
 ---
 
-# Brain - Knowledge Base Query
+# Brain - Open Brain with Namespace Awareness
 
-Query your Open Brain knowledge base using semantic vector search across all knowledge types.
+All Open Brain interactions MUST go through this skill. Direct `mcp2cli open-brain` calls without namespace resolution will be blocked by hooks.
+
+## Namespace Resolution (CRITICAL)
+
+Before ANY write to OB, resolve the namespace using these rules in order:
+
+### 1. Explicit Intent Override (highest priority)
+
+If the user says any of these, override all other rules:
+
+| User Says | Namespace | Example |
+|-----------|-----------|---------|
+| "my brain", "my ob", "personal", "private" | `<caller_identity>` | "save this to my brain" -> `rico` |
+| "collab", "shared", "team", "king" | `collab` | "push this to collab" -> `collab` |
+
+### 2. Host + Directory Detection (default)
+
+Determine namespace from hostname and working directory:
+
+```
+HOSTNAME = $(hostname)
+
+if HOSTNAME starts with "cc-":
+  # LXC box -- default collab
+  if user explicitly says "personal/private/my":
+    namespace = <caller_identity>
+  else:
+    namespace = "collab"
+
+elif HOSTNAME ends with ".local":
+  # Personal machine (Mini-M4-Pro.local, rodaddy-air-2.local)
+  if cwd matches */king* OR */King*:
+    namespace = "collab"
+  else:
+    namespace = <caller_identity>
+
+else:
+  # Unknown host -- default to caller identity
+  namespace = <caller_identity>
+```
+
+### 3. Caller Identity
+
+`<caller_identity>` = the authenticated user's ID. This comes from the auth token, NOT hardcoded:
+- Rico's sessions -> `rico`
+- Kevin's sessions -> `kevin`
+- Geetesh's sessions -> `geetesh`
+- Skippy OC -> `skippy`
+- Other agents -> their `clientId`
 
 ## Usage
 
-```
-/brain auth patterns
-/brain how did I handle database connections
-/brain what decisions about embeddings
-```
+### Resolve Namespace First
 
-## Implementation
-
-When invoked, use mcp2cli to query Open Brain:
-
-### Search (default)
+Before any OB call, determine the namespace:
 
 ```bash
-mcp2cli open-brain search_brain --params '{"query": "<user query>", "limit": 10}'
+# Step 1: Get hostname
+HOSTNAME=$(hostname)
+
+# Step 2: Get cwd basename for directory matching
+CWD=$(basename "$PWD")
+
+# Step 3: Apply rules (see Namespace Resolution above)
+# Result: NAMESPACE variable set
 ```
 
-Results include `source_type` (thought, decision, session, relationship, project), `content_preview`, `tags`, and `distance` (lower = more relevant).
+### Search
+
+```bash
+# Search respects visibility -- users see own namespace + collab + shared
+mcp2cli open-brain search_brain --params '{"query": "<user query>", "limit": 10}'
+
+# Federated search (OB + qmd files)
+mcp2cli open-brain search_all --params '{"query": "<user query>"}'
+
+# Search within specific namespace
+mcp2cli open-brain search_brain --params '{"query": "<query>", "namespace": "rico"}'
+```
+
+### Log Thought
+
+```bash
+# ALWAYS include namespace
+mcp2cli open-brain log_thought --params '{"content": "<content>", "tags": ["tag1", "tag2"], "namespace": "<resolved_namespace>"}'
+```
+
+### Log Decision
+
+```bash
+mcp2cli open-brain log_decision --params '{"title": "<title>", "rationale": "<why>", "alternatives": ["<alt1>"], "tags": ["tag1"], "namespace": "<resolved_namespace>"}'
+```
+
+### Session Save
+
+```bash
+mcp2cli open-brain session_save --params '{"project": "<project>", "summary": "<summary>", "namespace": "<resolved_namespace>"}'
+```
 
 ### Find Person
-
-If the user asks about a person:
 
 ```bash
 mcp2cli open-brain find_person --params '{"query": "<name or description>"}'
 ```
 
-### Log New Knowledge
-
-If the user wants to save something:
+### Upsert Person
 
 ```bash
-# Save a thought/learning
-mcp2cli open-brain log_thought --params '{"content": "<content>", "tags": ["tag1", "tag2"]}'
-
-# Save a decision
-mcp2cli open-brain log_decision --params '{"title": "<title>", "rationale": "<why>", "alternatives": ["<alt1>"], "tags": ["tag1"]}'
+mcp2cli open-brain upsert_person --params '{"person_name": "<name>", "context": "<relationship>", "namespace": "<resolved_namespace>"}'
 ```
+
+## Auto-Tagging Guidelines
+
+When logging thoughts/decisions, include contextual tags:
+
+| Context | Auto-Tags |
+|---------|-----------|
+| In a king repo | `["king", "<repo-name>"]` |
+| Infrastructure work | `["infra", "<service-name>"]` |
+| Personal/career | `["personal"]` |
+| Financial | `["personal", "finance"]` |
+| Session wrap | `["session", "<project>"]` |
+
+Tags are additive -- merge with any user-provided tags.
 
 ## Output Format
 
@@ -87,11 +177,22 @@ The local fallback searches `~/.config/pai-private/knowledge/` JSON files (decis
 
 ## Tools Available
 
-| Tool | Use For |
-|------|---------|
-| `search_brain` | Semantic search across all tables |
-| `find_person` | Lookup people by name or context |
-| `log_thought` | Save a new thought/learning/note |
-| `log_decision` | Record a decision with rationale |
-| `session_save` | Save session summary |
-| `session_load` | Load previous session context |
+| Tool | Use For | Namespace Required |
+|------|---------|-------------------|
+| `search_brain` | Semantic search across all tables | Optional (filter) |
+| `search_all` | Federated OB + qmd search | Optional (filter) |
+| `find_person` | Lookup people by name or context | No |
+| `log_thought` | Save a new thought/learning/note | **Yes** |
+| `log_decision` | Record a decision with rationale | **Yes** |
+| `session_save` | Save session summary | **Yes** |
+| `session_load` | Load previous session context | No |
+| `list_recent` | Browse recent entries | Optional (filter) |
+| `update_entry` | Modify existing entry | No (inherits) |
+| `rate_entry` | Rate entry usefulness | No |
+| `archive_entry` | Soft-delete entry | No |
+| `upsert_person` | Create/update contact | **Yes** |
+
+## Reference Docs
+
+- [Namespace Guide](references/namespace-guide.md) -- full mapping table and edge cases
+- [Agent Usage](references/agent-usage.md) -- how OC agents should use this skill
