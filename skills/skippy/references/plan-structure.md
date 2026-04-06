@@ -134,6 +134,18 @@ The `must_haves` frontmatter block defines verifiable success criteria:
 
 Verifiers check `must_haves` against the actual codebase after execution. Failed checks trigger gap-closure plans.
 
+## Pre-Approval Coherence Check
+
+Before approving a plan for execution, validate it against:
+1. **PROJECT.md constraints** -- Does the plan violate any stated project constraints?
+2. **Recorded decisions** -- Does the plan contradict decisions made in earlier phases?
+3. **Recent file overlap** -- Does the plan modify files that were just changed in the previous phase? (potential conflict)
+4. **ROADMAP scope** -- Does the plan's scope match what the roadmap expects for this phase?
+
+If any check fails, flag the conflict and revise the plan before proceeding. This lightweight pre-flight prevents plans that are internally consistent but externally contradictory.
+
+Source: PAUL v1.2 coherence check.
+
 ## Integration Points
 
 - **Reconciliation:** See reconciliation.md for plan-vs-actual comparison after execution
@@ -150,4 +162,4 @@ Verifiers check `must_haves` against the actual codebase after execution. Failed
 
 ---
 *Source: Adapted from GSD execute-plan.md and summary.md template. Task format adapted from PAUL task-anatomy.*
-*Last reviewed: 2026-03-08*
+*Last reviewed: 2026-04-06*

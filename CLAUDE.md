@@ -129,7 +129,7 @@ cd skippy-agentspace
 | Source | Commands Audited | Kept | Cut | Key Abilities |
 |--------|-----------------|------|-----|---------------|
 | [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done) | 32 | 10 | 22 | Bootstrap, Plan, Execute, Verify, Persist, Debug |
-| [anthropics/oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) | 38 | 13 | 25 | Loop, Interview, Review, Plan (adversarial) |
+| [Yeachan-Heo/oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) | 38 | 13 | 25 | Loop, Interview, Review, Plan (adversarial) |
 | [ChristopherKahler/paul](https://github.com/ChristopherKahler/paul) | 5 | 5 | 0 | Context brackets, reconciliation, plan boundaries |
 | [garrytan/gstack](https://github.com/garrytan/gstack) | 25 | 0 | 25 | 8 patterns enriched existing abilities |
 | [obra/superpowers](https://github.com/obra/superpowers) | 14 | 0 | 14 | Anti-rationalization, hard-gate, two-stage review |

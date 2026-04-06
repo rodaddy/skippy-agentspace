@@ -2,7 +2,7 @@
 name: brain
 description: Query, write, and manage your Open Brain knowledge base with automatic namespace resolution. USE WHEN logging thoughts, decisions, searching brain, session saves, or any OB interaction. All OB calls MUST go through this skill for proper namespace tagging.
 metadata:
-  version: 0.2.0
+  version: 0.3.0
   author: Rico
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
@@ -123,6 +123,27 @@ mcp2cli open-brain log_decision --params '{"title": "<title>", "rationale": "<wh
 mcp2cli open-brain session_save --params '{"project": "<project>", "summary": "<summary>", "namespace": "<resolved_namespace>"}'
 ```
 
+### Set Cognitive Tier
+
+```bash
+# Set an entry's tier: hot (front-of-mind, +0.3 boost), warm (default), cold (deprioritized, -0.2)
+mcp2cli open-brain set_tier --params '{"table": "thoughts", "id": "<uuid>", "tier": "hot"}'
+# Valid tables: thoughts, decisions, relationships, projects, sessions
+```
+
+### Tier-Filtered Search
+
+```bash
+# Search only hot (front-of-mind) entries
+mcp2cli open-brain search_brain --params '{"query": "<query>", "tier": "hot"}'
+
+# Federated search filtered to warm+ entries
+mcp2cli open-brain search_all --params '{"query": "<query>", "tier": "warm"}'
+
+# Recent entries by tier
+mcp2cli open-brain list_recent --params '{"tier": "hot", "limit": 10}'
+```
+
 ### Find Person
 
 ```bash
@@ -177,20 +198,21 @@ The local fallback searches `~/.config/pai-private/knowledge/` JSON files (decis
 
 ## Tools Available
 
-| Tool | Use For | Namespace Required |
-|------|---------|-------------------|
-| `search_brain` | Semantic search across all tables | Optional (filter) |
-| `search_all` | Federated OB + qmd search | Optional (filter) |
-| `find_person` | Lookup people by name or context | No |
-| `log_thought` | Save a new thought/learning/note | **Yes** |
-| `log_decision` | Record a decision with rationale | **Yes** |
-| `session_save` | Save session summary | **Yes** |
-| `session_load` | Load previous session context | No |
-| `list_recent` | Browse recent entries | Optional (filter) |
-| `update_entry` | Modify existing entry | No (inherits) |
-| `rate_entry` | Rate entry usefulness | No |
-| `archive_entry` | Soft-delete entry | No |
-| `upsert_person` | Create/update contact | **Yes** |
+| Tool | Use For | Namespace Required | Tier Param |
+|------|---------|-------------------|------------|
+| `search_brain` | Semantic search across all tables | Optional (filter) | Optional |
+| `search_all` | Federated OB + qmd search | Optional (filter) | Optional |
+| `find_person` | Lookup people by name or context | No | No |
+| `log_thought` | Save a new thought/learning/note | **Yes** | No |
+| `log_decision` | Record a decision with rationale | **Yes** | No |
+| `session_save` | Save session summary | **Yes** | No |
+| `session_load` | Load previous session context | No | No |
+| `list_recent` | Browse recent entries | Optional (filter) | Optional |
+| `update_entry` | Modify existing entry | No (inherits) | No |
+| `rate_entry` | Rate entry usefulness | No | No |
+| `archive_entry` | Soft-delete entry | No | No |
+| `upsert_person` | Create/update contact | **Yes** | No |
+| `set_tier` | Set cognitive tier (hot/warm/cold) | No | N/A (is the tier tool) |
 
 ## Reference Docs
 

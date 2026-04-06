@@ -61,6 +61,19 @@ Adapt loading behavior based on context depth (see `context-brackets.md`):
 | DEEP | Load fully | Skip -- rely on artifacts | Skip -- rely on artifacts |
 | CRITICAL | Load fully | Skip entirely | Skip entirely |
 
+## Worktree-per-Issue Isolation
+
+Pattern from OMC v4.10 (project-session-manager skill): create an isolated git worktree for each GitHub issue or PR being worked on.
+
+- Each worktree gets its own branch -- no merge conflicts between parallel work streams
+- Skippy already supports worktree aliases (`cw`, `cwa`, `cwb`, `cwc`) but this formalizes the issue-linked pattern
+- **Naming convention:** `worktree-{issue-number}` or `worktree-{feature-name}`
+- **Cleanup:** worktrees are removed after the issue is merged or closed
+
+**Why this matters for session persistence:** each issue's working context is physically isolated. STATE.md, plan files, and Working tier state in one worktree don't conflict with another. Enables true parallel work on multiple issues without state bleed between sessions.
+
+*Source: OMC v4.10 project-session-manager skill.*
+
 ## Integration Points
 
 - **Session start:** Load STATE.md Priority tier (Current Position section) immediately. Load Working tier if resuming active work.
@@ -78,4 +91,4 @@ Adapt loading behavior based on context depth (see `context-brackets.md`):
 
 ---
 *Sources: OMC `skills/note/SKILL.md`. Adapted from GSD `.planning/STATE.md` conventions.*
-*Last reviewed: 2026-03-07*
+*Last reviewed: 2026-04-06*

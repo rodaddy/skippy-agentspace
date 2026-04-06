@@ -90,6 +90,17 @@ Before entering plan-phase, answer these quickly:
 
 If you can't answer 2+ of these confidently, run the scoring before planning.
 
+## Investigation-to-Requirements Pipeline
+
+When an investigation phase (trace, debug, explore) precedes requirements gathering, inject findings at 3 points:
+1. **Enriched starting context** -- Investigation findings become the interview's background context
+2. **System context** -- Structural discoveries (dependencies, constraints found during investigation) set interview constraints
+3. **Seeded questions** -- Investigation reveals specific unknowns that become the first interview questions
+
+This eliminates redundant re-exploration. The interview starts with knowledge from the investigation, not from zero.
+
+Source: OMC v4.10 deep-dive skill (trace -> deep-interview pipeline).
+
 ## Integration Prompt
 
 When evaluating requirements before planning:
@@ -101,3 +112,7 @@ Rate each 0-10, apply weights (40/30/30 greenfield, 35/25/25/15 brownfield).
 If total score is below 60, ask targeted questions on the weakest dimension before
 proceeding to planning.
 ```
+
+---
+*Source: Adapted from OMC deep-interview skill. Enriched with OMC v4.10 investigation-to-requirements pipeline.*
+*Last reviewed: 2026-04-06*

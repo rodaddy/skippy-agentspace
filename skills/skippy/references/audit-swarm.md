@@ -19,6 +19,15 @@ The 8-step process executed by the `/skippy:review` command:
 1. **SCOPE** -- Detect review target (phase directory, file list, or full repo). Accept `--scope` argument or auto-detect from current `.planning/` state.
 2. **PREPARE** -- Create findings board at `.reports/skippy-review/findings-{timestamp}.md` with section headers for each reviewer. Record start time.
 3. **REVIEW** -- Spawn each reviewer subagent sequentially (security, code-quality, architecture, consistency). Pass scope and board path in the task prompt. Wait for each to complete before spawning the next.
+
+   Review depth adapts to scope:
+   | Depth | When | What |
+   |---|---|---|
+   | **Quick** | <10 files changed, no security-sensitive paths | Code-quality + consistency only |
+   | **Standard** | 10-50 files, or any security-sensitive paths | All 4 reviewers |
+   | **Deep** | >50 files, architectural changes, or milestone review | All reviewers + additional domain specialists |
+
+   Source: GSD v1.34 code-review depth levels.
 4. **SYNTHESIZE** -- Read the full findings board. Cross-reference findings across reviewers (e.g., security injection + code quality validation gap on the same function). Deduplicate overlapping findings.
 5. **PRIORITIZE** -- Sort findings by severity (CRITICAL > HIGH > MEDIUM > LOW). Group by file for fix planning. Only CRITICAL and HIGH trigger fix cycles.
 6. **FIX** -- Spawn fix agents for each CRITICAL/HIGH finding. Each fix agent receives specific finding details and file paths. Fix agents make atomic commits prefixed `fix(review):`.
@@ -93,6 +102,28 @@ Three layers of protection, motivated by the v1.1 incident where a red team agen
 
 Architecture reviewer uses opus (HIGH complexity per model-routing.md) because architecture analysis requires reasoning about system-wide impact and tradeoffs.
 
+## Adaptive Gating
+
+Track reviewer hit rates over time. If a specialist reviewer produces 0 findings for N consecutive dispatches (suggested: 10), auto-gate that reviewer -- skip dispatching them for similar scopes. This prevents wasting agent calls on reviewers that never find issues in certain codebases.
+
+Rules:
+- Security and data-migration reviewers are `[NEVER_GATE]` -- always dispatch regardless of hit rate (insurance reviewers)
+- Force flag `--force-all` overrides gating and dispatches all reviewers
+- Gating is per-scope-category, not global (a reviewer gated for "docs changes" may still fire for "auth changes")
+- Store hit rates in `.reports/skippy-review/reviewer-stats.json`
+
+Source: gstack v0.15 review army adaptive gating.
+
+## Anti-Slop Review Mode
+
+A specialized review pass focused on AI-generated code quality. Deletion-first approach:
+- Look for unnecessary abstractions, over-engineering, premature generalization
+- Flag code that adds complexity without clear justification
+- Use `--review` flag for reviewer-only pass (no auto-fix -- just report)
+- Bounded scope: only reviews files changed in the current PR/phase, not the whole repo
+
+Source: OMC v4.10 ai-slop-cleaner skill.
+
 ## Exit Conditions
 
 When to stop the fix/eval cycle:
@@ -120,5 +151,5 @@ When to stop the fix/eval cycle:
 - After major refactoring -- verify no regressions or convention violations
 
 ---
-*Sources: v1.1 audit process (7 rounds, 20+ agents, 17 findings). Adapted from OMC UltraQA cycling and PAUL verification protocol.*
-*Last reviewed: 2026-03-08*
+*Sources: v1.1 audit process (7 rounds, 20+ agents, 17 findings). Adapted from OMC UltraQA cycling and PAUL verification protocol. Enriched with gstack v0.15 adaptive gating, OMC v4.10 anti-slop review, GSD v1.34 review depth tiers.*
+*Last reviewed: 2026-04-06*
