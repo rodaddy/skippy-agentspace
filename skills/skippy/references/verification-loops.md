@@ -55,6 +55,9 @@ Cycle N (max 5):
 | Max iterations reached (5) | Exit: report remaining failures and diagnosis |
 | Same failure 3 consecutive times | Exit early: the fix approach is wrong, escalate |
 | Environment error (not a code issue) | Exit: report infrastructure problem |
+| Issue count plateaus across iterations | Exit early: stall detected -- the approach isn't converging, re-plan |
+
+Stall detection: Track the issue count between revision cycles. If the count stops decreasing for 2+ consecutive iterations, the current fix strategy isn't converging. Escalate or re-plan rather than burning remaining iterations. (Source: GSD v1.34 plan-checker revision loop)
 
 ### 5. Same-Failure Detection
 
@@ -73,6 +76,56 @@ When verification includes code review, rate findings by severity:
 
 Only CRITICAL and HIGH findings should trigger fix cycles. MEDIUM and LOW are logged for future cleanup.
 
+### 7. Diagnostic Failure Routing
+
+Before attempting a fix, classify the failure:
+
+| Failure Type | Meaning | Action |
+|---|---|---|
+| **Intent** | The requirement itself is wrong or unclear | Escalate to user -- don't fix code for a bad spec |
+| **Spec** | The spec/plan doesn't match the intent | Revise the plan, then re-execute |
+| **Code** | The implementation doesn't match the spec | Fix the code (normal fix cycle) |
+
+The common mistake: treating all failures as code failures. If the spec is wrong, fixing code is wasted work.
+
+Source: PAUL v1.2 diagnostic routing.
+
+### 8. Evidence-Before-Claims
+
+Anti-rationalization table -- cognitive override checklist:
+
+| If you're thinking... | Instead do... |
+|---|---|
+| "This probably works" | Run the verify command |
+| "The test is wrong" | Re-read the test. Re-read the requirement. THEN decide. |
+| "This is close enough" | Check the done criteria literally |
+| "I'll fix this later" | Fix it now or log it as a deviation |
+| "The failure is environmental" | Reproduce it twice before blaming environment |
+
+Source: PAUL v1.2 anti-rationalization enforcement.
+
+### 9. Audit-to-Fix Pipeline
+
+Pattern for autonomous audit->classification->fix workflows:
+
+1. Run audit (tests, lints, security scan)
+2. Classify each finding: auto-fixable vs manual-required
+3. Auto-fix the auto-fixable ones with test verification per fix
+4. Report manual-required findings for human review
+5. Cycle: re-run audit to check for regressions from fixes
+
+Key: classify BEFORE fixing. Don't attempt to auto-fix everything -- some findings require human judgment. The classification step prevents wasted fix attempts and ensures manual-required items get surfaced rather than silently skipped.
+
+Source: GSD v1.34 audit-to-fix pipeline.
+
+### 10. DX Boomerang Verification
+
+Score developer experience dimensions at plan time (e.g., time-to-hello-world, friction points, error clarity). After implementation, re-score with live testing. Diff the two scores. If post-implementation scores are lower than planned, something went wrong -- the implementation degraded DX despite intending to improve it.
+
+This forces honesty about whether changes actually improved DX. Planning-time optimism gets checked against implementation-time reality.
+
+Source: gstack v0.15 devex-review skill.
+
 ## Integration Points
 
 - **Task execution:** After each task, run the task's `verify` command. If it fails, enter a cycling loop (max 3 iterations for task-level, max 5 for plan-level).
@@ -90,5 +143,5 @@ Only CRITICAL and HIGH findings should trigger fix cycles. MEDIUM and LOW are lo
 - NOT for exploratory/research work with no clear pass/fail criteria
 
 ---
-*Sources: OMC `skills/ultraqa/SKILL.md`, PAUL verification protocol (via `plan-structure.md`). Adapted from GSD `verify-work` phase.*
-*Last reviewed: 2026-03-07*
+*Sources: OMC `skills/ultraqa/SKILL.md`, PAUL verification protocol (via `plan-structure.md`). Adapted from GSD `verify-work` phase. PAUL v1.2 (diagnostic routing, anti-rationalization), GSD v1.34 (stall detection, audit-to-fix), gstack v0.15 (DX boomerang).*
+*Last reviewed: 2026-04-06*

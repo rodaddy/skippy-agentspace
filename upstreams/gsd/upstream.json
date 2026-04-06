@@ -3,8 +3,8 @@
   "description": "Get Shit Done -- phased execution framework for Claude Code",
   "repo": "https://github.com/gsd-build/get-shit-done.git",
   "branch": "main",
-  "last_checked_sha": "dab0c471113d7de846f4116d1ed0bbd6f255196e",
-  "last_check": "2026-03-22",
-  "cherry_picks": [],
-  "notes": "Base infrastructure -- we augment, never modify. v1.25-v1.28 reviewed (270 commits, 18 new commands, 0 new abilities). Core patterns stable. Prompt injection guard hook and cross-AI review noted as interesting patterns."
+  "last_checked_sha": "caf337508fe9c84f4d1a0edb423b76b83f256e91",
+  "last_check": "2026-04-06",
+  "cherry_picks": ["gates-taxonomy", "review-depth-tiers", "stall-detection", "audit-to-fix-pipeline"],
+  "notes": "v1.34.2 reviewed. 13 releases, 11 new commands since last check. 4 patterns extracted: gates taxonomy (4 canonical gate types), review depth tiers, stall detection, audit-to-fix pipeline. Core patterns remain stable."
 }

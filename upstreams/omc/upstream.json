@@ -3,8 +3,8 @@
   "description": "Oh My ClaudeCode -- multi-agent orchestration with skills, hooks, and execution modes",
   "repo": "https://github.com/Yeachan-Heo/oh-my-claudecode.git",
   "branch": "main",
-  "last_checked_sha": "7d07356366606364076addb8b3e10f3ad1f5500f",
-  "last_check": "2026-03-15",
+  "last_checked_sha": "2487d3878f8d25e60802940b020d5ee8774d135e",
+  "last_check": "2026-04-06",
   "cherry_picks": [
     {
       "id": "pre-execution-gate",
@@ -33,7 +33,11 @@
       "target": "skills/skippy/references/parallel-file-ownership.md",
       "description": "File ownership patterns for parallel execution safety",
       "date": "2026-03-07"
-    }
+    },
+    "sealed-eval",
+    "3-point-injection",
+    "worktree-per-issue",
+    "anti-slop-review-mode"
   ],
-  "notes": "Cherry-pick ideas only -- no runtime dependency on OMC's Node.js infrastructure"
+  "notes": "v4.10.2 reviewed. 10 releases, 11 new commands since last check. 4 new patterns extracted: sealed eval (tamper-proof benchmarks), 3-point injection pipeline, worktree-per-issue, anti-slop review mode. Cherry-pick ideas only -- no runtime dependency on OMC's Node.js infrastructure."
 }

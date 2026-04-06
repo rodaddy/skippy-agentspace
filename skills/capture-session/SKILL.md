@@ -3,7 +3,7 @@ name: capture-session
 description: Capture insights from the current Claude Code session and save to Open Brain. Extracts decisions, learnings, and session context for long-term semantic storage.
 allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
-  version: 0.1.0
+  version: 0.2.0
   author: Rico
   source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
@@ -39,21 +39,29 @@ When triggered:
 ### Step 1: Summarize Session
 Generate a brief session summary covering: what was worked on, key decisions, problems solved, and next steps.
 
+### Step 1b: Resolve Namespace
+Before any OB write, resolve the namespace using the brain skill's rules:
+```bash
+# Determine namespace from host + directory context
+# See brain skill's Namespace Resolution section for full rules
+# Result: NAMESPACE variable (e.g., "rico", "collab")
+```
+
 ### Step 2: Save Decisions
 For each architectural or implementation decision made during the session:
 ```bash
-mcp2cli open-brain log_decision --params '{"title": "<decision>", "rationale": "<why>", "alternatives": ["<alt1>", "<alt2>"], "tags": ["tag1", "tag2"]}'
+mcp2cli open-brain log_decision --params '{"title": "<decision>", "rationale": "<why>", "alternatives": ["<alt1>", "<alt2>"], "tags": ["tag1", "tag2"], "namespace": "<resolved_namespace>"}'
 ```
 
 ### Step 3: Save Learnings
 For each learning, gotcha, or solution discovered:
 ```bash
-mcp2cli open-brain log_thought --params '{"content": "<learning with full context>", "tags": ["tag1", "tag2"]}'
+mcp2cli open-brain log_thought --params '{"content": "<learning with full context>", "tags": ["tag1", "tag2"], "namespace": "<resolved_namespace>"}'
 ```
 
 ### Step 4: Save Session Summary
 ```bash
-mcp2cli open-brain session_save --params '{"summary": "<session summary>", "project": "<project>", "tags": ["session-capture"], "key_decisions": ["<decision1>"], "next_steps": ["<step1>"], "blockers": []}'
+mcp2cli open-brain session_save --params '{"summary": "<session summary>", "project": "<project>", "tags": ["session-capture"], "key_decisions": ["<decision1>"], "next_steps": ["<step1>"], "blockers": [], "namespace": "<resolved_namespace>"}'
 ```
 
 ### Step 5: Confirm
