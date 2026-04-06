@@ -1,6 +1,58 @@
 # Changelog
 
 All notable changes to skippy-agentspace are documented here.
+## [1.3.0] - 2026-04-06
+
+### What's New
+
+**Cognitive Tiering (OB Dreaming)**
+Open Brain now has a memory lifecycle system. Every entry gets a tier -- hot, warm, or cold -- based on how often it's accessed. Hot entries get boosted in search results (+0.3 RRF), cold entries get penalized (-0.2). This means the stuff you use most surfaces faster, and stale knowledge fades naturally.
+
+- Use `set_tier` to manually promote important entries to hot
+- Use `tier` param on `search_brain`, `search_all`, or `list_recent` to filter (e.g., show only hot entries)
+- Access tracking logs every search hit to `entry_access_log` for frequency/recency analysis
+- Nightly dream cycle (guided by Skippy at 3am) promotes/demotes/consolidates entries
+
+**15 New Patterns from 5 Upstream Sources**
+Re-audited GSD v1.34.2, OMC v4.10.2, gstack v0.15.13, PAUL v1.2, and superpowers v5.0.7. All 15 extracted patterns enrich existing abilities -- no new abilities needed (the 11-ability taxonomy holds stable).
+
+### Added
+- 4 new reference docs: `gates-taxonomy.md`, `sealed-eval.md`, `context-degradation.md`, `eval-integrity.md`
+- Brain skill v0.3.0: `set_tier` tool + `tier` filter param on search/list (12 -> 13 tools)
+- Open Brain upstream.json synced to cognitive tiering release
+- 5 upstream.json files updated with current SHAs
+
+### Fixed
+- Capture-session v0.2.0: namespace resolution on all OB write calls (was missing, could write to wrong namespace)
+- CLAUDE.md: OMC URL corrected to `Yeachan-Heo/oh-my-claudecode`
+
+### Enriched
+- `verification-loops.md` +5 patterns (diagnostic routing, evidence-before-claims, stall detection, audit-to-fix, DX boomerang)
+- `audit-swarm.md` +3 patterns (adaptive gating, anti-slop mode, depth tiers)
+- `plan-structure.md` +1 (coherence check)
+- `ambiguity-scoring.md` +1 (3-point injection)
+- `session-persistence.md` +1 (worktree-per-issue)
+
+### How to Use the New Stuff
+
+**Set an entry's tier:**
+```bash
+mcp2cli open-brain set_tier --params '{"id":"<entry-uuid>","table":"thoughts","tier":"hot"}'
+```
+
+**Search only hot entries:**
+```bash
+mcp2cli open-brain search_brain --params '{"query":"king capital architecture","tier":"hot"}'
+```
+
+**List recent cold entries (candidates for cleanup):**
+```bash
+mcp2cli open-brain list_recent --params '{"tier":"cold","days":30}'
+```
+
+**Check what's tracked:**
+The `entry_access_log` table records every search hit with timestamp, query text, and context. This feeds the nightly dream cycle scoring.
+
 
 ## [1.2.0] - 2026-03-22
 
