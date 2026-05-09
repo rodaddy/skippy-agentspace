@@ -3,7 +3,7 @@ name: brain
 description: Query, write, and manage your Open Brain knowledge base with automatic namespace resolution. USE WHEN logging thoughts, decisions, searching brain, session saves, or any OB interaction. All OB calls MUST go through this skill for proper namespace tagging.
 metadata:
   version: 0.3.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
 triggers:
@@ -36,7 +36,7 @@ If the user says any of these, override all other rules:
 
 | User Says | Namespace | Example |
 |-----------|-----------|---------|
-| "my brain", "my ob", "personal", "private" | `<caller_identity>` | "save this to my brain" -> `rico` |
+| "my brain", "my ob", "personal", "private" | `<caller_identity>` | "save this to my brain" -> `<your_id>` |
 | "collab", "shared", "team", "king" | `collab` | "push this to collab" -> `collab` |
 
 ### 2. Host + Directory Detection (default)
@@ -54,7 +54,7 @@ if HOSTNAME starts with "cc-":
     namespace = "collab"
 
 elif HOSTNAME ends with ".local":
-  # Personal machine (Mini-M4-Pro.local, rodaddy-air-2.local)
+  # Personal machine (your-desktop.local, your-laptop.local)
   if cwd matches */king* OR */King*:
     namespace = "collab"
   else:
@@ -68,9 +68,8 @@ else:
 ### 3. Caller Identity
 
 `<caller_identity>` = the authenticated user's ID. This comes from the auth token, NOT hardcoded:
-- Rico's sessions -> `rico`
-- Kevin's sessions -> `kevin`
-- Geetesh's sessions -> `geetesh`
+- User's sessions -> `<user_id>`
+- Team member sessions -> `<their_id>`
 - Skippy OC -> `skippy`
 - Other agents -> their `clientId`
 
@@ -101,7 +100,7 @@ mcp2cli open-brain search_brain --params '{"query": "<user query>", "limit": 10}
 mcp2cli open-brain search_all --params '{"query": "<user query>"}'
 
 # Search within specific namespace
-mcp2cli open-brain search_brain --params '{"query": "<query>", "namespace": "rico"}'
+mcp2cli open-brain search_brain --params '{"query": "<query>", "namespace": "<your_id>"}'
 ```
 
 ### Log Thought

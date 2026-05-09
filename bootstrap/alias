@@ -1,0 +1,300 @@
+
+
+EZA_CONFIG_DIR="$HOME/.config/eza"
+# $XDG_CONFIG_HOME=$EZA_CONFIG_DIR/current.yml
+
+alias l='eza --long  --no-user --time-style=long-iso --icons --group-directories-first'
+alias ll='eza --long --no-user --time-style=long-iso --icons --group-directories-first -a'
+alias dir="eza --icons --group-directories-first -a"
+alias tree="eza --tree --level=2 --long"
+
+# alias fabric='fabric-ai'
+
+_iterm2_command() {
+    printf "\033]%s\a" "$1"
+}
+
+iterm2_profile () {
+	local profile="$1"
+	local cmd="1337;SetProfile=$profile"
+	_iterm2_command "${cmd}"
+	ITERM_PROFILE="$profile"
+}
+
+
+alias itp='iterm2_profile Pinky'
+alias ith='iterm2_profile Hulk'
+alias itb='iterm2_profile Bengals'
+alias ity='iterm2_profile Yella_boy'
+alias itbb='iterm2_profile Blue_boy'
+
+
+alias history='history -f 1'
+
+alias blueToggle='blueutil -p toggle; blueutil -p toggle'
+
+alias k='kubectl'
+alias kga='kubectl get all'
+alias kgp='kubectl get pods'
+alias kgn='kubectl get namespace'
+alias kgs='kubectl get services'
+alias kgd='kubectl get deployments'
+alias kgsa='kubectl get ServiceAccounts'
+alias kgvs='kubectl get VirtualServices'
+alias kgj='kubectl get jobs'
+
+alias py='uv run python'
+alias upip='uv run pip'
+alias python='python3'
+alias pythonw='python3'
+alias pip='pip3'
+
+# PostgreSQL 18 (Homebrew) -- guarded for portability (Intel vs Apple Silicon, version)
+if [[ -d "$(brew --prefix 2>/dev/null)/opt/postgresql@18" ]]; then
+  _pg_bin="$(brew --prefix)/opt/postgresql@18/bin"
+  alias psql="$_pg_bin/psql"
+  alias pg_dump="$_pg_bin/pg_dump"
+  alias pg_restore="$_pg_bin/pg_restore"
+  unset _pg_bin
+fi
+
+# Uses SSHFS (SSH tunnel), not NFS. See SMB rule for network file shares.
+alias mountData='sshfs $USER@__YOUR_NAS_IP__:/data_pool/media_share ~/Data -ocache=no -onolocalcaches -ovolname=Data'
+alias uMountData='umount -f $HOME/Data'
+
+
+alias updatePip='pip install --upgrade pip'
+alias updatePip311='pip3.12 install --upgrade pip'
+
+
+alias updateAllPip='pip list --outdated | grep -v "^\-e" | cut -d = -f 1  | xargs -n1 pip install -U'
+alias updateAllPip311='pip3.11 list --outdated | grep -v "^\-e" | cut -d = -f 1  | xargs -n1 pip3.11 install -U'
+# alias python='uv run python'
+
+# vaultwarden-secrets CLI
+alias secret="$HOME/Development/vaultwarden-secrets/bin/secret"  # Adjust path to your vaultwarden-secrets install
+alias sg='secret get'
+alias sc='secret copy'
+alias ss='secret set'
+alias sl='secret list'
+alias sv='secret vault'
+alias sth='secret health'
+
+# ============================================
+# Claude Code Worktree Sessions (Boris pattern)
+# ============================================
+# Parallel isolated sessions -- each gets its own worktree + branch
+# cw "name"  = launch Claude in a named worktree
+# cwa/cwb/cwc = quick-switch aliases for up to 3 parallel sessions
+# cwanalysis = permanent read-only analysis worktree (logs, queries, debugging)
+
+cw() {
+    local name="${1:-$(date +%s | shasum | head -c 6)}"
+    _cc_launch --worktree "$name" "${@:2}"
+}
+cwa() { cw "session-a" "$@"; }
+cwb() { cw "session-b" "$@"; }
+cwc() { cw "session-c" "$@"; }
+
+# Permanent analysis worktree -- never gets dirty with implementation
+cwanalysis() {
+    local repo_root
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "$repo_root" ]]; then
+        echo "Not in a git repo"
+        return 1
+    fi
+    local wt_path="$repo_root/.claude/worktrees/analysis"
+    if [[ ! -d "$wt_path" ]]; then
+        git worktree add "$wt_path" HEAD --detach
+        echo "Created analysis worktree at $wt_path"
+    fi
+    (cd "$wt_path" && _cc_launch "$@")
+}
+
+# ============================================
+# Claude Code Launchers
+# ============================================
+
+# iTerm2 profile switching for CC sessions
+# Reads ~/.config/pai/iterm-profiles.json for project-to-profile mapping
+# Disable with: export PAI_ITERM_PROFILES=0
+_cc_set_profile() {
+    [[ "$PAI_ITERM_PROFILES" == "0" ]] && return
+    local config="$HOME/.config/pai/iterm-profiles.json"
+    [[ ! -f "$config" ]] && return
+    local dir=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
+    local profile=$(jq -r --arg d "$dir" '.projects[$d] // .default // "Blue_boy"' "$config" 2>/dev/null)
+    iterm2_profile "$profile"
+}
+
+# WARNING: Disables ALL Claude permission prompts. Remove for default safety behavior.
+_cc_launch() {
+    local old="${ITERM_PROFILE:-Blue_boy}"
+    _cc_set_profile
+    claude --dangerously-skip-permissions "$@"
+    iterm2_profile "$old"
+}
+
+# WARNING: Disables ALL Claude permission prompts. Remove for default safety behavior.
+# Bare claude always gets --dangerously-skip-permissions
+claude() { command claude --dangerously-skip-permissions "$@"; }
+
+# Default launchers (via LiteLLM)
+unalias cc cco ccs cch ccg ccgf ccg2 2>/dev/null
+cc()  { _cc_launch "$@"; }
+cco() { _cc_launch --model opus "$@"; }
+ccs() { _cc_launch --model sonnet "$@"; }
+cch() { _cc_launch --model haiku "$@"; }
+
+# Gemini models via LiteLLM
+ccg()  { _cc_launch --model gemini-3-pro "$@"; }
+ccgf() { _cc_launch --model gemini-3-flash "$@"; }
+ccg2() { _cc_launch --model gemini-2.5-pro "$@"; }
+
+# tmux-wrapped -- protects scrollback from Ink renderer clearing
+tclaude() {
+    local session_name="claude-${PWD##*/}"
+    if [[ -n "$TMUX" ]]; then
+        _cc_launch "$@"
+        return
+    fi
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux attach -t "$session_name"
+    else
+        tmux new-session -s "$session_name" "zsh -ic '_cc_launch $*; exec zsh'"
+    fi
+}
+
+# Direct Vertex AI -- bypasses LiteLLM, uses Google Cloud auth directly
+# WARNING: Disables ALL Claude permission prompts. Remove for default safety behavior.
+vclaude() {
+    local old="${ITERM_PROFILE:-Blue_boy}"
+    _cc_set_profile
+    (
+        unset ANTHROPIC_BASE_URL ANTHROPIC_API_KEY
+        export CLAUDE_CODE_USE_VERTEX=1
+        export CLOUD_ML_REGION=global
+        export ANTHROPIC_VERTEX_PROJECT_ID="__YOUR_GCP_PROJECT_ID__"
+        export ANTHROPIC_MODEL="claude-opus-4-6@default[1M]"
+        claude --dangerously-skip-permissions "$@"
+    )
+    iterm2_profile "$old"
+}
+
+# Model switcher function - use: ccm gemini-3-flash
+ccm() {
+    if [[ -z "$1" ]]; then
+        echo "Available models:"
+        echo "  Claude:  opus, sonnet, haiku"
+        echo "  Gemini:  gemini-3-pro, gemini-3-flash, gemini-2.5-pro, gemini-2.5-flash"
+        echo "  Vertex:  vclaude (direct Vertex AI, no LiteLLM)"
+        echo ""
+        echo "Usage: ccm <model-name>"
+        return
+    fi
+    _cc_launch --model "$1"
+}
+
+# -- Paperclip server management --
+PAPERCLIP_URL="http://localhost:3100"
+PAPERCLIP_AGENT="com.paperclip.server"
+
+pcstart()  { launchctl load ~/Library/LaunchAgents/$PAPERCLIP_AGENT.plist && echo "Paperclip starting..."; }
+pcstop()   { launchctl unload ~/Library/LaunchAgents/$PAPERCLIP_AGENT.plist && echo "Paperclip stopped."; }
+pcrestart(){ pcstop; sleep 2; pcstart; }
+pclog()    { tail -f ~/Library/Logs/$PAPERCLIP_AGENT.log; }
+pcerr()    { tail -f ~/Library/Logs/$PAPERCLIP_AGENT.error.log; }
+
+# -- Paperclip agent management --
+
+# Kick a routine by name fragment: pkick myapp, pkick deploy, pkick standup
+pkick() {
+  local q="${1:?Usage: pkick <name-fragment>}"
+  local match=$(curl -s "$PAPERCLIP_URL/api/companies/__YOUR_PAPERCLIP_COMPANY_ID__/routines" \
+    | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+routines=data if isinstance(data,list) else data.get('routines',data.get('data',[]))
+q='$q'.lower()
+for r in routines:
+    if q in r.get('title','').lower():
+        print(r['id'],r['title']); break
+")
+  if [ -z "$match" ]; then echo "No routine matching '$q'"; return 1; fi
+  local rid=$(echo "$match" | cut -d' ' -f1)
+  local title=$(echo "$match" | cut -d' ' -f2-)
+  echo "Kicking: $title"
+  curl -s -X POST "$PAPERCLIP_URL/api/routines/$rid/run" \
+    -H "Content-Type: application/json" -d '{"source":"manual"}' | python3 -c "import sys,json; d=json.load(sys.stdin); print(f'  -> {d.get(\"status\",d.get(\"id\",\"ok\"))}')" 2>/dev/null
+}
+
+# Kick all routines: pkickall
+pkickall() {
+  curl -s "$PAPERCLIP_URL/api/companies/__YOUR_PAPERCLIP_COMPANY_ID__/routines" \
+    | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+routines=data if isinstance(data,list) else data.get('routines',data.get('data',[]))
+for r in routines:
+    print(r['id'],r['title'])
+" | while read -r rid title; do
+    echo "Kicking: $title"
+    curl -s -X POST "$PAPERCLIP_URL/api/routines/$rid/run" \
+      -H "Content-Type: application/json" -d '{"source":"manual"}' > /dev/null
+  done
+  echo "All routines kicked."
+}
+
+# Wake an agent by name fragment: pwake cto, pwake "tax master"
+pwake() {
+  local q="${1:?Usage: pwake <name-fragment>}"
+  local match=$(curl -s "$PAPERCLIP_URL/api/companies/__YOUR_PAPERCLIP_COMPANY_ID__/agents" \
+    | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+agents=data if isinstance(data,list) else data.get('agents',data.get('data',[]))
+q='$q'.lower()
+for a in agents:
+    if q in a.get('name','').lower():
+        print(a['id'],a['name']); break
+")
+  if [ -z "$match" ]; then echo "No agent matching '$q'"; return 1; fi
+  local aid=$(echo "$match" | cut -d' ' -f1)
+  local name=$(echo "$match" | cut -d' ' -f2-)
+  echo "Waking: $name"
+  curl -s -X POST "$PAPERCLIP_URL/api/agents/$aid/heartbeat/invoke" \
+    -H "Content-Type: application/json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(f'  -> {d.get(\"status\",\"queued\")}')" 2>/dev/null
+}
+
+# Wake all agents: pwakeall
+pwakeall() {
+  curl -s "$PAPERCLIP_URL/api/companies/__YOUR_PAPERCLIP_COMPANY_ID__/agents" \
+    | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+agents=data if isinstance(data,list) else data.get('agents',data.get('data',[]))
+for a in agents:
+    if a.get('status') != 'terminated':
+        print(a['id'],a['name'])
+" | while read -r aid name; do
+    echo "Waking: $name"
+    curl -s -X POST "$PAPERCLIP_URL/api/agents/$aid/heartbeat/invoke" \
+      -H "Content-Type: application/json" > /dev/null
+  done
+  echo "All agents woken."
+}
+
+# Quick agent status: pstatus
+pstatus() {
+  curl -s "$PAPERCLIP_URL/api/companies/__YOUR_PAPERCLIP_COMPANY_ID__/agents" \
+    | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+agents=data if isinstance(data,list) else data.get('agents',data.get('data',[]))
+for a in sorted(agents, key=lambda x: x['name']):
+    hb=a.get('lastHeartbeatAt','never')
+    if hb and hb!='never': hb=hb[5:16]
+    print(f'{a[\"name\"]:<25} {a[\"status\"]:<12} last:{hb}')
+"
+}

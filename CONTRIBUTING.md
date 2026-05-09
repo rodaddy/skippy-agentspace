@@ -2,7 +2,7 @@
 
 ## Adding a Skill
 
-Each skill is a self-contained directory under `skills/<name>/`:
+Each skill is a self-contained directory under `skills/<name>/` (88 skills currently):
 
 ```
 skills/<name>/
@@ -18,7 +18,7 @@ skills/<name>/
 name: skill-name
 description: One-line summary
 metadata:
-  version: "1.2.0"
+  version: "2.0.0"
   author: your-name
   source: original | adapted-from-X
   category: core | workflow | utility | domain
@@ -29,6 +29,8 @@ metadata:
 1. Add skill entry to `.claude-plugin/marketplace.json`
 2. Run `bash tools/index-sync.sh --generate` to update INDEX.md
 3. Verify no cross-skill imports -- each skill must be standalone
+4. Use `__DOUBLE_UNDERSCORE__` placeholders for user-filled config values in bootstrap templates
+5. Use `<ANGLE_BRACKET>` placeholders for infrastructure-specific values in reference docs
 
 ## Running Tests
 
@@ -36,10 +38,13 @@ metadata:
 # Unit tests (bats-core, 37 cases, sandboxed HOME)
 ./tests/bats/bin/bats tests/
 
-# Health check (24+ checks across 5 categories)
+# Structural evals (111 assertions across 4 categories)
+bash evals/structural/runner.sh
+
+# Health check
 bash tools/verify.sh
 
-# Full integration suite (36 tests, clones upstreams)
+# Full integration suite (clones upstreams)
 bash tools/integration-test.sh
 
 # Integration -- skip upstream clones
@@ -57,6 +62,8 @@ All tests run in sandboxed `$HOME` -- never touches your real `~/.claude/`.
 - Safety: `set -euo pipefail`
 - Run tests before submitting
 
+**Secret scanning:** If ggshield is installed (`install.sh --ggshield`), the pre-commit hook blocks secrets automatically. If it flags a false positive, use a placeholder instead (see [CONVENTIONS.md](CONVENTIONS.md) Placeholder Conventions).
+
 **Pull requests:** One feature or fix per PR. Include test output if applicable.
 
 ## Conventions
@@ -65,5 +72,6 @@ All tests run in sandboxed `$HOME` -- never touches your real `~/.claude/`.
 - `validate_skill_name()` for any user-supplied skill name argument
 - No cross-skill imports -- portability is a hard constraint
 - Slim SKILL.md (<150 lines) with detail in `references/` subdirectory
+- `__PLACEHOLDER__` style for bootstrap config, `<PLACEHOLDER>` style for reference docs
 
-See [CONVENTIONS.md](CONVENTIONS.md) for full coding conventions and content classification.
+See [CONVENTIONS.md](CONVENTIONS.md) for full coding conventions, placeholder rules, and content classification.

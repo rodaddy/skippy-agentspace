@@ -44,31 +44,43 @@ The v2.0 pipeline was first run manually this session. These failures become fea
 
 ## Milestones
 
-### v2.0 Curation Engine (next)
+### v2.0 Portable Clean (shipped 2026-05-09)
 
-The consume -> coalesce -> eval -> iterate pipeline. Turns skippy-agentspace from "12 portable skills" into a skill curation framework for any Claude Code user.
+Major merge release -- 62 skills from pai-portable merged into skippy-agentspace, bringing the total to 86 skills. Full secret scrub across the repo with ggshield integration for continuous scanning.
 
-**What ships:**
-- `skippy:consume <source>` -- audit a marketplace/plugin, extract patterns, classify, persist results
-- `skippy:coalesce` -- merge all consumed patterns into abilities, deduplicate, cut overlap
-- `skippy:eval` -- Karpathy-style binary assertion loop per ability, auto-fix, iterate to perfect
-- `skippy:status` -- show consumed sources, abilities, scores, overlap
-- Pre-consume diff (never regress installed skills)
-- Full-scope backup before any modification
-- Cross-source overlap detection and resolution
-- Audit persistence (`.planning/audits/`)
+**What shipped:**
+- 62 skills merged from pai-portable (86 total skills across all categories)
+- Full secret scrub -- historical secrets removed from repo
+- ggshield integration for pre-commit secret scanning
+- Bootstrap layer for new machine onboarding
 - 11 default abilities from GSD+OMC+PAUL+Open Brain pre-consumed
+- Audit persistence (`.planning/audits/`)
 
-**Architecture:**
+**Architecture additions:**
+- Bootstrap layer for first-time setup and machine onboarding
+- ggshield pre-commit hook for secret scanning
 - Each consumed source gets an entry in `upstreams/` with audit results
 - Each ability is a skill dir with SKILL.md + commands/ + references/ + evals/
 - `evals/evals.json` defines binary assertions per ability
 - `evals/results.md` tracks scores and iteration history
 - The 18 existing reference docs become the knowledge base for pattern classification
 
+### v2.1 Stabilization & Security (next)
+
+Post-v2.0 hardening plus the curation engine pipeline from the original v2.0 vision.
+
+**Candidates:**
+- Curation engine pipeline (`skippy:consume`, `skippy:coalesce`, `skippy:eval`, `skippy:status`)
+- Security hardening (ggshield CI enforcement, secret scanning)
+- Pre-consume diff (never regress installed skills)
+- Full-scope backup before any modification
+- Cross-source overlap detection and resolution
+- Skill quality gates and eval framework
+
 ### v1.2 Standalone Skippy (shipped 2026-03-08)
 
 Skippy IS the framework -- no external dependencies on GSD, PAUL, or OMC at runtime. 6 phases, 14 plans, 22 requirements -- all satisfied.
+
 
 **What shipped:**
 - Shared shell library (`tools/lib/common.sh`) with DRY extraction across all tool scripts
@@ -156,10 +168,11 @@ We chose the portable skill repo approach: standalone execution with source attr
 
 ### Relationship to PAI
 
-- **Source:** This repo (`skippy-agentspace/`) is the development copy
-- **Installed copy:** `~/.config/pai/Skills/skippy/` (symlinked via `tools/install.sh`)
+- **Source:** This repo (`skippy-agentspace/`) is the development copy -- 86 total skills
+- **Installed copy:** `~/.config/pai/Skills/` (symlinked via `tools/install.sh`)
 - **Commands registered:** `~/.claude/commands/skippy/` (symlinks to `skills/skippy/commands/`)
 - **Agent access:** Listed in `~/.config/pai/Skills/AGENT-INDEX.md` under "Development Workflow"
+- **Security:** ggshield pre-commit hook for secret scanning
 
 ### Backup
 
@@ -184,4 +197,4 @@ Pre-change backup created at `~/Desktop/claude_setup/backup-2026-03-06-skippy/` 
 | Separate agentspace repo | Skills should be portable, not buried in PAI config | -- Pending |
 
 ---
-*Last updated: 2026-03-08 after v1.2 milestone complete*
+*Last updated: 2026-05-09 after v2.0 shipped*

@@ -1,0 +1,9 @@
+{
+  "name": "pai-art-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "latest",
+    "replicate": "latest"
+  }
+}

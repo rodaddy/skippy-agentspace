@@ -1,0 +1,43 @@
+{
+  "cluster": {
+    "name": "my-cluster",
+    "nodes": [
+      {
+        "name": "proxmox02",
+        "hostname": "<PROXMOX_NODE_IP>",
+        "api_port": 8006,
+        "ssh_port": 22,
+        "ssh_user": "user",
+        "roles": ["secondary", "containers", "vms"],
+        "enabled": true
+      },
+      {
+        "name": "proxmox06",
+        "hostname": "<PROXMOX_NODE_IP>",
+        "api_port": 8006,
+        "ssh_port": 22,
+        "ssh_user": "user",
+        "roles": ["primary", "containers"],
+        "enabled": true
+      }
+    ]
+  },
+  "api": {
+    "verify_ssl": false,
+    "timeout": 30000,
+    "retry_attempts": 3,
+    "retry_delay": 2000
+  },
+  "ssh": {
+    "key_path": "~/.config/pai/skills/proxmox/ssh/proxmox_id_rsa",
+    "connect_timeout": 10,
+    "command_timeout": 300,
+    "strict_host_key_checking": false
+  },
+  "defaults": {
+    "container_template": "local:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst",
+    "storage": "local-lvm",
+    "network_bridge": "vmbr0",
+    "gateway": "<UNIFI_IP>"
+  }
+}

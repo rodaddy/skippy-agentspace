@@ -4,7 +4,7 @@ description: Create and maintain a project glossary (GLOSSARY.md) so humans and 
 allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   category: workflow
 ---
 

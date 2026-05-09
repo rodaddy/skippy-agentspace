@@ -19,11 +19,11 @@ CWD_BASE=$(basename "$PWD")
 if [[ "$HOST" == cc-* ]]; then
   # LXC -- default collab
   NS="collab"
-elif [[ "$CWD_BASE" == king* ]] || [[ "$CWD_BASE" == King* ]]; then
-  # Personal machine + king directory
+elif [[ "$CWD_BASE" == team-project* ]] || [[ "$CWD_BASE" == Team-Project* ]]; then
+  # Personal machine + shared project directory
   NS="collab"
 else
-  # Personal machine + non-king directory
+  # Personal machine + non-team-project directory
   # Use your authenticated identity (from your auth token)
   NS="<your_client_id>"
 fi
@@ -31,13 +31,13 @@ fi
 
 ### For Skippy OC Specifically
 
-- You run on `rodaddy-air-2.local` (Air) or `Mini-M4-Pro.local` (local)
+- You run on the user's personal machine (e.g. `dev-laptop.local` or `my-mac.local`)
 - Your `clientId` is `skippy`
-- Default: `namespace = "skippy"` (unless in a king dir -> "collab")
+- Default: `namespace = "skippy"` (unless in a shared project dir -> "collab")
 - If a user explicitly tells you "this is for the team" or "push to collab" -> use "collab"
-- If a user says "save this to Rico's brain" or "this is personal for me" -> use that user's identity, NOT "skippy"
+- If a user says "save this to my brain" or "this is personal for me" -> use that user's identity, NOT "skippy"
 
-### For LXC Agents (cc-king, cc-kevin, cc-geetesh)
+### For LXC Agents (cc-dev, cc-alice, cc-bob)
 
 - Default: `namespace = "collab"` (you're doing team work)
 - Only switch to personal namespace if the user explicitly asks
@@ -60,7 +60,7 @@ Never omit namespace. Never omit tags. Empty tags array `[]` is acceptable if ge
 
 | Working On | Tags to Include |
 |-----------|-----------------|
-| King Capital code | `["king", "<repo-name>"]` |
+| Shared project code | `["team-project", "<repo-name>"]` |
 | Infrastructure | `["infra", "<service>"]` |
 | PAI system itself | `["pai", "<component>"]` |
 | Agent/OC work | `["oc", "<task-domain>"]` |
@@ -70,17 +70,17 @@ Never omit namespace. Never omit tags. Empty tags array `[]` is acceptable if ge
 ## Common Mistakes
 
 1. **Omitting namespace** -- the server defaults to your `clientId`, which may be wrong for collab work
-2. **Hardcoding "rico"** -- use the authenticated identity, not a hardcoded string
+2. **Hardcoding a username** -- use the authenticated identity, not a hardcoded string
 3. **Ignoring user intent** -- "save this to my brain" means THEIR namespace, not yours
 4. **No tags** -- always tag with at least the project context for traceability
 
-## Example: Skippy OC Logging a Thought from King Work
+## Example: Skippy OC Logging a Thought from Shared Project Work
 
 ```bash
-# On rodaddy-air-2.local, in ~/Development/king-trading
+# On dev-laptop.local, in ~/Development/team-project-api
 mcp2cli open-brain log_thought --params '{
   "content": "The RRF fusion weights need tuning -- k=60 is too aggressive for short queries",
-  "tags": ["king", "king-trading", "search", "rrf"],
+  "tags": ["team-project", "team-project-api", "search", "rrf"],
   "namespace": "collab"
 }'
 ```
@@ -88,7 +88,7 @@ mcp2cli open-brain log_thought --params '{
 ## Example: Skippy OC Logging a Personal Observation
 
 ```bash
-# On rodaddy-air-2.local, in ~/Development/pai-skills
+# On dev-laptop.local, in ~/Development/pai-skills
 mcp2cli open-brain log_thought --params '{
   "content": "Skill enforcement hooks should check recent messages deeper than 20",
   "tags": ["pai", "hooks", "skills"],
@@ -99,10 +99,10 @@ mcp2cli open-brain log_thought --params '{
 ## Example: User Says "Save This to My Brain"
 
 ```bash
-# User = Rico, on any host
+# User on any host
 mcp2cli open-brain log_thought --params '{
   "content": "Whatever the user asked to save",
   "tags": ["personal"],
-  "namespace": "rico"
+  "namespace": "<user_identity>"
 }'
 ```

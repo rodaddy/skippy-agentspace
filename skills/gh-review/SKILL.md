@@ -4,7 +4,7 @@ description: Set up Claude Code review workflow with self-hosted runner for any 
 allowed-tools: "Read,Write,Edit,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
 ---
@@ -24,22 +24,22 @@ Automates the full setup of Claude Code PR reviews on a self-hosted runner for a
 
 | Requirement | How to Check |
 |-------------|-------------|
-| SSH access to runner LXC | `ssh root@10.71.1.114 hostname` |
+| SSH access to runner LXC | `ssh root@<YOUR_IP> hostname` |
 | `gh` CLI authenticated | `gh auth status` |
 | LiteLLM API key in vaultwarden | `mcp2cli vaultwarden-secrets get_secret --params '{"name": "LiteLLM"}'` |
-| Claude Code on runner LXC | `ssh root@10.71.1.114 "su - runner -c 'claude --version'"` |
+| Claude Code on runner LXC | `ssh root@<YOUR_IP> "su - runner -c 'claude --version'"` |
 
 ## Infrastructure
 
 | Property | Value |
 |----------|-------|
-| Runner LXC | 106 (gh-runner) at 10.71.1.114 |
+| Runner LXC | 106 (gh-runner) at <YOUR_IP> |
 | Runner user | `runner` |
 | Runner base | `/home/runner/` |
 | Node | v24+ at `/usr/local/bin/node` |
 | Bun | `/usr/local/bin/bun` |
 | Claude Code | `/home/runner/.local/bin/claude` |
-| LiteLLM proxy | `http://10.71.20.33:4000` |
+| LiteLLM proxy | `http://<LITELLM_IP>:4000` |
 
 ## Commands
 
@@ -59,12 +59,12 @@ Automates the full setup of Claude Code PR reviews on a self-hosted runner for a
 
 | Repo | Runner Name | Label | Status |
 |------|-------------|-------|--------|
-| rodaddy/skippy-agentspace | gh-runner-skippy | skippy | online |
-| rodaddy/mcp2cli | gh-runner | (default) | online |
-| rodaddy/king-ng | king-ng | king-ng | online |
-| rodaddy/king-ng | king-uat | king-uat | online |
+| user/skippy-agentspace | gh-runner-skippy | skippy | online |
+| user/mcp2cli | gh-runner | (default) | online |
+| user/my-project | my-project | my-project | online |
+| user/my-project | my-project-uat | my-project-uat | online |
 
 ## References
 
-- King-ng workflow: `gh api repos/rodaddy/king-ng/contents/.github/workflows/claude-code-review.yml`
+- Example workflow: `gh api repos/user/my-project/contents/.github/workflows/claude-code-review.yml`
 - Runner docs: https://docs.github.com/en/actions/hosting-your-own-runners

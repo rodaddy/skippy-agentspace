@@ -4,19 +4,19 @@
 
 | Hostname Pattern | Type | Default Namespace | Example |
 |-----------------|------|-------------------|---------|
-| `cc-*` | LXC container | `collab` | cc-king, cc-kevin, cc-geetesh |
-| `*.local` | Personal machine | `<caller_identity>` | Mini-M4-Pro.local, rodaddy-air-2.local |
+| `cc-*` | LXC container | `collab` | cc-dev, cc-alice, cc-bob |
+| `*.local` | Personal machine | `<caller_identity>` | my-mac.local, dev-laptop.local |
 | Other | Unknown | `<caller_identity>` | |
 
 ## Known Hosts
 
 | Hostname | Owner | Location |
 |----------|-------|----------|
-| `Mini-M4-Pro.local` | Rico | Local Mac Mini |
-| `rodaddy-air-2.local` | Rico/Skippy | MacBook Air |
-| `cc-king` | King (collab) | LXC 10.71.20.120 |
-| `cc-kevin` | Kevin | LXC 10.71.20.121 |
-| `cc-geetesh` | Geetesh | LXC 10.71.20.122 |
+| `my-mac.local` | User | Local desktop |
+| `dev-laptop.local` | User/Skippy | Laptop |
+| `cc-dev` | Dev (collab) | LXC container |
+| `cc-alice` | Alice | LXC container |
+| `cc-bob` | Bob | LXC container |
 
 ## Directory-Based Override (Personal Machines Only)
 
@@ -24,7 +24,7 @@ On `*.local` hosts, the working directory overrides the default:
 
 | Directory Pattern | Namespace | Why |
 |-------------------|-----------|-----|
-| `*/king*` or `*/King*` | `collab` | King Capital work is shared |
+| `*/team-project*` or `*/Team-Project*` | `collab` | Shared project work is collaborative |
 | Everything else | `<caller_identity>` | Personal by default |
 
 LXC boxes do NOT use directory detection -- they default to `collab` regardless of cwd.
@@ -44,7 +44,7 @@ Result: `namespace = <caller_identity>`
 
 ### Collab Override
 - "collab", "shared", "team"
-- "king", "push to collab"
+- "team-project", "push to collab"
 - "this is for the team"
 
 Result: `namespace = "collab"`
@@ -58,52 +58,52 @@ Result: `namespace = "collab"`
 
 ## Examples
 
-### Rico on local Mac, in ~/Development/king-trading
+### User on local Mac, in ~/Development/team-project-api
 ```
-Host: Mini-M4-Pro.local (personal machine)
-CWD: king-trading (matches king*)
+Host: my-mac.local (personal machine)
+CWD: team-project-api (matches team-project*)
 -> namespace: "collab"
 ```
 
-### Rico on local Mac, in ~/Development/tax-strategy
+### User on local Mac, in ~/Development/side-project
 ```
-Host: Mini-M4-Pro.local (personal machine)
-CWD: tax-strategy (no king match)
--> namespace: "rico"
+Host: my-mac.local (personal machine)
+CWD: side-project (no team-project match)
+-> namespace: "user"
 ```
 
-### Rico on local Mac, in ~/Development/tax-strategy, says "push this to collab"
+### User on local Mac, in ~/Development/side-project, says "push this to collab"
 ```
-Host: Mini-M4-Pro.local (personal machine)
-CWD: tax-strategy (no king match)
+Host: my-mac.local (personal machine)
+CWD: side-project (no team-project match)
 Intent: "collab" override
 -> namespace: "collab" (intent wins)
 ```
 
-### Kevin on cc-kevin LXC, working on anything
+### Alice on cc-alice LXC, working on anything
 ```
-Host: cc-kevin (LXC)
+Host: cc-alice (LXC)
 -> namespace: "collab"
 ```
 
-### Kevin on cc-kevin LXC, says "save this to my brain"
+### Alice on cc-alice LXC, says "save this to my brain"
 ```
-Host: cc-kevin (LXC)
+Host: cc-alice (LXC)
 Intent: "my brain" -> personal override
--> namespace: "kevin" (intent wins)
+-> namespace: "alice" (intent wins)
 ```
 
-### Skippy on rodaddy-air-2.local, in ~/Development/open-brain
+### Skippy on dev-laptop.local, in ~/Development/open-brain
 ```
-Host: rodaddy-air-2.local (personal machine)
-CWD: open-brain (no king match)
+Host: dev-laptop.local (personal machine)
+CWD: open-brain (no team-project match)
 Caller: skippy
 -> namespace: "skippy"
 ```
 
-### Skippy on rodaddy-air-2.local, says "this is for the team"
+### Skippy on dev-laptop.local, says "this is for the team"
 ```
-Host: rodaddy-air-2.local (personal machine)
+Host: dev-laptop.local (personal machine)
 Intent: "team" -> collab override
 -> namespace: "collab" (intent wins)
 ```

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Structural eval runner for skippy-agentspace
-# 103 binary pass/fail assertions across 22 categories
+# 111 binary pass/fail assertions across 26 categories
 # Usage: bash evals/structural/runner.sh
 #
 # Assertions are split into category files under categories/ for LAW 9 compliance.

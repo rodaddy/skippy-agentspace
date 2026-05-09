@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+# Proxmox VE API helper
+# Requires PVE_TOKEN env var (get from vaultwarden PROXMOX_API)
+#
+# Usage: PVE_TOKEN=<value> pve <endpoint> [curl-args...]
+#   pve /nodes
+#   pve /cluster/resources?type=vm
+#   pve /nodes/proxmox01/lxc/200/status/start -X POST
+
+if [ -z "$PVE_TOKEN" ]; then
+  echo "Error: PVE_TOKEN not set. Fetch from vaultwarden: get_secret_fields('PROXMOX_API')" >&2
+  exit 1
+fi
+
+ENDPOINT="$1"
+shift
+
+BASE="https://<PROXMOX_NODE_IP>:8006/api2/json"
+AUTH="PVEAPIToken=claude@pve!mcp=${PVE_TOKEN}"
+
+curl -sk -H "Authorization: ${AUTH}" "${BASE}${ENDPOINT}" "$@"

@@ -1,16 +1,24 @@
 name: Tests & Evals
+# Runs structural assertions and bats test suite
 on:
   push:
-    branches: ['*']
+    branches: [main]
   pull_request:
     branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   structural-evals:
-    runs-on: macos-latest
+    runs-on: [self-hosted, skippy]
     steps:
       - uses: actions/checkout@v4
 
@@ -18,14 +26,11 @@ jobs:
         run: bash evals/structural/runner.sh
 
   bats-tests:
-    runs-on: macos-latest
+    runs-on: [self-hosted, skippy]
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Install bun
-        run: brew install oven-sh/bun/bun
 
       - name: Run bats tests
         run: ./tests/bats/bin/bats tests/

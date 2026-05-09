@@ -5,6 +5,8 @@
 - [x] **v1.0 Initial Release** - Phases 1-4 (shipped 2026-03-07)
 - [x] **v1.1 Portable PAI** - Phases 5-10 (shipped 2026-03-08)
 - [x] **v1.2 Standalone Skippy** - Phases 11-16 (shipped 2026-03-08)
+- [x] **v2.0 Portable Clean** - 62 skills merged from pai-portable, secret scrub, ggshield (shipped 2026-05-09)
+- [ ] **v2.1 Stabilization & Security** - Post-v2 hardening, curation engine pipeline (planning)
 
 ## Phases
 
@@ -250,9 +252,21 @@ Plans:
 
 </details>
 
+<details>
+<summary>v2.0 Portable Clean - SHIPPED 2026-05-09</summary>
+
+v2.0 was a major merge release rather than a phased development cycle. Key deliverables:
+
+- **62 skills merged** from pai-portable into skippy-agentspace (86 total skills)
+- **Full secret scrub** across entire repository history
+- **ggshield integration** for continuous secret scanning on commits
+- **Bootstrap layer** for new machine setup and onboarding
+
+</details>
+
 ## Progress
 
-All 16 phases across 3 milestones complete. 39 plans executed.
+All 16 phases across 4 milestones complete. 39 plans executed.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -272,3 +286,15 @@ All 16 phases across 3 milestones complete. 39 plans executed.
 | 14. Audit Swarm | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 15. Hardening | v1.2 | 2/2 | Complete | 2026-03-08 |
 | 16. Integration & Polish | v1.2 | 2/2 | Complete | 2026-03-08 |
+| v2.0 Portable Clean | v2.0 | -- | Complete | 2026-05-09 |
+
+## v2.1 Stabilization & Security (Planning)
+
+Post-v2.0 hardening and the curation engine pipeline that was envisioned in the original v2.0 spec.
+
+**Candidates:**
+- Curation engine pipeline (`skippy:consume`, `skippy:coalesce`, `skippy:eval`, `skippy:status`)
+- Ongoing security hardening (ggshield enforcement, secret scanning CI)
+- Skill quality gates and eval framework
+- Cross-source overlap detection and resolution
+- Pre-consume diff (never regress installed skills)

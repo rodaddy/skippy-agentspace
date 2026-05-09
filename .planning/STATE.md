@@ -1,45 +1,48 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: Curation Engine
-status: planning
-stopped_at: v2.0 vision defined, audit complete, PROJECT.md updated
-last_updated: "2026-03-13T20:45:00.000Z"
-last_activity: 2026-03-13 -- Marketplace audits (GSD/OMC/Open Brain), 11 abilities defined, v2.0 vision locked
+milestone_name: Portable Clean
+status: shipped
+stopped_at: v2.0 shipped -- 62 skills merged from pai-portable, full secret scrub, ggshield integration
+last_updated: "2026-05-09T00:00:00.000Z"
+last_activity: 2026-05-09 -- v2.0 shipped. 86 total skills, pai-portable merge, ggshield secret scanning, bootstrap layer
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 16
+  completed_phases: 16
+  total_plans: 39
+  completed_plans: 39
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-13)
+See: .planning/PROJECT.md (updated 2026-05-09)
 
 **Core value:** Skill curation engine -- consume any marketplace, coalesce patterns, verify with eval loops
-**Current focus:** v2.0 Curation Engine -- PLANNING
+**Current focus:** Post-v2.0 stabilization, security hardening
 
 ## Current Position
 
-Phase: Pre-planning (audit complete, vision locked)
-Status: Marketplace audits done (93 commands audited across GSD/OMC/Open Brain), 11 abilities defined, pipeline architecture designed
-Last activity: 2026-03-13 -- Full audit, v2.0 vision, lessons-from-first-run captured
+Phase: Post-release stabilization
+Status: v2.0 shipped 2026-05-09. 86 total skills. 62 skills merged from pai-portable. Full secret scrub with ggshield integration.
+Last activity: 2026-05-09 -- v2.0 release
 
-Progress: [----------] 0% (phases not yet created)
+Progress: [##########] 100% (v2.0 complete)
 
-**Next step:** Create v2.0 phases and roadmap. Core commands: consume, coalesce, eval, status.
+**Next step:** v2.1 planning -- stabilization, security hardening, curation engine pipeline.
 
-## What's Done for v2.0
+## What Shipped in v2.0
 
+- 62 skills merged from pai-portable into skippy-agentspace (86 total skills)
+- Full secret scrub across entire repo
+- ggshield integration for continuous secret scanning
+- Bootstrap layer for new machine setup
 - Marketplace audit of GSD (32 cmds), OMC (38 cmds), Open Brain (18 patterns) -- see `.planning/audits/marketplace-audit-2026-03-13.md`
 - 11 abilities defined: Bootstrap, Plan, Execute, Verify, Persist, Loop, Interview, Review, Debug, Cleanup, Remember
 - Pipeline architecture: consume -> coalesce -> eval -> iterate -> ship
 - Lessons from manual run captured as pipeline features (8 failure-to-feature items)
-- Install infrastructure working: `~/.claude/skills/` is single symlink to `~/.config/pai/Skills/`
 
 ## Performance Metrics
 
@@ -153,10 +156,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None at milestone start.
+None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T22:55:35Z
-Stopped at: Completed 16-02-PLAN.md (v1.2 milestone complete)
+Last session: 2026-05-09
+Stopped at: v2.0 shipped, .planning/ docs updated
 Resume file: None

@@ -1,0 +1,13 @@
+# Sensitive files
+.env
+ssh/proxmox_id_rsa
+ssh/proxmox_id_rsa.pub
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store

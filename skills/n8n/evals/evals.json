@@ -1,0 +1,128 @@
+{
+  "skill": "n8n",
+  "description": "Binary assertions for n8n skill execution. Validates CE limitations, auth patterns, draft/publish model, credential handling, and common gotchas.",
+  "test_prompt": "Using the n8n skill, generate a complete dry-run execution plan for: Create a new n8n workflow that receives a Telegram message, processes it through a Code node that calls an external API, stores the result in PostgreSQL, and sends a formatted response back via Telegram. Include credential setup, webhook configuration, and activation steps. Do NOT execute anything -- just output every step, every API call, every node configuration, and every gotcha you'd watch for.",
+  "pass_threshold": 1.0,
+  "assertions": [
+    {
+      "id": 1,
+      "category": "env-vars",
+      "assertion": "The plan does NOT use $env.VAR in any n8n expression. Community Edition does not support $env.",
+      "check": "CE limitation -- $env is paid only. Repeated because it's the #1 mistake."
+    },
+    {
+      "id": 2,
+      "category": "env-vars",
+      "assertion": "For values that would use $env, the plan passes them via $json fields from Code nodes instead",
+      "check": "Correct CE workaround for environment variables"
+    },
+    {
+      "id": 3,
+      "category": "auth",
+      "assertion": "API authentication uses X-N8N-API-KEY header with a UI-generated JWT, NOT the N8N_API_KEY env var or Authorization: Bearer",
+      "check": "N8N_API_KEY env var returns 401. Must use UI JWT."
+    },
+    {
+      "id": 4,
+      "category": "credentials",
+      "assertion": "Credentials are looked up from vaultwarden MCP (get_credential or get_service), NOT from env files or .env",
+      "check": "Never grep/cat env files for passwords"
+    },
+    {
+      "id": 5,
+      "category": "credentials",
+      "assertion": "If PostgreSQL credentials are needed, the plan uses user 'n8nops', NOT 'n8nuser'",
+      "check": "n8nuser is the old user. n8nops is current."
+    },
+    {
+      "id": 6,
+      "category": "telegram",
+      "assertion": "The plan does NOT manually register a Telegram webhook (no setWebhook API call). n8n manages webhook registration automatically.",
+      "check": "Manual setWebhook breaks n8n's callback auth"
+    },
+    {
+      "id": 7,
+      "category": "telegram",
+      "assertion": "All Telegram Send Message nodes include appendAttribution: false",
+      "check": "Defaults to true, adds 'Sent by n8n' footer"
+    },
+    {
+      "id": 8,
+      "category": "code-node",
+      "assertion": "The Code node does NOT attempt to access credentials directly. API URLs and keys are built in Code, then passed to HTTP Request node via $json.",
+      "check": "Code nodes can't access credential store"
+    },
+    {
+      "id": 9,
+      "category": "code-node",
+      "assertion": "For external HTTP calls in Code nodes, the plan uses execSync('curl ...') from child_process, NOT the https module",
+      "check": "https module times out on async calls in Code nodes"
+    },
+    {
+      "id": 10,
+      "category": "code-node",
+      "assertion": "If require('child_process') is used, the plan mentions NODE_FUNCTION_ALLOW_BUILTIN=child_process must be in the env file",
+      "check": "Code node sandbox blocks require() by default"
+    },
+    {
+      "id": 11,
+      "category": "if-node",
+      "assertion": "Any IF node in the workflow has BOTH true (index 0) and false (index 1) outputs connected to downstream nodes",
+      "check": "Disconnected IF output = flow hangs"
+    },
+    {
+      "id": 12,
+      "category": "webhook",
+      "assertion": "If any webhook uses responseMode: 'responseNode', the plan includes a Respond to Webhook node in the flow",
+      "check": "Missing response node = webhook hangs indefinitely"
+    },
+    {
+      "id": 13,
+      "category": "publish",
+      "assertion": "The plan includes a publish step after workflow creation/update. Webhooks don't register until published.",
+      "check": "n8n 2.x draft/publish model -- activation needs publish first"
+    },
+    {
+      "id": 14,
+      "category": "publish",
+      "assertion": "If direct DB surgery is needed, the plan updates ALL THREE tables: workflow_entity, workflow_history, and workflow_published_version",
+      "check": "Updating only workflow_entity does nothing in n8n 2.x"
+    },
+    {
+      "id": 15,
+      "category": "postgresql",
+      "assertion": "PostgreSQL queries via SSH use heredoc (<<'ENDSQL') piped to psql stdin, NOT psql -c with inline SQL",
+      "check": "Double-quoted PG identifiers break inside -c single quotes"
+    },
+    {
+      "id": 16,
+      "category": "import",
+      "assertion": "If CLI import is used, the plan includes systemctl restart n8n afterward",
+      "check": "CLI import changes don't take effect without restart"
+    },
+    {
+      "id": 17,
+      "category": "import",
+      "assertion": "Workflow JSON for import includes the workflow ID field to prevent duplicate creation",
+      "check": "Missing ID = new duplicate on every import"
+    },
+    {
+      "id": 18,
+      "category": "timezone",
+      "assertion": "Any schedule or date-related configuration uses America/New_York timezone",
+      "check": "Instance default timezone -- must be consistent"
+    },
+    {
+      "id": 19,
+      "category": "mcp2cli",
+      "assertion": "n8n tool calls go through mcp2cli (mcp2cli n8n <tool> --params), NOT direct MCP tool invocation",
+      "check": "mcp2cli is the required bridge -- never call n8n MCP directly"
+    },
+    {
+      "id": 20,
+      "category": "service",
+      "assertion": "n8n binary path is /opt/n8n/node_modules/.bin/n8n, NOT /usr/bin/n8n. Env file is /home/n8n/.n8n/env.",
+      "check": "Wrong paths = wrong config loaded"
+    }
+  ]
+}

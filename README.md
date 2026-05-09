@@ -6,7 +6,7 @@ Standalone Claude Code skill framework with patterns adapted from [GSD](https://
 
 PAI (Personal AI) is a multi-persona AI infrastructure for Claude Code -- think dotfiles for AI assistants. This repo packages PAI's best skills as portable, installable modules.
 
-12 skills across 4 categories. 18 reference docs distilling workflow patterns from 3 upstream frameworks. 5 orchestration patterns for composing skills into pipelines. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
+88 skills across 5 categories. 18 reference docs distilling workflow patterns from 3 upstream frameworks. 5 orchestration patterns for composing skills into pipelines. Portable bootstrap for new machines. GitGuardian secret scanning. Self-contained -- no cross-skill imports. Works with vanilla Claude Code -- PAI enhancements are optional.
 
 ## Quick Start
 
@@ -28,6 +28,19 @@ bash tools/install.sh --all    # or: install.sh --core, install.sh <skill-name>
 bash tools/verify.sh
 ```
 
+**GitGuardian secret scanning (optional):**
+```bash
+bash scripts/setup-ggshield.sh
+bash scripts/test-ggshield.sh
+```
+
+**New machine bootstrap:**
+```bash
+cd bootstrap && bash install.sh
+```
+
+See `bootstrap/INSTALL.md` for full guide (prerequisites, secrets, verification).
+
 Run `/clear` in Claude Code to pick up new skills.
 
 ## Try It
@@ -39,14 +52,15 @@ After install, try these in any project with Claude Code:
 
 ## What's Inside
 
-### Skills (12)
+### Skills (88)
 
-| Category | Skills | Requires |
-|----------|--------|----------|
-| Core | personas, LAWs, 15 hooks, templates | bun |
-| Workflow (6) | add-todo, check-todos, update-todo, correct, session-wrap, skippy | Standalone |
-| Utility (4) | browser, excalidraw, fabric, vaultwarden | Infrastructure |
-| Domain (1) | deploy-service (LXC + nginx + DNS) | Proxmox |
+| Category | Count | Examples | Requires |
+|----------|-------|---------|----------|
+| Core | 1 | personas, LAWs, hooks, templates | bun |
+| Workflow | 14 | skippy, autopilot, drive, prd, session mgmt, todos, team | Standalone |
+| Utility | 7 | brain, browser, excalidraw, fabric, gh-review, trace, vaultwarden | Infrastructure |
+| Domain | 1 | deploy-service (LXC + Caddy + DNS) | Proxmox |
+| Uncategorized | 65 | n8n suite (8), infra (4), AI/creative (6), git (3), research, debug | Varies |
 
 See [INDEX.md](INDEX.md) for the full catalog with portability badges.
 
@@ -69,6 +83,14 @@ Workflow patterns adapted from 3 frameworks, distilled into standalone reference
 **Original (1)** -- from v1.1 audit process:
 - Audit swarm
 
+### Bootstrap
+
+Portable PAI setup for new machines. Copies `~/.claude/`, `~/.config/pai/`, `~/.config/mcp2cli/` with placeholder resolution. Templates use `__DOUBLE_UNDERSCORE__` conventions for values resolved at install time. See `bootstrap/INSTALL.md`.
+
+### GitGuardian Integration
+
+Pre-commit secret scanning via ggshield. Setup script handles authentication, hook installation, and verification. See `scripts/setup-ggshield.sh`.
+
 ### Upstream Tracking
 
 Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`. Run `/skippy:update` to check for changes.
@@ -85,13 +107,19 @@ Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`.
 |------|-------------|
 | `tools/install.sh` | Selective installer (`--core`, `--all`, positional args) |
 | `tools/uninstall.sh` | Selective uninstaller (scoped -- only removes its own symlinks) |
+| `tools/local-install.sh` | Local-only installer (copies skill dirs, no symlinks) |
+| `tools/local-uninstall.sh` | Local-only uninstaller |
 | `tools/verify.sh` | brew-doctor-style health check (25+ checks across 5 categories) |
 | `tools/prereqs.sh` | Cross-platform prerequisite checker with interactive install |
 | `tools/validate-hooks.sh` | Hook manifest validation (6 checks) |
 | `tools/index-sync.sh` | INDEX.md validation and regeneration |
 | `tools/integration-test.sh` | 36 automated tests, fully sandboxed |
 | `tools/backup-restore.sh` | Snapshot/restore ~/.claude/ before testing |
-| `tools/bump-version.sh` | Version bump across all 25 version locations |
+| `tools/bump-version.sh` | Version bump across all version locations |
+| `tools/security/` | Security scanning tools (pattern detection, report generation) |
+| `tools/skill-gen/` | Auto-skill generation pipeline (detect, draft, propose, quarantine) |
+| `scripts/setup-ggshield.sh` | GitGuardian secret scanning setup (non-interactive) |
+| `scripts/test-ggshield.sh` | Verify ggshield installation |
 
 ## Documentation
 
@@ -104,6 +132,7 @@ Three upstream frameworks tracked with live SHAs in `upstreams/*/upstream.json`.
 | [INDEX.md](INDEX.md) | Full skill catalog with portability badges |
 | [CLAUDE.md](CLAUDE.md) | AI agent context and project architecture |
 | [CONVENTIONS.md](CONVENTIONS.md) | Content classification and upstream registry |
+| [bootstrap/INSTALL.md](bootstrap/INSTALL.md) | Portable PAI setup for new machines |
 
 ## Requirements
 

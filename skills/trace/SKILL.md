@@ -4,7 +4,7 @@ description: Display agent flow trace -- shows how skills, agents, and tools int
 allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
   absorbed_from: oh-my-claudecode/trace

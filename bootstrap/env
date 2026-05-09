@@ -1,0 +1,308 @@
+# PAI Bootstrap Template
+# Copy this file and replace __PLACEHOLDER__ values with your actual credentials
+# See bootstrap/INSTALL.md for setup instructions
+#
+# ============================================
+# SHARED ENVIRONMENT CONFIGURATION
+# ============================================
+# Sourced by both ~/.zshrc and ~/.bashrc
+# Ensures consistent environment across shells
+
+# ============================================
+# HOMEBREW
+# ============================================
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Suppress ggshield macOS Keychain probe dialog
+export GG_NO_KEYRING=1
+
+# Claude/Anthropic (Vertex AI)
+# ENABLE_LSP_TOOL (singular) and ENABLE_LSP_TOOLS (plural) are both set below in DEVELOPER TOOLS section
+
+# ============================================
+# PATH DEDUPLICATION FUNCTION
+# ============================================
+deduplicate_path() {
+    local path_var="$1"
+    local new_path=""
+    local old_ifs="$IFS"
+    IFS=':'
+
+    # Handle zsh vs bash array expansion differences
+    if [[ -n "$ZSH_VERSION" ]]; then
+        # Zsh version - split on colons manually
+        local -a path_array
+        path_array=("${(@s/:/)${(P)path_var}}")
+        for dir in "${path_array[@]}"; do
+            if [[ ! "$new_path" =~ (^|:)"$dir"(:|$) ]] && [[ -n "$dir" ]]; then
+                if [[ -z "$new_path" ]]; then
+                    new_path="$dir"
+                else
+                    new_path="$new_path:$dir"
+                fi
+            fi
+        done
+    else
+        # Bash version - use eval (compatible with bash 3.2 on macOS; local -n requires 4.3+)
+        local path_ref
+        eval "path_ref=\"\$$path_var\""
+        local -a path_array
+        IFS=':' read -ra path_array <<< "$path_ref"
+        for dir in "${path_array[@]}"; do
+            if [[ ! "$new_path" =~ (^|:)"$dir"(:|$) ]] && [[ -n "$dir" ]]; then
+                if [[ -z "$new_path" ]]; then
+                    new_path="$dir"
+                else
+                    new_path="$new_path:$dir"
+                fi
+            fi
+        done
+    fi
+
+    IFS="$old_ifs"
+    eval "export $path_var=\"$new_path\""
+}
+
+# ============================================
+# PATH SETUP - Consolidated and ordered
+# ============================================
+# Priority order (first = highest priority):
+# 1. .local/bin (working uv)
+# 2. Custom bins (npm, go, gemini, etc)
+# 3. System bins
+
+# Add .local/bin first (contains working uv)
+if [[ -d "$HOME/.local/bin" ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Add custom binaries
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$PATH"
+export PATH="$HOME/.gemini/bin:$PATH"
+
+# GNU utils path overrides as default CLI tools
+if type brew &>/dev/null; then
+  HOMEBREW_PREFIX=$(brew --prefix)
+  for d in ${HOMEBREW_PREFIX}/opt/*/libexec/gnubin; do export PATH=$d:$PATH; done
+fi
+
+# Windsurf
+# export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+
+#ClawdBot
+export CLAWDBOT_GATEWAY_TOKEN=__CLAWDBOT_TOKEN__
+
+# LM Studio CLI
+export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+
+# Claude Code bin (claudePy, claudePip)
+export PATH="$HOME/.claude/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/Library/Application Support/reflex/bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# ============================================
+# AI/ML CONFIGURATION
+# ============================================
+# export LOCAL_ENDPOINT="http://__YOUR_OLLAMA_IP__:11434/v1"  # Local Ollama instance
+
+# API Keys
+export GEMINI_API_KEY="__GEMINI_API_KEY__"
+
+export GOOGLE_CLOUD_PROJECT="__YOUR_GCP_PROJECT_ID__"
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/application_default_credentials.json"  # Path to your GCP service account key
+export GOOGLE_CLOUD_LOCATION=global
+
+export ENABLE_LSP_TOOL=1
+export ENABLE_LSP_TOOLS=1
+export ENABLE_EXPERIMENTAL_MCP_CLI=1
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+# PRIMARY: LiteLLM Proxy (faster, cached, monitored)
+unset CLAUDE_CODE_USE_VERTEX
+export ANTHROPIC_BASE_URL="http://__YOUR_LITELLM_IP__:4000"  # LiteLLM proxy
+export ANTHROPIC_API_KEY="__LITELLM_API_KEY__"
+
+
+#DEFAULT MODELS Section
+export ANTHROPIC_MODEL="claude-opus-4-6@default[1M]"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6@default[1M]"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6@default[1M]"
+
+
+# OMC Model Overrides (use LiteLLM aliases)
+export OMC_MODEL_HIGH="claude-opus-4-6@default[1M]"
+export OMC_MODEL_MEDIUM="claude-sonnet-4-6@default[1M]"
+export OMC_MODEL_LOW="haiku"
+
+# Gemini defaults (LiteLLM aliases -- update HERE when models change)
+export GEMINI_DEFAULT_MODEL="gemini-3.1-pro"
+export GEMINI_FAST_MODEL="flash"
+export GEMINI_IMAGE_MODEL="image"
+
+# FALLBACK: Direct Vertex AI (uncomment these, comment out proxy above)
+# export CLAUDE_CODE_USE_VERTEX=1
+# unset ANTHROPIC_BASE_URL ANTHROPIC_API_KEY
+# export CLOUD_ML_REGION=global
+# export ANTHROPIC_VERTEX_PROJECT_ID="__YOUR_GCP_PROJECT_ID__"
+
+
+export OPENAI_API_KEY="__OPENAI_API_KEY__"
+export OPENAI_API_BASE="https://api.openai.com/v1"
+# openRouter_OPENAI_KEY="__OPENAI_API_KEY__"
+
+# AI Models Directory
+export AI_MODELS_DIR="$HOME/AI"  # Local AI models directory
+export HF_HOME=$AI_MODELS_DIR
+export OLLAMA_MODELS=$AI_MODELS_DIR/ollama
+
+# ============================================
+# PAI (Personal AI Infrastructure)
+# ============================================
+export PAI_HOME="$HOME/.config/pai"
+export PAI_PRIVATE="$HOME/.config/pai-private"
+export PATH="$PAI_HOME/Tools:$PATH"
+export ACTIVE_PERSONA="bob"  # Options: skippy, bob, clarisa, april
+
+# PAI Storage Paths (ThunderBolt for large files)
+export PAI_BACKUP_DIR="$HOME/Backups/pai"       # PAI backups directory
+export PAI_EXPORTS_DIR="$HOME/Exports/pai"       # PAI exports directory
+export PAI_SESSIONS_DIR="$HOME/Claude/sessions"  # Claude Code session logs
+
+# Second Brain Infrastructure
+export SECOND_BRAIN_HOT="$HOME/Development/ai-second-brain/Skippy_matrix"  # Adjust to your Second Brain location
+export SECOND_BRAIN_DB_HOST="__YOUR_DB_IP__"  # PostgreSQL for Second Brain
+export SECOND_BRAIN_DB_NAME="secondbrain"
+export SECOND_BRAIN_DB_USER="clawdbot"
+
+# n8n Webhook Endpoints
+export N8N_HOST="__YOUR_N8N_IP__:5678"  # n8n workflow automation
+export N8N_BRAIN_INGEST="http://$N8N_HOST/webhook/brain-ingest"
+export N8N_BRAIN_QUERY="http://$N8N_HOST/webhook/brain-query"
+
+# ============================================
+# DEVELOPER TOOLS
+# ============================================
+# PostgreSQL 18 client tools (psql, pg_dump, etc.) -- guarded for portability
+if [[ -d "$(brew --prefix 2>/dev/null)/opt/postgresql@18" ]]; then
+  export PATH="$(brew --prefix)/opt/postgresql@18/bin:$PATH"
+fi
+
+export BAT_THEME=tokyonight_night
+export EDITOR="/usr/local/bin/code"
+
+# OPTIMIZED: Fabric pattern aliases (cached to save ~1.0s startup time)
+# Regenerates only when patterns directory changes
+FABRIC_ALIASES_CACHE="$HOME/.cache/fabric_aliases.zsh"
+
+if [[ ! -f "$FABRIC_ALIASES_CACHE" ]] || \
+   [[ "$HOME/.config/fabric/patterns" -nt "$FABRIC_ALIASES_CACHE" ]]; then
+
+    mkdir -p "$(dirname "$FABRIC_ALIASES_CACHE")"
+    > "$FABRIC_ALIASES_CACHE"  # Clear file
+
+    for pattern_file in $HOME/.config/fabric/patterns/*; do
+        pattern_name="$(basename "$pattern_file")"
+        alias_name="${FABRIC_ALIAS_PREFIX:-}${pattern_name}"
+        echo "alias $alias_name='fabric --pattern $pattern_name'" >> "$FABRIC_ALIASES_CACHE"
+    done
+fi
+
+source "$FABRIC_ALIASES_CACHE"
+
+# ============================================
+# PYENV SETUP
+# ============================================
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv >/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
+
+# Override pyenv's shim injection - force .local/bin to front
+if [[ -d "$HOME/.local/bin" ]]; then
+    # Remove .local/bin from PATH wherever it is
+    PATH="${PATH//:$HOME\/.local\/bin/}"
+    PATH="${PATH//$HOME\/.local\/bin:/}"
+    # Add it to the front (before pyenv shims)
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+export PATH="$HOME/.config/pai-private/bin:$HOME/.config/pai/bin:$PATH"
+
+# ============================================
+# NVM (Node Version Manager)
+# ============================================
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# ============================================
+# PERL LOCAL::LIB
+# ============================================
+if command -v perl >/dev/null 2>&1; then
+    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+fi
+
+
+# ============================================
+# THEFUCK
+# ============================================
+if command -v thefuck >/dev/null 2>&1; then
+    eval $(thefuck --alias)
+fi
+
+# ============================================
+# ALIASES
+# ============================================
+if [[ -f "$HOME/.alias" ]]; then
+    source "$HOME/.alias"
+fi
+
+# FABRIC PATTERN ALIASES -- handled by cached version above (OPTIMIZED section)
+
+# ============================================
+# SHELL COMPLETIONS
+# ============================================
+if [[ -n "$ZSH_VERSION" ]]; then
+    # Zsh completions
+    if type brew &>/dev/null; then
+        FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+    fi
+    fpath=(~/.zsh/completions $fpath)
+    autoload -Uz compinit && compinit
+elif [[ -n "$BASH_VERSION" ]]; then
+    # Bash completions
+    if type brew &>/dev/null; then
+        BASH_COMPLETION_DIR="$(brew --prefix)/etc/bash_completion.d"
+        if [[ -d "$BASH_COMPLETION_DIR" ]]; then
+            for completion in "$BASH_COMPLETION_DIR"/*; do
+                [[ -r "$completion" ]] && source "$completion"
+            done
+        fi
+        [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && \
+            source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+    fi
+fi
+
+# ============================================
+# CUSTOM FUNCTIONS
+# ============================================
+
+# YouTube transcript function
+yt() {
+    if [ "$#" -eq 0 ] || [ "$#" -gt 2 ]; then
+        echo "Usage: yt [-t | --timestamps] youtube-link"
+        echo "Use the '-t' flag to get the transcript with timestamps."
+        return 1
+    fi
+
+    transcript_flag="--transcript"
+    if [ "$1" = "-t" ] || [ "$1" = "--timestamps" ]; then
+        transcript_flag="--transcript-with-timestamps"
+        shift
+    fi
+    local video_link="$1"
+    fabric -y "$video_link" $transcript_flag
+}

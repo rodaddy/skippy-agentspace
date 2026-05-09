@@ -4,7 +4,7 @@ description: Break a PRD into independently-grabbable GitHub issues with vertica
 allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   category: workflow
 ---
 

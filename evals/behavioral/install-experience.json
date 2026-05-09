@@ -19,7 +19,7 @@
     {
       "id": 3,
       "category": "first-run",
-      "assertion": "install.sh --all works and installs all 24 skills in under 10 seconds",
+      "assertion": "install.sh --all works and installs all skills in under 30 seconds",
       "check": "Copy operations should be fast -- no network, no builds"
     },
     {

@@ -11,10 +11,10 @@ Register a self-hosted runner on the shared review LXC and create a Claude Code 
 <context>
 Repo: $ARGUMENTS (required -- e.g., "rodaddy/my-project")
 
-Runner LXC: 106 (gh-runner) at 10.71.1.114, SSH as root
+Runner LXC: 106 (gh-runner) at <YOUR_IP>, SSH as root
 Runner user: runner
 Runner home: /home/runner/
-LiteLLM proxy: http://10.71.20.33:4000
+LiteLLM proxy: http://<LITELLM_IP>:4000
 Vaultwarden secret: "LiteLLM" (via get_secret, returns text field -- NOT get_credential)
 </context>
 
@@ -40,7 +40,7 @@ If it fails, stop and report.
 
 Verify SSH access and required tools:
 ```bash
-ssh -o ConnectTimeout=5 root@10.71.1.114 "
+ssh -o ConnectTimeout=5 root@<YOUR_IP> "
   echo 'SSH: OK'
   su - runner -c 'export PATH=/usr/local/bin:/home/runner/.local/bin:/home/runner/.bun/bin:\$PATH && node --version && claude --version && bun --version'
 "
@@ -66,7 +66,7 @@ RUNNER_DIR="/home/runner/actions-runner-${REPO_NAME}"
 RUNNER_NAME="gh-runner-${REPO_NAME}"
 RUNNER_LABEL="${REPO_NAME}"
 
-ssh -o ConnectTimeout=10 root@10.71.1.114 "
+ssh -o ConnectTimeout=10 root@<YOUR_IP> "
   su - runner -c '
     mkdir -p $RUNNER_DIR
     cd $RUNNER_DIR
@@ -85,7 +85,7 @@ If config.sh fails (token expired, repo not found), report the error.
 
 Install and start as systemd service, configure PATH:
 ```bash
-ssh -o ConnectTimeout=10 root@10.71.1.114 "
+ssh -o ConnectTimeout=10 root@<YOUR_IP> "
   echo 'PATH=/home/runner/.local/bin:/home/runner/.bun/bin:/usr/local/bin:/usr/bin:/bin' >> $RUNNER_DIR/.env
   echo 'LANG=C' >> $RUNNER_DIR/.env
   cd $RUNNER_DIR
@@ -159,7 +159,7 @@ jobs:
       pull-requests: write
       issues: write
     env:
-      ANTHROPIC_BASE_URL: http://10.71.20.33:4000
+      ANTHROPIC_BASE_URL: http://<LITELLM_IP>:4000
       ANTHROPIC_API_KEY: ${{ secrets.LITELLM_API_KEY }}
       ANTHROPIC_MODEL: opus
       ANTHROPIC_DEFAULT_SONNET_MODEL: sonnet

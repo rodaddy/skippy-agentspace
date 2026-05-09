@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-LITELLM_URL="${LITELLM_BASE_URL:-http://10.71.1.33:4000}/v1/chat/completions"
+LITELLM_URL="${LITELLM_BASE_URL:-http://<LITELLM_IP>:4000}/v1/chat/completions"
 MODEL="${1:?Usage: cross-model-review.sh <model> <prompt-file> [--diff <diff-file>]}"
 PROMPT_FILE="${2:?Usage: cross-model-review.sh <model> <prompt-file> [--diff <diff-file>]}"
 DIFF_FILE=""

@@ -4,7 +4,7 @@ description: Create bulletproof Product Requirements Documents with machine-veri
 allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   category: workflow
 ---
 

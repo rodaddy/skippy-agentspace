@@ -77,7 +77,7 @@ claude -p 'List your skills and run /skippy:progress' \
 | Component | Location | Source |
 |-----------|----------|--------|
 | PAI infrastructure | `~/.config/pai/` | `rodaddy/pai-infrastructure` repo |
-| Skippy skills (24) | `~/.config/pai/Skills/<name>/` | `rodaddy/skippy-agentspace` repo |
+| Skippy skills (88) | `~/.config/pai/Skills/<name>/` | `rodaddy/skippy-agentspace` repo |
 | Skills symlink | `~/.claude/skills` -> `~/.config/pai/Skills` | Created during setup |
 | LAW hooks (15) | Merged into `~/.claude/settings.json` | `skills/core/hooks/install-hooks.sh` |
 | Session hooks | Merged into `~/.claude/settings.json` | Copied from working environment |
@@ -89,7 +89,7 @@ The cc-* containers and Air all run without `pai-private`. LAW enforcement comes
 
 ## Structural Evals
 
-111 assertions across 23 categories. Run anytime:
+111 assertions across 4 categories. Run anytime:
 
 ```bash
 bash evals/structural/runner.sh
@@ -141,7 +141,7 @@ Several hooks exist locally but aren't pushed to `pai-infrastructure` yet. Until
 
 ### Skill count varies by environment
 
-Environments with the full PAI repo have more skills (70+) than skippy alone (24). This is expected -- PAI ships its own skills alongside skippy's.
+Environments with the full PAI repo may have additional skills beyond skippy's 88. This is expected -- PAI can ship its own skills alongside skippy's.
 
 ## Replicating for Other Projects
 

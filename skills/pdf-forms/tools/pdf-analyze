@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# pdf-analyze - Analyze PDF form fields and their positions
+# Usage: pdf-analyze <pdf-path>
+
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: pdf-analyze <pdf-path>"
+    echo "Analyzes fillable PDF form fields and shows their positions"
+    exit 1
+fi
+
+PDF_PATH="$1"
+
+if [[ ! -f "$PDF_PATH" ]]; then
+    echo "Error: File not found: $PDF_PATH"
+    exit 1
+fi
+
+uv run --with pypdf python3 << EOF
+from pypdf import PdfReader
+
+reader = PdfReader("$PDF_PATH")
+page = reader.pages[0]
+
+# Get all widget annotations with positions
+annots = page.get('/Annots', [])
+if not annots:
+    print("No form fields found in this PDF")
+    exit(0)
+
+annot_list = [a.get_object() for a in annots]
+
+field_positions = []
+for annot in annot_list:
+    if annot.get('/Subtype') == '/Widget':
+        name = annot.get('/T', '')
+        if not name and '/Parent' in annot:
+            parent = annot['/Parent'].get_object()
+            name = parent.get('/T', 'unknown')
+
+        field_type = annot.get('/FT', '')
+        if not field_type and '/Parent' in annot:
+            parent = annot['/Parent'].get_object()
+            field_type = parent.get('/FT', '/Tx')
+
+        # Map field type codes
+        type_map = {'/Tx': 'text', '/Btn': 'checkbox', '/Sig': 'signature', '/Ch': 'choice'}
+        field_type_name = type_map.get(str(field_type), 'unknown')
+
+        rect = annot.get('/Rect', [0,0,0,0])
+        y = float(rect[1])
+        x = float(rect[0])
+        field_positions.append((y, x, str(name), field_type_name))
+
+# Sort by Y descending (top of page first)
+field_positions.sort(key=lambda f: -f[0])
+
+print(f"Found {len(field_positions)} form fields in {reader.pages[0].extract_text()[:50] if reader.pages[0].extract_text() else 'PDF'}...")
+print()
+print("Fields sorted by position (top to bottom):")
+print("-" * 80)
+print(f"{'Y':>8}  {'X':>8}  {'Type':<12}  Field Name")
+print("-" * 80)
+
+for y, x, name, ftype in field_positions:
+    print(f"{y:8.1f}  {x:8.1f}  {ftype:<12}  {name}")
+EOF

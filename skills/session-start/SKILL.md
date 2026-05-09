@@ -4,7 +4,7 @@ description: Pick up where you left off after /clear. Reads project state via li
 allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 triggers:
@@ -28,7 +28,7 @@ Tell the user "Pulling session state..." then spawn:
 Task(subagent_type="Explore", model="sonnet", prompt="""
 Working directory: {CWD}
 
-Derive PROJECT_NAME from CWD relative to DEV_ROOT (/Volumes/ThunderBolt/Development).
+Derive PROJECT_NAME from CWD relative to DEV_ROOT (<DEV_DIR>).
 If CWD == DEV_ROOT, PROJECT_NAME = "Development".
 
 ## Phase 1: Live State + Open Brain (parallel)

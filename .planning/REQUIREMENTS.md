@@ -97,23 +97,26 @@ Requirements for Standalone Skippy milestone. Phases 11-16.
 - [x] **HARD-02**: Version bump script updates VERSION file + all 25 version locations across 13 files
 - [x] **HARD-03**: `config.env.example` committed, `config.env` gitignored
 
-## v2 Requirements
+## v2.0 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+### Scale
 
-### Tooling
+- [x] **SCALE-01**: Full skill migration -- 62 skills merged from pai-portable (86 total, exceeds original 68 target) (validated v2.0)
+- [ ] **SCALE-02**: Skill dependency auto-resolution
+- [ ] **SCALE-03**: Cross-machine sync after bootstrap proven
+
+### Security
+
+- [x] **SEC-01**: Full secret scrub across repository (validated v2.0)
+- [x] **SEC-02**: ggshield integration for pre-commit secret scanning (validated v2.0)
+
+### Tooling (deferred to v2.1+)
 
 - **TOOL-01**: Skill scaffolding (`new-skill.sh`) -- generate correct skill directory
 - **TOOL-02**: Collision detection in install.sh -- check for reserved command names
 - **TOOL-03**: Reference doc metadata -- `last_verified`, `source`, `assumes` fields
 
-### Scale
-
-- **SCALE-01**: Full 68-skill migration (v1.1 does ~10 essential)
-- **SCALE-02**: Skill dependency auto-resolution
-- **SCALE-03**: Cross-machine sync after bootstrap proven
-
-### Swarm Enhancements
+### Swarm Enhancements (deferred to v2.1+)
 
 - **SWRM-01**: Persistent findings database for audit swarm
 - **SWRM-02**: Per-file review caching
@@ -197,14 +200,18 @@ Deferred to future release. Tracked but not in current roadmap.
 | HARD-01 | Phase 15 | Complete |
 | HARD-02 | Phase 15 | Complete |
 | HARD-03 | Phase 15 | Complete |
+| SCALE-01 | v2.0 | Validated (v2.0) |
+| SEC-01 | v2.0 | Validated (v2.0) |
+| SEC-02 | v2.0 | Validated (v2.0) |
 
 **Coverage:**
 - v1.0 requirements: 11 total (all validated)
 - v1.1 requirements: 28 total (all validated)
 - v1.2 requirements: 22 total (all validated)
-- Mapped to phases: 61
+- v2.0 requirements: 5 total (3 validated, 2 deferred)
+- Mapped to phases: 64
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-08 after v1.2 roadmap creation*
+*Last updated: 2026-05-09 after v2.0 shipped*

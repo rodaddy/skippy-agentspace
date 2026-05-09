@@ -1,0 +1,104 @@
+{
+  "skill": "humanizer",
+  "description": "Binary assertions for humanizer skill execution. Validates AI pattern detection, soul injection, and tone preservation.",
+  "test_prompt": "Using the humanizer skill, rewrite the following text to remove AI-generated writing patterns:\n\n\"Additionally, it's worth noting that the landscape of cloud computing has evolved significantly. Organizations are increasingly leveraging cutting-edge solutions to navigate the complexities of digital transformation. This multifaceted approach arguably represents a paradigm shift in how businesses harness technology. Furthermore, the holistic integration of AI capabilities serves as a catalyst for innovation, enabling teams to delve deeper into data-driven insights. It is important to note that these advancements have created a rich tapestry of opportunities for stakeholders across the ecosystem.\"\n\nOutput your rewritten version and explain which patterns you detected and fixed.",
+  "pass_threshold": 1.0,
+  "assertions": [
+    {
+      "id": 1,
+      "category": "transition-words",
+      "assertion": "The output does NOT contain 'Additionally', 'Furthermore', or 'Moreover' as sentence starters",
+      "check": "Classic AI transition filler -- must be removed or replaced naturally"
+    },
+    {
+      "id": 2,
+      "category": "ai-vocabulary",
+      "assertion": "The output does NOT contain 'delve', 'landscape', 'navigate', or 'leverage' (or their conjugated forms)",
+      "check": "Top 4 most common AI vocabulary tells"
+    },
+    {
+      "id": 3,
+      "category": "ai-vocabulary",
+      "assertion": "The output does NOT contain 'tapestry', 'multifaceted', 'holistic', or 'paradigm shift'",
+      "check": "AI buzzwords that no human uses in casual writing"
+    },
+    {
+      "id": 4,
+      "category": "ai-vocabulary",
+      "assertion": "The output does NOT contain 'ecosystem', 'stakeholders', or 'catalyst' unless contextually appropriate",
+      "check": "Corporate AI filler words"
+    },
+    {
+      "id": 5,
+      "category": "hedging",
+      "assertion": "The output does NOT contain 'It's worth noting', 'It is important to note', or 'It should be noted'",
+      "check": "Empty hedging phrases that add no value"
+    },
+    {
+      "id": 6,
+      "category": "hedging",
+      "assertion": "The output does NOT contain 'arguably' used as a hedge (weakening a claim the writer should commit to)",
+      "check": "Hedge word that signals AI uncertainty"
+    },
+    {
+      "id": 7,
+      "category": "copilot-phrases",
+      "assertion": "The output does NOT contain 'serves as', 'stands as', or 'marks a' -- uses direct verbs ('is', 'has') instead",
+      "check": "AI copilot indirection patterns"
+    },
+    {
+      "id": 8,
+      "category": "copilot-phrases",
+      "assertion": "The output does NOT contain 'cutting-edge', 'game-changing', or 'groundbreaking'",
+      "check": "Hyperbolic AI superlatives"
+    },
+    {
+      "id": 9,
+      "category": "soul-injection",
+      "assertion": "The rewritten text contains at least one concrete example, specific detail, or personal observation that was NOT in the original",
+      "check": "Soul injection -- not just pattern removal, must ADD personality"
+    },
+    {
+      "id": 10,
+      "category": "soul-injection",
+      "assertion": "The rewritten text expresses an opinion, reaction, or point of view (not neutral reporting)",
+      "check": "Real humans have opinions -- AI writes neutrally"
+    },
+    {
+      "id": 11,
+      "category": "structure",
+      "assertion": "Sentences vary in length -- at least one sentence under 8 words and at least one over 15 words",
+      "check": "AI writes uniform mid-length sentences. Humans vary."
+    },
+    {
+      "id": 12,
+      "category": "structure",
+      "assertion": "The output does NOT have an outline-like structure with overly parallel bullet points or numbered lists",
+      "check": "AI loves symmetrical structure. Real writing is messy."
+    },
+    {
+      "id": 13,
+      "category": "formatting",
+      "assertion": "The output does NOT contain em dashes (--). Uses hyphens (-) or double hyphens (--) instead.",
+      "check": "User preference: no em dashes anywhere"
+    },
+    {
+      "id": 14,
+      "category": "tone",
+      "assertion": "The rewritten text maintains the same general topic (cloud/AI technology) without drifting into unrelated territory",
+      "check": "Preserve subject matter while fixing style"
+    },
+    {
+      "id": 15,
+      "category": "pattern-report",
+      "assertion": "The output includes a list of which specific AI patterns were detected and what was changed for each",
+      "check": "Must explain the fixes, not just output clean text"
+    },
+    {
+      "id": 16,
+      "category": "overcorrection",
+      "assertion": "The output does NOT replace every -ing word -- some gerund constructions are natural and should be kept",
+      "check": "Contextual correction, not blanket removal"
+    }
+  ]
+}

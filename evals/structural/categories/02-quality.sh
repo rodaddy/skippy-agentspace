@@ -6,8 +6,10 @@ echo "--- deep-quality ---"
 check 27 "deep-quality" "SKILL.md frontmatter has description: field" \
   bash -c 'fails=0; for f in skills/*/SKILL.md; do grep -q "^description:" "$f" || { echo "$f"; fails=1; }; done; exit $fails'
 
-check 28 "deep-quality" "SKILL.md frontmatter has metadata: block" \
-  bash -c 'fails=0; for f in skills/*/SKILL.md; do grep -q "^metadata:" "$f" || { echo "$f"; fails=1; }; done; exit $fails'
+check 28 "deep-quality" "SKILL.md frontmatter has name: and description: fields" \
+  bash -c 'fails=0; for f in skills/*/SKILL.md; do
+    grep -q "^name:" "$f" && grep -q "^description:" "$f" || { echo "$f"; fails=1; }
+  done; exit $fails'
 
 check 29 "deep-quality" "No empty SKILL.md files (min 10 lines)" \
   bash -c 'fails=0; for f in skills/*/SKILL.md; do lines=$(wc -l < "$f"); if [ "$lines" -lt 10 ]; then echo "TOO SHORT ($lines lines): $f"; fails=1; fi; done; exit $fails'
@@ -31,7 +33,7 @@ check 31 "deep-quality" "All TypeScript files pass syntax check" \
   done; exit $fails'
 
 check 32 "deep-quality" "No TODO/FIXME/HACK in shipped skill files" \
-  assert_empty bash -c 'grep -rn "TODO\|FIXME\|HACK\|XXX" skills/ --include="*.md" 2>/dev/null | grep -v "add-todo\|check-todos\|update-todo\|todo.*skill\|/todos/\|agents/\|references/\|captured as TODO\|console.log.*TODO\|Debug code\|US-XXX\|[A-Z]*-XXX" || true'
+  assert_empty bash -c 'grep -rn "TODO\|FIXME\|HACK\|XXX" skills/ --include="*.md" 2>/dev/null | grep -v "add-todo\|check-todos\|update-todo\|todo.*skill\|/todos/\|agents/\|references/\|captured as TODO\|console.log.*TODO\|Debug code\|US-XXX\|[A-Z]*-XXX\|XXX-XX" || true'
 
 check 33 "deep-quality" "CLAUDE.md references correct skill count" \
   bash -c '

@@ -4,7 +4,7 @@ description: Spawn N coordinated agents working on a shared task list using Clau
 allowed-tools: "Read,Write,Edit,Bash,Grep,Glob,Agent"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
   absorbed_from: oh-my-claudecode/team

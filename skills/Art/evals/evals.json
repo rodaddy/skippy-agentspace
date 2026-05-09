@@ -1,0 +1,98 @@
+{
+  "skill": "Art",
+  "description": "Binary assertions for Art skill editorial illustration workflow. Validates mandatory story explanation, style selection, aspect ratio, color rules, and post-generation steps.",
+  "test_prompt": "Using the Art skill, generate a complete dry-run execution plan for creating an editorial illustration for a LinkedIn post about 'Why most CI/CD pipelines are security theater.' Do NOT generate any images -- just output every step you would take, every file you would read, every tool you would call, and every decision point. Be exhaustive.",
+  "pass_threshold": 1.0,
+  "assertions": [
+    {
+      "id": 1,
+      "category": "pre-generation",
+      "assertion": "The plan reads the Art skill's workflow file (workflows/workflow.md) BEFORE any generation steps",
+      "check": "Workflow must be loaded first"
+    },
+    {
+      "id": 2,
+      "category": "pre-generation",
+      "assertion": "The plan reads ~/.claude/skills/CORE/aesthetic.md (or equivalent aesthetic source) BEFORE generation",
+      "check": "Color/style definitions must inform the prompt"
+    },
+    {
+      "id": 3,
+      "category": "story-explanation",
+      "assertion": "The plan runs the story-explanation skill with 24-item length BEFORE generating the image. This is marked MANDATORY and non-negotiable.",
+      "check": "24-item story explanation is the #1 skipped step"
+    },
+    {
+      "id": 4,
+      "category": "style-selection",
+      "assertion": "The plan runs select-style.ts --json to get the user's ranked style preferences",
+      "check": "Style preference learning system must be consulted"
+    },
+    {
+      "id": 5,
+      "category": "style-selection",
+      "assertion": "The plan presents top 3-4 styles to the user via AskUserQuestion with multiSelect: false",
+      "check": "User picks ONE style, not multiple"
+    },
+    {
+      "id": 6,
+      "category": "aspect-ratio",
+      "assertion": "The plan specifies 1:1 square aspect ratio for editorial illustrations, NOT 16:9 or any other ratio",
+      "check": "Editorial = square. Always."
+    },
+    {
+      "id": 7,
+      "category": "model",
+      "assertion": "The plan uses nano-banana-pro (Gemini) as the default model, with flux/gpt-image-1 as alternatives only if user requests",
+      "check": "Default model must be nano-banana-pro"
+    },
+    {
+      "id": 8,
+      "category": "composition",
+      "assertion": "The plan specifies full-bleed composition -- elements fill 100% of the frame with no margins or borders",
+      "check": "No whitespace margins around the illustration"
+    },
+    {
+      "id": 9,
+      "category": "color",
+      "assertion": "The plan ensures purple (#4A148C) is visible and noticeable in the generated image, not microscopic or hidden",
+      "check": "Brand color must be prominent"
+    },
+    {
+      "id": 10,
+      "category": "color",
+      "assertion": "The plan specifies NO gradients anywhere in the illustration",
+      "check": "Flat color only -- gradients violate the style"
+    },
+    {
+      "id": 11,
+      "category": "background",
+      "assertion": "The plan generates on a WHITE background, then uses remove.bg for transparency",
+      "check": "Two-step: white gen → transparency conversion"
+    },
+    {
+      "id": 12,
+      "category": "signature",
+      "assertion": "The plan includes a Kai signature in charcoal in the bottom right of the image",
+      "check": "Signature is required on all editorial illustrations"
+    },
+    {
+      "id": 13,
+      "category": "post-generation",
+      "assertion": "After image display, the plan uses AskUserQuestion to collect a style rating from the user",
+      "check": "Feedback loop for style preference learning"
+    },
+    {
+      "id": 14,
+      "category": "language",
+      "assertion": "The prompt and plan do NOT use copilot phrases: 'serves as', 'stands as', 'marks a'. Uses direct verbs instead.",
+      "check": "Language cleanliness applies to the plan itself"
+    },
+    {
+      "id": 15,
+      "category": "output",
+      "assertion": "The output file path follows the pattern ~/Downloads/pai-generated-${timestamp}.png",
+      "check": "Standard output location"
+    }
+  ]
+}

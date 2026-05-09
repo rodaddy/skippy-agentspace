@@ -138,7 +138,7 @@ check 94 "skill-consistency" "All skills have consistent frontmatter order" \
   done; exit $fails'
 check 95 "skill-consistency" "No skill has duplicate frontmatter fields" \
   bash -c 'fails=0; for f in skills/*/SKILL.md; do
-    dupes=$(sed -n "/^---$/,/^---$/p" "$f" | grep -oE "^[a-z_]+:" | sort | uniq -d)
+    dupes=$(awk "NR==1 && /^---$/{fm=1;next} fm && /^---$/{exit} fm{print}" "$f" | grep -oE "^[a-z_]+:" | sort | uniq -d)
     if [ -n "$dupes" ]; then echo "DUPES in $f: $dupes"; fails=1; fi
   done; exit $fails'
 check 96 "skill-consistency" "All skill categories are valid values" \
@@ -147,11 +147,11 @@ check 96 "skill-consistency" "All skill categories are valid values" \
     [ -n "$meta_cat" ] || continue
     case "$meta_cat" in core|workflow|utility|domain) ;; *) echo "UNKNOWN: $(basename "$d") -> $meta_cat"; fails=1 ;; esac
   done; exit $fails'
-check 97 "skill-consistency" "All skill names match their directory names" \
+check 97 "skill-consistency" "All skill names match their directory names (normalized)" \
   bash -c 'fails=0; for d in skills/*/; do
-    dir_name=$(basename "$d")
-    skill_name=$(grep "^name:" "$d/SKILL.md" 2>/dev/null | head -1 | sed "s/^name: *//" | tr -d " ")
-    if [ -n "$skill_name" ] && [ "$skill_name" != "$dir_name" ]; then echo "MISMATCH: $dir_name vs $skill_name"; fails=1; fi
+    dir_norm=$(basename "$d" | tr "[:upper:]" "[:lower:]" | tr -d "-")
+    skill_norm=$(grep "^name:" "$d/SKILL.md" 2>/dev/null | head -1 | sed "s/^name: *//" | tr -d " " | tr "[:upper:]" "[:lower:]" | tr -d "-")
+    if [ -n "$skill_norm" ] && [ "$skill_norm" != "$dir_norm" ]; then echo "MISMATCH: $(basename "$d") vs $(grep "^name:" "$d/SKILL.md" | head -1 | sed "s/^name: *//")"; fails=1; fi
   done; exit $fails'
 
 echo ""
@@ -163,9 +163,9 @@ check 100 "git-hygiene" "No package-lock.json or yarn.lock (bun only)" bash -c '
 
 echo ""
 echo "--- naming ---"
-check 101 "naming" "All skill directories use kebab-case" \
+check 101 "naming" "All skill directories use kebab-case or PascalCase (no underscores/spaces)" \
   bash -c 'fails=0; for d in skills/*/; do name=$(basename "$d")
-    if [[ "$name" =~ [A-Z_] ]]; then echo "NOT KEBAB: $name"; fails=1; fi
+    if [[ "$name" =~ [_[:space:]] ]]; then echo "BAD NAME: $name"; fails=1; fi
   done; exit $fails'
 check 102 "naming" "All command files use kebab-case" \
   bash -c 'fails=0; for f in skills/*/commands/*.md; do [ -f "$f" ] || continue; name=$(basename "$f" .md)

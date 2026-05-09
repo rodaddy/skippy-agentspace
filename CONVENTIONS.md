@@ -69,6 +69,27 @@ Each upstream is a directory under `upstreams/` containing an `upstream.json` fi
 }
 ```
 
+## Placeholder Conventions
+
+Two distinct placeholder styles, each scoped to a specific context:
+
+| Style | Where | Purpose | Example |
+|-------|-------|---------|---------|
+| `__DOUBLE_UNDERSCORE__` | `bootstrap/` templates | User-filled config values (paths, API keys, IPs) | `__HOME__`, `__GEMINI_API_KEY__`, `__YOUR_NAS_IP__` |
+| `<ANGLE_BRACKET>` | `skills/*/references/` | Infrastructure-specific values in reference docs | `<VLAN20_PREFIX>`, `<NODE_IP>`, `<VMID>` |
+
+**`__DOUBLE_UNDERSCORE__`** placeholders appear in bootstrap shell configs (`env`, `zshrc`, `alias`) and `settings.json`. The bootstrap installer resolves path placeholders automatically (`__HOME__` -> `$HOME`). Secret placeholders (`__GEMINI_API_KEY__`, `__REPLACE_WITH_*__`) must be filled manually after install. See `bootstrap/INSTALL.md` for the full list.
+
+**`<ANGLE_BRACKET>`** placeholders appear in skill reference docs (e.g., `deploy-service/references/deploy-workflow.md`). These are documentation placeholders -- the agent resolves them at runtime by looking up the actual values from HOSTMAP.md, inventory, or user input. They are never auto-replaced by an installer.
+
+Do not mix the two styles. Bootstrap templates use `__UNDERSCORES__`. Skill reference docs use `<ANGLES>`.
+
+## Secret Scanning (ggshield)
+
+All commits are scanned by GitGuardian's `ggshield` pre-commit hook when installed. `install.sh --all` includes ggshield setup automatically, or run `install.sh --ggshield` standalone.
+
+The pre-commit hook prevents secrets (API keys, tokens, passwords) from being committed. If ggshield blocks a commit, remove the secret and use a placeholder instead (see Placeholder Conventions above).
+
 ## Shell Library Conventions
 
 All `tools/` scripts source `tools/lib/common.sh` for shared functionality. Skill scripts (`skills/*/scripts/*.sh`) remain standalone per the portability constraint.
@@ -96,11 +117,12 @@ Key functions: `skippy_pass`, `skippy_warn`, `skippy_fail`, `skippy_summary`, `s
 
 ## Installation Philosophy
 
-v1.1 shifts the installation approach:
+v2.0 provides two installation paths:
 
-| Concern | Handled By | Format |
-|---------|-----------|--------|
-| Prerequisite validation | Shell scripts | `#!/usr/bin/env bash` -- checks for bun, jq, git, bash 4+ |
-| Install/config/update operations | Markdown instruction files | INSTALL.md, UPDATE.md, CONFIG.md -- designed for AI agents |
+| Path | Method | Best For |
+|------|--------|----------|
+| Plugin install | `/plugin marketplace add rodaddy/skippy-agentspace` | Existing Claude Code users adding skills |
+| Manual install | `git clone` + `tools/install.sh` | Full control, bootstrap setup, CI environments |
+| Bootstrap | `bootstrap/install.sh` | Fresh Mac setup (full PAI environment from scratch) |
 
-Existing v1.0 `tools/install.sh` remains for backward compatibility. New v1.1 operations use markdown instructions that AI agents (Claude, Gemini, Codex) execute directly.
+`tools/install.sh` handles skill installation, target detection, and ggshield setup. The bootstrap layer (`bootstrap/`) is a separate installer for provisioning a complete PAI environment on a new machine -- see `bootstrap/INSTALL.md` for details.

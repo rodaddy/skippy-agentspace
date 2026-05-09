@@ -2,6 +2,24 @@
 
 All notable changes to skippy-agentspace are documented here.
 
+## [2.0.0] - 2026-05-09
+
+### Added
+- 62 new skills (86 total) from pai-portable merge
+- Portable bootstrap layer (env, zshrc, alias templates)
+- GitGuardian integration (install.sh --ggshield, pre-commit hooks)
+- scripts/ directory with utility scripts
+
+### Security
+- Incident response: scrubbed all hardcoded credentials, IPs, employer refs
+- All API keys replaced with __PLACEHOLDER__ templates
+- Internal IPs replaced with <SERVICE_IP> placeholders
+- Container IDs replaced with service-name references
+
+### Changed
+- install.sh: added --ggshield flag
+- deploy-service: rewritten v2.1 with Ansible-first, Caddy approach
+
 ## [1.2.0] - 2026-03-22
 
 ### Added

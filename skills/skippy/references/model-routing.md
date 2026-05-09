@@ -49,7 +49,7 @@ Claude Code's Agent tool only supports Claude models. For Gemini, call LiteLLM d
 scripts/cross-model-review.sh gemini-3.1-pro /tmp/review-prompt.md --diff /tmp/changes.diff
 
 # Direct LiteLLM API call
-curl -s http://10.71.1.33:4000/v1/chat/completions \
+curl -s http://<LITELLM_IP>:4000/v1/chat/completions \
   -H "Authorization: Bearer $LITELLM_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model": "gemini-3.1-pro", "messages": [{"role": "user", "content": "..."}]}'

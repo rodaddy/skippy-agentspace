@@ -4,7 +4,7 @@ description: Generate a targeted first message for the next session -- captures 
 allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 triggers:

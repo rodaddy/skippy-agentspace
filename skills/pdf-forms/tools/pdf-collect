@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# pdf-collect - Analyze PDF and generate a template for required info
+# Usage: pdf-collect <pdf-path> [output-json]
+
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: pdf-collect <pdf-path> [output-template.json]"
+    echo ""
+    echo "Analyzes a PDF form and creates a JSON template with all fields"
+    echo "that need to be filled. Edit the template, then use pdf-fill."
+    exit 1
+fi
+
+PDF_PATH="$1"
+OUTPUT_JSON="${2:-}"
+
+if [[ ! -f "$PDF_PATH" ]]; then
+    echo "Error: File not found: $PDF_PATH"
+    exit 1
+fi
+
+uv run --with pypdf python3 << EOF
+import json
+from pypdf import PdfReader
+
+reader = PdfReader("$PDF_PATH")
+page = reader.pages[0]
+
+# Get annotations
+annots = page.get('/Annots', [])
+if not annots:
+    print("No form fields found")
+    exit(0)
+
+annot_list = [a.get_object() for a in annots]
+
+fields_template = {}
+field_info = []
+
+for annot in annot_list:
+    if annot.get('/Subtype') == '/Widget':
+        name = annot.get('/T', '')
+        if not name and '/Parent' in annot:
+            parent = annot['/Parent'].get_object()
+            name = parent.get('/T', '')
+
+        if not name:
+            continue
+
+        field_type = annot.get('/FT', '')
+        if not field_type and '/Parent' in annot:
+            parent = annot['/Parent'].get_object()
+            field_type = parent.get('/FT', '/Tx')
+
+        rect = annot.get('/Rect', [0,0,0,0])
+        y = float(rect[1])
+
+        name = str(name)
+
+        # Skip signature fields
+        if str(field_type) == '/Sig':
+            continue
+
+        # Create template entry
+        if str(field_type) == '/Btn':
+            fields_template[name] = "Yes/No"
+        else:
+            fields_template[name] = ""
+
+        field_info.append((y, name, str(field_type)))
+
+# Sort by position for better organization
+field_info.sort(key=lambda f: -f[0])
+
+output_json = "$OUTPUT_JSON"
+
+if output_json:
+    # Write to file
+    with open(output_json, 'w') as f:
+        json.dump(fields_template, f, indent=2)
+    print(f"✓ Template written to: {output_json}")
+    print(f"  Edit this file, then run:")
+    print(f"  pdf-fill '<input.pdf>' 'output.pdf' \"$(cat '{output_json}')\"")
+else:
+    # Print to stdout
+    print("Form fields template (copy and edit):")
+    print("-" * 60)
+    print(json.dumps(fields_template, indent=2))
+    print("-" * 60)
+    print(f"\nFound {len(fields_template)} fillable fields")
+    print("\nField order (top to bottom):")
+    for y, name, ftype in field_info[:15]:
+        print(f"  {name}")
+    if len(field_info) > 15:
+        print(f"  ... and {len(field_info) - 15} more")
+EOF

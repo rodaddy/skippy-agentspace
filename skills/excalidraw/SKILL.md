@@ -4,7 +4,7 @@ description: Generate Excalidraw diagrams from natural language using a Mermaid-
 allowed-tools: "Read,Write,Bash,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: utility
 ---
@@ -68,7 +68,7 @@ View the PNG (Read tool) or have user open `.excalidraw`. If fixes needed, spawn
 - Container `boundElements` <-> text `containerId` must be bidirectional
 - Arrow `startBinding`/`endBinding` elementIds must reference existing shape IDs
 - `seed` values must be unique per element
-- Mermaid node IDs starting with numbers need quoting: `"202"[CT 202...]`
+- Mermaid node IDs starting with numbers need quoting: `"202"[Service on 202...]`
 - `parseMermaidToExcalidraw` is async -- await it
 
 ## References

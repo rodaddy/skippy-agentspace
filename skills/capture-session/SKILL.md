@@ -4,7 +4,7 @@ description: Capture insights from the current Claude Code session and save to O
 allowed-tools: "Read,Write,Edit,Grep,Glob"
 metadata:
   version: 0.2.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: workflow
 triggers:
@@ -44,7 +44,7 @@ Before any OB write, resolve the namespace using the brain skill's rules:
 ```bash
 # Determine namespace from host + directory context
 # See brain skill's Namespace Resolution section for full rules
-# Result: NAMESPACE variable (e.g., "rico", "collab")
+# Result: NAMESPACE variable (e.g., "<your_id>", "collab")
 ```
 
 ### Step 2: Save Decisions

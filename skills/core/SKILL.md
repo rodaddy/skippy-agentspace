@@ -4,7 +4,7 @@ description: PAI core infrastructure -- personas, LAWs, rules, and project templ
 allowed-tools: "Read,Grep,Glob"
 metadata:
   version: 0.1.0
-  author: Rico
+  author: community
   source: https://github.com/rodaddy/skippy-agentspace
   category: core
 ---

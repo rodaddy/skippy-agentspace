@@ -10,7 +10,8 @@ trap 'for d in "${_CLEANUP_DIRS[@]+"${_CLEANUP_DIRS[@]}"}"; do rm -rf "$d" 2>/de
 #   install.sh                            Show status table of all skills
 #   install.sh <skill-name> [skill...]    Install one or more skills (auto-detect target)
 #   install.sh --core                     Install only the core skill
-#   install.sh --all                      Install all skills
+#   install.sh --all                      Install all skills + ggshield
+#   install.sh --ggshield                 Set up ggshield secret scanning
 #   install.sh [options] --target=X       Override target (skills|commands|auto)
 #
 # Targets:
@@ -48,6 +49,7 @@ TARGET="auto"
 SKILL_NAMES=()
 INSTALL_ALL=false
 INSTALL_CORE=false
+INSTALL_GGSHIELD=false
 PAI_SKILLS_DIR="${PAI_SKILLS_DIR:-$HOME/.config/pai/Skills}"
 BACKUP_DIR="${SKIPPY_BACKUP_DIR:-$HOME/.cache/skippy-backups}"
 
@@ -128,6 +130,55 @@ warn_plugin_conflict() {
             echo "        Consider running 'tools/uninstall.sh $name' if you switch install methods."
         fi
     fi
+}
+
+setup_ggshield() {
+    skippy_section "ggshield secret scanning"
+
+    # Skip in CI environments (no browser for OAuth, no brew on Linux runners)
+    if [[ -n "${CI:-}" || -n "${GITHUB_ACTIONS:-}" ]]; then
+        skippy_warn "CI detected -- skipping ggshield setup (requires interactive auth)"
+        return 0
+    fi
+
+    # 1. Check / install ggshield
+    if command -v ggshield &>/dev/null; then
+        skippy_pass "ggshield installed: $(ggshield --version 2>/dev/null || echo 'unknown')"
+    else
+        echo "  ggshield not found -- installing via Homebrew..."
+        if ! command -v brew &>/dev/null; then
+            skippy_fail "Homebrew not found. Install brew first: https://brew.sh"
+            return 1
+        fi
+        if brew install gitguardian/tap/ggshield; then
+            skippy_pass "ggshield installed: $(ggshield --version 2>/dev/null)"
+        else
+            skippy_fail "Failed to install ggshield via Homebrew"
+            return 1
+        fi
+    fi
+
+    # 2. Authenticate (browser-based GitHub OAuth -- non-interactive)
+    if ggshield api-status &>/dev/null; then
+        skippy_pass "Already authenticated with GitGuardian"
+    else
+        echo "  Authenticating via GitHub OAuth (opens browser)..."
+        if ggshield auth login --method=web; then
+            skippy_pass "Authenticated with GitGuardian"
+        else
+            skippy_warn "Authentication failed -- you can retry later with: ggshield auth login --method=web"
+        fi
+    fi
+
+    # 3. Install pre-commit hook globally
+    if ggshield install --mode global --force 2>/dev/null; then
+        skippy_pass "Global pre-commit hook installed"
+    else
+        skippy_warn "Pre-commit hook install had issues (may already exist)"
+    fi
+
+    echo ""
+    echo "  ggshield setup complete. Secrets will be scanned on every commit."
 }
 
 install_skill_modern() {
@@ -280,6 +331,9 @@ for arg in "$@"; do
         --all)
             INSTALL_ALL=true
             ;;
+        --ggshield)
+            INSTALL_GGSHIELD=true
+            ;;
         --copy)
             echo "NOTE: --copy is deprecated. Install now copies by default (never symlinks)."
             ;;
@@ -287,13 +341,14 @@ for arg in "$@"; do
             INSTALL_CORE=true
             ;;
         -h|--help)
-            echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+            echo "Usage: install.sh [skill-name...] [--core] [--all] [--ggshield] [--target=skills|commands|auto]"
             echo ""
             echo "Modes:"
             echo "  (no args)            Show status table of all skills"
             echo "  <skill> [skill...]   Install one or more skills by name"
             echo "  --core               Install only the core skill"
-            echo "  --all                Install all skills"
+            echo "  --all                Install all skills + ggshield"
+            echo "  --ggshield           Set up ggshield secret scanning (install, auth, hooks)"
             echo ""
             echo "Options:"
             echo "  --target=X           Override target (skills|commands|auto, default: auto)"
@@ -305,6 +360,7 @@ for arg in "$@"; do
             echo "  install.sh skippy                   Install one skill"
             echo "  install.sh skippy excalidraw        Install multiple skills"
             echo "  install.sh --all                    Install everything"
+            echo "  install.sh --ggshield               Set up ggshield only"
             echo ""
             echo "Available skills:"
             list_skills
@@ -325,7 +381,10 @@ if [[ "$INSTALL_ALL" == true ]]; then
         [[ -d "$skill_dir" ]] || continue
         install_skill "$(basename "$skill_dir")"
     done
+    setup_ggshield
     echo "=== Done. Run /clear to refresh skill list. ==="
+elif [[ "$INSTALL_GGSHIELD" == true ]]; then
+    setup_ggshield
 elif [[ "$INSTALL_CORE" == true ]]; then
     echo "=== Installing core skill (target: $(detect_target)) ==="
     install_skill "core"
@@ -348,6 +407,6 @@ elif [[ ${#SKILL_NAMES[@]} -gt 0 ]]; then
 else
     show_status
     echo ""
-    echo "Usage: install.sh [skill-name...] [--core] [--all] [--target=skills|commands|auto]"
+    echo "Usage: install.sh [skill-name...] [--core] [--all] [--ggshield] [--target=skills|commands|auto]"
     echo "Run install.sh --help for more details."
 fi

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# pdf-fill - Fill PDF form fields programmatically
+# Usage: pdf-fill <input-pdf> <output-pdf> '<json-data>'
+
+set -euo pipefail
+
+if [[ $# -lt 3 ]]; then
+    echo "Usage: pdf-fill <input-pdf> <output-pdf> '<json-field-data>'"
+    echo ""
+    echo "Example:"
+    echo "  pdf-fill form.pdf filled.pdf '{\"Name\": \"John Doe\", \"SSN\": \"123-45-6789\"}'"
+    exit 1
+fi
+
+INPUT_PDF="$1"
+OUTPUT_PDF="$2"
+JSON_DATA="$3"
+
+if [[ ! -f "$INPUT_PDF" ]]; then
+    echo "Error: Input file not found: $INPUT_PDF"
+    exit 1
+fi
+
+uv run --with pypdf python3 << EOF
+import json
+from pypdf import PdfReader, PdfWriter
+
+input_path = "$INPUT_PDF"
+output_path = "$OUTPUT_PDF"
+json_data = '''$JSON_DATA'''
+
+try:
+    field_data = json.loads(json_data)
+except json.JSONDecodeError as e:
+    print(f"Error: Invalid JSON data: {e}")
+    exit(1)
+
+# Read template and clone
+reader = PdfReader(input_path)
+writer = PdfWriter()
+writer.clone_document_from_reader(reader)
+
+# Fill fields
+writer.update_page_form_field_values(writer.pages[0], field_data)
+
+# Write output
+with open(output_path, "wb") as f:
+    writer.write(f)
+
+print(f"✓ Filled {len(field_data)} fields")
+print(f"✓ Output: {output_path}")
+EOF
