@@ -34,7 +34,7 @@ Skippy is the machine that extracts those patterns. We audited 93 commands acros
 - **103 structural assertions** verify repo integrity on every commit
 - **Per-skill Karpathy evals** prove each skill actually works (not just that it exists)
 
-See `.planning/audits/marketplace-audit-2026-03-13.md` for full audit data.
+See `planning/audits/marketplace-audit-2026-03-13.md` for full audit data.
 
 ## Architecture
 
@@ -163,7 +163,7 @@ cd skippy-agentspace
 | [obra/superpowers](https://github.com/obra/superpowers) | 14 | 0 | 14 | Anti-rationalization, hard-gate, two-stage review |
 | Open Brain (local) | 18 patterns | 6 | 12 | Remember |
 
-Full audit: `.planning/audits/marketplace-audit-2026-03-13.md`
+Full audit: `planning/audits/marketplace-audit-2026-03-13.md`
 
 ## Constraints
 
@@ -197,10 +197,10 @@ v1.0-v1.2 shipped (16 phases, 39 plans). v2.0 shipped -- portable bootstrap, 88 
 
 | Need | Read |
 |------|------|
-| Full project context + decisions | `.planning/PROJECT.md` |
-| Requirements (11 total, all mapped) | `.planning/REQUIREMENTS.md` |
-| Phase structure + success criteria | `.planning/ROADMAP.md` |
-| Current position + blockers | `.planning/STATE.md` |
+| Full project context + decisions | `planning/PROJECT.md` |
+| Requirements (11 total, all mapped) | `planning/REQUIREMENTS.md` |
+| Phase structure + success criteria | `planning/ROADMAP.md` |
+| Current position + blockers | `planning/STATE.md` |
 | Skill composition + workflow patterns | `ORCHESTRATION.md` |
 | Skill index (88 skills by category) | `INDEX.md` |
 | Dev workflow skill | `skills/skippy/SKILL.md` |
