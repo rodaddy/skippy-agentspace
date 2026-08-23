@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # skippy-agentspace
 
 > **Why this exists:** Claude Code marketplaces ship 30-40+ commands each. 85% is ceremony. Skippy is the machine that finds the 15% that matters and proves it with binary assertion evals.
